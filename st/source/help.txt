@@ -1,0 +1,1334 @@
+--- H_ABOUT
+Acerca de SmartTar
+SmartTar es un sistema de alta tecnología concebido como una herramienta para hoy y el 
+futuro, utilizando en el hardware los componentes y metodologías de diseño más modernos del 
+mercado internacional actual; de la misma forma el desarrollo de la interfase con el usuario ha 
+sido diseñada para la máxima simplicidad en el manejo y la mayor amigabilidad para el 
+operario; el diseño y selección de los iconos, su contraste para blanco y negro así como sus 
+colores han sido cuidadosamente estudiados y seleccionados.\
+Se han utilizado las normas internacionales ANSI e IBM SAA/CUA para los botones, cajas de 
+diálogo, sistemas de selección, ayudas etc.\
+El hardware y el software fueron concebidos para manejar en esta primera versión hasta 32 
+cabinas en forma totalmente automática; se le han incluido todas las funciones que diseñamos 
+para el tarificador LAMDA C16A y muchas otras propias de un equipo con base en un PC.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3].
+--- H_ACCUM
+Acumulados
+Esta opción sirve para que el operador(a), verifique los acumulados de su turno y si lo desea 
+los puede imprimir.\
+Su función principal es la de que el operador(a) al iniciar su turno, verifique que el total de los 
+acumulados estén en Cero, para así poder iniciar su turno. Y al terminar dicho turno debe 
+Imprimir, para que quede una constancia y Borrarlos, para que se actualicen, los acumulados 
+especiales, los cuales llevan estadísticas diarias, semanales, mensuales y anuales.\
+Procedimiento:\
+en el momento de requerir este servicio, ubíquese en la Barra de Herramientas y por medio de 
+las teclas del cursor seleccione el icono de la herramienta Imprimir Acumulado de Turno, si 
+observa en la parte inferior izquierda de la pantalla, el sistema le indicará el nombre de la 
+herramienta que está en el momento seleccionada. Presione [ENTER] en la opción deseada y el 
+sistema colocará en pantalla una caja de diálogo en la cual aparecerá toda la información del 
+acumulado de turno. Si solamente su necesidad es verificar el acumulado; por medio de las 
+teclas del cursor seleccione No Borrar, ahora bien si va terminar el turno seleccione Borrar 
+luego presione [TAB], con lo cual se ubicara en el botón de Imprimir, presione [ENTER] para 
+ejecutar la acción ó presione [TAB] y seleccione el botón de Cancelar y presione [ENTER] 
+para volver a la Barra de Herramientas.\
+Nota:\
+Si necesita cambiar el nombre del operador(a) presione [TAB] hasta llegar a Operador(a), no 
+necesita borrar el nombre anterior, solamente digite su nombre, luego presione [TAB] hasta 
+llegar a seleccionar Imprimir y Presione [ENTER] para ejecutar la acción.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3]
+--- H_ADM_REC
+Administración de recibos
+Se utiliza para cancelar o incluir recibos en el acumulado de turno afectando el valor del 
+acumulado por ejemplo si usted desea y esta autorizado, puede anular o poner en pago 
+revertido algún recibo de manera que este no se le sume al acumulado y usted no se descuadre 
+por el dinero faltante de este recibo o lo contrario si desea incluir un recibo que usted anulo en 
+el acumulado.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Impresión, luego 
+presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en la cual 
+aparecerá la información de todos los servicios prestados en este menú, si no necesita ningún 
+servicio, ó entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas 
+o por medio de las teclas del cursor seleccione el servicio que desee utilizar y presione 
+[ENTER] el sistema colocará en pantalla una caja de diálogo, en la cual en Recibo, se digitará 
+el número del recibo al que se va a cambiar de categoría, presione [TAB] y pase a Atributo, en 
+el cual por medio de las teclas del cursor se podrá seleccionar Pagado, No Cobro o Pago 
+Revertido. Presione [TAB] y seleccione el botón de Aceptar, presione [ENTER] para ejecutar 
+la acción ó presione [TAB] y seleccione el botón de Cancelar y presione [ENTER] para volver 
+a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_ALARM
+Programación de Alarmas del Sistema
+Se utiliza para colocar un límite a las llamadas que presenten errores de comunicación y 
+marcación, de manera que cuando un usuario en la cabina intente comunicarce y tenga errores 
+de comunicación o se equivoque al marcar, y rebase el límite programado para errores, el 
+sistema generara una alarma indicándole al operador(a) que el tipo de alarma y  la cabina en la 
+cual se produjo.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Información, luego 
+presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en la cual 
+aparecerá la información de todos los servicios prestados en este menú. Por medio de las teclas 
+del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó entró en el 
+menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas o presione [ENTER] 
+y el sistema colocará en pantalla una caja de diálogo, en la cual se programará el número de 
+errores posibles de intentos para hacer una llamada antes de generar una alarma. En el área de 
+Número de errores se podrá seleccionar por medio de las teclas del cursor las opciones  De 
+Comunicación o De Marcación en las cuales se digitará el número a que se debe activar la 
+alarma. Presione  [TAB] y seleccione el botón de Aceptar, presione [ENTER] para ejecutar la 
+acción ó presione [TAB] y seleccione el botón de Cancelar y presione [ENTER] para volver a 
+la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_ALIAS
+Identificadores de las Cabinas
+Muy utilizado en caso de requerir asignar  al número de la cabina que aparece en el recibo otro 
+número diferente para usos de control especial como por ejemplo:\
+iniciando con la cabina 1 igual 01, la cabina 2 igual a 02 ..... y así hasta donde se necesite o 
+colocar el número de la línea telefónica. Esta opción permite programar hasta ocho cifras.    
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Configuración, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en 
+la cual aparecerá la información de todos los servicios prestados en este menú, si no necesita 
+ningún servicio, ó entró en el menú por curiosidad, presione [F3] y volverá a la Barra de 
+Herramientas o por medio de las teclas del cursor seleccione el servicio que desee utilizar, 
+presione [ENTER] y el sistema colocará en pantalla una caja de diálogo, en la cual aparecerá la 
+información referente a la identificación de todas las cabinas, por medio de las teclas del cursor 
+ubiques en la cabina que necesite y digite el valor que la va a identificar, luego de hacer todas 
+las modificaciones pertinentes presione [TAB] y seleccione el botón de Aceptar, presione 
+[ENTER] para ejecutar la acción ó presione [TAB] y seleccione el botón de Cancelar y 
+presione [ENTER] para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_CALC
+Calculadora
+Utilice notación infija, para lo cual el + suma, el - resta, el * multiplica, el / divide y el ^ eleva a 
+potencia. Se usará paréntesis para operaciones que lo requieran (Ejemplo (3+5*7)/2=19).\
+Mediante la tecla [Enter] se visualiza el resultado total o los resultados parciales en el momento 
+de la entrada de datos.\
+\
+Procedimiento:\
+en el momento de requerir este servicio, ubíquese en la Barra de Herramientas y por medio de 
+las teclas del cursor seleccione el icono de la herramienta Activar Calculadora , si observa en la 
+parte inferior izquierda de la pantalla, el sistema le indicará el nombre de la herramienta que 
+está en el momento seleccionada. Presione [ENTER] en la opción deseada y el sistema 
+colocará en pantalla una caja de diálogo en la cual aparecerá siempre por defecto un ejemplo. 
+No se preocupe en borrarlo solamente digite la operación necesitada; para obtener el resultado  
+=  presione [ENTER], para desactivar esta herramienta presione [TAB] para ubicarce en el 
+botón de Aceptar, presione [ENTER] para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3].
+--- H_CASH
+Apertura de la caja
+Se utiliza para abrir automáticamente la caja de billetes o cajero monedero, similares a las de 
+las cajas registradoras, hay dos tipos de cajeros, su diferencia radica en el método de apertura 
+de la caja:\
+Cajeros Seriales:\
+El sistema permite la utilización de los puertos seriales COM1 o COM2, para dar la señal de 
+apertura de caja, seleccione el puerto que tenga disponible.\
+Por Pulso de Voltaje:\
+en este tipo de cajero el método de apertura de la caja es por medio de un pulso de voltaje, este 
+pude ser dado por medio de la Impresora, o el sistema provee este pulso al seleccionar la 
+opción SmartTar\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Configuración, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en 
+la cual aparecerá la información de todos los servicios prestados en este menú. Por medio de 
+las teclas del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó 
+entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas o presione 
+[ENTER] y el sistema colocará en pantalla una caja de diálogo, en la cual por medio de las 
+teclas del cursor se podrá seleccionar dependiendo del tipo de cajero el método de apertura de 
+la caja, presione [TAB] y seleccione el botón de Aceptar, presione [ENTER] para ejecutar la 
+acción ó presione [TAB] y seleccione el botón de Cancelar y presione [ENTER] para volver a 
+la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_CHANGE_PASSWD
+Cambio de Código de Acceso
+
+Se utilizará cuando sea necesario cambiar el código de acceso, por razones de seguridad o de 
+facilidad.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Configuración, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en 
+la cual aparecerá la información de todos los servicios prestados en este menú. Por medio de 
+las teclas del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó 
+entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas o presione 
+[ENTER] y el sistema colocará en pantalla una caja de diálogo, en la cual se programará el 
+nuevo código de acceso, el cursor por defecto estará en Código de acceso en esta se digitará el 
+código de acceso con el cual entró al menú de configuración, por medio de las teclas del cursor 
+pase a Nuevo Código y digite el nuevo código, el cual podrá estar compuesto de ocho 
+caracteres máximo; como caracteres se entienden los números, las letras mayúsculas y 
+minúsculas y los símbolos.\
+Anote muy bien el nuevo código por cuanto una vez se acepte sólo se podrá entrar a las 
+funciones de configuración mediante éste nuevo código. presionando [TAB] y seleccione el 
+botón de Aceptar, presione [ENTER] para ejecutar la acción ó presione [TAB] y seleccione el 
+botón de Cancelar y presione [ENTER] para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_CONFIG_MENU
+Menú Configuración del Sistema
+Este menú agrupa los parámetros necesarios para la configuración del sistema; a este debe 
+tener acceso solamente el personal técnico encargado del mantenimiento del sistema, por favor 
+siempre deshabilite este menú de configuración al terminar de hacer los cambios necesarios. 
+Por medio de la opción Deshabilitar este menú.\
+Este servicio permite modificar los parámetros en línea, ósea con el sistema en funcionamiento 
+no se necesita terminar la sección de trabajo ó apagar el equipo.\
+el menú esta compuesto por:\
+Hora y Fecha Actual.\
+Días Festivos.\
+Señal de Contestación.\
+Tiempos de Operación.\
+Bloqueo de numeración.\
+Tarifas Nacionales.\
+Tarifas Internacionales.\
+Nuevas Localidades.\
+Nuevos Países.\
+Identificadores de Cabina.\
+Redondeo Total de la Factura.\
+Puerto de la Impresora.\
+Abertura del Caja.\
+Cambiar Código de Acceso\
+Simulación del Sistema.\
+Desactivar este menú.\
+\
+Procedimiento para obtener ayuda de los parámetros anteriores:\
+en el momento de requerir información de alguno de los parámetros que se encuentran en este 
+menú, primero ubíquese el la Barra de Menús presionando [ALT] y por medio de las teclas del 
+cursor seleccione el menú de Configuración luego presione [ENTER] el sistema colocará en 
+pantalla una caja de diálogo descolgable en la cual estarán todos los parámetros disponibles, si 
+no necesita ningún servicio, ó entró en el menú por curiosidad, presione [F3] y volverá a la 
+Barra de Herramientas; o por medio de las teclas del cursor seleccione el parámetro del cual 
+necesita información y presione [ENTER] el sistema colocará en pantalla una caja de diálogo 
+en la cual estará la información necesaria para programar el parámetro, presione [F1] y 
+obtendrá la información y la forma utilización de parámetro; para cancelar o cerrar la caja de 
+diálogo que tiene la ayuda presione [F3], y para cerrar la caja de diálogo que tienen los datos 
+para programar el parámetro, presione [TAB] hasta llegar a el botón de Cancelar, luego 
+presione [ENTER] para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo de la opción que estaba utilizando 
+presione en cualquier momento [F3].
+--- H_FILE_MENU
+Menú Administración de archivos
+Este menú contiene tres opciones:\
+Vaciar base de datos:\
+El sistema almacena cada cinco minutos en disco duro todos los datos que hallan sido 
+procesados en este lapso de tiempo, y se encuentran en memoria, este procesos se puede hacer 
+manualmente y en el momento que se desee, utilizando este servicio.\
+Reconstruir bases de datos:\
+Solamente utilícelo cuando se determine que tiene problemas o alteraciones con los 
+acumulados; este le hará una nueva sumatoria del los acumulados. 
+Salir:\
+Utilícelo si ha terminado la sección de trabajo y el equipo será apagado, asegurece de que todas 
+las cabinas estén libres, y no haya ninguna operación pendiente por realizar como impresión y 
+borrado de acumulados de turno.\
+Nota:\
+Importante no apague el equipo cuando este en el funcionamiento normal, por favor utilice este 
+servicio para terminar la sección de trabajo y así corroborar con el funcionamiento normal del 
+sistema , al ejecutar esta opción en la pantalla debe quedar el prompt del MS-DOS C >, y luego 
+proceda con apagar el equipo.\
+
+Procedimiento:\
+En el momento de requerir uno de los servicio del menú de Archivo ubíquese en la Barra de 
+Menús presionando [ALT], y por medio delas teclas del cursor seleccione el menú Archivo, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en 
+la cual aparecerá la información de todos los servicios prestados en este menú. Por medio de 
+las teclas del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó 
+entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas.
+Si al utilizar este menú selecciono Vaciar Bases de Datos solamente presione [ENTER] para 
+ejecutar la acción. O si selecciona Salir presione [ENTER] y el sistema colocará en pantalla una 
+caja de diálogo en la cual se podrá seleccionar por medio de [TAB] el botón Si y presionar 
+[ENTER] para ejecutar la acción ó presione [TAB] para seleccionar No y presione [ENTER] 
+para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3] cancelando la acción.\
+--- H_FOOTER
+Mensaje de Fin de Recibo
+Utilizado para que el sistema le ponga algún mensaje a los recibos que salen por la impresora 
+para el usuario, este puede ser programado en cualquier momento.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Impresión, luego 
+presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en la cual 
+aparecerá la información de todos los servicios prestados en este menú, si no necesita ningún 
+servicio, ó entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas 
+o por medio de las teclas del cursor seleccione el servicio que desee utilizar y presione 
+[ENTER] el sistema colocará en pantalla una caja de diálogo, Mensaje en la cual se digitará el 
+mensaje que desea (máximo 60 caracteres por línea). Presione [TAB] y seleccione el botón de 
+Aceptar, presione [ENTER] para ejecutar la acción ó presione [TAB] y seleccione el botón de 
+Cancelar y presione [ENTER] para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_FORMS
+Formatos de Impresión
+Se usa para seleccionar el tipo de formato que se utilizará en la impresión de recibos, 
+dependiendo del tipo de impresora que este funcionando, ya que de ella depende el número de 
+caracteres y el tipo de papel (Hojas) ó (Rollos).\
+\
+80 col. doble recibo:  impresora LX, FX, LQ\
+80 col. Media página:  impresora LX, FX, LQ\
+80 col. Lineal:  impresora LX, FX, LQ\
+80 col. Telecom:  impresora LX, FX, LQ\
+80 col. EMETEL:  impresora LX, FX, LQ\
+40 col. doble rollo:  impresora TM-930\
+40 col. simple rollo:  impresora TM-930\
+18 col. doble rollo:  impresora SP-312\
+28 col. rollo simple:  impresora SP-312\
+\
+Procedimiento:\
+en el momento de requerir este servicio, ubíquese en la Barra de Herramientas y por medio de 
+las teclas del cursor seleccione el icono de la herramienta Formatos de recibos para la 
+impresora , si observa en la parte inferior izquierda de la pantalla, el sistema le indicará el 
+nombre de la herramienta que está en el momento seleccionada. Presione [ENTER] en la 
+opción deseada y el sistema colocará en pantalla una caja de diálogo en la cual aparece el 
+formato en que se están imprimiendo los recibos, y el cursor estará ubicado en el botón de 
+Aceptar. Para cambiar el formato de impresión presione [TAB] hasta llegar a cuadro, donde 
+esta el tipo de formato presione [ENTER] y el sistema abrirá una caja de diálogo descolgable 
+en la cual aparecerán todas las opciones disponibles las cuales se pueden seleccionar mediante 
+las teclas del cursor y en la opción necesitada presione [ENTER], la caja descolgable se cerrará 
+y quedará solamente el formato de impresión seleccionado. Presione [TAB] para seleccionar el 
+botón de Aceptar y presione [ENTER] para ejecutar la acción ó presione [TAB] y seleccione el 
+botón de Cancelar y presione [ENTER] para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3]
+--- H_GENERAL
+Ayuda General
+Como simbología en todas las ayudas y los manuales tendremos:\
+Cuando se mencione que se debe operar una tecla específica del computador, su nombre o 
+símbolo se encerrará entre paréntesis cuadrado, por ejemplo la tecla [ENTER] o de la Escape 
+[ESC]. Cuando se mencione teclas de cursor se referirá a las cuatro teclas con flechas que se 
+encuentran en el teclado.\
+Tenga siempre presente que cualquier opción del sistema esta formado por ventanas, cajas de 
+diálogo o cuadros y para desplazarse entre estos es con la tecla [TAB] y dentro de una ventana 
+se mueve con las teclas de cursor.\
+Menú principal se refiere a las opciones que se encuentran en la parte superior de la pantalla 
+(Archivo, Configuración, Información, impresión, Ayudas) y para accesar este menú se 
+presiona la tecla [ALT] y de nuevo [ALT] o [ESC] para desactivarlo.\
+Barra de herramientas se refiere a los iconos (dibujos) de las principales funciones de trabajo 
+del sistema (Servicios especiales, intervenir cabina, bloquear/desbloquear cabinas, acumulado 
+de turno, llamadas internacionales, impresión de recibos, formato de recibos, etc.) y están 
+ubicados debajo del menú principal para dar acceso a cualquiera de estos iconos ubíquese en el 
+deseado y presione [ENTER].\
+Para mayor información acerca de lo que usted necesita ubíquese con las teclas de cursor en la 
+opción deseada y presione [F1] y para salir presione [F3].\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3].
+--- H_HELP_MENU
+Menú de Ayudas del Sistema
+Este menú contiene una guía básica acerca del manejo del sistema. Aquí también se puede 
+consultar cual es la versión del sistema SmartTar.\
+\
+Procedimiento para obtener ayuda de los parámetros anteriores:\
+en el momento de requerir información de alguno de los parámetros que se encuentran en este 
+menú, primero ubíquese el la Barra de Menús presionando [ALT] y por medio de las teclas del 
+cursor seleccione el menú de Información luego presione [ENTER] el sistema colocará en 
+pantalla una caja de diálogo descolgable en la cual estarán todos los parámetros disponibles. si 
+no necesita ningún servicio, ó entró en el menú por curiosidad, presione [F3] y volverá a la 
+Barra de Herramientas, o por medio de las teclas del cursor seleccione el parámetro del cual 
+necesita información y presione [ENTER] el sistema colocará en pantalla una caja de diálogo 
+en la cual estará la información necesaria del parámetro, presione [F1] y obtendrá la 
+información y la forma utilización de parámetro; para cancelar o cerrar la caja de diálogo que 
+tiene la ayuda presione [F3], y para cerrar la caja de diálogo que tienen los dato para programar 
+el parámetro, presione [TAB] hasta llegar a el botón de Cancelar, luego presione [ENTER] 
+para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3].
+--- H_INFO_MENU
+Menú de Configuración del Sistema
+En este menú se encuentra toda la información acerca de como esta trabajando el sistema en la 
+actualidad, y además permite actualizar  la identificación del operario, activar las alarmas y 
+activar el menú de configuración.\
+Este menú esta compuesto por:\
+Configuración del sistema.\
+Identificación del operario.\
+Tarifas nacionales.\
+Tarifas internacionales.\
+Alarmas del sistema.\
+Activar el menú de configuración.\
+\
+Procedimiento para obtener ayuda de los parámetros anteriores:\
+en el momento de requerir información de alguno de los parámetros que se encuentran en este 
+menú, primero ubíquese el la Barra de Menús presionando [ALT] y por medio de las teclas del 
+cursor seleccione el menú de Información luego presione [ENTER] el sistema colocará en 
+pantalla una caja de diálogo descolgable en la cual estarán todos los parámetros disponibles. si 
+no necesita ningún servicio, ó entró en el menú por curiosidad, presione [F3] y volverá a la 
+Barra de Herramientas, o por medio de las teclas del cursor seleccione el parámetro del cual 
+necesita información y presione [ENTER] el sistema colocará en pantalla una caja de diálogo 
+en la cual estará la información necesaria del parámetro, presione [F1] y obtendrá la 
+información y la forma utilización de parámetro; para cancelar o cerrar la caja de diálogo que 
+tiene la ayuda presione [F3], y para cerrar la caja de diálogo que tienen los dato para programar 
+el parámetro, presione [TAB] hasta llegar a el botón de Cancelar, luego presione [ENTER] 
+para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3].
+--- H_INSTALL
+Instalación de SmartTar
+Esta instalación leerá la información de configuración anterior del sistema y permitirá la 
+configuración de los parámetros más generales; por favor solamente cambie lo necesario para 
+configurar su sistema acorde a la localidad en que se encuentra prestando el servicio el sistema 
+SmartTar.\
+Los parámetros son:\
+- País.\
+En este se programará el País en que este prestando el servicio el sistema SmartTar.\
+- Símbolo Monetario.\
+En este se programará el Símbolo Monetario del País en que este prestando el servicio el 
+sistema SmartTar.\
+Ejemplo:\
+País: Colombia\
+Símbolo Monetario: $ (pesos).\
+- Impuesto.\
+En este se programará el nombre el impuesto del país en que esta prestando el servicio el 
+sistema SmartTar.\
+Ejemplo:\
+País: Colombia\
+Nombre del Impuesto: IVA (Impuesto al Valor Agregado.\
+- Porcentaje del Impuesto.\
+En este se digitará el valor del porcentaje establecido para el impuesto.\
+- Representante.\
+Este se podrá seleccionar el representante que esta a cargo del sistema en esa localidad.\
+Ejemplo:\
+País: Colombia\
+Representante: MicroDiseño Ltda.\
+- Acceso.\
+Ente se podrá seleccionar el número de acceso para generar las llamadas internacionales y los 
+cuales pueden ser el número “9” nueve o el “0” cero.\
+Ejemplo:\
+País: Colombia.\
+Acceso: 9.\
+- Ciudad.\
+En esta se digitará el nombre de la localidad en la cual esta prestando el servicio el sistema 
+SmartTar.\
+Ejemplo:\
+Nombre de la localidad: Piedecuesta (Sdr).\
+- Usuario.\
+En este se digitará el nombre de la empresa que adquirió el sistema.\
+Ejemplo:\
+Usuario: Telecom.\
+- Identificación del usuario.\
+En este se podrá digitar el número de identificación del usuario.\
+Ejemplo:\
+Localidad: Piedecuesta (Sdr)\
+Identificación del usuario:  NIT 899999023-9.\
+- Formatos de impresión.\
+En esta se podrá seleccionar el tipo de formato de impresión que se utilizará para los recibos de 
+acuerdo al tipo de impresora utilizada y dependiendo del tipo de papel o la cantidad de rollos 
+que utiliza, y a la cantidad de caracteres que maneja.\
+Ejemplo:\
+impresora LX, FX, LQ: 80 col. doble recibo\
+- Crear PH_INFO.DAT\
+El Sistema SmartTar en las versiones 2.0 y posteriores tienen una forma diferente de manejar la 
+información, para lograr así una mayor eficiencia y tener la certeza de que, los archivos que 
+contienen la información de la  configuración del sistema y los arboles de numeración 
+solamente puedan ser modificados por personal autorizado.
+Al utilizar esta opción el sistema lo que hace es tomar la información de los archivos de discado 
+directo nacional e internacional que están trabajando en el momento en la versión anterior  y 
+que supuestamente han ido siendo organizados con el tiempo acorde a las características de la 
+localidad y son convertidos al formato que maneja el archivo PH_INF.DAT (datos de 
+información telefónica).que es el que trabajara directamente con el sistema.\
+\
+Procedimiento:\
+Presione [TAB] para cambiarce entre las diferentes opciones y para modificar la opción, digite 
+los datos deseados. En las opciones que tienen datos predeterminados presione [ENTER] y por 
+medio de las teclas del cursor seleccione el parámetro acorde a su necesidad, luego presione 
+nuevamente [ENTER]. Si desea la ejecución de la opción “Crear PH_INFO.DAT” presione 
+[ENTER] para marcar el cuadro con X y sino es necesario utilizarla solamente presione [TAB] 
+y pasé a “Continuar” luego presione [ENTER].\
+Para cerrar esta caja de diálogo y salir presione en cualquier momento [F3].
+--- H_INTER
+Internacional
+El sistema tiene la facilidad de bloquear la numeración internacional, a causa de que estás 
+llamadas tiene un alto costo de dinero, como el sistema es automático las personas al intentar 
+marcar internacional, el sistema generara una alarma indicándole al operador(a) que en la 
+cabina X están intentando una llamada internacional. Al cliente se le indicará que debe hace un 
+prepago ó deja un depósito dependiendo a donde necesita comunicarce; en ese momento utilice 
+la herramienta Llamadas Internacionales, para habilitar la cabina seleccionada, el sistema al 
+establecerse la comunicación ira descontando del dinero depositado y al faltar un minuto para 
+terminarce el dinero, el sistema dará una señal por medio de un pito al cliente; al terminarce 
+este tiempo el equipo automáticamente cortará la llamada. Ahora bien si el cliente termina antes 
+de acabarcele el dinero, el sistema indicará la cantidad a devolver.\
+Si la persona después de haber hecho el prepago y no puede comunicarce y decide no intentar 
+más; utilice otra vez esta herramienta y a la cabina antes seleccionada colóquele un depósito de 
+Cero pesos para cancelar esta opción.\
+Nota:\
+Este servicio puede utilizarce para llamadas a cualquier localidad, solamente seleccione la 
+cabina y el valor en dinero del depósito.\
+\
+Procedimiento:\
+en el momento de requerir este servicio, ubíquese en la Barra de Herramientas y por medio de 
+las teclas del cursor seleccione el icono de la herramienta Llamadas Internacionales , si observa 
+en la parte inferior izquierda de la pantalla, el sistema le indicará el nombre de la herramienta 
+que está en el momento seleccionada. Presione [ENTER] en la opción deseada y el sistema 
+colocará en pantalla una caja de diálogo en la cual se utiliza para anotar el depósito para las 
+llamadas. En el área de datos, por medio de las tecla del cursor se seleccionara Cabina y se 
+digitará el número de la cabina que va ser habilitada y seleccione Depósito en el cual se digitará 
+el valor del dinero depositado.\
+Presione [TAB] y seleccione el botón de Aceptar, presione [ENTER] para ejecutar la acción  ó 
+presione [TAB] y seleccione el botón de Cancelar y presione [ENTER] para volver a la  Barra 
+de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3].
+--- H_INTER_TAR
+Tarifas Internacionales
+Se utiliza para programar el valor de las Tarifas Internacionales, desde la tarifa cero (0) hasta la 
+diecinueve (19), la tarifa cero (0) aparecerá para las localidades no incluidas dentro de los 
+arboles de numeración del sistema, o cuando se establecen comunicaciones a servicios de pago 
+revertido. Además se puede programar Reducidas, a Estados Unidos, Otros Países y Frontera, 
+y es posible programar el Impuesto al Valor Agregado (IVA).\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Configuración, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en 
+la cual aparecerá la información de todos los servicios prestados en este menú. Por medio de 
+las teclas del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó 
+entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas o presione 
+[ENTER] y el sistema colocará en pantalla una caja de diálogo, en la cual aparecerán por 
+defecto estará relacionada la opción de Tarifas Plenas, en la cual por medio de las teclas del 
+cursor se seleccionara la tarifa  a programar y digite el valor de la tarifa, presione [TAB] y pase 
+a Reducidas, en este hay tres tipos de reducidas a Estados Unidos, Otros Países y Frontera, por 
+medio de [TAB] se cambia entre los diferentes tipos de reducidas y por medio de las teclas del 
+cursor, se puede ubíquese en Día Ordinario , Sábado - Domingo o Festivo, en los cuales podrá 
+digitar los horarios y los porcentajes de cobro, para las tarifas reducidas; presione [TAB] y 
+pasará a IVA en la cual se digitará el valor del Impuesto al Valor Agregado IVA que se 
+cobrara a las tarifas internacionales, luego presione [TAB] y seleccione el botón de Aceptar, 
+presione [ENTER] para ejecutar la acción ó presione [TAB] y seleccione el botón de Cancelar 
+y presione [ENTER] para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_IPRINT
+Impresión Internacional
+Se utiliza para consultar o imprimir el árbol de numeración internacional o listado de los  de los 
+países con su respectiva tarifa y numeración. El listado esta organizado por zonas ejemplo: si 
+los números telefónicos empiezan con indicativo 90 se referirá a la zona 0, 99 se referirá a la 
+zona 9, estos listados se puede ver o imprimir en orden alfabético o numérico.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Impresión, luego 
+presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en la cual 
+aparecerá la información de todos los servicios prestados en este menú, si no necesita ningún 
+servicio, ó entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas 
+o por medio de las teclas del cursor seleccione el servicio que desee utilizar, presione [ENTER] 
+y el sistema colocará en pantalla una caja de diálogo, en la cual en la área de datos  Zona se 
+digitará el número de la zona que se desee observar o imprimir, Luego de hacer la selección se 
+presiona [ENTER] y el sistema colocará en pantalla el listado de numeración y tarifas de la 
+zona. Presione [TAB] para pasar a clase en la cual se podrá seleccionar la manera de 
+ordenación del listado por orden Alfabético o Numérico. Presione [TAB] y seleccione el botón 
+de Imprimir, presione [ENTER] para ejecutar la acción ó presione [TAB] y seleccione el botón 
+de Cancelar y presione [ENTER] para volver a la Barra de Herramientas. o presione [TAB] 
+para pasar al área de información donde por medio de las teclas del cursor podrá buscar un 
+localidad en especial, presione [TAB] hasta llegar a Cancelar o Imprimir.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_LOCK
+Bloqueo/Desbloqueo
+Se utiliza para bloquear o desbloquear una cabina.\
+Esta se puede utilizar en el caso de que una cabina esté fallando, para que los usuarios no la 
+utilicen; ó habiendo una comunicación establecida.\
+Procedimiento:\
+en el momento de requerir este servicio, ubíquese en la Barra de Herramientas y por medio de 
+las teclas del cursor seleccione el icono de la herramienta Bloquea / Desbloquear cabinas , si 
+observa en la parte inferior izquierda de la pantalla, el sistema le indicará el nombre de la 
+herramienta que está en el momento seleccionada. Presione [ENTER] en la opción deseada y el 
+sistema colocará en pantalla una caja de diálogo en la cual se podrá seleccionar, por medio de 
+las teclas del cursor  Bloquear ó Desbloquear, presione [TAB] , el cursor pasará  a Cabina el 
+cual se digitará el número de la cabina a bloquear ó Desbloquear, presione nuevamente [TAB] 
+y seleccione el botón de Aceptar, presione [ENTER] para ejecutar la acción ó presione [TAB] 
+y seleccione el botón de Cancelar y presione [ENTER] para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3].
+--- H_LOCK_NUM
+Bloqueo de Numeración
+Se utiliza para bloquear llamadas telefónicas por tres diferentes motivos estos son:\
+Por Número de Cifras.\
+El sistema cortará el proceso de marcación, si no se marca la cantidad de cifras establecidas 
+antes de transcurrir el tiempo programado Para Marcación en el DDN (Discado Directo 
+Nacional) y en el DDI (Discado Directo Internacional) ó si se marcan más de las cifras 
+establecidas en los discados directos.\
+Por Cifras.\
+El sistema cortará el proceso de marcación, que inicie por la cifras programadas (marcadas) 
+con una x.\
+Locales y Otras.\
+Se podrán programar otras como locales, ó hacia alguna localidad si se presenta la necesidad. 
+Máximo se podrán colocar diez series diferentes.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Configuración, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgare, , en 
+la cual aparecerá la información de todos los servicios prestados en este menú. Por medio de 
+las teclas del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó 
+entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas o presione 
+[ENTER] y el sistema colocará en pantalla una caja de diálogo, en la cual aparecerán tres 
+cuadros en los que se especifican los tipos de bloqueo, presionando [TAB] se cambia entre los 
+cuadros, si selecciona Por Número de Cifras por medio de las teclas del cursor seleccione la 
+cifra con que empieza la numeración y digite el número de la  cantidad de cifras a la  que se 
+debe bloquear la marcación. O seleccione por medio de [TAB] la opción  Por Cifras y por 
+medio de las teclas del cursor seleccione la cifra con que empieza la numeración y presione 
+[ENTER], para programar y quede marcada con una X o si estaba programada 
+desprogramarla. O seleccione por medio de [TAB] la opción Locales y Otras y digite la 
+numeración a bloquear, luego presione [TAB] y seleccione el botón de Aceptar, presione 
+[ENTER] para ejecutar la acción ó presione [TAB] y seleccione el botón de Cancelar y 
+presione [ENTER] para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_MANUAL
+Servicio de Impresión de Recibos Manual
+Sólo es activo cuando el sistema está trabajando en operación de impresión de recibos manual, 
+muy importante porque brinda la posibilidad de verificar antes de imprimir la información de 
+una cabina.\
+\
+Procedimiento:\
+En el momento de requerir este servicio, ubíquese en la Barra de Herramientas y por medio de 
+las teclas del cursor seleccione el icono de la herramienta Cabina, si observa en la parte inferior 
+izquierda de la pantalla, el sistema le indicará el nombre de la herramienta que está en el 
+momento seleccionada. Presione [ENTER] en la opción deseada y el sistema colocará en 
+pantalla una caja de diálogo en la cual aparecerá una área con toda la información de cabina; 
+número de Llamadas y Total; el cursor por defecto estará en Recibido en el área de Totales, 
+esto permitirá digitar si desea el valor del dinero recibido y presionando [ENTER] obtener el 
+valor de dinero a devolver en Devuelta; luego de verificar que todo está bien presione [TAB] 
+para seleccionar el botón de Imprimir y presione [ENTER], para ejecutar la acción o presione 
+[TAB] hasta seleccionar el botón de Cancelar, si sólo deseaba verificar la información y 
+presione [ENTER] para volver a la Barra de Herramientas.\
+ Nota:\
+Si está autorizado y se le presenta la necesidad de colocar recibos con atributos de no cobro 
+NC ó pago revertido PR; Antes de pasar a imprimir. Presione [TAB] y ubíquese en la área de 
+información de las llamadas realizadas en la cabina en los cuadros de NC ó PR y por medio de 
+las teclas del cursor seleccione la llamada a la que desea darle el atributo y presione [ENTER], 
+en NC ó PR observe que el cuadro queda seleccionado por una X y el total es alterado, luego 
+presione [TAB] hasta llegar a lo que desee.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3].  
+--- H_MD
+Acerca de MicroDiseño Ltda.
+Aquí usted encontrara los números telefónicos, el número de fax y la dirección de MicroDiseño 
+en caso de solicitar algún tipo de Información.\
+Procedimiento:\
+en el momento de requerir este servicio, ubíquese en la Barra de Herramientas y por medio de 
+las teclas del cursor seleccione el icono de la herramienta Acerca de MicroDiseño Ltda., si 
+observa en la parte inferior izquierda de la pantalla, el sistema le indicará el nombre de la 
+herramienta que está en el momento seleccionada. Presione [ENTER] en la opción deseada y el 
+sistema colocará en pantalla una caja de diálogo en la cual aparecerá toda la información acerca 
+de MicroDiseño Ltda. Después de leer la información necesaria presione [ENTER] y al estar 
+seleccionado el botón Aceptar el sistema cerrará la caja de diálogo y volverá a la Barra de 
+Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3] Cancelando la acción.
+--- H_NAL_TAR
+Tarifas Nacionales
+Se utiliza para programar el valor de las Tarifas Nacionales, desde la tarifa cero (0) hasta la 
+quince (15), la tarifa cero (0) aparecerá para las localidades no incluidas dentro de los arboles 
+de numeración del sistema, o cuando se establecen comunicaciones a servicios de pago 
+revertido. Además se puede programar Reducidas, si se utiliza horario de tarifas reducidas y es 
+posible programar el Impuesto al Valor Agregado (IVA).\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Configuración, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en 
+la cual aparecerá la información de todos los servicios prestados en este menú. Por medio de 
+las teclas del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó 
+entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas o presione 
+[ENTER] y el sistema colocará en pantalla una caja de diálogo, en la cual aparecerán por 
+defecto estará relacionada la opción de Plenas, en la cual por medio de las teclas del cursor se 
+seleccionara la tarifa  a programar y digite el número, luego por medio de las teclas del cursor 
+pase al cuadro adyacente en el cual se programará si a esa tarifa se le adicionara el IVA, esto se 
+hace presionando [ENTER] sobre el cuadro, el cual quedará marcado con una x, presione 
+[TAB] y pase a Reducidas ahora por medio de las teclas del cursor ubíquese en Día Ordinario 
+o Sábado - Domingo o Festivo, en los cuales podrá digitar los horarios y los porcentajes de 
+cobro, para las tarifas reducidas; presione [TAB] y pasará a IVA en la cual se digitará el valor 
+del Impuesto al Valor Agregado IVA que se cobrara a las tarifas nacionales, luego presione 
+[TAB] y seleccione el botón de Aceptar, presione [ENTER] para ejecutar la acción ó presione 
+[TAB] y seleccione el botón de Cancelar y presione [ENTER] para volver a la Barra de 
+Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_NEW_CITY
+Nuevas Localidades Nacionales
+Mediante esta opción podremos adicionar al árbol de numeración, cualquier nueva localidad 
+que sea incorporada al sistema Discado Directo Nacional (DDN), o modificar cualquier 
+localidad las existentes.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Configuración, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en 
+la cual aparecerá la información de todos los servicios prestados en este menú. Por medio de 
+las teclas del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó 
+entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas o presione 
+[ENTER] y el sistema colocará en pantalla una caja de diálogo, en la cual se programarán los 
+datos para actualizar la información del árbol de numeración, el cursor por defecto estará en 
+Localidad en esta se digitará el nombre de la localidad, el máximo número de caracteres para 
+identificar la localidad es de veinte (20), incluyendo los espacios en blanco. Por medio de las 
+teclas del cursor pase a Tarifa, en la cual se digitará la banda tarifaría a que pertenece la 
+localidad. pase a seleccionar Numeración por medio de las teclas del cursor digite la 
+numeración correspondiente a la localidad, teniendo en cuenta que el sistema interpreta el 
+guión - como Hasta , y la coma , como Y.\
+Ejemplo
+Localidad:  Sincelejo(Suc)\
+Tarifa:  5\
+Numeración:  952800-952802,952805,952806,952820-952826\
+Presione [TAB] y seleccione el botón de Adicionar, presione [ENTER] para ejecutar la acción 
+ó presione [TAB] y seleccione el botón de Cancelar y presione [ENTER] para volver a la Barra 
+de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_NEW_COUNTRY
+Nuevos Países
+Mediante esta opción podremos adicionar al árbol de numeración, cualquier nuevo país que sea 
+incorporada al sistema Discado Directo Internacional (DDI), o modificar cualquier país ya 
+existentes.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Configuración, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en 
+la cual aparecerá la información de todos los servicios prestados en este menú. Por medio de 
+las teclas del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó 
+entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas o presione 
+[ENTER] y el sistema colocará en pantalla una caja de diálogo, en la cual se programarán los 
+datos para actualizar la información del árbol de numeración, el cursor por defecto estará en 
+País en el cual se digitará el nombre del país, el máximo número de caracteres para identificar el 
+país es de veinte (20), incluyendo los espacios en blanco. Por medio de las teclas del cursor 
+pase a Tarifa, en la cual se digitará la banda tarifaría a que pertenece el país, pase a seleccionar 
+Numeración por medio de las teclas del cursor digite la numeración correspondiente al país, 
+teniendo en cuenta que el sistema interpreta el guión - como Hasta , y la coma , como Y.\
+Ejemplo:\
+Localidad: Trinidad Tobago\
+Tarifa:  8\
+Numeración: 90180962-90180967,90180968\
+Presione [TAB] y seleccione el botón de Adicionar, presione [ENTER] para ejecutar la acción 
+ó presione [TAB] y seleccione el botón de Cancelar y presione [ENTER] para volver a la Barra 
+de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_OP_ID
+Identificación del Operario
+Se utiliza para colocar el nombre del operador(a) que empieza turno para que en el acumulado 
+de turno se actualice el nombre de la persona encargada.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Información, luego 
+presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en la cual 
+aparecerá la información de todos los servicios prestados en este menú. Por medio de las teclas 
+del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó entró en el 
+menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas o presione [ENTER] 
+y el sistema colocará en pantalla una caja de diálogo, en la cual se programará el nombre de 
+oprerador(a) que inicia el nuevo turno, el cursor por defecto estará en Titulo, por medio de las 
+teclas del cursor se seleccionara el titulo del operador(a) encargado, presione [TAB] y pase 
+Nombre, no se preocupe en borrar el nombre anterior, solamente digite su nombre. Presione 
+[TAB] y seleccione el botón de Aceptar, presione [ENTER] para ejecutar la acción ó presione 
+[TAB] y seleccione el botón de Cancelar y presione [ENTER] para volver a la Barra de 
+Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_OPERATION
+Operación de Impresión de recibos
+El sistema permite, la impresión de recibos de dos formas.\
+Automática.\
+El sistema en  este modo de trabajo, no almacena información en una cabina de mas de una 
+llamada; ósea en el momento de terminar la comunicación (Cuelgue) el equipo 
+automáticamente imprime el recibo correspondiente.\
+Manual.\
+El sistema en este modo de trabajo permite el almacenamiento de información en cabina, 
+permitiendo así que el sistema totalice el valor en dinero del número de llamadas hechas por un 
+sólo usuario; y el recibo total será impreso solamente cuando el operador(a) lo necesite.    
+\
+Procedimiento:\
+En el momento de requerir este servicio, ubíquese en la Barra de Herramientas y por medio de 
+las teclas del cursor seleccione el icono de la herramienta Operación Manual/Automática de 
+tarificación, si observa en la parte inferior izquierda de la pantalla, el sistema le indicará el 
+nombre de la herramienta que está en el momento seleccionada. Presione [ENTER] en la 
+opción deseada y el sistema colocará en pantalla una caja de diálogo en la cual por medio de las 
+teclas del cursor se podrá seleccionar la operación de impresión de recibos Automática ó 
+Manual, luego presione [TAB] y seleccione el botón de Aceptar, presione [ENTER] para 
+ejecutar la acción ó presione [TAB] y seleccione el botón de Cancelar y presione [ENTER] 
+para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3].
+--- H_P_PORT
+Puerto Paralelo
+En este se puede seleccionar, el puerto que va trabajar del computador el Puerto paralelo 1  
+LPT1 o el puerto paralelo LPT2.
+--- H_PASSWORD
+Activar Menú de Configuración.
+Se utiliza para dar acceso al menú de configuración.\
+El menú de configuración se encuentra siempre desactivado para evitar el acceso a particulares 
+ajenos, evitando la manipulación indebida del sistema para bien propio, por lo cual hay que 
+activarlo primero en el menú de información con el código de acceso que lo deben tener las 
+personas que están a cargo del mantenimiento del sistema.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Información, luego 
+presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en la cual 
+aparecerá la información de todos los servicios prestados en este menú. Por medio de las teclas 
+del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó entró en el 
+menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas o presione [ENTER] 
+y el sistema colocará en pantalla una caja de diálogo, en la cual se programará el número de 
+errores posibles de intentos para hacer una llamada antes de generar una alarma. En el área de 
+Número de errores se podrá seleccionar por medio de las teclas del cursor las opciones  De 
+Comunicación o De Marcación en las cuales se digitará el número a que se debe activar la 
+alarma. Presione  [TAB] y seleccione el botón de Aceptar, presione [ENTER] para ejecutar la 
+acción ó presione [TAB] y seleccione el botón de Cancelar y presione [ENTER] para volver a 
+la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_PPORT
+Puerto de Impresora
+El sistema permite manejar impresoras seriales como paralelas. Dependiendo del tipo de 
+impresora que se va utilizar se seleccionara a que puerto al que irá la conexión de la 
+impresora.\
+Además el sistema permite la configuración del puerto seleccionado.\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio de las teclas del cursor seleccione el menú Configuración, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en 
+la cual aparecerá la información de todos los servicios prestados en este menú. Por medio de 
+las teclas del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó 
+entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas o presione 
+[ENTER] y el sistema colocará en pantalla una caja de diálogo, en la cual por medio de las 
+teclas del cursor se podrá seleccionar dependiendo de la impresora la conexión a que va ir en el 
+computador Puerto Paralelo o Puerto Serie Presione [TAB] y pase a el botón de Opciones en 
+el cual se presionara [ENTER] si se necesita configurar el puerto seleccionado o omitirlo 
+presionando [TAB] y seleccione el botón de Aceptar, presione [ENTER] para ejecutar la 
+acción ó presione [TAB] y seleccione el botón de Cancelar y presione [ENTER] para volver a 
+la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_PRINT_MENU
+Menú de Impresión del Sistema
+Este menú agrupa todos los servicios que estén relacionados con la impresión.\
+el menú esta compuesto por:\
+Acumulados de Turno\
+Acumulados Especiales\
+Recibos de turno.\
+Recibos de otro turnos.\
+Impresión Zonal.\
+Impresión Internacional.\
+Manejo de Recibos.\
+Mensaje de Recibos.\
+\
+Procedimiento para obtener ayuda de los parámetros anteriores:\
+en el momento de requerir información de alguno de los parámetros que se encuentran en este 
+menú, primero ubíquese el la Barra de Menús presionando [ALT] y por medio de las teclas del 
+cursor seleccione el menú de Impresión luego presione [ENTER] el sistema colocará en 
+pantalla una caja de diálogo descolgable en la cual estarán todos los parámetros. si no necesita 
+ningún servicio, ó entró en el menú por curiosidad, presione [F3] y volverá a la Barra de 
+Herramientas. Por medio de las teclas del cursor seleccione el servicio del cual necesita 
+información y presione [ENTER] el sistema colocará en pantalla una caja de diálogo en la cual 
+estará la información del servicio, presione [F1] y obtendrá la información y la forma utilización 
+del servicio; para cancelar o cerrar la caja de diálogo que tiene la ayuda presione [F3], y para 
+cerrar la caja de diálogo que tienen los dato para programar el parámetro, presione [TAB] 
+hasta llegar a el botón de Cancelar, luego presione [ENTER] para volver a la Barra de 
+Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3].
+--- H_QUIT
+Salir de SmartTar
+Utilícelo si ha terminado la sección de trabajo y el equipo será apagado, asegurase de que todas 
+las cabinas estén libres, y no haya ninguna operación pendiente por realizar como impresión y 
+borrado de acumulados de turno.\
+Nota:\
+Importante no apague el equipo cuando este en el funcionamiento normal, por favor utilice esta 
+herramienta para terminar la sección de trabajo y así corroborar con el funcionamiento normal 
+del sistema , al ejecutar esta opción en la pantalla debe quedar el prompt del MS-DOS C:\>, y 
+luego proceda con apagar el equipo.\
+\
+Procedimiento:\
+en el momento de requerir este servicio, ubíquese en la Barra de Herramientas y por medio de 
+las teclas del cursor seleccione el icono de la herramienta Salir del SmartTar, si observa en la 
+parte inferior izquierda de la pantalla, el sistema le indicará el nombre de la herramienta que 
+está en el momento seleccionada. Presione [ENTER] en la opción deseada y el sistema 
+colocará en pantalla una caja de diálogo en la cual se podrá seleccionar por medio de [TAB] el 
+botón Si y presionar [ENTER] para ejecutar la acción ó presione [TAB] para seleccionar No y 
+presione [ENTER] para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3] cancelando la acción.
+--- H_RECEIPT
+Impresión de Recibos
+Se utiliza para la manipulación de los recibos generados en tres categorías:\
+No Impresos y No Pagados.\
+Se Utilizará en casos en que por fallas en la impresora ó falta de papel, no se puede imprimir y 
+además no es cancelado el valor del recibo. Este servicio permite que al restablecerse el 
+servicio de impresión, y cancelen el valor del recibo; el sistema permitirá buscar el recibo e 
+imprimirlo a la vez pagarlo si lo cancelan, para adicionarlo a acumulado de turno.\
+No impresos y Pagados.\
+Se utilizará en casos en que por fallas de la impresora ó falta de papel, no se pueda imprimir los 
+recibos; pero estos son cancelados por el usuario. Este servicio permite que al restablecerse el 
+servicio de impresión el sistema permitirá buscar el recibo e imprimirlo.\
+Impresos.\
+Se utiliza para sacar una copia de un recibo, que este dentro del  acumulado de turno actual, 
+por necesidad de un cliente o por fallas en el momento de imprimir.\
+\
+Procedimiento:\
+en el momento de requerir este servicio, ubíquese en la Barra de Herramientas y por medio de 
+las teclas del cursor seleccione el icono de la herramienta Imprimir Recibos , si observa en la 
+parte inferior izquierda de la pantalla, el sistema le indicará el nombre de la herramienta que 
+está en el momento seleccionada. Presione [ENTER] en la opción deseada y el sistema 
+colocará en pantalla una caja de diálogo en la cual se podrá seleccionar, por medio de las teclas 
+del cursor  el tipo de recibo a imprimir, presione [TAB] , el cursor pasará  a Cabina o Recibo 
+dependiendo del tipo de recibo seleccionado, digite el número de la cabina o el del recibo a 
+imprimir. Presione [ENTER] y el equipo colocará en pantalla una lista de recibos, presione 
+[TAB] y pase a seleccionar los recibos que desee, presione [TAB] y dependiendo del recibo 
+seleccione Pagar o Imprimir presione [ENTER] para confirmar la acción.\
+Si desea puede pasar por medio de presionar [TAB] a Seleccionar Todo luego presionar 
+[ENTER] , lo cual selecciona todos los recibos que estén en pantalla, o presionar [TAB] y 
+seleccionar Imprimir Turno, y presionar [ENTER], con esta opción serán impresos todos los 
+recibos del turno ordenados por cabinas.\
+presione nuevamente [TAB] y seleccione el botón de Cancelar y presione [ENTER] para 
+confirmar la acción y volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3]
+--- H_ROUND
+Redondeo del Valor de la Factura
+El sistema permite seleccionar el valor al cual se redondeará el total de la factura para facilitar 
+la devolución de dinero al usuario, según la existencia de la menor denominación de monedas, 
+el sistema presenta cinco alternativas posibles.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Configuración, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en 
+la cual aparecerá la información de todos los servicios prestados en este menú. Por medio de 
+las teclas del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó 
+entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas o presione 
+[ENTER] y el sistema colocará en pantalla una caja de diálogo, en la cual por medio de las 
+teclas del cursor se podrá seleccionar dependiendo de la existencia de la menor denominación 
+de monedas el valor que el sistema utilizará para redondear el valor de una llamada. Presione 
+[TAB] y seleccione el botón de Aceptar, presione [ENTER] para ejecutar la acción ó presione 
+[TAB] y seleccione el botón de Cancelar y presione [ENTER] para volver a la Barra de 
+Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_S_PORT
+Puerto Serie
+En este se puede seleccionar, el puerto que va trabajar del computador el Puerto de 
+Comunicación 1 COM1  o el puerto de comunicación 2 COM2, y a su vez se puede programar 
+el protocolo de comunicación dentro del cual esta:\
+Velocidad:\
+Velocidad de transmisión de datos del computador a la impresora.\
+Bits:\
+Cantidad bits por palabra.\
+Paridad:\
+Método para identificar que el dato recibido es igual al trasmitido.\
+Bits de parada:\
+Para identificar el inicio y el termino de una palabra.                                                                                                                                                                                                                
+--- H_SACCUM
+Acumulados especiales
+Se utiliza para imprimir el acumulado diario, semanal, mensual o anual muy utilizado para hacer 
+estadísticas del trabajo y productividad que se esta desempeñando en el kiosco.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Información, luego 
+presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en la cual 
+aparecerá la información de todos los servicios prestados en este menú. Por medio de las teclas 
+del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó entró en el 
+menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas o presione [ENTER] 
+y el sistema colocará en pantalla una caja de diálogo, en la cual por medio de la teclas del 
+cursor se podrá seleccionar el acumulado especial deseado Diario, Semanal, Mensual o Anual. 
+Presione  [TAB] y seleccione el botón de Imprimir, presione [ENTER] para ejecutar la acción 
+ó presione [TAB] y seleccione el botón de Cancelar y presione [ENTER] para volver a la Barra 
+de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo de Acumulados Especiales 
+presione en cualquier momento [F3].  
+--- H_SDAYS
+Días Festivos
+Sí usted utiliza la reducción de tarifas en días festivos, en esta opción el sistema le permitirá 
+programar los días festivos hasta dos años apartir de la fecha actual.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Configuración, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en 
+la cual aparecerá la información de todos los servicios prestados en este menú, si no necesita un 
+servicio, ó entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas 
+ó por medio de las teclas del cursor seleccionar Días Festivos y luego presionar [ENTER], el 
+sistema colocará en pantalla una caja de diálogo en la cual aparecerá un calendario del mes 
+correspondiente al de la fecha actualizada del sistema en el cual en Día se digitará el número 
+del día al que se desea adicionar o eliminar como festivo, por medio de las teclas del cursor 
+pase a Adicionar y presione [ENTER] para incluirlo como día festivo el número se resaltara en 
+color blanco para indicar que está seleccionado, pase a Eliminar y presione [ENTER], para 
+ejecutar la acción, después de seleccionar o eliminar todos los días necesarios del mes actual, 
+puede pasar a Mes Siguiente o Mes Anterior en los cuales se podrá hacer el mismo 
+procedimiento, Presione las teclas del cursor para seleccionar el botón de Aceptar y presione 
+[ENTER] para ejecutar la acción ó presione [TAB] y seleccione el botón de Cancelar y 
+presione [ENTER] para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual esta trabajando Días 
+Festivos presione en cualquier momento [F3].
+--- H_SETUP
+Configuración de SmartTar
+El Sistema SmartTar en las versiones 2.0 y posteriores tienen una forma diferente de manejar la 
+información, para lograr así una mayor eficiencia y tener la certeza de que, los archivos que 
+contienen la información de la  configuración del sistema y los arboles de numeración 
+solamente puedan ser modificados por personal autorizado.
+Los archivos tienen dos funciones:\
+1. Entorno para el usuario en el cual se pueden observar y modificar los archivos.\
+2. Estos mismos archivos convertidos a un formato diferente para así trabajar con el sistema.\
+El proceso consiste en que el usuario modifica todo lo necesario en los archivos de entorno de 
+usuario. Pero para que el sistema los asuma, es necesario ejecutar el archivo SETUP.EXE el 
+cual permite convertir los archivos de entorno del usuario en archivos de entorno del sistema y 
+viceversa. Ósea los archivos que están en el momento trabajando en el sistema convertirlos a 
+entorno del usuario y así modificar lo que esta actualmente trabajando.\
+Entorno usuario.    Entorno Sistema.\
+-Reconstruir bases de datos.\
+Solamente utilícelo cuando se determine que tiene problemas o alteraciones con los 
+acumulados; este le hará una nueva sumatoria del los acumulados.\
+\
+Procedimiento:\
+Presione [TAB] para cambiarce entre las diferentes opciones y para ejecutar la opción presione 
+[ENTER].\
+Para cerrar esta caja de diálogo y salir presione en cualquier momento [F3].
+--- H_SIGNAL
+Señal de Contestación
+Dependiendo de la central que se utilice, la señal para indicar que el abonado B ha contestado 
+puede ser:\
+Por Inversión:\
+esta pude ser Permanente ó Pulsada.
+Por Hilo C.\
+esta puede ser a Tierra ó a - 48 Voltios.\
+Por Tonos.\
+También se puede presentar que la central no tenga ó no dispone de señal de contestación, el 
+sistema permite la opción Por Tiempo en la cual se programa el tiempo para que después de 
+descolgado el teléfono el equipo empiece a tarificar habiendo o no establecido comunicación el 
+usuario.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Configuración, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en 
+la cual aparecerá la información de todos los servicios prestados en este menú, si no necesita un 
+servicio, ó entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas 
+ó por medio de las teclas del cursor seleccionar Señal de Contestación y luego presionar 
+[ENTER], el sistema colocará en pantalla una caja de diálogo en la cual por medio de las teclas 
+del cursor se podrá seleccionar el tipo de señal de contestación que le provee la central o la 
+opción Por Tiempo, presione [TAB] y pase al cuadro adyacente en el cual podrá colocar los 
+datos dependiendo de la opción seleccionada anteriormente. Luego presione [TAB] y 
+seleccione el botón de Aceptar, presione [ENTER] para ejecutar la acción ó presione [TAB] y 
+seleccione el botón de Cancelar y presione [ENTER] para volver a la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual estaba trabajando Señal 
+de Contestación presione en cualquier momento [F3].
+--- H_SIMULA
+Simulación de Llamadas
+Se utiliza para hacer llamadas ficticias, muy utilizado para hacer pruebas del sistema tales como 
+averiguar si esta bloqueando ciertos números telefónicos, comprobar que el acumulado si este 
+funcionando, comprobar los recibos al momento de imprimirlos o puede ser utilizado como un 
+tutor para enseñarle a alguien el comportamiento del sistema durante una llamada.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Configuración, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en 
+la cual aparecerá la información de todos los servicios prestados en este menú. Por medio de 
+las teclas del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó 
+entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas o presione 
+[ENTER] y el sistema colocará en pantalla una caja de diálogo, en la cual en el área de Datos 
+se podrá seleccionar por medio de las teclas del cursor Cabina en la cual se digitará el número 
+de la cabina en la cual se va hacer la simulación. Luego seleccione Teléfono y digite el número 
+telefónico. Antes de iniciar la simulación presionando [TAB] el cursor pasará el área de 
+Generar, en la cual usted puede seleccionar por medio de las teclas del cursor Recibos o 
+Acumulados estos por defecto están habilitados por una X, si se desea deshabilitar solamente 
+ubíquese en el que quiere deshabilitar y presione [ENTER], lo cual quitara la X que lo 
+marcaba. Si no desea modificar esta parte de la opción ubíquese por medio de [TAB] en el área 
+de datos y seleccione Comunicar y presione [ENTER] lo cual iniciara la simulación, para 
+terminar con la llamada seleccione Colgar y presione [ENTER]. Para cerrar este servicio 
+presione [TAB], hasta llegar al botón de Cancelar y presione [ENTER] para volver a la Barra 
+de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_SP_SERV
+Servicios Especiales
+Se utiliza para generar recibos que no estén en relación directa con el servicio automático de 
+tarificación.\
+\
+Procedimiento:\
+En el momento de requerir este servicio, ubíquese en la Barra de Herramientas y por medio de 
+las teclas del cursor seleccione el icono de la herramienta Servicios Especiales , si observa en la 
+parte inferior izquierda de la pantalla, el sistema le indicará el nombre de la herramienta que 
+está en el momento seleccionada. Presione [ENTER] en la opción deseada y el sistema 
+colocará en pantalla una caja de diálogo en la cual  aparecerá una cuadro donde están los 
+servicios disponible los cuáles se seleccionaran por medio de las teclas del cursor; en el cuadro 
+adyacente aparece la información requerida para generar el recibo del servicio seleccionado, 
+para pasar al cuadro de los datos del recibo presione [TAB] y digite la información requerida, 
+desplácese con las teclas del cursor. Para imprimir presione [TAB] y seleccione el botón 
+Imprimir presione [ENTER] para ejecutar la acción, el cursor pasará automáticamente a la 
+opción de Cancelar, si necesita hacer otro recibo presione [TAB] y seleccione el servicio 
+deseado si no necesita generar más servicios especiales seleccione por medio de [TAB]  el 
+botón Cancelar y presione [ENTER] para volver a la Barra de Herramientas.\
+Los servicios disponibles son:\
+\
+Telefonía:\
+Se utilizará para servicios en forma manual usualmente en las llamadas de transito y espera 
+citas, o en el caso por ejemplo de no recibir señal de contestación y el usuario confirma haber 
+usado el servicio.\
+Los datos que se requiere entrar son: el número de la cabina, el número telefónico marcado 
+completo, la localidad, el tiempo de conversación y la tarifa correspondiente  con lo cual se 
+generará el valor total.\
+\
+Telegrafía:\
+Se utilizará para generar el recibo de cobro del servicio de telegrama.\
+Los datos que se requiere entrar son el Nombre de la localidad a donde se transmitirá el 
+telegrama, el número de palabras del mismo y la tarifa por palabra. El sistema le adicionara el 
+valor del reparto.\
+\
+Tarjetas Magnéticas:\
+Se utilizará para la venta de tarjetas magnéticas de uso telefónico.\
+Los datos que se requiere entrar son sólo la cantidad de tarjetas de un mismo valor.\
+Fax:\
+Se utilizará para generar el recibo de cobro para el servicio de Fax.\
+Los datos que se requiere entrar son: el número completo del facsímil a donde se transmitirá o 
+el nombre de la localidad, el número de páginas y la tarifa respectiva por página.\
+\
+Otros:\
+Se utilizará para generar el recibo para el cobro de algún otro tipo de servicio no contemplado 
+en los anteriores.\
+Los datos que se requiere entrar son: el motivo del servicio, la cantidad y el valor unitario.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3].   
+--- H_SPY
+Intervenir Cabina
+El sistema provee un teléfono de operador(a) el cual puede utilizarce como un teléfono normal  
+y a vez puede colocarce en paralelo con cualquiera de las cabinas por medio de la Intervención 
+de Cabina el sistema permite la dos tipos de intervención  
+Línea Interna.\
+Al seleccionar Línea Interna el sistema coloca el teléfono de operador(a) en paralelo con la 
+cabina seleccionada y bloquea la Línea Externa si hay.\
+Este servicio puede servir para marcarle a personas que tengan dificultades para utilizar el 
+sistema automático ó para Chequear la calidad de la línea telefónica seleccionada.\
+Línea Externa.\
+Muy utilizada para Llamadas de Transito y Espera  ó Citas es la operación contraía de la Línea 
+Interna, al utilizar este servicio el sistema bloquea la línea de la cabina seleccionada y coloca en 
+paralelo la comunicación que se encuentra establecida en el teléfono del operador(a); como su 
+nombre indica la comunicaciones establecidas en esta opción no son traficadas por el sistema.\
+Notas:\
+-Para cancelar la intervención de un cabina se selecciona en número de Cabina Cero, la cual no 
+existe permitiendo así dejar libres todas la cabinas. 
+-Sólo se puede intervenir una cabina al tiempo.
+\
+Procedimiento:\
+en el momento de requerir este servicio, ubíquese en la Barra de Herramientas y por medio de 
+las teclas del cursor seleccione el icono de la herramienta Intervenir / Liberar cabinas, si 
+observa en la parte inferior izquierda de la pantalla, el sistema le indicará el nombre de la 
+herramienta que está en el momento seleccionada. Presione [ENTER] en la opción deseada y el 
+sistema colocará en pantalla una caja de diálogo en la cual se puede seleccionar el tipo de 
+intervención Línea Interna ó Línea Externa por medio de las teclas del cursor. Luego se 
+presiona [TAB] para ubicarce en Cabina, donde se digitará el número de la cabina a intervenir, 
+presione [TAB] para ubicarce en el botón de Aceptar, presione [ENTER] para ejecutar la 
+acción ó presione [TAB] y seleccione el botón de Cancelar y presione [ENTER] para volver a 
+la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la Barra de Herramientas presione en cualquier 
+momento [F3].   
+--- H_SYS_INFO
+Configuración General del Sistema
+Es muy útil porque el se halla la información de como esta configurado el sistema, lo cual da un 
+apoyo para un rápido mantenimiento.\
+En el solamente se puede observar la información, el sistema no permite la modificación de 
+ningún parámetro.\
+Si después de observar la información necesita modificar algún parámetro de la configuración 
+del sistema, active el menú de configuración seleccionando en este mismo menú de 
+Información, la opción Activar menú de configuración y cambiar los parámetros que se necesite 
+en dicho menú.\
+\
+Para cerrar la caja de diálogo Configuración General del Sistema, presione [ENTER] o [F3] en 
+cualquier momento.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_TIME_DATE
+Hora y Fecha
+Mediante esta opción se puede cambiar la hora y la fecha para la operación del sistema.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Configuración, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en 
+la cual aparecerá la información de todos los servicios prestados en este menú, si no necesita 
+ningún servicio, ó entró en el menú por curiosidad, presione [F3] y volverá a la Barra de 
+Herramientas ó por medio de las teclas del cursor seleccionar Hora y Fecha Actual y luego 
+presionar [ENTER], el sistema colocará en pantalla una caja de diálogo en la cual se puede 
+programar:\
+Hora.\
+Para programar la Hora, utilice la notación de veinticuatro (24) horas, digite la hora y sepárela 
+de los minutos por medio de los dos puntos (:); presione [TAB] y pase a  programar la Fecha.
+Fecha.\
+Para programar la Fecha, la secuencia es digite el número del día del mes / el número del 
+correspondiente del mes en el año / y los dos últimos dígitos del año en curso; Utilice la 
+diagonal  /  para separar los datos.
+Presione [TAB] para seleccionar el botón de Aceptar y presione [ENTER] para ejecutar la 
+acción ó presione [TAB] y seleccione el botón de Cancelar y presione [ENTER] para volver a 
+la Barra de Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual esta trabajando Hora y 
+Fecha presione en cualquier momento [F3].\
+--- H_TIMES
+Tiempos de Operación
+Estos parámetros permiten la programación de los valores de los tiempos de operación para el 
+manejo de las llamadas, los parámetros son:\
+\
+De Gracia.\
+Es el tiempo que da el sistema después haber señal de contestación, para empezar a tarificar, 
+esto le permitirá identificar a usuario si la comunicación es falsa ó equivocada, teniendo así 
+tiempo para colgar el teléfono antes de que el sistema empiece a tarificar, para que no genere 
+recibo.\
+Este tiempo se puede programar desde uno (1) hasta veinte (20) segundos, por defecto se 
+utilizará  en uno (1) segundos.\
+\
+Para Marcación.\
+Es el tiempo que dispondrá el usuario para realizar la marcación completa. Al terminar este 
+tiempo, si no se ha completado la marcación, el sistema cortará el proceso de la llamada y el 
+usuario tendrá que intentar de nuevo la llamada.\
+Este tiempo se puede programar desde diez (10) hasta sesenta (60) segundos , por defecto se 
+utilizará de quince (15) segundos.\
+\
+De Cuelgue.\
+Es tiempo que se demorara el sistema en habilitar de nuevo la línea telefónica de una cabina 
+después de haber detectado un cuelgue igual o mayor a doscientos (200) milisegundos; 
+permitiendo así evitar que los cuelgues muy rápidos no los detecte el sistema.\
+Este tiempo se puede programar desde doscientos (200) hasta dos mil (2000) milisegundos, 
+por defecto se utilizará en ochocientos (800) milisegundos
+\
+Para Contestación.\
+Es el tiempo de espera que dará el sistema para que una vez terminada la marcación completa, 
+se reciba la señal de contestación, de lo contrario el sistema cortará el proceso de la llamada y 
+el usuario tendrá que intentar de nuevo la llamada.\
+Este tiempo se puede programar desde quince (15) hasta setenta (70) segundos , por defecto se 
+utilizará de veinte (20) segundos.\
+\
+De Inicio de Comunicación.\
+Es el tiempo programado cuando el sistema para empezar a tarificar es Por Tiempo. En este 
+caso es necesario programar también el tiempo Para Contestación, mayor que el De Inicio de 
+Contestación con el fin de que no se corte esta.\
+Este tiempo se puede programar desde quince (15) hasta sesenta (60) segundos , por defecto 
+se utilizará de veinticinco (25) segundos.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Configuración, 
+luego presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, , en 
+la cual aparecerá la información de todos los servicios prestados en este menú. Por medio de 
+las teclas del cursor seleccione el servicio que desee utilizar; si no necesita ningún servicio, ó 
+entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas, o presione 
+[ENTER] y el sistema colocará en pantalla una caja de diálogo en la cual aparecerá la 
+información de todos los tiempos de operación, por medio de las teclas de cursor seleccione el 
+tiempo a programar y digite el valor, entre rango determinado para dicha opción. Presione 
+[TAB] y seleccione el botón de Aceptar, presione [ENTER] para ejecutar la acción ó presione 
+[TAB] y seleccione el botón de Cancelar y presione [ENTER] para volver a la Barra de 
+Herramientas.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_VIEWER
+Visualizador de Recibos
+Este es un medio en cual se podrá ver la información de los recibos y los acumulados en el 
+tiempo; esto será de gran utilidad a nivel de auditoria . Se presentan en dos utilidades:\
+Recibos de turno.\
+Este le permitirá ver o imprimir  uno a uno las especificaciones de los recibos y el acumulado 
+de  turno vigente.\
+Recibos de otros turnos.\
+Este le permitirá ver o imprimir uno a uno las especificaciones de los recibos y los acumulados 
+de los turnos anteriores, permitiendo colocar la fecha y el número del turno deseado a 
+observar.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Impresión, luego 
+presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en la cual 
+aparecerá la información de todos los servicios prestados en este menú, si no necesita ningún 
+servicio, ó entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas 
+o por medio de las teclas del cursor seleccione el servicio que desee utilizar y presione 
+[ENTER] el sistema colocará en pantalla una caja de diálogo. Si utilizo el servicio “Recibos de 
+otros turnos” usted podrá digitar la fecha como por ejemplo 07-04-94 luego presione [TAB] y 
+podrá digitar el número del turno deseado, nuevamente presione [TAB] para pasar a “Recibo” 
+en el cual se podrá digitar el número del recibo que desee observar, presione [ENTER] para 
+que el sistema asuma los datos. Si desea ir de recibo en recibo presione [TAB] y por medio de 
+las teclas del cursor dezplasece entre los diferentes recibos; el sistema a su vez ira desplegando 
+la información de cada recibo. Si desea salir de este servicio presione [TAB] para pasar a 
+cancelar y luego presione [ENTER] o si desea imprimir el recibo seleccionado presione [TAB] 
+para pasar a “Imprimir recibo” y presione [ENTER] para ver los acumulados presione [TAB] 
+hasta pasar a la opción deseada y luego presione [ENTER].\
+Y si utilizo el servicio por “Recibos de turno” solamente digite el número del recibo y presione 
+[ENTER].\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
+--- H_ZPRINT
+Impresión Zonal
+Se utiliza para consultar o imprimir el árbol de numeración nacional o listado de las  localidades 
+nacionales con su respectiva tarifa y numeración. El listado esta organizado por zonas ejemplo: 
+si los números telefónicos empiezan con indicativo 94 se referirá a la zona 4, 91 se referirá a la 
+zona 1 y así sucesivamente o si se desean ver las abreviadas que son los números telefónicos 
+que pueden ser marcados sin indicativos, estos listados se puede ver o imprimir en orden 
+alfabético o numérico.\
+\
+Procedimiento:\
+En el momento de requerir la utilización de este servicio ubíquese en la Barra de Menús 
+presionando [ALT], y por medio delas teclas del cursor seleccione el menú Impresión, luego 
+presione [ENTER] y el sistema colocará en pantalla una caja de diálogo descolgable, en la cual 
+aparecerá la información de todos los servicios prestados en este menú, si no necesita ningún 
+servicio, ó entró en el menú por curiosidad, presione [F3] y volverá a la Barra de Herramientas 
+o por medio de las teclas del cursor seleccione el servicio que desee utilizar, presione [ENTER] 
+y el sistema colocará en pantalla una caja de diálogo, en la cual se podrá seleccionar en área de 
+datos por medio de las teclas del cursor Zona, en la cual se digitará el número de la zona que se 
+desee observar o imprimir, también se puede seleccionar Abreviadas Luego de hacer la 
+selección se presiona [ENTER] y el sistema colocará en pantalla el listado de numeración y 
+tarifas de la zona. Presione [TAB] para pasar a clase en la cual se podrá seleccionar la manera 
+de ordenación del listado por orden Alfabético o Numérico. Presione [TAB] y seleccione el 
+botón de Imprimir, presione [ENTER] para ejecutar la acción ó presione [TAB] y seleccione el 
+botón de Cancelar y presione [ENTER] para volver a la Barra de Herramientas. o presione 
+[TAB] para pasar al área de información donde por medio de las teclas del cursor podrá buscar 
+un localidad en especial, presione [TAB] hasta llegar a Cancelar o Imprimir.\
+\
+Para cerrar esta caja de diálogo y volver a la caja de diálogo en la cual se estaba trabajando 
+presione en cualquier momento [F3].
