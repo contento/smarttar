@@ -1,41 +1,27 @@
-# Prerequisites
-*.d
+# ==============================================================================
+# BC/, PHARLAP/, UTIL/, ZINC/, Documents/ are intentionally NOT listed here
+# — their contents are always tracked
+# ==============================================================================
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# ==============================================================================
+# st/ — build artifacts only
+# ==============================================================================
 
-# Precompiled Headers
-*.gch
-*.pch
+# Compiled objects
+st/**/*.obj
 
-# Linker files
-*.ilk
+# Libraries
+st/**/*.lib
 
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# DLLs
+st/**/*.dll
 
 # Executables
-*.exe
-*.out
-*.app
+st/**/*.exe
 
-# debug information files
-*.dwo
+# Linker map / debug symbols
+st/**/*.map
+st/**/*.sym
+
+# Borland IDE desktop state
+st/**/*.dsk
