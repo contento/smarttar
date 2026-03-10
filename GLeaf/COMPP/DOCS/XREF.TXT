@@ -1,0 +1,1753 @@
+
+    Function/Macro Name                       Source File   Example    Status
+--------------------------------------------  ------------  ------- -------------
+LibMain                                       DLL16.CPP
+WEP                                           DLL16.CPP
+UT16Init                                      DLL16.CPP
+_TranslateWindowsErrorCode                    DLL16.CPP
+_Open                                         DLL16.CPP
+_Close                                        DLL16.CPP
+_GetBufferInfo                                DLL16.CPP
+_NewLinkSize                                  DLL16.CPP
+_SetHandShake                                 DLL16.CPP
+_GetHandShake                                 DLL16.CPP
+_LineBreak                                    DLL16.CPP
+_LineControl                                  DLL16.CPP
+_SetDataFormat                                DLL16.CPP
+_GetDataFormat                                DLL16.CPP
+_PutChar                                      DLL16.CPP
+_PutBuffer                                    DLL16.CPP
+_GetChar                                      DLL16.CPP
+_GetBuffer                                    DLL16.CPP
+_Flush                                        DLL16.CPP
+_UpdateLineStatus                             DLL16.CPP
+_ClearLink                                    DLL16.CPP
+_DumpLine0                                    DLL16.CPP
+_DumpLine1                                    DLL16.CPP
+_DumpLine2                                    DLL16.CPP
+_DumpLine3                                    DLL16.CPP
+_DumpLine4                                    DLL16.CPP
+_DumpLine5                                    DLL16.CPP
+_ReportLinkStatus                             DLL16.CPP
+UT16Proc                                      DLL16.CPP
+GFI8250::GFI8250                              8250_386.CPP  008     public
+GFI8250::GFI8250                              8250_386.CPP  008     public
+GFI8250::~GFI8250                             8250_386.CPP  008     public
+GFI8250::Initialize                           8250_386.CPP          protected
+GFI8250::Open                                 8250_386.CPP          protected
+GFI8250::Close                                8250_386.CPP          protected
+GFI8250::BlockingOn                           8250_386.CPP          protected
+GFI8250::BlockingOff                          8250_386.CPP          protected
+GFI8250::ParityIs                             8250_386.CPP          protected
+GFI8250::PutChar                              8250_386.CPP          protected
+GFI8250::PutString                            8250_386.CPP          protected
+GFI8250::PutBuffer                            8250_386.CPP          protected
+GFI8250::PutImm                               8250_386.CPP          protected
+GFI8250::GetChar                              8250_386.CPP          protected
+GFI8250::GetBuffer                            8250_386.CPP          protected
+GFI8250::Read                                 8250_386.CPP          protected
+GFI8250::Write                                8250_386.CPP          protected
+GFI8250::ClearInt                             8250_386.CPP          protected
+GFI8250::SetBaudRate                          8250_386.CPP          protected
+GFI8250::GetBaudRate                          8250_386.CPP          protected
+GFI8250::NewLinkSize                          8250_386.CPP          protected
+GFI8250::GetBufferInfo                        8250_386.CPP          protected
+GFI8250::SetHandShake                         8250_386.CPP          protected
+GFI8250::GetHandShake                         8250_386.CPP          protected
+GFI8250::IsIrqLine                            8250_386.CPP          protected
+GFI8250::ClearLink                            8250_386.CPP          protected
+GFI8250::Flush(void)                          8250_386.CPP          protected
+GFI8250::Set16550TriggerLevel                 8250_386.CPP  009     public
+GFI8250::SystemIdle                           8250_386.CPP  004     protected
+GFI8250::ReportLinkStatus                     8250R386.CPP          protected
+_gf_pokec32                                   BC386.CPP
+_gf_pokevid32                                 BC386.CPP
+_gf_peekc32                                   BC386.CPP
+_FarMemSet                                    BC386.CPP
+_CopyToFarMem                                 BC386.CPP
+_CopyFromFarMem                               BC386.CPP
+_GetCs                                        BC386.CPP
+_GetDs                                        BC386.CPP
+_AllocateDosMemory                            DPMI386.CPP
+_FreeDosMemory                                DPMI386.CPP
+_GetDosSelector                               DPMI386.CPP
+_GetRealAddress                               DPMI386.CPP
+_GetOldProtHandler                            DPMI386.CPP
+_GetOldRealHandler                            DPMI386.CPP
+_SetHandlers                                  DPMI386.CPP
+_LockRegion                                   DPMI386.CPP
+GFDOSFileEngine::GFDOSFileEngine              FILED386.CPP          public
+GFDOSFileEngine::~GFDOSFileEngine             FILED386.CPP          public
+GFDOSFileEngine::SetTimeDate                  FILED386.CPP          public
+GFDOSFileEngine::GetTimeDate                  FILED386.CPP          public
+GFDOSFileEngine::FindFirst                    FILED386.CPP          public
+GFDOSFileEngine::FindNext                     FILED386.CPP          public
+GFWin32FileEngine::GFWin32FileEngine          FILEW386.CPP          public
+GFWin32FileEngine::~GFWin32FileEngine         FILEW386.CPP          public
+GFWin32FileEngine::Initialize                 FILEW386.CPP          public
+GFWin32FileEngine::Open                       FILEW386.CPP          public
+GFWin32FileEngine::Close                      FILEW386.CPP          public
+GFWin32FileEngine::SetCurrentPosition         FILEW386.CPP          public
+GFWin32FileEngine::GetCurrentPosition         FILEW386.CPP          public
+GFWin32FileEngine::SetTimeDate                FILEW386.CPP          public
+GFWin32FileEngine::GetTimeDate                FILEW386.CPP          public
+GFWin32FileEngine::GetLength                  FILEW386.CPP          public
+GFWin32FileEngine::GetNextName                FILEW386.CPP          public
+GFWin32FileEngine::PutBuffer                  FILEW386.CPP          public
+GFWin32FileEngine::GetBuffer                  FILEW386.CPP          public
+GFWin32FileEngine::GetChar                    FILEW386.CPP          public
+GFWin32FileEngine::PutChar                    FILEW386.CPP          public
+GFWin32FileEngine::Flush                      FILEW386.CPP          public
+GFWin32FileEngine::GetNextWildName            FILEW386.CPP          public
+GFWin32FileEngine::FindFirst                  FILEW386.CPP          public
+GFWin32FileEngine::FindNext                   FILEW386.CPP          public
+IsMicroChannelBus                             ISMIC386.CPP  098
+kbd_int_handler                               KBD386.CPP
+exit_function                                 KBD386.CPP
+hook_break                                    KBD386.CPP
+enhkbd                                        KBD386.CPP    095
+keyboard_initialize                           KBD386.CPP
+let_dos_break                                 KBD386.CPP
+getkey                                        KBD386.CPP    095
+gfkbhit                                       KBD386.CPP
+kbfetch                                       KBD386.CPP
+kbshift                                       KBD386.CPP
+breakchk                                      KBD386.CPP    094
+_disenk                                       KBD386.CPP
+GFMemDPMI::AllocateDOSMemory                  MEMFN386.CPP          public
+GFMemDPMI::DeallocatDOSMemory                 MEMFN386.CPP          public
+_gf_pokec32                                   MSVC386.CPP
+_gf_pokevid32                                 MSVC386.CPP
+_gf_peekc32                                   MSVC386.CPP
+_FarMemSet                                    MSVC386.CPP
+_CopyToFarMem                                 MSVC386.CPP
+_CopyFromFarMem                               MSVC386.CPP
+_GetCs                                        MSVC386.CPP
+_GetDs                                        MSVC386.CPP
+_FarMemSet                                    SC386.CPP
+_CopyToFarMem                                 SC386.CPP
+_CopyFromFarMem                               SC386.CPP
+_GetCs                                        SC386.CPP
+_GetDs                                        SC386.CPP
+GFSerint::GFSerint                            SERNT386.CPP          protected
+GFSerint::~GFSerint                           SERNT386.CPP          protected
+GFSerint::SetRXBuffer                         SERNT386.CPP          protected
+GFSerint::SetTXBuffer                         SERNT386.CPP          protected
+GFSerint::CheckForUart                        SERNT386.CPP          protected
+GFSerint::BlockingOn                          SERNT386.CPP          protected
+GFSerint::BlockingOff                         SERNT386.CPP          protected
+GFSerint::Install                             SERNT386.CPP          protected
+GFSerint::Remove                              SERNT386.CPP          protected
+GFSerint::GetChar                             SERNT386.CPP          protected
+GFSerint::Stuff                               SERNT386.CPP          protected
+GFSerint::PutChar                             SERNT386.CPP          protected
+GFSerint::PutImm                              SERNT386.CPP          protected
+GFSerint::Update                              SERNT386.CPP          protected
+GFSerint::Clear                               SERNT386.CPP          protected
+GFSerint::IrqInUse                            SERNT386.CPP          protected
+GFSerint::SetUartBaseStatusElement            SERNT386.CPP          protected
+GFSerint::GetTXBlockStatusElement             SERNT386.CPP          protected
+GFSerint::SetTXBlockStatusElement             SERNT386.CPP          protected
+GFSerint::GetRXBlockStatusElement             SERNT386.CPP          protected
+GFSerint::SetRXBlockStatusElement             SERNT386.CPP          protected
+GFSerint::SetParityStatusElement              SERNT386.CPP          protected
+GFSerint::GetTXFlowStatusElement              SERNT386.CPP          protected
+GFSerint::SetTXFlowStatusElement              SERNT386.CPP          protected
+GFSerint::GetRXFlowStatusElement              SERNT386.CPP          protected
+GFSerint::SetRXFlowStatusElement              SERNT386.CPP          protected
+GFSerint::GetModemStatusElement               SERNT386.CPP          protected
+GFSerint::SetModemStatusElement               SERNT386.CPP          protected
+GFSerint::SetRXPBufferStatusElement           SERNT386.CPP          protected
+GFSerint::SetRXRBufferStatusElement           SERNT386.CPP          protected
+GFSerint::SetRXHeadStatusElement              SERNT386.CPP          protected
+GFSerint::SetRXTailStatusElement              SERNT386.CPP          protected
+GFSerint::GetRXCountStatusElement             SERNT386.CPP          protected
+GFSerint::SetRXCountStatusElement             SERNT386.CPP          protected
+GFSerint::GetRXLengthStatusElement            SERNT386.CPP          protected
+GFSerint::SetRXLengthStatusElement            SERNT386.CPP          protected
+GFSerint::SetRXHighMarkStatusElement          SERNT386.CPP          protected
+GFSerint::GetRXBlockingStatusElement          SERNT386.CPP          protected
+GFSerint::SetRXBlockingStatusElement          SERNT386.CPP          protected
+GFSerint::SetTXPBufferStatusElement           SERNT386.CPP          protected
+GFSerint::SetTXRBufferStatusElement           SERNT386.CPP          protected
+GFSerint::SetTXHeadStatusElement              SERNT386.CPP          protected
+GFSerint::SetTXTailStatusElement              SERNT386.CPP          protected
+GFSerint::GetTXCountStatusElement             SERNT386.CPP          protected
+GFSerint::SetTXCountStatusElement             SERNT386.CPP          protected
+GFSerint::GetTXLengthStatusElement            SERNT386.CPP          protected
+GFSerint::SetTXLengthStatusElement            SERNT386.CPP          protected
+GFSerint::SetTXFlagStatusElement              SERNT386.CPP          protected
+GFSerint::GetLSErrorStatusElement             SERNT386.CPP          protected
+GFSerint::SetLSErrorStatusElement             SERNT386.CPP          protected
+GFSerint::Set16550StatusElement               SERNT386.CPP          protected
+GFSerint::GetIsrDataCopy                      SERNT386.CPP          protected
+ElapsedSysTime                                TIMER386.CPP
+_SetHandlers                                  TNT386.CPP
+_LockRegion                                   TNT386.CPP
+_GetOldProtHandler                            TNT386.CPP
+_GetOldRealHandler                            TNT386.CPP
+_AllocateDosMemory                            TNT386.CPP
+_FreeDosMemory                                TNT386.CPP
+_GetDosSelector                               TNT386.CPP
+_GetRealAddress                               TNT386.CPP
+GFScreenVid::GFScreenVid                      VIDDP386.CPP  104     public
+GFScreenVid::~GFScreenVid                     VIDDP386.CPP  104     public
+GFScreenVid::Flush                            VIDDP386.CPP          public
+GFScreenVid::Clear                            VIDDP386.CPP  105     public
+GFScreenVid::MoveTo                           VIDDP386.CPP  105     public
+GFScreenVid::WhereAmI                         VIDDP386.CPP  107     public
+GFScreenVid::CursorHome                       VIDDP386.CPP  104     public
+GFScreenVid::CursorUp                         VIDDP386.CPP  104     public
+GFScreenVid::CursorDown                       VIDDP386.CPP  104     public
+GFScreenVid::CursorRight                      VIDDP386.CPP  104     public
+GFScreenVid::CursorLeft                       VIDDP386.CPP  104     public
+GFScreenVid::Color                            VIDDP386.CPP  111     public
+GFScreenVid::ReadColor                        VIDDP386.CPP  107     public
+GFScreenVid::PutChar                          VIDDP386.CPP  105     public
+GFScreenVid::PutString                        VIDDP386.CPP  105     public
+GFScreenVid::GetChar                          VIDDP386.CPP          public
+GFScreenVid::Erase2EOL                        VIDDP386.CPP  106     public
+GFScreenVid::Erase2EOP                        VIDDP386.CPP  106     public
+GFScreenVid::Erase2SOL                        VIDDP386.CPP  106     public
+GFScreenVid::Erase2SOP                        VIDDP386.CPP  106     public
+GFScreenVid::DeleteLine                       VIDDP386.CPP  105     public
+GFScreenVid::InsertLine                       VIDDP386.CPP  105     public
+GFScreenVid::DeleteChar                       VIDDP386.CPP  105     public
+GFScreenVid::InsertChar                       VIDDP386.CPP  105     public
+GFScreenVid::Scroll                           VIDDP386.CPP  106     public
+GFScreenVid::GetKey                           VIDDP386.CPP          public
+GFScreenVid::KbdHit                           VIDDP386.CPP          public
+GFScreenVid::HideCursor                       VIDDP386.CPP  112     public
+GFScreenVid::Index                            VIDDP386.CPP  120     public
+GFScreenVid::ShowCursor                       VIDDP386.CPP  112     public
+GFScreenVid::Invert                           VIDDP386.CPP          public
+VidSelectBIOSDrivers                          VIDEO386.CPP  307
+VidSelectFastDrivers                          VIDEO386.CPP  307
+VidInitialize                                 VIDEO386.CPP  300
+VidCheckForDESQView                           VIDEO386.CPP
+VidDetermineType                              VIDEO386.CPP
+VidClearWindowBIOS                            VIDEO386.CPP  305
+VidClearWindowFast                            VIDEO386.CPP  305
+VidGoto                                       VIDEO386.CPP  300
+VidReadPhysicalPosition                       VIDEO386.CPP  309
+VidClearLineFast                              VIDEO386.CPP  305
+VidClearLineBIOS                              VIDEO386.CPP  305
+VidPutsFast                                   VIDEO386.CPP  301
+VidPutsBIOS                                   VIDEO386.CPP  301
+VidPutcBIOS                                   VIDEO386.CPP  300
+VidPutcFast                                   VIDEO386.CPP  300
+VidBeep                                       VIDEO386.CPP  301
+VidPokesFast                                  VIDEO386.CPP  300
+VidPokesBIOS                                  VIDEO386.CPP  300
+VidSetAttribute                               VIDEO386.CPP  310
+VidTerminate                                  VIDEO386.CPP  308
+VidPokecFast                                  VIDEO386.CPP  300
+VidPokecBIOS                                  VIDEO386.CPP  300
+VidPeekWordFast                               VIDEO386.CPP  300
+VidPeekWordBIOS                               VIDEO386.CPP  300
+VidSaveWindowFast                             VIDEO386.CPP  308
+VidSaveWindowBIOS                             VIDEO386.CPP  308
+VidRestoreWindowFast                          VIDEO386.CPP  308
+VidRestoreWindowBIOS                          VIDEO386.CPP  308
+VidSetMode                                    VIDEO386.CPP
+VidSetFont                                    VIDEO386.CPP
+VidSetScanLines                               VIDEO386.CPP
+VidDisableEGACursorEmulation                  VIDEO386.CPP
+VidSet80x25                                   VIDEO386.CPP  302
+VidSet40x25                                   VIDEO386.CPP  300
+VidSet80x28                                   VIDEO386.CPP  302
+VidSet80x43                                   VIDEO386.CPP  304
+VidSet80x50                                   VIDEO386.CPP  302
+VidSet640x350                                 VIDEO386.CPP
+VidScrollUpBIOS                               VIDEO386.CPP  306
+VidScrollUpFast                               VIDEO386.CPP  306
+VidScrollDownBIOS                             VIDEO386.CPP  306
+VidScrollDownFast                             VIDEO386.CPP  306
+VidSelectPage                                 VIDEO386.CPP  310
+VidPhysicalGoto                               VIDEO386.CPP  308
+VidSetWindowPage                              VIDEO386.CPP  310
+GFInterruptManager::GFInterruptManager        VMAN386.CPP           public
+GFInterruptManager::~GFInterruptManager       VMAN386.CPP           public
+GFInterruptManager::HookInterrupt             VMAN386.CPP           public
+GFInterruptManager::UnHookInterrupt           VMAN386.CPP           public
+GFInterruptManager::GetPreviousPVectorAddress VMAN386.CPP           public
+GFInterruptManager::GetInterruptVectorAddress VMAN386.CPP           public
+ManageManagerArray                            VMAN386.CPP
+_FarMemSet                                    WAT386.CPP
+_CopyToFarMem                                 WAT386.CPP
+_CopyFromFarMem                               WAT386.CPP
+_GetCs                                        WAT386.CPP
+_GetDs                                        WAT386.CPP
+GFI8250::GFI8250                              8250_88.CPP   008     public
+GFI8250::GFI8250                              8250_88.CPP   008     public
+GFI8250::~GFI8250                             8250_88.CPP   008     public
+GFI8250::Initialize                           8250_88.CPP           protected
+GFI8250::Open                                 8250_88.CPP           protected
+GFI8250::Close                                8250_88.CPP           protected
+GFI8250::BlockingOn                           8250_88.CPP           protected
+GFI8250::BlockingOff                          8250_88.CPP           protected
+GFI8250::ParityIs                             8250_88.CPP           protected
+GFI8250::PutChar                              8250_88.CPP           protected
+GFI8250::PutString                            8250_88.CPP           protected
+GFI8250::PutBuffer                            8250_88.CPP           protected
+GFI8250::PutImm                               8250_88.CPP           protected
+GFI8250::GetChar                              8250_88.CPP           protected
+GFI8250::GetBuffer                            8250_88.CPP           protected
+GFI8250::Read                                 8250_88.CPP           protected
+GFI8250::Write                                8250_88.CPP           protected
+GFI8250::ClearInt                             8250_88.CPP           protected
+GFI8250::SetBaudRate                          8250_88.CPP           protected
+GFI8250::GetBaudRate                          8250_88.CPP           protected
+GFI8250::NewLinkSize                          8250_88.CPP           protected
+GFI8250::GetBufferInfo                        8250_88.CPP           protected
+GFI8250::SetHandShake                         8250_88.CPP           protected
+GFI8250::GetHandShake                         8250_88.CPP           protected
+GFI8250::IsIrqLine                            8250_88.CPP           protected
+GFI8250::ClearLink                            8250_88.CPP           protected
+GFI8250::Flush(void)                          8250_88.CPP           protected
+GFI8250::Set16550TriggerLevel                 8250_88.CPP   009     piblic
+GFI8250::SystemIdle                           8250_88.CPP   004     protected
+GFI8250::ReportLinkStatus                     8250R_88.CPP          protected
+GFSmartArnet::GFSmartArnet                    ARNET.CPP     014     public
+GFSmartArnet::GFSmartArnet                    ARNET.CPP     014     public
+GFSmartArnet::~GFSmartArnet                   ARNET.CPP     014     public
+GFSmartArnet::SystemIdle                      ARNET.CPP     015     public
+GFSmartArnet::Flush                           ARNET.CPP             protected
+GFSmartArnet::Initialize                      ARNET.CPP             protected
+GFSmartArnet::Open                            ARNET.CPP             protected
+GFSmartArnet::Close                           ARNET.CPP             protected
+GFSmartArnet::GetBufferInfo                   ARNET.CPP             protected
+GFSmartArnet::NewLinkSize                     ARNET.CPP             protected
+GFSmartArnet::SetHandShake                    ARNET.CPP             protected
+GFSmartArnet::GetHandShake                    ARNET.CPP             protected
+GFSmartArnet::LineBreak                       ARNET.CPP             protected
+GFSmartArnet::LineControl                     ARNET.CPP             protected
+GFSmartArnet::SetDataFormat                   ARNET.CPP             protected
+GFSmartArnet::GetDataFormat                   ARNET.CPP             protected
+GFSmartArnet::UpdateLineStatus                ARNET.CPP             protected
+GFSmartArnet::PutChar                         ARNET.CPP             protected
+GFSmartArnet::PutString                       ARNET.CPP             protected
+GFSmartArnet::PutBuffer                       ARNET.CPP             protected
+GFSmartArnet::GetChar                         ARNET.CPP             protected
+GFSmartArnet::GetBuffer                       ARNET.CPP             protected
+GFSmartArnet::ClearLink                       ARNET.CPP             protected
+GFSmartArnet::ReportLinkStatus                ARNET_R.CPP           protected
+GFBIOS::GFBIOS                                BIOS.CPP      001     public
+GFBIOS::GFBIOS                                BIOS.CPP      001     public
+GFExtended::GFExtendedBIOS                    BIOS.CPP      007     public
+GFBIOS::~GFBIOS                               BIOS.CPP      001     public
+GFBIOS::SystemIdle                            BIOS.CPP      002     public
+GFBIOS::Initialize                            BIOS.CPP              protected
+GFBIOS::Open                                  BIOS.CPP              protected
+GFBIOS::Close                                 BIOS.CPP              protected
+GFExtendedBIOS::Close                         BIOS.CPP              protected
+GFBIOS::GetBufferInfo                         BIOS.CPP              protected
+GFBIOS::NewLinkSize                           BIOS.CPP              protected
+GFBIOS::SetHandShake                          BIOS.CPP              protected
+GFBIOS::GetHandShake                          BIOS.CPP              protected
+GFBIOS::LineBreak                             BIOS.CPP              protected
+GFExtendedBIOS::LineBreak                     BIOS.CPP              protected
+GFBIOS::LineControl                           BIOS.CPP              protected
+GFExtendedBIOS::LineControl                   BIOS.CPP              protected
+GFBIOS::GetChar                               BIOS.CPP              protected
+GFBIOS::GetBuffer                             BIOS.CPP              protected
+GFBIOS::SetDataFormat                         BIOS.CPP              protected
+GFExtendedBIOS::SetDataFormat                 BIOS.CPP              protected
+GFBIOS::GetDataFormat                         BIOS.CPP              protected
+GFBIOS::UpdateLineStatus                      BIOS.CPP              protected
+GFBIOS::PutChar                               BIOS.CPP              protected
+GFBIOS::PutString                             BIOS.CPP              protected
+GFBIOS::PutBuffer                             BIOS.CPP              protected
+GFBIOS::Flush                                 BIOS.CPP              protected
+GFBIOS::ClearLink                             BIOS.CPP              protected
+GFBIOS::ReportLinkStatus                      BIOS_R.CPP            protected
+GFExtended::ReportLinkStatus                  BIOS_R.CPP            protected
+GFDigiPC::GFDigiPC                            DIGI_88.CPP   006     public
+GFDigiPC::MulitBoardSetup                     DIGI_88.CPP   006     public
+GFDigiPC::Initialize                          DIGI_88.CPP           protected
+GFScreenDW::GFScreenDW                        DWDISP.CPP    109     public
+GFScreenDW::~GFScreenDW                       DWDISP.CPP    109     public
+GFScreenDW::Flush                             DWDISP.CPP            public
+GFScreenDW::Clear                             DWDISP.CPP            public
+GFScreenDW::MoveTo                            DWDISP.CPP            public
+GFScreenDW::WhereAmI                          DWDISP.CPP            public
+GFScreenDW::CursorHome                        DWDISP.CPP            public
+GFScreenDW::CursorUp                          DWDISP.CPP            public
+GFScreenDW::CursorDown                        DWDISP.CPP            public
+GFScreenDW::CursorRight                       DWDISP.CPP            public
+GFScreenDW::CursorLeft                        DWDISP.CPP            public
+GFScreenDW::Color                             DWDISP.CPP            public
+GFScreenDW::ReadColor                         DWDISP.CPP            public
+GFScreenDW::PutChar                           DWDISP.CPP            public
+GFScreenDW::PutString                         DWDISP.CPP            public
+GFScreenDW::GetChar                           DWDISP.CPP    109     public
+GFScreenDW::Erase2EOL                         DWDISP.CPP            public
+GFScreenDW::Erase2EOP                         DWDISP.CPP            public
+GFScreenDW::Erase2SOL                         DWDISP.CPP            public
+GFScreenDW::Erase2SOP                         DWDISP.CPP            public
+GFScreenDW::DeleteLine                        DWDISP.CPP            public
+GFScreenDW::InsertLine                        DWDISP.CPP            public
+GFScreenDW::DeleteChar                        DWDISP.CPP            public
+GFScreenDW::InsertChar                        DWDISP.CPP            public
+GFScreenDW::Scroll                            DWDISP.CPP            public
+GFScreenDW::Wrap                              DWDISP.CPP            public
+GFScreenDW::GetKey                            DWDISP.CPP            public
+GFScreenDW::KbdHit                            DWDISP.CPP            public
+GFScreenDW::HideCursor                        DWDISP.CPP            public
+GFScreenDW::ShowCursor                        DWDISP.CPP            public
+GFScreenDW::Invert                            DWDISP.CPP            public
+GFDOSFileEngine::GFDOSFileEngine              FILE_88.CPP           public
+GFDOSFileEngine::~GFDOSFileEngine             FILE_88.CPP           public
+GFDOSFileEngine::SetTimeDate                  FILE_88.CPP           public
+GFDOSFileEngine::GetTimeDate                  FILE_88.CPP           public
+GFDOSFileEngine::FindFirst                    FILE_88.CPP           public
+GFDOSFileEngine::FindNext                     FILE_88.CPP           public
+IsMicroChannelBus                             ISMIC88.CPP   098
+enhkbd                                        KBD88.CPP     095
+kbfetch                                       KBD88.CPP     096
+kbshift                                       KBD88.CPP     097
+breakchk                                      KBD88.CPP     094
+getkey                                        KBD88.CPP     095
+gfkbhit                                       KBD88.CPP     095
+MachineType                                   MACHINE.CPP
+SubmodelType                                  MACHINE.CPP   098
+GFNasi::GFNasi                                NASI_AD.CPP   118     public
+GFNasi::GFNasi                                NASI_AD.CPP   118     public
+GFNasi::~GFNasi                               NASI_AD.CPP   118     public
+GFNasi::Initialize                            NASI_AD.CPP           protected
+GFNasi::Open                                  NASI_AD.CPP           protected
+GFNasi::Close                                 NASI_AD.CPP           protected
+GFNasi::GetBufferInfo                         NASI_AD.CPP           protected
+GFNasi::NewLinkSize                           NASI_AD.CPP           protected
+GFNasi::SetHandShake                          NASI_AD.CPP           protected
+GFNasi::GetHandShake                          NASI_AD.CPP           protected
+GFNasi::LineBreak                             NASI_AD.CPP           protected
+GFNasi::LineControl                           NASI_AD.CPP           protected
+GFNasi::SetDataFormat                         NASI_AD.CPP           protected
+GFNasi::GetDataFormat                         NASI_AD.CPP           protected
+GFNasi::UpdateLineStatus                      NASI_AD.CPP           protected
+GFNasi::PutChar                               NASI_AD.CPP           protected
+GFNasi::PutString                             NASI_AD.CPP           protected
+GFNasi::PutBuffer                             NASI_AD.CPP           protected
+GFNasi::PutImm                                NASI_AD.CPP           protected
+GFNasi::GetChar                               NASI_AD.CPP           protected
+GFNasi::GetBuffer                             NASI_AD.CPP           protected
+GFNasi::ClearLink                             NASI_AD.CPP           protected
+GFNasi::Flush                                 NASI_AD.CPP           protected
+GFNasi::SystemIdle                            NASI_AD.CPP   119     protected
+GFNasi::NasiInit                              NASI_AD.CPP           protected
+GFNasi::SetDTRNasi                            NASI_AD.CPP           protected
+GFNasi::SetRTSNasi                            NASI_AD.CPP           protected
+GFNasi::GetNames                              NASI_AD.CPP           protected
+GFNasi::AttachNasi                            NASI_AD.CPP           protected
+get_token                                     NASI_AD.CPP
+GFNasi::NasiParsePortName                     NASI_AD.CPP           protected
+GFNasi::DumpNasiItems                         NASI_DD.CPP           protected
+GFNasi::DumpAllVcStatus                       NASI_DD.CPP
+translate_baud_rate                           NASI_DD.CPP
+translate_parity                              NASI_DD.CPP
+translate_length                              NASI_DD.CPP
+translate_stop_bits                           NASI_DD.CPP
+translate_on_off                              NASI_DD.CPP
+translate_flow                                NASI_DD.CPP
+GFNasi::DumpConfig                            NASI_DD.CPP           protected
+translate_transmit_status                     NASI_DD.CPP
+translate_transmitter_status                  NASI_DD.CPP
+GFNasi::DumpStatus                            NASI_DD.CPP           protected
+GFNasi::ReportLinkStatus                      NASI_DD.CPP           protected
+NasiLoaded                                    NASI_XD.CPP   118
+_NasiMungQueryNames                           NASI_XD.CPP
+NasiQueryFirstPort                            NASI_XD.CPP   118
+NasiQueryNextPort                             NASI_XD.CPP   118
+NasiCloseQuery                                NASI_XD.CPP   118
+_NasiSetServiceName                           NASI_XD.CPP
+_NasiAllocateVc                               NASI_XD.CPP
+_NasiDisconnectVc                             NASI_XD.CPP
+GFSmartDigiBoard::GFSmartDigiBoard            SDIGI.CPP     010     public
+GFSmartDigiBoard::GFSmartDigiBoard            SDIGI.CPP     010     public
+GFSmartDigiBoard::~GFSmartDigiBoard           SDIGI.CPP     010     public
+GFSmartDigiBoard::SystemIdle                  SDIGI.CPP     011     public
+GFSmartDigiBoard::Initialize                  SDIGI.CPP             protected
+GFSmartDigiBoard::Open                        SDIGI.CPP             protected
+GFSmartDigiBoard::Close                       SDIGI.CPP             protected
+GFSmartDigiBoard::GetBufferInfo               SDIGI.CPP             protected
+GFSmartDigiBoard::NewLinkSize                 SDIGI.CPP             protected
+GFSmartDigiBoard::SetHandShake                SDIGI.CPP             protected
+GFSmartDigiBoard::GetHandShake                SDIGI.CPP             protected
+GFSmartDigiBoard::LineBreak                   SDIGI.CPP             protected
+GFSmartDigiBoard::LineControl                 SDIGI.CPP             protected
+GFSmartDigiBoard::GetChar                     SDIGI.CPP             protected
+GFSmartDigiBoard::GetBuffer                   SDIGI.CPP             protected
+GFSmartDigiBoard::SetDataFormat               SDIGI.CPP             protected
+GFSmartDigiBoard::GetDataFormat               SDIGI.CPP             protected
+GFSmartDigiBoard::UpdateLineStatus            SDIGI.CPP             protected
+GFSmartDigiBoard::PutChar                     SDIGI.CPP             protected
+GFSmartDigiBoard::PutString                   SDIGI.CPP             protected
+GFSmartDigiBoard::PutBuffer                   SDIGI.CPP             protected
+GFSmartDigiBoard::PutImm                      SDIGI.CPP             protected
+GFSmartDigiBoard::Flush                       SDIGI.CPP             protected
+GFSmartDigiBoard::SetDigiboardDriverType      SDIGI.CPP             protected
+GFSmartDigiBoard::ClearLink                   SDIGI.CPP             protected
+GFSmartDigiBoard::ReportLinkStatus            SDIGI_R.CPP           protected
+GFSerint::GFSerint                            SERNT88.CPP           public
+GFSerint::~GFSerint                           SERNT88.CPP           public
+GFSerint::BlockingOn                          SERNT88.CPP           protected
+GFSerint::BlockingOff                         SERNT88.CPP           protected
+GFSerint::SetRXBuffer                         SERNT88.CPP           protected
+GFSerint::SetTXBuffer                         SERNT88.CPP           protected
+GFSerint::CheckForUart                        SERNT88.CPP           protected
+GFSerint::Install                             SERNT88.CPP           protected
+GFSerint::Remove                              SERNT88.CPP           protected
+GFSerint::GetChar                             SERNT88.CPP           protected
+GFSerint::Stuff                               SERNT88.CPP           protected
+GFSerint::PutChar                             SERNT88.CPP           protected
+GFSerint::PutImm                              SERNT88.CPP           protected
+GFSerint::Update                              SERNT88.CPP           protected
+GFSerint::Clear                               SERNT88.CPP           protected
+GFSerint::IrqInUse                            SERNT88.CPP           protected
+GFSerint::GetTXBlockStatusElement             SERNT88.CPP           protected
+GFSerint::SetTXBlockStatusElement             SERNT88.CPP           protected
+GFSerint::GetRXBlockStatusElement             SERNT88.CPP           protected
+GFSerint::SetRXBlockStatusElement             SERNT88.CPP           protected
+GFSerint::SetParityStatusElement              SERNT88.CPP           protected
+GFSerint::GetTXFlowStatusElement              SERNT88.CPP           protected
+GFSerint::SetTXFlowStatusElement              SERNT88.CPP           protected
+GFSerint::GetRXFlowStatusElement              SERNT88.CPP           protected
+GFSerint::SetRXFlowStatusElement              SERNT88.CPP           protected
+GFSerint::GetModemStatusElement               SERNT88.CPP           protected
+GFSerint::SetModemStatusElement               SERNT88.CPP           protected
+GFSerint::SetRXHeadStatusElement              SERNT88.CPP           protected
+GFSerint::SetRXTailStatusElement              SERNT88.CPP           protected
+GFSerint::GetRXCountStatusElement             SERNT88.CPP           protected
+GFSerint::SetRXCountStatusElement             SERNT88.CPP           protected
+GFSerint::GetRXLengthStatusElement            SERNT88.CPP           protected
+GFSerint::SetTXHeadStatusElement              SERNT88.CPP           protected
+GFSerint::SetTXTailStatusElement              SERNT88.CPP           protected
+GFSerint::GetTXCountStatusElement             SERNT88.CPP           protected
+GFSerint::SetTXCountStatusElement             SERNT88.CPP           protected
+GFSerint::GetTXLengthStatusElement            SERNT88.CPP           protected
+GFSerint::SetTXFlagStatusElement              SERNT88.CPP           protected
+GFSerint::GetLSErrorStatusElement             SERNT88.CPP           protected
+GFSerint::SetLSErrorStatusElement             SERNT88.CPP           protected
+GFSerint::Set16550StatusElement               SERNT88.CPP           protected
+GFSmartStarGate::GFSmartStarGate              STAR.CPP      012     public
+GFSmartStarGate::~GFSmartStarGate             STAR.CPP      012     public
+GFSmartStarGate::SystemIdle                   STAR.CPP      013     public
+GFSmartStarGate::Initialize                   STAR.CPP              protected
+GFSmartStarGate::Open                         STAR.CPP              protected
+GFSmartStarGate::Close                        STAR.CPP              protected
+GFSmartStarGate::Flush                        STAR.CPP              protected
+GFSmartStarGate::GetBufferInfo                STAR.CPP              protected
+GFSmartStarGate::NewLinkSize                  STAR.CPP              protected
+GFSmartStarGate::SetHandShake                 STAR.CPP              protected
+GFSmartStarGate::GetHandShake                 STAR.CPP              protected
+GFSmartStarGate::LineBreak                    STAR.CPP              protected
+GFSmartStarGate::LineControl                  STAR.CPP              protected
+GFSmartStarGate::SetDataFormat                STAR.CPP              protected
+GFSmartStarGate::GetDataFormat                STAR.CPP              protected
+GFSmartStarGate::PutChar                      STAR.CPP              protected
+GFSmartStarGate::PutString                    STAR.CPP              protected
+GFSmartStarGate::PutBuffer                    STAR.CPP              protected
+GFSmartStarGate::PutImm                       STAR.CPP              protected
+GFSmartStarGate::GetChar                      STAR.CPP              protected
+GFSmartStarGate::GetBuffer                    STAR.CPP              protected
+GFSmartStarGate::ClearLink                    STAR.CPP              protected
+GFSmartStarGate::ConfigureSmartStarGateBoard  STAR.CPP      012     public
+GFSmartStarGate::SendCCBCommand               STAR.CPP              protected
+GFSmartStarGate::EnableRam                    STAR.CPP              protected
+GFSmartStarGate::DisableRam                   STAR.CPP              protected
+GFSmartStarGate::ReportLinkStatus             STAR.CPP              protected
+GFScreenZDisp::GFScreenZDisp                  SYMDSPD.CPP   103     public
+GFScreenZDisp::~GFScreenZDisp                 SYMDSPD.CPP   103     public
+GFScreenZDisp::Flush                          SYMDSPD.CPP   111     public
+GFScreenZDisp::Clear                          SYMDSPD.CPP   105     public
+GFScreenZDisp::MoveTo                         SYMDSPD.CPP           public
+GFScreenZDisp::WhereAmI                       SYMDSPD.CPP           public
+GFScreenZDisp::CursorHome                     SYMDSPD.CPP   104     public
+GFScreenZDisp::CursorUp                       SYMDSPD.CPP   104     public
+GFScreenZDisp::CursorDown                     SYMDSPD.CPP   104     public
+GFScreenZDisp::CursorRight                    SYMDSPD.CPP   104     public
+GFScreenZDisp::CursorLeft                     SYMDSPD.CPP   104     public
+GFScreenZDisp::Color                          SYMDSPD.CPP   111     public
+GFScreenZDisp::ReadColor                      SYMDSPD.CPP           public
+GFScreenZDisp::PutChar                        SYMDSPD.CPP           public
+GFScreenZDisp::PutString                      SYMDSPD.CPP           public
+GFScreenZDisp::GetChar                        SYMDSPD.CPP           public
+GFScreenZDisp::Erase2EOL                      SYMDSPD.CPP   106     public
+GFScreenZDisp::Erase2EOP                      SYMDSPD.CPP   106     public
+GFScreenZDisp::Erase2SOL                      SYMDSPD.CPP   106     public
+GFScreenZDisp::Erase2SOP                      SYMDSPD.CPP   106     public
+GFScreenZDisp::DeleteLine                     SYMDSPD.CPP   105     public
+GFScreenZDisp::InsertLine                     SYMDSPD.CPP           public
+GFScreenZDisp::DeleteChar                     SYMDSPD.CPP   105     public
+GFScreenZDisp::InsertChar                     SYMDSPD.CPP           public
+GFScreenZDisp::Scroll                         SYMDSPD.CPP           public
+GFScreenZDisp::GetKey                         SYMDSPD.CPP           public
+GFScreenZDisp::KbdHit                         SYMDSPD.CPP           public
+GFScreenZDisp::ShowCursor                     SYMDSPD.CPP           public
+GFScreenZDisp::HideCursor                     SYMDSPD.CPP           public
+GFScreenZDisp::Invert                         SYMDSPD.CPP           public
+ElapsedSysTime                                TIMERD.CPP    039
+GFScreenVid::GFScreenVid                      VIDDP88.CPP   104     public
+GFScreenVid::~GFScreenVid                     VIDDP88.CPP   104     public
+GFScreenVid::Flush                            VIDDP88.CPP           public
+GFScreenVid::Clear                            VIDDP88.CPP   105     public
+GFScreenVid::MoveTo                           VIDDP88.CPP   105     public
+GFScreenVid::WhereAmI                         VIDDP88.CPP   107     public
+GFScreenVid::CursorHome                       VIDDP88.CPP   104     public
+GFScreenVid::CursorUp                         VIDDP88.CPP   104     public
+GFScreenVid::CursorDown                       VIDDP88.CPP   104     public
+GFScreenVid::CursorRight                      VIDDP88.CPP   104     public
+GFScreenVid::CursorLeft                       VIDDP88.CPP   104     public
+GFScreenVid::Color                            VIDDP88.CPP   111     public
+GFScreenVid::ReadColor                        VIDDP88.CPP   107     public
+GFScreenVid::PutChar                          VIDDP88.CPP   105     public
+GFScreenVid::PutString                        VIDDP88.CPP   105     public
+GFScreenVid::GetChar                          VIDDP88.CPP           public
+GFScreenVid::Erase2EOL                        VIDDP88.CPP   106     public
+GFScreenVid::Erase2EOP                        VIDDP88.CPP   106     public
+GFScreenVid::Erase2SOL                        VIDDP88.CPP   106     public
+GFScreenVid::Erase2SOP                        VIDDP88.CPP   106     public
+GFScreenVid::DeleteLine                       VIDDP88.CPP   105     public
+GFScreenVid::InsertLine                       VIDDP88.CPP   105     public
+GFScreenVid::DeleteChar                       VIDDP88.CPP   105     public
+GFScreenVid::InsertChar                       VIDDP88.CPP   105     public
+GFScreenVid::Scroll                           VIDDP88.CPP   106     public
+GFScreenVid::GetKey                           VIDDP88.CPP           public
+GFScreenVid::KbdHit                           VIDDP88.CPP           public
+GFScreenVid::HideCursor                       VIDDP88.CPP   112     public
+GFScreenVid::Index                            VIDDP386.CPP  120     public
+GFScreenVid::ShowCursor                       VIDDP88.CPP   112     public
+GFScreenVid::Invert                           VIDDP88.CPP           public
+VidSelectBIOSDrivers                          VIDEO88.CPP   307
+VidSelectFastDrivers                          VIDEO88.CPP   307
+VidInitialize                                 VIDEO88.CPP   300
+VidCheckForDESQView                           VIDEO88.CPP
+VidDetermineType                              VIDEO88.CPP
+VidClearWindowBIOS                            VIDEO88.CPP   305
+VidClearWindowFast                            VIDEO88.CPP   305
+VidGoto                                       VIDEO88.CPP   300
+VidReadPhysicalPosition                       VIDEO88.CPP   309
+VidClearLineFast                              VIDEO88.CPP   305
+VidClearLineBIOS                              VIDEO88.CPP   305
+VidPutsFast                                   VIDEO88.CPP   301
+VidPutsBIOS                                   VIDEO88.CPP   301
+VidPutcBIOS                                   VIDEO88.CPP   300
+VidPutcFast                                   VIDEO88.CPP   300
+VidBeep                                       VIDEO88.CPP   301
+VidPokesFast                                  VIDEO88.CPP   300
+VidPokesBIOS                                  VIDEO88.CPP   300
+VidSetAttribute                               VIDEO88.CPP   310
+VidTerminate                                  VIDEO88.CPP   308
+VidPokecFast                                  VIDEO88.CPP   300
+VidPokecBIOS                                  VIDEO88.CPP   300
+VidPeekWordFast                               VIDEO88.CPP   300
+VidPeekWordBIOS                               VIDEO88.CPP   300
+VidSaveWindowFast                             VIDEO88.CPP   308
+VidSaveWindowBIOS                             VIDEO88.CPP   308
+VidRestoreWindowFast                          VIDEO88.CPP   308
+VidRestoreWindowBIOS                          VIDEO88.CPP   308
+VidSetMode                                    VIDEO88.CPP
+VidSetFont                                    VIDEO88.CPP
+VidSetScanLines                               VIDEO88.CPP
+VidDisableEGACursorEmulation                  VIDEO88.CPP
+VidSet80x25                                   VIDEO88.CPP   304
+VidSet40x25                                   VIDEO88.CPP   300
+VidSet80x28                                   VIDEO88.CPP   302
+VidSet80x43                                   VIDEO88.CPP   304
+VidSet80x50                                   VIDEO88.CPP   302
+VidSet640x350                                 VIDEO88.CPP
+VidScrollUpBIOS                               VIDEO88.CPP   306
+VidScrollUpFast                               VIDEO88.CPP   306
+VidScrollDownBIOS                             VIDEO88.CPP   306
+VidScrollDownFast                             VIDEO88.CPP   306
+VidSelectPage                                 VIDEO88.CPP   310
+VidPhysicalGoto                               VIDEO88.CPP   308
+VidSetWindowPage                              VIDEO88.CPP   310
+_VidMapVideo                                  VIDEO88.CPP
+VidSetMono                                    VIDEO88.CPP
+_VidMapDebugAddresses                         VIDEO88.CPP
+VidFreeVid                                    VIDEO88.CPP   310
+VidHideCursor                                 VIDEO88.CPP   308
+VidShowCursor                                 VIDEO88.CPP   308
+VidGetCursorData                              VIDEO88.CPP
+GFInterruptManager::GFInterruptManager        VMAN88.CPP            public
+GFInterruptManager::~GFInterruptManager       VMAN88.CPP            public
+GFInterruptManager::HookInterrupt             VMAN88.CPP            public
+GFInterruptManager::UnHookInterrupt           VMAN88.CPP            public
+GFInterruptManager::GetPreviousPVectorAddress VMAN88.CPP            public
+GFInterruptManager::GetInterruptVectorAddress VMAN88.CPP            public
+ManageManagerArray                            VMAN88.CPP
+GFAnsiTerminal::GFAnsiTerminal                ansiterm.cpp    101   Public
+GFAnsiTerminal::~GFAnsiTerminal               ansiterm.cpp    102   Public
+GFAnsiTerminal::GetChar                       ansiterm.cpp    101   Public
+GFAnsiTerminal::GetKey                        ansiterm.cpp    101   Public
+GFAnsiTerminal::Decode                        ansiterm.cpp          Protected
+GFAnsiTerminal::Parse                         ansiterm.cpp          Protected
+GFAnsiTerminal::Defaults                      ansiterm.cpp          Protected
+GFAnsiTerminal::IsFinal                       ansiterm.cpp          Protected
+GFAnsiTerminal::IsInter                       ansiterm.cpp          Protected
+GFTranstxt::_ReceiveFile                      ASCIITRN.CPP          protected
+GFTranstxt::AsciiReceiveReadData              ASCIITRN.CPP          protected
+GFTranstxt::AsciiReceiveWaitForRxData         ASCIITRN.CPP          protected
+GFTranstxt::_SendFile                         ASCIITRN.CPP          protected
+GFTranstxt::AsciiSendExecuteLineDelay         ASCIITRN.CPP          protected
+GFTranstxt::AsciiSendLoadUpBuffer             ASCIITRN.CPP          protected
+GFTranstxt::AsciiSendTheBuffer                ASCIITRN.CPP          protected
+GFTranstxt::AsciiSendEchoSomeCharacters       ASCIITRN.CPP          protected
+GFCompuServeBPlus::GFCompuServeBPlus          BP.CPP        115     public
+GFCompuServeBPlus:: ~GFCompuServeBPlus        BP.CPP        115     public
+GFCompuServeBPlus::Respond                    BP.CPP        115     public
+GFCompuServeBPlus:: TransferFile              BP.CPP        115     public
+GFCompuServeBPlus::ReceiveFile                BP.CPP                public
+GFCompuServeBPlus::SendFile                   BP.CPP                public
+GFCompuServeBPlus::SetSendFileInfoFlag        BP.CPP        115     public
+GFCompuServeBPlus::SetStripPathOption         BP.CPP                public
+GFCompuServeBPlus::SetChecksumMethod          BP.CPP        115     public
+GFCompuServeBPlus::SetResumeDownloadFlag      BP.CPP        115     public
+GFCompuServeBPlus::Initialize                 BP.CPP                protected
+GFCompuServeBPlus::InitCheck                  BP.CPP                protected
+GFCompuServeBPlus::DoChecksum                 BP.CPP                protected
+GFCompuServeBPlus::DiscardAckedPackets        BP.CPP                protected
+GFCompuServeBPlus::WriteCharTimed             BP.CPP                protected
+GFCompuServeBPlus::SendAck                    BP.CPP                protected
+GFCompuServeBPlus::SendMaskedByte             BP.CPP                protected
+GFCompuServeBPlus::ReadByte                   BP.CPP                protected
+GFCompuServeBPlus::ReadMaskedByte             BP.CPP                protected
+GFCompuServeBPlus::TransmitPacket             BP.CPP                protected
+GFCompuServeBPlus::WaitForAck                 BP.CPP                protected
+GFCompuServeBPlus::FlushPending               BP.CPP                protected
+GFCompuServeBPlus::Fail                       BP.CPP                protected
+GFCompuServeBPlus::SendUnexpectedPacket       BP.CPP                protected
+GFCompuServeBPlus::SendAbort                  BP.CPP                protected
+GFCompuServeBPlus::ReadPacket                 BP.CPP                protected
+GFCompuServeBPlus::SendPacket                 BP.CPP                protected
+GFCompuServeBPlus::RespondToPlus              BP.CPP                protected
+GFCompuServeBPlus::_ReceiveFile               BP.CPP                protected
+GFCompuServeBPlus::_SendFile                  BP.CPP                protected
+GFCompuServeBPlus::HandleProtocol             BP.CPP                protected
+GFChecksum::GFChecksum                        CHECKSUM.CPP  090     public
+GFChecksum::~GFChecksum                       CHECKSUM.CPP  093     public
+GFChecksum::CalculateBlock                    CHECKSUM.CPP  090     public
+GFCheck2Byte::GFCheck2Byte                    CHECKSUM.CPP  091     public
+GFCheck2Byte::~GFCheck2Byte                   CHECKSUM.CPP  093     public
+GFCheck2Byte::CalculateBlock                  CHECKSUM.CPP  091     public
+GFCrc16::GFCrc16                              CHK16CRC.CPP  092     public
+GFCrc16::~GFCrc16                             CHK16CRC.CPP  092     public
+GFCrc16::CalculateBlock                       CHK16CRC.CPP  092     public
+GFCrc16::CalculateCharacter                   CHK16CRC.CPP  092     public
+GFCrc16::CalculateCharacterModified           CHK16CRC.CPP  092     public
+GFCrc32::GFCrc32                              CHK32CRC.CPP  093     public
+GFCrc32::~GFCrc32                             CHK32CRC.CPP  093     public
+GFCrc32::CalculateBlock                       CHK32CRC.CPP  093     public
+GFCrc32::CalculateCharacter                   CHK32CRC.CPP  093     public
+GFCCITTCrc16::GFCCITTCrc16                    CHKCCITT.C    121     public
+GFCCITTCrc16::~GFCCITTCrc16                   CHKCCITT.C    121     public
+GFCCITTCrc16::CalculateBlock                  CHKCCITT.C    121     public
+GFCCITTCrc16::CalculateCharacter              CHKCCITT.C    121     public
+GFComLink::GFComLink                          COMLINK.CPP           protected
+GFComLink::~GFComLink                         COMLINK.CPP           public
+GFComLink::SetEcho                            COMLINK.CPP           protected
+GFComLink::SetBack                            COMLINK.CPP           protected
+GFComLink::GetError                           COMLINK.CPP           protected
+GFComLink::PeekError                          COMLINK.CPP           protected
+GFComLink::SystemIdle                         COMLINK.CPP           public
+GFComLink::Flush                              COMLINK.CPP           protected
+GFComLink::Initialize                         COMLINK.CPP           protected
+GFComLink::Open                               COMLINK.CPP           protected
+GFComLink::Close                              COMLINK.CPP           protected
+GFComLink::GetBufferInfo                      COMLINK.CPP           protected
+GFComLink::NewLinkSize                        COMLINK.CPP           protected
+GFComLink::SetHandShake                       COMLINK.CPP           protected
+GFComLink::GetHandShake                       COMLINK.CPP           protected
+GFComLink::LineBreak                          COMLINK.CPP           protected
+GFComLink::LineControl                        COMLINK.CPP           protected
+GFComLink::SetDataFormat                      COMLINK.CPP           protected
+GFComLink::GetDataFormat                      COMLINK.CPP           protected
+GFComLink::UpdateLineStatus                   COMLINK.CPP           protected
+GFComLink::PutChar                            COMLINK.CPP           protected
+GFComLink::PutString                          COMLINK.CPP           protected
+GFComLink::PutBuffer                          COMLINK.CPP           protected
+GFComLink::PutImm                             COMLINK.CPP           protected
+GFComLink::GetChar                            COMLINK.CPP           protected
+GFComLink::GetBuffer                          COMLINK.CPP           protected
+GFComLink::ClearLink                          COMLINK.CPP           protected
+GFComLink::ReportLinkStatus                   COMLINK.CPP           protected
+GFDataFormat::ReportDataStatus                DATAFM_R.CPP          public
+GFDataFormat::GFDataFormat                    DATAFORM.CPP  031     public
+GFDataFormat::GFDataFormat                    DATAFORM.CPP  031     public
+GFDataFormat::~GFDataFormat                   DATAFORM.CPP  032     public
+GFDataFormat::Install                         DATAFORM.CPP  033     public
+GFDataFormat::Setup                           DATAFORM.CPP  036     public
+GFDataFormat::operator =                      DATAFORM.CPP  035     public
+GFDataFormat::Parity                          DATAFORM.CPP  031     public
+GFDataFormat::DataLength                      DATAFORM.CPP  034     public
+GFDataFormat::StopBits                        DATAFORM.CPP  037     public
+GFDataFormat::BaudRate                        DATAFORM.CPP  034     public
+GFDataFormat::Set                             DATAFORM.CPP          protected
+GFDataFormat::Get                             DATAFORM.CPP          protected
+GFFileBaseEngine::GFFileBaseEngine            ENGINE.CPP            public
+GFFileBaseEngine::~GFFileBaseEngine           ENGINE.CPP            public
+GFFileBaseEngine::Initialize                  ENGINE.CPP            public
+GFFileBaseEngine::Open                        ENGINE.CPP            public
+GFFileBaseEngine::Close                       ENGINE.CPP            public
+GFFileBaseEngine::SetCurrentPosition          ENGINE.CPP            public
+GFFileBaseEngine::GetCurrentPosition          ENGINE.CPP            public
+GFFileBaseEngine::SetTimeDate                 ENGINE.CPP            public
+GFFileBaseEngine::GetTimeDate                 ENGINE.CPP            public
+GFFileBaseEngine::GetLength                   ENGINE.CPP            public
+GFFileBaseEngine::GetNextName                 ENGINE.CPP            public
+GFFileBaseEngine::PutBuffer                   ENGINE.CPP            public
+GFFileBaseEngine::GetBuffer                   ENGINE.CPP            public
+GFFileBaseEngine::GetChar                     ENGINE.CPP            public
+GFFileBaseEngine::PutChar                     ENGINE.CPP            public
+GFFileBaseEngine::Flush                       ENGINE.CPP            public
+GFFileBaseEngine::GetNextWildName             ENGINE.CPP            protected
+GetCommErrorName                              ERRNAME.CPP   039
+GetBiosSegment                                GETBIOS.CPP
+GFFileIO::GFFileIO                            IOCONTRL.CPP          virtual
+GFFileIO::~GFFileIO                           IOCONTRL.CPP          virtual
+GFFileIO::ProcessFileTime                     IOCONTRL.CPP          virtual
+GFFileIO::FromJulian                          IOCONTRL.CPP          virtual
+GFFileIO::CreateUnixTime                      IOCONTRL.CPP          virtual
+GFFileIO::ToJulian                            IOCONTRL.CPP          virtual
+GFFileIO::SetTimeDateValues                   IOCONTRL.CPP          virtual
+GFFileIO::GetTimeDateValues                   IOCONTRL.CPP          virtual
+GFFileIO::Reset                               IOCONTRL.CPP          virtual
+GFFileIO::GetInputName                        IOCONTRL.CPP          virtual
+GFKermit::GFKermit                            KERMIT.CPP    074     public
+GFKermit::~GFKermit                           KERMIT.CPP    074     public
+GFKermit::ReceiveFile                         KERMIT.CPP    074     public
+GFKermit::SendFile                            KERMIT.CPP    078     public
+GFKermit::SetRecurseFlag                      KERMIT.CPP    079     public
+GFKermit::SetStripPathOption                  KERMIT.CPP    079     public
+GFKermit::SetDataType                         KERMIT.CPP    079     public
+GFKermit::Initialize                          KERMIT.CPP            protected
+GFKermit::SendPacket                          KERMIT.CPP            protected
+GFKermit::ReceivePacket                       KERMIT.CPP            protected
+GFKermit::ChecksumCalculate                   KERMIT.CPP            protected
+GFKermit::InitParameters                      KERMIT.CPP            protected
+GFKermit::UpdateErrorCount                    KERMIT.CPP            protected
+GFKermit::LoadInitParameters                  KERMIT.CPP            protected
+GFKermit::KermitCleanup                       KERMIT.CPP            protected
+GFKermit::_ReceiveFile                        KERMITR.CPP           protected
+GFKermit::GetInitPacket                       KERMITR.CPP           protected
+GFKermit::GetBorF                             KERMITR.CPP           protected
+GFKermit::SetDate                             KERMITR.CPP           protected
+GFKermit::ProcessCapability                   KERMITR.CPP           protected
+GFKermit::ReadFileData                        KERMITR.CPP           protected
+GFKermit::SendInitialAck                      KERMITR.CPP           protected
+GFKermit::SendAck                             KERMITR.CPP           protected
+GFKermit::ResendAck                           KERMITR.CPP           protected
+GFKermit::ResendInitialAck                    KERMITR.CPP           protected
+GFKermit::SaveBuffer                          KERMITR.CPP           protected
+GFKermit::_SendFile                           KERMITS.CPP           protected
+GFKermit::SendFileBlocks                      KERMITS.CPP           protected
+GFKermit::SendFileName                        KERMITS.CPP           protected
+GFKermit::FillBuffer                          KERMITS.CPP           protected
+GFKermit::SendPacketAndWaitForACK             KERMITS.CPP           protected
+GFLineStatus::ReportLineStatus                LINEST_R.CPP          public
+GFLineStatus::GFLineStatus                    LINESTAT.CPP  003     public
+GFLineStatus::GFLineStatus                    LINESTAT.CPP  016     public
+GFLineStatus::GFLineStatus                    LINESTAT.CPP  017     public
+GFLineStatus::~GFLineStatus                   LINESTAT.CPP  018     public
+GFLineStatus::operator=                       LINESTAT.CPP  027     public
+GFLineStatus::SetHandShake                    LINESTAT.CPP  025     public
+GFLineStatus::GetHandShake                    LINESTAT.CPP  025     public
+GFLineStatus::Status                          LINESTAT.CPP  021     public
+GFLineStatus::SendBreak                       LINESTAT.CPP  030     public
+GFLineStatus::Dtr                             LINESTAT.CPP  023     public
+GFLineStatus::Rts                             LINESTAT.CPP  023     public
+GFLineStatus::LineBreak                       LINESTAT.CPP  026     public
+GFLineStatus::Cts                             LINESTAT.CPP  021     public
+GFLineStatus::Dsr                             LINESTAT.CPP  021     public
+GFLineStatus::Ring                            LINESTAT.CPP          public
+GFLineStatus::Carrier                         LINESTAT.CPP  021     public
+GFLineStatus::CtsChanged                      LINESTAT.CPP  022     public
+GFLineStatus::DsrChanged                      LINESTAT.CPP  022     public
+GFLineStatus::BreakDetected                   LINESTAT.CPP          public
+GFLineStatus::RingDetected                    LINESTAT.CPP  029     public
+GFLineStatus::CarrierChanged                  LINESTAT.CPP  022     public
+GFLineStatus::ParityError                     LINESTAT.CPP  024     public
+GFLineStatus::FramingError                    LINESTAT.CPP  024     public
+GFLineStatus::BufferOverflow                  LINESTAT.CPP  020     public
+GFLineStatus::HardwareOverrun                 LINESTAT.CPP  024     public
+GFMem::AllocateMemory                         MEMFUN.CPP    100     public
+GFMem::DeallocatMemory                        MEMFUN.CPP    100     public
+NasiGetSession                                NASI_X.CPP    118     public
+NasiSetSession                                NASI_X.CPP    119     public
+pvtrap                                        PVTRAP.CPP
+GFScreenDriver::~GFScreenDriver               SCRNDRVR.CPP          public
+GFScreenDriver::Origin                        SCRNDRVR.CPP  108     public
+GFScreenDriver::MaxSize                       SCRNDRVR.CPP  108     public
+GFScreenDriver::GetCols                       SCRNDRVR.CPP  107     public
+GFScreenDriver::GetRows                       SCRNDRVR.CPP  107     public
+GFScreenDriver::SetRegion                     SCRNDRVR.CPP  113     public
+GFScreenDriver::SetColumns                    SCRNDRVR.CPP  113     public
+GFScreenDriver::SetTabStop                    SCRNDRVR.CPP  112     public
+GFScreenDriver::ClearTabStop                  SCRNDRVR.CPP  112     public
+GFScreenDriver::ClearAllTabs                  SCRNDRVR.CPP  112     public
+GFScreenDriver::InitTabs                      SCRNDRVR.CPP  112     public
+GFScreenDriver::Tab                           SCRNDRVR.CPP  112     public
+GFScreenDriver::BackTab                       SCRNDRVR.CPP  104     public
+GFScreenDriver::Printf                        SCRNDRVR.CPP  107     public
+GFSerial::GFSerial                            SERIAL.CPP    038     public
+GFSerial::~GFSerial                           SERIAL.CPP    038     public
+GFSerial::BlockingOff                         SERIAL.CPP    122     public
+GFSerial::BlockingOn                          SERIAL.CPP    039     public
+GFSerial::GetBuffer                           SERIAL.CPP    043     public
+GFSerial::GetComLinkPointer                   SERIAL.CPP    117     public
+GFSerial::GetLineStatus                       SERIAL.CPP    047     public
+GFSerial::GetDataFormat                       SERIAL.CPP    046     public
+GFSerial::PutChar                             SERIAL.CPP    045     public
+GFSerial::GetChar                             SERIAL.CPP    045     public
+GFSerial::GetString                           SERIAL.CPP    048     public
+GFSerial::Delay                               SERIAL.CPP    040     public
+GFSerial::operator<<                          SERIAL.CPP    038     public
+GFSerial::operator<<                          SERIAL.CPP    049     public
+GFSerial::operator>>                          SERIAL.CPP    038     public
+GFSerial::PutString                           SERIAL.CPP    049     public
+GFSerial::Printf                              SERIAL.CPP    050     public
+GFSerial::PutBuffer                           SERIAL.CPP    043     public
+GFSerial::Write                               SERIAL.CPP            public
+GFSerial::Read                                SERIAL.CPP            public
+GFSerial::RXCount                             SERIAL.CPP    051     public
+GFSerial::TXCount                             SERIAL.CPP    051     public
+GFSerial::GetBufferInfo                       SERIAL.CPP    044     public
+GFSerial::GetCommError                        SERIAL.CPP    016     public
+GFSerial::ViewPortStatus                      SERIAL.CPP    053     public
+GFSerial::CallSystemIdle                      SERIAL.CPP    042     public
+GFSerial::TXflush                             SERIAL.CPP    049     public
+GFSerial::RXflush                             SERIAL.CPP    049     public
+GFSerial::SetRXBuffer                         SERIAL.CPP    052     public
+GFSerial::SetTXBuffer                         SERIAL.CPP            public
+GFSerial::PutImm                              SERIAL.CPP            public
+GFSerial::Duplex                              SERIAL.CPP            public
+GFSerial::EchoBack                            SERIAL.CPP            public
+GFSerial::GetKey                              SERIAL.CPP            public
+GFTerminalType::GFTerminalType                TERMINAL.CPP          public
+GFTerminalType::~GFTerminalType               TERMINAL.CPP          public
+GFTeletype::GFTeletype                        TERMINAL.CPP  114     public
+GFTeletype::~GFTeletype                       TERMINAL.CPP  114     public
+GFTeletype::GetChar                           TERMINAL.CPP  114     public
+GFTeletype::GetKey                            TERMINAL.CPP  114     public
+GFTranstxt::GFTranstxt                        TRANSTXT.CPP  072     public
+GFTranstxt::~GFTranstxt                       TRANSTXT.CPP  072     public
+GFTranstxt::SendFile                          TRANSTXT.CPP  072     public
+GFTranstxt::ReceiveFile                       TRANSTXT.CPP  077     public
+GFTranstxt::SetRecurseFlag                    TRANSTXT.CPP  071     public
+GFTranstxt::SetLineFeedStripping              TRANSTXT.CPP  071     public
+UseSysTime                                    USESTIME.CPP  039     public
+VidDefineWindow                               VIDALL.CPP    300
+VidPrintf                                     VIDALL.CPP    301
+VidDrawBorder                                 VIDALL.CPP    308
+VidPokef                                      VIDALL.CPP    300
+VidGetLine                                    VIDALL.CPP    300
+VidDeleteChar                                 VIDALL.CPP
+VidInsertChar                                 VIDALL.CPP
+VidGets                                       VIDALL.CPP    301
+VidMenu                                       VIDALL.CPP    303
+VidClearToEndOfLine                           VIDALL.CPP    305
+VidClearToEndOfWindow                         VIDALL.CPP    305
+GFVt100::GFVt100                              VT100.CPP     103     public
+GFVt100::~GFVt100                             VT100.CPP     103     public
+GFVt100::Initialize                           VT100.CPP             protected
+GFVt100::GetChar                              VT100.CPP     103     public
+GFVt100::PutChar                              VT100.CPP             public
+GFVt100::DoChar                               VT100.CPP             protected
+GFVt100::DoEscape                             VT100.CPP             protected
+GFVt100::Vt100Parse                           VT100.CPP             protected
+GFVt100::ExtParse                             VT100.CPP             protected
+GFVt100::AnsiModeSet                          VT100.CPP             protected
+GFVt100::ExtModeSet                           VT100.CPP             protected
+GFVt100::SetChar0                             VT100.CPP             protected
+GFVt100::SetChar1                             VT100.CPP             protected
+GFVt100::SetDoubleSize                        VT100.CPP             protected
+GFVt100::TransmitId                           VT100.CPP             protected
+GFVt100::Bell                                 VT100.CPP             protected
+GFVt100::GetKey                               VT100.CPP     103     public
+GFVt100::Translate                            VT100.CPP             protected
+GFVt100::MapCharSet                           VT100.CPP             protected
+GFVt100::SetCharSet                           VT100.CPP             protected
+GFVt100::SetScreenWidth                       VT100.CPP             protected
+GFVt100::SetBackGround                        VT100.CPP             protected
+GFVt100::SaveCursor                           VT100.CPP             protected
+GFVt100::RestoreCursor                        VT100.CPP             protected
+GFVt52::GFVt52                                VT52.CPP      102     public
+GFVt52::~GFVt52                               VT52.CPP      102     public
+GFVt52::Decode                                VT52.CPP              public
+GFTransHelper::GFTransHelper                  XFERHELP.CPP          protected
+GFTransHelper::~GFTransHelper                 XFERHELP.CPP          protected
+GFTransHelper::WriteCharTimed                 XFERHELP.CPP          protected
+GFTransHelper::WriteBufferTimed               XFERHELP.CPP          protected
+GFTransHelper::Initialize                     XFERHELP.CPP          protected
+GFTransHelper::Message                        XFERHELP.CPP          protected
+GFTransHelper::Cleanup                        XFERHELP.CPP          protected
+GFTransHelper::FlushInput                     XFERHELP.CPP          protected
+GFTransHelper::OpenFile                       XFERHELP.CPP          protected
+GFTransHelper::CheckForAbort                  XFERHELP.CPP          protected
+GFTransHelper::StripPathComponent             XFERHELP.CPP          protected
+GFXmodem::GFXmodem                            XMODEM.CPP    080     public
+GFXmodem::~GFXmodem                           XMODEM.CPP    080     public
+GFXmodem::ReceiveFile                         XMODEM.CPP    081     public
+GFXmodem::SendFile                            XMODEM.CPP    080     public
+GFXmodem::Initialize                          XMODEM.CPP            protected
+GFXmodem1K::GFXmodem1K                        XMODEM1K.CPP  082     public
+GFXmodem1K::~GFXmodem1K                       XMODEM1K.CPP  082     public
+GFXmodem1KG::GFXmodem1KG                      XMODEMKG.CPP  083     public
+GFXmodem1KG::~GFXmodem1KG                     XMODEMKG.CPP  083     public
+GFXmodem::_ReceiveFile                        XMODEMR.CPP           protected
+GFXmodem::ReceiveBlock                        XMODEMR.CPP           protected
+GFXmodem::GetFirstCharacter                   XMODEMR.CPP           protected
+GFXmodem::GetBlockNumber                      XMODEMR.CPP           protected
+GFXmodem::ReadDataForBlock                    XMODEMR.CPP           protected
+GFXmodem::GetChecksum                         XMODEMR.CPP           protected
+GFXmodem::CheckBlockNumber                    XMODEMR.CPP           protected
+GFXmodem::VerifyChecksum                      XMODEMR.CPP           protected
+GFXmodem::SendNAK                             XMODEMR.CPP           protected
+GFXmodem::SendACK                             XMODEMR.CPP           protected
+GFXmodem::_SendFile                           XMODEMS.CPP           protected
+GFXmodem::SendBlock                           XMODEMS.CPP           protected
+GFXmodem::SendChecksum                        XMODEMS.CPP           protected
+GFXmodem::SendBlockNumber                     XMODEMS.CPP           protected
+GFXmodem::SendStartCharacter                  XMODEMS.CPP           protected
+GFXmodem::GetFirstNAK                         XMODEMS.CPP           protected
+GFXmodem::ReadNextFileBlock                   XMODEMS.CPP           protected
+GFXmodem::GetACK                              XMODEMS.CPP           protected
+GFXmodem::SendEOT                             XMODEMS.CPP           protected
+GFYmodem::GFYmodem                            YMODEM.CPP    084     public
+GFYmodem::~GFYmodem                           YMODEM.CPP    084     public
+GFYmodem::ReceiveFile                         YMODEM.CPP    084     public
+GFYmodem::SendFile                            YMODEM.CPP    084     public
+GFYmodem::SendFileList                        YMODEM.CPP            public
+GFYmodem::SetRecurseFlag                      YMODEM.CPP    085     public
+GFYmodem::SetStripPathOption                  YMODEM.CPP    085     public
+GFYmodem::_YmodemReceive                      YMODEM.CPP            protected
+GFYmodem::_YmodemSend                         YMODEM.CPP            protected
+GFYmodemG::GFYmodemG                          YMODEMG.CPP   086     public
+GFYmodemG::~GFYmodemG                         YMODEMG.CPP   086     public
+GFZmodem::GFZmodem                            ZMODEM.CPP    088     public
+GFZmodem::~GFZmodem                           ZMODEM.CPP    088     public
+GFZmodem::ReceiveFile                         ZMODEM.CPP    088     public
+GFZmodem::SendFile                            ZMODEM.CPP    088     public
+GFZmodem::SendFileList                        ZMODEM.CPP            public
+GFZmodem::SetBlockBeforeWrite                 ZMODEM.CPP    088     public
+GFZmodem::SetRecurseFlag                      ZMODEM.CPP    089     public
+GFZmodem::SetStripPathOption                  ZMODEM.CPP    089     public
+GFZmodem::SetCrashRecovery                    ZMODEM.CPP    089     public
+GFZmodem::SetResumeSend                       ZMODEM.CPP    089     public
+GFZmodem::SetUseWindow                        ZMODEM.CPP    089     public
+GFZmodem::SetOverwriteOption                  ZMODEM.CPP    089     public
+GFZmodem::SetMaxErrors                        ZMODEM.CPP            public
+GFZmodem::OpenFile                            ZMODEM.CPP            public
+GFZmodem::ReadFrameHeader                     ZMODEMC.CPP           protected
+GFZmodem::GetPad                              ZMODEMC.CPP           protected
+GFZmodem::GetHeaderType                       ZMODEMC.CPP           protected
+GFZmodem::ReadHexFrameHeaderData              ZMODEMC.CPP           protected
+GFZmodem::ReadBinaryHeaderData16              ZMODEMC.CPP           protected
+GFZmodem::ReadBinaryHeaderData32              ZMODEMC.CPP           protected
+GFZmodem::ReadHexByte                         ZMODEMC.CPP           protected
+GFZmodem::GetCookedChar                       ZMODEMC.CPP           protected
+GFZmodem::SendBinaryHeader                    ZMODEMC.CPP           protected
+GFZmodem::SendHexHeader                       ZMODEMC.CPP           protected
+GFZmodem::SendBinaryPacket                    ZMODEMC.CPP           protected
+GFZmodem::EncodeCharacter                     ZMODEMC.CPP           protected
+GFZmodem::SendEncodedCharacter                ZMODEMC.CPP           protected
+GFZmodem::ReadBinaryByte                      ZMODEMC.CPP           protected
+GFZmodem::ReadCrc16                           ZMODEMC.CPP           protected
+GFZmodem::ReadCrc32                           ZMODEMC.CPP           protected
+GFZmodem::ReadBinaryPacket                    ZMODEMC.CPP           protected
+GFZmodem::GetFileName                         ZMODEMR.CPP           protected
+GFZmodem::SetRXFileOptions                    ZMODEMR.CPP           protected
+GFZmodem::SendFileOffset                      ZMODEMR.CPP           protected
+GFZmodem::ConvertHeaderToOffset               ZMODEMR.CPP           protected
+GFZmodem::ReadFileData                        ZMODEMR.CPP           protected
+GFZmodem::_ReceiveFile                        ZMODEMR.CPP           protected
+GFZmodem::OpenLink                            ZMODEMS.CPP           protected
+GFZmodem::OpenNextFile                        ZMODEMS.CPP           protected
+GFZmodem::CloseLink                           ZMODEMS.CPP           protected
+GFZmodem::ReadBlock                           ZMODEMS.CPP           protected
+GFZmodem::BackChannelActivity                 ZMODEMS.CPP           protected
+GFZmodem::SendDataFrame                       ZMODEMS.CPP           protected
+GFZmodem::StartFileTransfer                   ZMODEMS.CPP           protected
+GFZmodem::SendFileData                        ZMODEMS.CPP           protected
+GFZmodem::_SendFile                           ZMODEMS.CPP           protected
+Modify8259Priority                            CHGPRI.CPP    098
+GFDeviceItem::operator=                       DEVICE.CPP            public
+GFDeviceItem::operator                        DEVICE.CPP            public
+GFDeviceList::GFDeviceList                    DEVICE.CPP            public
+GFDeviceList::Search                          DEVICE.CPP            public
+GFDeviceList::Search                          DEVICE.CPP            public
+GFDeviceList::Set                             DEVICE.CPP            public
+GFDeviceList::Reset                           DEVICE.CPP            public
+GFDeviceList::Get                             DEVICE.CPP            public
+GFDeviceList::Test                            DEVICE.CPP            public
+GFDeviceList::Mask                            DEVICE.CPP            public
+GFMultibitList::GFMultibitList                DEVICE.CPP            public
+GFMultibitList::Set                           DEVICE.CPP            public
+GFMultibitList::Get                           DEVICE.CPP            public
+GFDevice::GFDevice                            DEVICE.CPP            protected
+GFDevice::~GFDevice                           DEVICE.CPP            protected
+GFDevice::Open                                DEVICE.CPP            protected
+GFDevice::Close                               DEVICE.CPP            protected
+GFDevice::Set                                 DEVICE.CPP            protected
+GFDevice::Reset                               DEVICE.CPP            protected
+GFDevice::Test                                DEVICE.CPP            protected
+GFDevice::Read                                DEVICE.CPP            protected
+GFDevice::Write                               DEVICE.CPP            protected
+GFModem::AbortModemFunction                   MODEMABD.CPP  054     public
+GFModem::GFModem                              MODEM.CPP     055     public
+GFModem::GFModem                              MODEM.CPP     055     public
+GFModem::operator=                            MODEM.CPP     064     public
+GFModem::Install                              MODEM.CPP     058     public
+GFModem::DialMode                             MODEM.CPP     059     public
+GFModem::Dial                                 MODEM.CPP     058     public
+GFModem::Redial                               MODEM.CPP     065     public
+GFModem::HangUp                               MODEM.CPP     058     public
+GFModem::Reset                                MODEM.CPP     058     public
+GFModem::AutoOn                               MODEM.CPP     056     public
+GFModem::AutoOff                              MODEM.CPP     056     public
+GFModem::SetRegister                          MODEM.CPP     061     public
+GFModem::GetRegister                          MODEM.CPP     061     public
+GFModem::Write                                MODEM.CPP     070     public
+GFModem::GetModemInput                        MODEM.CPP     054     public
+GFModem::Initialize                           MODEM.CPP     062     public
+GFModem::WriteNoWait                          MODEM.CPP     070     public
+GFModem::AnswerPhone                          MODEM.CPP     054     public
+GFModem::EchoOn                               MODEM.CPP     060     public
+GFModem::EchoOff                              MODEM.CPP     060     public
+GFModem::ModemOnline                          MODEM.CPP             public
+GFModem::OnHook                               MODEM.CPP     063     public
+GFModem::OffHook                              MODEM.CPP     063     public
+GFModem::SetNumericResponse                   MODEM.CPP     067     public
+GFModem::SetVerbalResponse                    MODEM.CPP     067     public
+GFModem::SetSpeakerLevel                      MODEM.CPP     069     public
+GFModem::SetResultCodeLevel                   MODEM.CPP     068     public
+GFModem::DelayChar                            MODEM.CPP     057     public
+GFModem::FixedDelay                           MODEM.CPP     060     public
+GFModem::SetAbortKey                          MODEM.CPP     066     public
+GFModem::WaitForOk                            MODEM.CPP     062     public
+GFModem::ModemPrinter                         MODEM.CPP     060     public
+GFModem::Build                                MODEM.CPP             protected
+GFModem::Printf                               MODEM.CPP             protected
+GFMonitor::TransferAbort                      TRANSD.CPP            public
+GFUart::GFUart                                UART.CPP              protected
+GFUart::Test                                  UART.CPP              protected
+GFUart::LineControl                           UART.CPP              protected
+GFUart::LineBreak                             UART.CPP              protected
+GFUart::UpdateLineStatus                      UART.CPP              protected
+GFUart::SetDataFormat                         UART.CPP              protected
+GFUart::GetDataFormat                         UART.CPP              protected
+IsWindowsEnhancedMode                         WINUTIL.CPP   098
+IsDESQViewRunning                             WINUTIL.CPP   099
+SysYieldWindowsTimeSlice                      WINUTIL.CPP   099
+SysYieldDESQViewTimeSlice                     WINUTIL.CPP   099
+GFComOS2::GFComOS2                            COMOS2.CPP    003     public
+GFComOS2::GFComOS2                            COMOS2.CPP    003     public
+GFComOS2::~GFComOS2                           COMOS2.CPP    003     public
+GFComOS2::Initialize                          COMOS2.CPP            protected
+GFComOS2::Open                                COMOS2.CPP            protected
+GFComOS2::Close                               COMOS2.CPP            protected
+GFComOS2::GetBufferInfo                       COMOS2.CPP            protected
+GFComOS2::NewLinkSize                         COMOS2.CPP            protected
+GFComOS2::SetHandShake                        COMOS2.CPP            protected
+GFComOS2::GetHandShake                        COMOS2.CPP            protected
+GFComOS2::LineBreak                           COMOS2.CPP            protected
+GFComOS2::LineControl                         COMOS2.CPP            protected
+GFComOS2::SetDataFormat                       COMOS2.CPP            protected
+GFComOS2::GetDataFormat                       COMOS2.CPP            protected
+GFComOS2::PutChar                             COMOS2.CPP            protected
+GFComOS2::PutString                           COMOS2.CPP            protected
+GFComOS2::PutBuffer                           COMOS2.CPP            protected
+GFComOS2::GetChar                             COMOS2.CPP            protected
+GFComOS2::GetBuffer                           COMOS2.CPP            protected
+GFComOS2::Flush                               COMOS2.CPP            protected
+GFComOS2::UpdateLineStatus                    COMOS2.CPP            protected
+GFComOS2::ClearLink                           COMOS2.CPP            protected
+GFComOS2::SystemIdle                          COMOS2.CPP    004     protected
+GFComOS2::RXCount                             COMOS2.CPP            protected
+GFComOS2::TXCount                             COMOS2.CPP            protected
+GFComOS2::ReportLinkStatus                    COMOS2_R.CPP          protected
+GFOS2FileEngine::GFOS2FileEngine              FILE_OS2.CPP          public
+GFOS2FileEngine::~GFOS2FileEngine             FILE_OS2.CPP          public
+GFOS2FileEngine::Initialize                   FILE_OS2.CPP          public
+GFOS2FileEngine::Open                         FILE_OS2.CPP          public
+GFOS2FileEngine::Close                        FILE_OS2.CPP          public
+GFOS2FileEngine::SetCurrentPosition           FILE_OS2.CPP          public
+GFOS2FileEngine::GetCurrentPosition           FILE_OS2.CPP          public
+GFOS2FileEngine::SetTimeDate                  FILE_OS2.CPP          public
+GFOS2FileEngine::GetTimeDate                  FILE_OS2.CPP          public
+GFOS2FileEngine::GetLength                    FILE_OS2.CPP          public
+GFOS2FileEngine::GetNextName                  FILE_OS2.CPP          public
+GFOS2FileEngine::PutBuffer                    FILE_OS2.CPP          public
+GFOS2FileEngine::GetBuffer                    FILE_OS2.CPP          public
+GFOS2FileEngine::GetChar                      FILE_OS2.CPP          public
+GFOS2FileEngine::PutChar                      FILE_OS2.CPP          public
+GFOS2FileEngine::Flush                        FILE_OS2.CPP          public
+GFOS2FileEngine::GetNextWildName              FILE_OS2.CPP          protected
+GFOS2FileEngine::FindFirst                    FILE_OS2.CPP          protected
+GFOS2FileEngine::FindNext                     FILE_OS2.CPP          protected
+SetKeyStatus                                  KBDSUBSO.C
+enhkbd                                        KBDSUBSO.C
+kbfetch                                       KBDSUBSO.C
+breakchk                                      KBDSUBSO.C
+getkey                                        KBDSUBSO.C
+gfkbhit                                       KBDSUBSO.C
+GFModem::AbortModemFunction                   MODEMABO.CPP          public
+GFScreenZDisp::GFScreenZDisp                  SRNDISPO.CPP  103     public
+GFScreenZDisp::~GFScreenZDisp                 SRNDISPO.CPP  103     public
+GFScreenZDisp::Flush                          SRNDISPO.CPP  111     public
+GFScreenZDisp::Clear                          SRNDISPO.CPP  105     public
+GFScreenZDisp::MoveTo                         SRNDISPO.CPP          public
+GFScreenZDisp::WhereAmI                       SRNDISPO.CPP          public
+GFScreenZDisp::CursorHome                     SRNDISPO.CPP  104     public
+GFScreenZDisp::CursorUp                       SRNDISPO.CPP  104     public
+GFScreenZDisp::CursorDown                     SRNDISPO.CPP  104     public
+GFScreenZDisp::CursorRight                    SRNDISPO.CPP  104     public
+GFScreenZDisp::CursorLeft                     SRNDISPO.CPP  104     public
+GFScreenZDisp::Color                          SRNDISPO.CPP  111     public
+GFScreenZDisp::ReadColor                      SRNDISPO.CPP          public
+GFScreenZDisp::PutChar                        SRNDISPO.CPP          public
+GFScreenZDisp::PutString                      SRNDISPO.CPP          public
+GFScreenZDisp::Printf                         SRNDISPO.CPP          public
+GFScreenZDisp::GetChar                        SRNDISPO.CPP          public
+GFScreenZDisp::Erase2EOL                      SRNDISPO.CPP  106     public
+GFScreenZDisp::Erase2EOP                      SRNDISPO.CPP  106     public
+GFScreenZDisp::Erase2SOL                      SRNDISPO.CPP  106     public
+GFScreenZDisp::Erase2SOP                      SRNDISPO.CPP  106     public
+GFScreenZDisp::DeleteLine                     SRNDISPO.CPP  105     public
+GFScreenZDisp::InsertLine                     SRNDISPO.CPP          public
+GFScreenZDisp::DeleteChar                     SRNDISPO.CPP  105     public
+GFScreenZDisp::InsertChar                     SRNDISPO.CPP          public
+GFScreenZDisp::Scroll                         SRNDISPO.CPP          public
+GFScreenZDisp::GetKey                         SRNDISPO.CPP          public
+GFScreenZDisp::KbdHit                         SRNDISPO.CPP          public
+GFScreenZDisp::ShowCursor                     SRNDISPO.CPP          public
+GFScreenZDisp::HideCursor                     SRNDISPO.CPP          public
+GFScreenZDisp::Invert                         SRNDISPO.CPP          public
+ElapsedSysTime                                TIMERO.CPP
+GFMonitor::TransferAbort                      TRANSO.CPP            public
+GFScreenVid::GFScreenVid                      VIDDISPO.CPP  104     public
+GFScreenVid::~GFScreenVid                     VIDDISPO.CPP  104     public
+GFScreenVid::Flush                            VIDDISPO.CPP          public
+GFScreenVid::Clear                            VIDDISPO.CPP          public
+GFScreenVid::MoveTo                           VIDDISPO.CPP  105     public
+GFScreenVid::WhereAmI                         VIDDISPO.CPP  107     public
+GFScreenVid::CursorHome                       VIDDISPO.CPP  104     public
+GFScreenVid::CursorUp                         VIDDISPO.CPP  104     public
+GFScreenVid::CursorDown                       VIDDISPO.CPP  104     public
+GFScreenVid::CursorRight                      VIDDISPO.CPP  104     public
+GFScreenVid::CursorLeft                       VIDDISPO.CPP  104     public
+GFScreenVid::Color                            VIDDISPO.CPP          public
+GFScreenVid::ReadColor                        VIDDISPO.CPP  107     public
+GFScreenVid::PutChar                          VIDDISPO.CPP  105     public
+GFScreenVid::PutString                        VIDDISPO.CPP  105     public
+GFScreenVid::Printf                           VIDDISPO.CPP  107     public
+GFScreenVid::GetChar                          VIDDISPO.CPP          public
+GFScreenVid::Erase2EOL                        VIDDISPO.CPP  106     public
+GFScreenVid::Erase2EOP                        VIDDISPO.CPP  106     public
+GFScreenVid::Erase2SOL                        VIDDISPO.CPP  106     public
+GFScreenVid::Erase2SOP                        VIDDISPO.CPP  106     public
+GFScreenVid::DeleteLine                       VIDDISPO.CPP  105     public
+GFScreenVid::InsertLine                       VIDDISPO.CPP  105     public
+GFScreenVid::DeleteChar                       VIDDISPO.CPP  105     public
+GFScreenVid::InsertChar                       VIDDISPO.CPP  105     public
+GFScreenVid::Scroll                           VIDDISPO.CPP  106     public
+GFScreenVid::GetKey                           VIDDISPO.CPP          public
+GFScreenVid::KbdHit                           VIDDISPO.CPP          public
+VidSelectBIOSDrivers                          VIDEOOS2.CPP  307
+VidSelectFastDrivers                          VIDEOOS2.CPP  307
+VidInitialize                                 VIDEOOS2.CPP  300
+VidDetermineType                              VIDEOOS2.CPP
+VidClearWindowFast                            VIDEOOS2.CPP  305
+VidGoto                                       VIDEOOS2.CPP  300
+VidReadPhysicalPosition                       VIDEOOS2.CPP  309
+VidClearLineFast                              VIDEOOS2.CPP  305
+VidPutsFast                                   VIDEOOS2.CPP  301
+VidPutcFast                                   VIDEOOS2.CPP  300
+VidBeep                                       VIDEOOS2.CPP  301
+VidPokesFast                                  VIDEOOS2.CPP  300
+VidSetAttribute                               VIDEOOS2.CPP  310
+VidTerminate                                  VIDEOOS2.CPP  308
+VidPokecFast                                  VIDEOOS2.CPP  300
+VidPeekWordFast                               VIDEOOS2.CPP  300
+VidSaveWindowFast                             VIDEOOS2.CPP  308
+VidRestoreWindowFast                          VIDEOOS2.CPP  308
+VidSetMode                                    VIDEOOS2.CPP
+VidSetFont                                    VIDEOOS2.CPP
+VidSetScanLines                               VIDEOOS2.CPP
+VidDisableEGACursorEmulation                  VIDEOOS2.CPP
+VidSet80x25                                   VIDEOOS2.CPP  304
+VidSet40x25                                   VIDEOOS2.CPP
+VidSet80x28                                   VIDEOOS2.CPP
+VidSet80x43                                   VIDEOOS2.CPP
+VidSet80x50                                   VIDEOOS2.CPP
+VidSet640x350                                 VIDEOOS2.CPP
+VidScrollUpFast                               VIDEOOS2.CPP  306
+VidScrollDownFast                             VIDEOOS2.CPP  306
+VidSelectPage                                 VIDEOOS2.CPP  310
+VidPhysicalGoto                               VIDEOOS2.CPP  308
+VidSetWindowPage                              VIDEOOS2.CPP  310
+VidSetMono                                    VIDEOOS2.CPP
+VidFreeVid                                    VIDEOOS2.CPP  310
+VidHideCursor                                 VIDEOOS2.CPP  308
+VidShowCursor                                 VIDEOOS2.CPP  308
+VidGetCursorData                              VIDEOOS2.CPP
+LibMain                                       COMPPDLL.CPP
+WEP                                           COMPPDLL.CPP
+GFComWin3::GFComWin3                          CW16.CPP      005     public
+GFComWin3::GFComWin3                          CW16.CPP      005     public
+GFComWin3::~GFComWin3                         CW16.CPP      005     public
+GFComWin3::GetMaskedEvents                    CW16.CPP      117     public
+GFComWin3::GetCommHandle                      CW16.CPP      117     public
+GFComWin3::GetEventMask                       CW16.CPP      117     public
+GFComWin3::SetEventCharacter                  CW16.CPP      117     public
+GFComWin3::EnableNotification                 CW16.CPP      117     public
+GFComWin3::IsNotification                     CW16.CPP      117     public
+GFComWin3::IsNotificationSuspended            CW16.CPP      117     public
+GFComWin3::SuspendNotification                CW16.CPP      117     public
+GFComWin3::ResumeNotification                 CW16.CPP      117     public
+GFComWin3::Initialize                         CW16.CPP              protected
+GFComWin3::Open                               CW16.CPP              protected
+GFComWin3::Close                              CW16.CPP              protected
+GFComWin3::GetLine                            CW16.CPP              protected
+GFComWin3::GetBufferInfo                      CW16.CPP              protected
+GFComWin3::NewLinkSize                        CW16.CPP              protected
+GFComWin3::SetHandShake                       CW16.CPP              protected
+GFComWin3::GetHandShake                       CW16.CPP              protected
+GFComWin3::LineBreak                          CW16.CPP              protected
+GFComWin3::LineControl                        CW16.CPP              protected
+GFComWin3::SetDataFormat                      CW16.CPP              protected
+GFComWin3::GetDataFormat                      CW16.CPP              protected
+GFComWin3::PutChar                            CW16.CPP              protected
+GFComWin3::PutString                          CW16.CPP              protected
+GFComWin3::PutBuffer                          CW16.CPP              protected
+GFComWin3::GetChar                            CW16.CPP              protected
+GFComWin3::GetBuffer                          CW16.CPP              protected
+GFComWin3::Flush                              CW16.CPP              protected
+GFComWin3::UpdateLineStatus                   CW16.CPP              protected
+GFComWin3::ClearLink                          CW16.CPP              protected
+GFComWin3::TranslateWindowsErrorCode          CW16.CPP              protected
+GFComWin3::SystemIdle                         CW16.CPP      005     protected
+GFComWin3::PutImm                             CW16.CPP              protected
+GFComWin3::ReportLinkStatus                   CW16_R.CPP            protected
+GFWinFileEngine::GFWinFileEngine              FILE_W16.CPP          public
+GFWinFileEngine::~GFWinFileEngine             FILE_W16.CPP          public
+GFWinFileEngine::Initialize                   FILE_W16.CPP          public
+GFWinFileEngine::Open                         FILE_W16.CPP          public
+GFWinFileEngine::Close                        FILE_W16.CPP          public
+GFWinFileEngine::SetCurrentPosition           FILE_W16.CPP          public
+GFWinFileEngine::GetCurrentPosition           FILE_W16.CPP          public
+GFWinFileEngine::SetTimeDate                  FILE_W16.CPP          public
+GFWinFileEngine::GetTimeDate                  FILE_W16.CPP          public
+GFWinFileEngine::GetLength                    FILE_W16.CPP          public
+GFWinFileEngine::GetNextName                  FILE_W16.CPP          public
+GFWinFileEngine::PutBuffer                    FILE_W16.CPP          public
+GFWinFileEngine::GetBuffer                    FILE_W16.CPP          public
+GFWinFileEngine::GetChar                      FILE_W16.CPP          public
+GFWinFileEngine::PutChar                      FILE_W16.CPP          public
+GFWinFileEngine::Flush                        FILE_W16.CPP          public
+GFWinFileEngine::GetNextWildName              FILE_W16.CPP          protected
+GFWinFileEngine::FindFirst                    FILE_W16.CPP          protected
+GFWinFileEngine::FindNext                     FILE_W16.CPP          protected
+GFModem::AbortModemFunction                   MABTRW16.CPP          public
+GFNasi::GFNasi                                NASI_AW.CPP   118     public
+GFNasi::GFNasi                                NASI_AW.CPP   118     public
+GFNasi::~GFNasi                               NASI_AW.CPP   118     public
+GFNasi::Initialize                            NASI_AW.CPP           protected
+GFNasi::Open                                  NASI_AW.CPP           protected
+GFNasi::Close                                 NASI_AW.CPP           protected
+GFNasi::GetBufferInfo                         NASI_AW.CPP           protected
+GFNasi::NewLinkSize                           NASI_AW.CPP           protected
+GFNasi::SetHandShake                          NASI_AW.CPP           protected
+GFNasi::GetHandShake                          NASI_AW.CPP           protected
+GFNasi::LineBreak                             NASI_AW.CPP           protected
+GFNasi::LineControl                           NASI_AW.CPP           protected
+GFNasi::SetDataFormat                         NASI_AW.CPP           protected
+GFNasi::GetDataFormat                         NASI_AW.CPP           protected
+GFNasi::UpdateLineStatus                      NASI_AW.CPP           protected
+GFNasi::PutChar                               NASI_AW.CPP           protected
+GFNasi::PutString                             NASI_AW.CPP           protected
+GFNasi::PutBuffer                             NASI_AW.CPP           protected
+GFNasi::PutImm                                NASI_AW.CPP           protected
+GFNasi::GetChar                               NASI_AW.CPP           protected
+GFNasi::GetBuffer                             NASI_AW.CPP           protected
+GFNasi::ClearLink                             NASI_AW.CPP           protected
+GFNasi::Flush                                 NASI_AW.CPP           protected
+GFNasi::NasiInit                              NASI_AW.CPP           protected
+GFNasi::SetDTRNasi                            NASI_AW.CPP           protected
+GFNasi::SetRTSNasi                            NASI_AW.CPP           protected
+GFNasi::GetNames                              NASI_AW.CPP           protected
+GFNasi::SystemIdle                            NASI_AW.CPP   119     protected
+GFNasi::AttachNasi                            NASI_AW.CPP           protected
+get_token                                     NASI_AW.CPP
+GFNasi::NasiParsePortName                     NASI_AW.CPP           protected
+GFNasi::DumpNasiItems                         NASI_DW.CPP           protected
+GFNasi::DumpAllVcStatus                       NASI_DW.CPP           protected
+translate_baud_rate                           NASI_DW.CPP
+translate_parity                              NASI_DW.CPP
+translate_length                              NASI_DW.CPP
+translate_stop_bits                           NASI_DW.CPP
+translate_on_off                              NASI_DW.CPP
+translate_flow                                NASI_DW.CPP
+GFNasi::DumpConfig                            NASI_DW.CPP           protected
+translate_transmit_status                     NASI_DW.CPP
+translate_transmitter_status                  NASI_DW.CPP
+GFNasi::DumpStatus                            NASI_DW.CPP           protected
+GFNasi::ReportLinkStatus                      NASI_DW.CPP           protected
+_free_library                                 NASI_XW.CPP
+NasiLoaded                                    NASI_XW.CPP   118
+_NasiMungQueryNames                           NASI_XW.CPP
+NasiQueryFirstPort                            NASI_XW.CPP   118
+NasiQueryNextPort                             NASI_XW.CPP   118
+NasiCloseQuery                                NASI_XW.CPP   118
+GFMonitor::TransferAbort                      TABRTW16.CPP          public
+ElapsedSysTime                                TIMERW16.CPP
+TWFrameWndProc                                TW_W16.CPP
+TWFreeInstanceData                            TW_W16.CPP    311
+TWSetDefaultAttribute                         TW_W16.CPP    110
+TWFreeWindow                                  TW_W16.CPP    311
+TWWndProc                                     TW_W16.CPP
+TWPaintHandler                                TW_W16.CPP
+TWHandleFunctionKeys                          TW_W16.CPP
+TWKeyDownHandler                              TW_W16.CPP
+BufferKeystroke                               TW_W16.CPP
+TWCharHandler                                 TW_W16.CPP
+TWPutCursorOnScreen                           TW_W16.CPP
+TWSetFocusHandler                             TW_W16.CPP
+TWKillFocusHandler                            TW_W16.CPP
+TWSizeHandler                                 TW_W16.CPP
+TWHorizontalScrollHandler                     TW_W16.CPP
+TWVerticalScrollHandler                       TW_W16.CPP
+TWAdjustCaret                                 TW_W16.CPP
+CloseEnumProc                                 TW_W16.CPP
+TWYield                                       TW_W16.CPP    314
+TWGotoWindow                                  TW_W16.CPP
+TWGoto                                        TW_W16.CPP    315
+TWClearToEndOfLine                            TW_W16.CPP    317
+TWClearToEndOfWindow                          TW_W16.CPP    317
+TWDeleteChar                                  TW_W16.CPP    316
+TWInsertChar                                  TW_W16.CPP    316
+TWScrollUp                                    TW_W16.CPP    313
+TWClearWindow                                 TW_W16.CPP    314
+TWScrollDown                                  TW_W16.CPP    313
+TWPutc                                        TW_W16.CPP    311
+TWPokef                                       TW_W16.CPP    315
+TWPokes                                       TW_W16.CPP    317
+TWPokec                                       TW_W16.CPP    312
+TWPuts                                        TW_W16.CPP    311
+TWPrintf                                      TW_W16.CPP    312
+TWDialogProc                                  TW_W16.CPP
+build_dialog_box                              TW_W16.CPP
+TWGetLine                                     TW_W16.CPP    318
+TWMenu                                        TW_W16.CPP    319
+TWGets                                        TW_W16.CPP    319
+TWGetkey                                      TW_W16.CPP    312
+TWKbhit                                       TW_W16.CPP    312
+TWSetAttribute                                TW_W16.CPP    314
+TWCreateHandler                               TW_W16.CPP
+TWDefineWindow                                TW_W16.CPP    311
+InitializeClasses                             TW_W16.CPP
+TWInitialize                                  TW_W16.CPP    311
+GFScreenTW::GFScreenTW                        TWDSPW16.CPP  110     public
+GFScreenTW::~GFScreenTW                       TWDSPW16.CPP  110     public
+GFScreenTW::Flush                             TWDSPW16.CPP      public
+GFScreenTW::Clear                             TWDSPW16.CPP      public
+GFScreenTW::MoveTo                            TWDSPW16.CPP      public
+GFScreenTW::WhereAmI                          TWDSPW16.CPP      public
+GFScreenTW::CursorHome                        TWDSPW16.CPP      public
+GFScreenTW::CursorUp                          TWDSPW16.CPP      public
+GFScreenTW::CursorDown                        TWDSPW16.CPP      public
+GFScreenTW::CursorRight                       TWDSPW16.CPP      public
+GFScreenTW::CursorLeft                        TWDSPW16.CPP      public
+GFScreenTW::Color                             TWDSPW16.CPP      public
+GFScreenTW::ReadColor                         TWDSPW16.CPP      public
+GFScreenTW::Put                               TWDSPW16.CPP      public
+GFScreenTW::PutString                         TWDSPW16.CPP      public
+GFScreenTW::GetChar                           TWDSPW16.CPP      public
+GFScreenTW::Erase2EOL                         TWDSPW16.CPP      public
+GFScreenTW::Erase2EOP                         TWDSPW16.CPP      public
+GFScreenTW::Erase2SOL                         TWDSPW16.CPP      public
+GFScreenTW::Erase2SOP                         TWDSPW16.CPP      public
+GFScreenTW::DeleteLine                        TWDSPW16.CPP      public
+GFScreenTW::InsertLine                        TWDSPW16.CPP      public
+GFScreenTW::DeleteChar                        TWDSPW16.CPP      public
+GFScreenTW::InsertChar                        TWDSPW16.CPP      public
+GFScreenTW::Scroll                            TWDSPW16.CPP      public
+GFScreenTW::GetKey                            TWDSPW16.CPP      public
+GFScreenTW::KbdHit                            TWDSPW16.CPP      public
+GFScreenTW::ShowCursor                        TWDSPW16.CPP      public
+GFScreenTW::HideCursor                        TWDSPW16.CPP      public
+GFScreenTW::Invert                            TWDSPW16.CPP      public
+_WindowsDefaultIdleFunction                   TWNOTIFY.CPP
+SetPortIdleFunctionPtr                        TWNOTIFY.CPP
+GFComWin32::GFComWin32                        CW32.CPP      116     public
+GFComWin32::GFComWin32                        CW32.CPP      116     public
+GFComWin32::~GFComWin32                       CW32.CPP      116     public
+GFComWin32::SetEventCharacter                 CW32.CPP      116     public
+GFComWin32::GetEventMask                      CW32.CPP      116     public
+GFComWin32::SetEventMask                      CW32.CPP      116     public
+GFComWin32::WaitForEvent                      CW32.CPP      116     public
+GFComWin32::Initialize                        CW32.CPP              protected
+GFComWin32::Open                              CW32.CPP              protected
+GFComWin32::Close                             CW32.CPP              protected
+GFComWin32::GetLine                           CW32.CPP              protected
+GFComWin32::GetBufferInfo                     CW32.CPP              protected
+GFComWin32::NewLinkSize                       CW32.CPP              protected
+GFComWin32::SetHandShake                      CW32.CPP              protected
+GFComWin32::GetHandShake                      CW32.CPP              protected
+GFComWin32::LineBreak                         CW32.CPP              protected
+GFComWin32::LineControl                       CW32.CPP              protected
+GFComWin32::SetDataFormat                     CW32.CPP              protected
+GFComWin32::GetDataFormat                     CW32.CPP              protected
+GFComWin32::PutChar                           CW32.CPP              protected
+GFComWin32::PutString                         CW32.CPP              protected
+GFComWin32::PutBuffer                         CW32.CPP              protected
+GFComWin32::GetChar                           CW32.CPP              protected
+GFComWin32::GetBuffer                         CW32.CPP              protected
+GFComWin32::Flush                             CW32.CPP              protected
+GFComWin32::UpdateLineStatus                  CW32.CPP              protected
+GFComWin32::ClearLink                         CW32.CPP              protected
+GFComWin32::TranslateWin32ErrorCode           CW32.CPP              protected
+GFComWin32::SystemIdle                        CW32.CPP      116     protected
+GFComWin32::PutImm                            CW32.CPP              protected
+GFComWin32::ReportLinkStatus                  CW32_R.CPP            protected
+GFWin32FileEngine::GFWin32FileEngine          FILE_W32.CPP          public
+GFWin32FileEngine::~GFWin32FileEngine         FILE_W32.CPP          public
+GFWin32FileEngine::Initialize                 FILE_W32.CPP          public
+GFWin32FileEngine::Open                       FILE_W32.CPP          public
+GFWin32FileEngine::Close                      FILE_W32.CPP          public
+GFWin32FileEngine::SetCurrentPosition         FILE_W32.CPP          public
+GFWin32FileEngine::GetCurrentPosition         FILE_W32.CPP          public
+GFWin32FileEngine::SetTimeDate                FILE_W32.CPP          public
+GFWin32FileEngine::GetTimeDate                FILE_W32.CPP          public
+GFWin32FileEngine::GetLength                  FILE_W32.CPP          public
+GFWin32FileEngine::GetNextName                FILE_W32.CPP          public
+GFWin32FileEngine::PutBuffer                  FILE_W32.CPP          public
+GFWin32FileEngine::GetBuffer                  FILE_W32.CPP          public
+GFWin32FileEngine::GetChar                    FILE_W32.CPP          public
+GFWin32FileEngine::PutChar                    FILE_W32.CPP          public
+GFWin32FileEngine::Flush                      FILE_W32.CPP          public
+GFWin32FileEngine::GetNextWildName            FILE_W32.CPP          protected
+GFWin32FileEngine::FindFirst                  FILE_W32.CPP          protected
+GFWin32FileEngine::FindNext                   FILE_W32.CPP          protected
+GFComWin32::GFComWin32                        CW32S.CPP             public
+GFComWin32::GFComWin32                        CW32S.CPP             public
+GFComWin32::~GFComWin32                       CW32S.CPP             public
+GFComWin32::SetEventCharacter                 CW32S.CPP             public
+GFComWin32::GetEventMask                      CW32S.CPP             public
+GFComWin32::SetEventMask                      CW32S.CPP             public
+GFComWin32::WaitForEvent                      CW32S.CPP             public
+GFComWin32::Initialize                        CW32S.CPP             protected
+GFComWin32::Open                              CW32S.CPP             protected
+GFComWin32::Close                             CW32S.CPP             protected
+GFComWin32::GetLine                           CW32S.CPP             protected
+GFComWin32::GetBufferInfo                     CW32S.CPP             protected
+GFComWin32::NewLinkSize                       CW32S.CPP             protected
+GFComWin32::SetHandShake                      CW32S.CPP             protected
+GFComWin32::GetHandShake                      CW32S.CPP             protected
+GFComWin32::LineBreak                         CW32S.CPP             protected
+GFComWin32::LineControl                       CW32S.CPP             protected
+GFComWin32::SetDataFormat                     CW32S.CPP             protected
+GFComWin32::GetDataFormat                     CW32S.CPP             protected
+GFComWin32::PutChar                           CW32S.CPP             protected
+GFComWin32::PutString                         CW32S.CPP             protected
+GFComWin32::PutBuffer                         CW32S.CPP             protected
+GFComWin32::GetChar                           CW32S.CPP             protected
+GFComWin32::GetBuffer                         CW32S.CPP             protected
+GFComWin32::Flush                             CW32S.CPP             protected
+GFComWin32::UpdateLineStatus                  CW32S.CPP             protected
+GFComWin32::ClearLink                         CW32S.CPP             protected
+GFComWin32::TranslateWin32ErrorCode           CW32S.CPP             protected
+GFComWin32::SystemIdle                        CW32S.CPP             protected
+GFComWin32::PutImm                            CW32S.CPP             protected
+GFComWin32::ReportLinkStatus                  CW32S.CPP             protected
+DllEntryPoint                                 CW32S.CPP
+GFModem::AbortModemFunction                   MABRTW32.CPP          public
+GFMonitor::TransferAbort                      TABRTW32.CPP          public
+ElapsedSysTime                                TIMERW32.CPP
+TWFrameWndProc                                TW_W32.CPP
+TWSetDefaultAttribute                         TW_W32.CPP    110
+TWFreeInstanceData                            TW_W32.CPP    311
+TWFreeWindow                                  TW_W32.CPP    311
+TWWndProc                                     TW_W32.CPP
+TWPaintHandler                                TW_W32.CPP
+TWHandleFunctionKeys                          TW_W32.CPP
+TWKeyDownHandler                              TW_W32.CPP
+BufferKeystroke                               TW_W32.CPP
+TWCharHandler                                 TW_W32.CPP
+TWPutCursorOnScreen                           TW_W32.CPP
+TWSetFocusHandler                             TW_W32.CPP
+TWKillFocusHandler                            TW_W32.CPP
+TWSizeHandler                                 TW_W32.CPP
+TWHorizontalScrollHandler                     TW_W32.CPP
+TWVerticalScrollHandler                       TW_W32.CPP
+TWAdjustCaret                                 TW_W32.CPP
+CloseEnumProc                                 TW_W32.CPP
+TWYield                                       TW_W32.CPP    314
+TWGotoWindow                                  TW_W32.CPP
+TWGoto                                        TW_W32.CPP    315
+TWClearToEndOfLine                            TW_W32.CPP    317
+TWClearToEndOfWindow                          TW_W32.CPP    317
+TWDeleteChar                                  TW_W32.CPP    316
+TWInsertChar                                  TW_W32.CPP    316
+TWScrollUp                                    TW_W32.CPP    313
+TWClearWindow                                 TW_W32.CPP    314
+TWScrollDown                                  TW_W32.CPP    313
+TWPutc                                        TW_W32.CPP    311
+TWPokef                                       TW_W32.CPP    315
+TWPokes                                       TW_W32.CPP    317
+TWPokec                                       TW_W32.CPP    312
+TWPuts                                        TW_W32.CPP    311
+TWPrintf                                      TW_W32.CPP    312
+TWDialogProc                                  TW_W32.CPP
+build_dialog_box                              TW_W32.CPP
+TWGetLine                                     TW_W32.CPP    318
+TWMenu                                        TW_W32.CPP    319
+TWGets                                        TW_W32.CPP    319
+TWGetkey                                      TW_W32.CPP    312
+TWKbhit                                       TW_W32.CPP    312
+TWSetAttribute                                TW_W32.CPP    314
+TWCreateHandler                               TW_W32.CPP
+TWDefineWindow                                TW_W32.CPP    311
+InitializeClasses                             TW_W32.CPP
+TWInitialize                                  TW_W32.CPP    311
+GFScreenTW::GFScreenTW                        TWDSPW32.CPP          public
+GFScreenTW::~GFScreenTW                       TWDSPW32.CPP          public
+GFScreenTW::Flush                             TWDSPW32.CPP          public
+GFScreenTW::Clear                             TWDSPW32.CPP          public
+GFScreenTW::MoveTo                            TWDSPW32.CPP          public
+GFScreenTW::WhereAmI                          TWDSPW32.CPP          public
+GFScreenTW::CursorHome                        TWDSPW32.CPP          public
+GFScreenTW::CursorUp                          TWDSPW32.CPP          public
+GFScreenTW::CursorDown                        TWDSPW32.CPP          public
+GFScreenTW::CursorRight                       TWDSPW32.CPP          public
+GFScreenTW::CursorLeft                        TWDSPW32.CPP          public
+GFScreenTW::Color                             TWDSPW32.CPP          public
+GFScreenTW::ReadColor                         TWDSPW32.CPP          public
+GFScreenTW::Put                               TWDSPW32.CPP          public
+GFScreenTW::PutString                         TWDSPW32.CPP          public
+GFScreenTW::GetChar                           TWDSPW32.CPP          public
+GFScreenTW::Erase2EOL                         TWDSPW32.CPP          public
+GFScreenTW::Erase2EOP                         TWDSPW32.CPP          public
+GFScreenTW::Erase2SOL                         TWDSPW32.CPP          public
+GFScreenTW::Erase2SOP                         TWDSPW32.CPP          public
+GFScreenTW::DeleteLine                        TWDSPW32.CPP          public
+GFScreenTW::InsertLine                        TWDSPW32.CPP          public
+GFScreenTW::DeleteChar                        TWDSPW32.CPP          public
+GFScreenTW::InsertChar                        TWDSPW32.CPP          public
+GFScreenTW::Scroll                            TWDSPW32.CPP          public
+GFScreenTW::GetKey                            TWDSPW32.CPP          public
+GFScreenTW::KbdHit                            TWDSPW32.CPP          public
+GFScreenTW::ShowCursor                        TWDSPW32.CPP          public
+GFScreenTW::HideCursor                        TWDSPW32.CPP          public
+GFScreenTW::Invert                            TWDSPW32.CPP          public
+VidSelectBIOSDrivers                          VIDC32.CPP    307
+VidSelectFastDrivers                          VIDC32.CPP    307
+VidSelectPage                                 VIDC32.CPP    310
+VidTerminate                                  VIDC32.CPP    308
+VidInitialize                                 VIDC32.CPP    300
+VidGoto                                       VIDC32.CPP    300
+VidSaveWindow                                 VIDC32.CPP    308
+VidRestoreWindow                              VIDC32.CPP    308
+VidPhysicalGoto                               VIDC32.CPP    308
+VidSetAttribute                               VIDC32.CPP    310
+VidPuts                                       VIDC32.CPP    301
+VidScrollUp                                   VIDC32.CPP    306
+VidScrollDown                                 VIDC32.CPP    306
+VidPokec                                      VIDC32.CPP    300
+VidReadPhysicalPosition                       VIDC32.CPP    309
+VidBeep                                       VIDC32.CPP    301
+VidSetWindowPage                              VIDC32.CPP
+VidPokes                                      VIDC32.CPP    300
+VidClearLine                                  VIDC32.CPP    305
+VidClearWindow                                VIDC32.CPP    305
+VidPutc                                       VIDC32.CPP    300
+VidPeekWord                                   VIDC32.CPP    300
+_VidSetSize                                   VIDC32.CPP
+VidSet40x25                                   VIDC32.CPP    300
+VidSet80x43                                   VIDC32.CPP    304
+VidSet80x25                                   VIDC32.CPP    304
+VidSet80x28                                   VIDC32.CPP    302
+VidSet80x50                                   VIDC32.CPP    302
+VidHideCursor                                 VIDC32.CPP    308
+VidShowCursor                                 VIDC32.CPP    308
+VidFreeVid                                    VIDC32.CPP    310
+_translate                                    VIDC32.CPP
+getkey                                        VIDC32.CPP
+gfkbhit                                       VIDC32.CPP
+GFScreenVid::GFScreenVid                      VIDDC32.CPP   104     public
+GFScreenVid::~GFScreenVid                     VIDDC32.CPP   104     public
+GFScreenVid::Flush                            VIDDC32.CPP           public
+GFScreenVid::Clear                            VIDDC32.CPP           public
+GFScreenVid::MoveTo                           VIDDC32.CPP   105     public
+GFScreenVid::WhereAmI                         VIDDC32.CPP   107     public
+GFScreenVid::CursorHome                       VIDDC32.CPP           public
+GFScreenVid::CursorUp                         VIDDC32.CPP   104     public
+GFScreenVid::CursorDown                       VIDDC32.CPP   104     public
+GFScreenVid::CursorRight                      VIDDC32.CPP   104     public
+GFScreenVid::CursorLeft                       VIDDC32.CPP   104     public
+GFScreenVid::Color                            VIDDC32.CPP           public
+GFScreenVid::ReadColor                        VIDDC32.CPP   107     public
+GFScreenVid::PutChar                          VIDDC32.CPP   105     public
+GFScreenVid::PutString                        VIDDC32.CPP   105     public
+GFScreenVid::GetChar                          VIDDC32.CPP           public
+GFScreenVid::Erase2EOL                        VIDDC32.CPP   106     public
+GFScreenVid::Erase2EOP                        VIDDC32.CPP   106     public
+GFScreenVid::Erase2SOL                        VIDDC32.CPP   106     public
+GFScreenVid::Erase2SOP                        VIDDC32.CPP   106     public
+GFScreenVid::DeleteLine                       VIDDC32.CPP   105     public
+GFScreenVid::InsertLine                       VIDDC32.CPP   105     public
+GFScreenVid::DeleteChar                       VIDDC32.CPP   105     public
+GFScreenVid::InsertChar                       VIDDC32.CPP   105     public
+GFScreenVid::Scroll                           VIDDC32.CPP   106     public
+GFScreenVid::GetKey                           VIDDC32.CPP           public
+GFScreenVid::KbdHit                           VIDDC32.CPP           public
+GFScreenVid::HideCursor                       VIDDC32.CPP   112     public
+GFScreenVid::ShowCursor                       VIDDC32.CPP   112     public
+GFScreenVid::Invert                           VIDDC32.CPP           public
+GFMonitor::GFMonitor                          TRANSFER.CPP  061     public
+GFMonitor::UserMonitor                        TRANSFER.CPP  074     public
+GFMonitor::TransferMessage                    TRANSFER.CPP  073     public
+GFMonitor::AsciiPrinter                       TRANSFER.CPP  071     public
+GFMonitor::Initialize                         TRANSFER.CPP          public
+GFMonitor::SetAbortKey                        TRANSFER.CPP          public
+GFTransfer::GFTransfer                        TRANSFER.CPP          public
+GFTransfer::~GFTransfer                       TRANSFER.CPP          public
+GFTransfer::ReplaceFileEngine                 TRANSFER.CPP  076     public
+GFTransfer::SetCheckCarrierFlag               TRANSFER.CPP          public
+_VidGoto                                      DEBUG88.ASM
+_VidPutc                                      DEBUG88.ASM
+_VidPutDat                                    DEBUG88.ASM
+_VidPuts                                      DEBUG88.ASM
+_assti                                        STI88.ASM
+_ascli                                        STI88.ASM
+_asinb                                        STI88.ASM
+_asoutb                                       STI88.ASM
+_VidGoto32                                    DEBUG386.ASM
+_VidPutc32                                    DEBUG386.ASM
+_VidDat32                                     DEBUG386.ASM
+_isrp_getchar                                 ISRP386.ASM
+_isrp_putchar                                 ISRP386.ASM
+gfp_irq2                                      ISRP386.ASM
+gfp_irq3                                      ISRP386.ASM
+gfp_irq4                                      ISRP386.ASM
+gfp_irq5                                      ISRP386.ASM
+gfp_irq6                                      ISRP386.ASM
+gfp_irq7                                      ISRP386.ASM
+_VidGoto16                                    ISRR386.ASM
+_VidPutc16                                    ISRR386.ASM
+_VidPuts16                                    ISRR386.ASM
+_VidPutHexByte16                              ISRR386.ASM
+gfr_irq2                                      ISRR386.ASM
+gfr_irq3                                      ISRR386.ASM
+gfr_irq4                                      ISRR386.ASM
+gfr_irq5                                      ISRR386.ASM
+gfr_irq6                                      ISRR386.ASM
+gfr_irq7                                      ISRR386.ASM
+_asi_kill_time                                KILL386.ASM
+gf_kbd_status                                 KSTAT386.ASM
+_assti                                        STI386.ASM
+_ascli                                        STI386.ASM
+_asinb                                        STI386.ASM
+_asoutb                                       SIT386.ASM

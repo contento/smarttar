@@ -1,0 +1,35 @@
+
+PROBLEMA CON LA PROTECCIÓN DEL SOFTWARE ST A TRAVÉS DE LA STM-2.
+
+Problema:
+
+La opción NOEEPROM no está funcionando correctamente en las versiones 2.30 o posteriores. Es decir, las versiones se generan como NOEEPROM esté o no la opción activada.
+
+Detalles:
+
+Normalmente, cuando se va a generar una versión SmartTar, se debe incluir en el archivo gen.lst una línea con la siguiente forma:
+
+78-1801-001-220-001 2 NOEEPROM      ; Para generar programa ST sin Clave
+78-1801-001-220-001 2                            ; Para generar programa ST con Clave
+
+Las dos primeras cifras indican el código del país.
+Las cuatro cifras siguientes indican el consecutivo de ZONA
+Las siguientes tres cifras indican el total de equipos vendidos
+Las siguientes tres cifras indican la versión del programa SmartTar.
+Las siguientes tres cifras indican el número tarjetas STM-2 Vendidas
+La siguiente cifra indica:  2=SmartTar ST16 , 4=SmartTar ST32
+
+A continuación van las opciones adicionales para el software:
+[PRO]              : SmartTar Pro
+[EDA]              : Versión para EDA
+[NOEEPROM] : ST sin clave
+
+Cuando se trata de generar una versión sin la opción NOEEPROM, Esta se genera como versión NOEEPROM.
+
+Notas: 
+
+Cuando se instala la versión, el Setup se ejecuta normalmente y al finalizar saca el mensaje de "Versión no Válida". Eso esta bien.
+
+Al ejecutar el st.exe, sin grabar el código en la STM-2, el programa corre normalmente, cuando debería sacar nuevamente el mensaje de "Versión no Válida"
+
+

@@ -1,0 +1,1106 @@
+A compilation of QEdit Tips from the SemWare Technical Support Staff.
+
+
+The InsertDate Command in QEdit 2.15 & 3.00
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  In QEdit 2.15 when you used the InsertDate command, the output contained the
+  full year:
+
+                             Tue 11-02-1993
+
+
+  However, in QEdit 3.00 the output of InsertDate does not contain the first
+  part of the year:
+
+                              Tue 11-02-93
+
+  To have QEdit 3.00 insert the "19" part of the year, use the following
+  macro:
+
+  <KEY>   MacroBegin
+              SaveSettings        * Save Settings of Insert, WordWrap, etc.
+              SetScreenOff        * Turn off screen updates
+              InsertDate          * Insert the Date
+              SetInsMode          * Set Insert ON
+              CursorLeft  2       * Move Back to the beginning of the year
+              "19"                * Insert the 19 part of the year
+              CursorRight 2       * Move to the end of the year
+              RestoreSettings     * Restore our original condition
+
+  This macro can be bound to any available key in your QCONFIG.DAT file.
+
+
+Converting QEdit 2.x Macros to 3.0
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  The binary macro files compiled with QMAC from QEdit 2.15 and earlier are
+  not completely compatible with QEdit 3.00.  However, there is a painless
+  process to convert your macros from 2.15 to 3.00.
+
+  To follow this process you will need to determine if you have text file
+  versions of your macros.  If you don't, you will need to follow this
+  process:
+
+    (1) Copy all of your binary macro files (*.MAC) to a temporary directory.
+
+    (2) Copy the QMAC program (QMAC.EXE) from your QEdit 2.15 directory to
+        your temporary directory.
+
+    (3) For each of the *.MAC files, run QMAC to convert them to text files.
+        For example:
+
+            C:\QETMP>QMAC <FileName>.MAC <FileName>.Q /A- /T
+
+        Where <FileName> is the file to convert.
+
+  This process creates the text file versions of your macros.  The files will
+  have the same name as the original macros, but with a ".Q" extension.
+
+  This process is for everyone, it will convert your QEdit 2.15 macros into
+  QEdit 3.0 macros:
+
+    (1) Copy all of text macro files (for those who followed the first
+        process: the *.Q files in the temporary directory) to your QEdit 3.0
+        directory.
+
+    (2) For each of the text macro files, run the QMAC program (from QEdit
+        3.0) to convert them to binary files.  For example:
+
+            C:\QE3>QMAC <FileName>.MAC <FileName>.Q /A- /B
+
+  That's it!  You have now successfully re-compiled your macros for QEdit 3.0.
+
+
+Multi-Line Macro Format
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  In QEdit 3.0 you can have multi-line macros in your QCONFIG.DAT file. This
+  new capability gives QEdit much more power over previous versions.
+
+  When upgrading from QEdit 2.15 (or earlier) there are a couple of
+  conventions that must be followed when formatting your QCONFIG.DAT file:
+
+    (1) The key must appear in the first column of the command assignment or
+        macro.
+
+    (2) When writing macros, all succeeding lines must be indented one or more
+        columns.
+
+  The reason for these conventions is to allow QEdit to differentiate between
+  commands and keys.  Consider this example, which does _not_ follow the new
+  conventions:
+
+    * This comment starts in column one.
+    *
+        CursorDown CursorDown BegLine
+        CursorUp CursorUp BegLine
+
+  Before QEdit 3.0, the first word on each line would have been interpreted as
+  a key automatically.  However, with multi-line macros it is no longer clear
+  exactly what the user intended here.  These lines could be seen as either
+  two individual key assignments, or as a single macro. (Granted, it would be
+  a silly macro -- one step forward and two steps back!)
+
+  Here is an example of a few key assignments that follow the new format:
+
+    * This comment starts in column one.
+    *
+    ^k_h        MacroBegin                          * Fancy Home Macro
+                BegLine
+                isCurrChar ' '      MacroQuitFalse
+                FirstNonWhite
+    CursorDown  CursorDown                          * Down / BegLine
+                BegLine
+    CursorUp    CursorUp BegLine                    * Up / BegLine
+
+
+Startup Macros
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  QEdit has the capability of loading and/or executing your compiled macro
+  files on startup through the use of command line parameters. The macro files
+  being used must be in binary format created using the MacroWrite command
+  <Esc><M><W> command or QMAC (QEdit's macro translator).
+
+  To _load_ a macro from the command line enter "-l" or "/l" (a dash or slash
+  and the letter "l") followed immediately by a macro filename.  The maximum
+  size of a loadable macro file is 2k. The format for loading a macro follows:
+
+          q <filename to edit> -l<macro filename>
+
+  To _execute_ a macro from the command line enter "-e" or "/e" followed
+  immediately by a macro filename.  The maximum size of an executed macro is
+  500 bytes.  The format for executing a macro on startup follows:
+
+          q <filename to edit> -e<macro filename>
+
+  When using the execute ("-e or /e") option, the first macro in the macrofile
+  is executed.  The macro is then executed only after the file to be edited
+  has been loaded.  The macro file is executed once and not loaded into the
+  editor.
+
+  A filename must be supplied to QEdit to make use of the command line
+  parameters.  Both the load and execute macro parameters may be used at the
+  same time.  The order that they are specified on the command line is not
+  important.  The format for executing a macro and loading a macrofile on
+  startup follows:
+
+          q <edit filename> -e<macro filename> -l<macro filename>
+
+  To illustrate the above, suppose you want to edit a file called WORK.TMP and
+  at the same time, from the command line, load the macro file called
+  FIRST.MAC and execute the macro file called SECOND.MAC.  From the command
+  line you would enter:
+
+          q work.tmp -lfirst.mac -esecond.mac
+
+
+QMac: The Basic's
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  QMac is a translator of QEdit macro files.  It translates QEdit macros from
+  the binary file in which QEdit saves macros to a text file which allows easy
+  macro editing, and translates such text files back into a QEdit binary file.
+
+  This allows you to "record" a macro using QEdit; fine-tune it by editing the
+  text representation of the macro; and then translate the edited version and
+  reload it into QEdit for replay.
+
+  QMac allows appending to or overwriting existing files, making it easy to
+  add new macros to existing files. QMac's text file format allows comments,
+  permitting documentation of the macros within their "source file".
+
+  To see a summary of QMac's operations, type "QMAC ?" at the DOS prompt and
+  press Return.  All of the command line switches are optional and are only
+  necessary to control QMac's operation in special ways.
+
+  Here is quick run-through of what you can do with QMac, including recording
+  a macro, saving it to disk, and converting it with QMac.  The keystrokes
+  mentioned below assume you are using the default QCONFIG.DAT supplied with
+  QEdit; if you have re-installed your keyboard using QCONFIG, please modify
+  as needed.
+
+  Recording a Macro:
+  ~~~~~~~~~~~~~~~~~
+  1. From inside QEdit, select MacroRecord.  (Either hit <Ctrl M> or select
+  "Macro record" from the "Macro" menu in the pull-down menu system, by
+  pressing <Escape><M><M>).
+
+  2. At the prompt that says "Assign to what key:" press a key to redefine.
+  We will use <Ctrl F10>
+
+  3. Press Find <Ctrl QF>, type "the" and press Return, and type "IW" and
+  press Return again.  (This is just an example of what you can do, you could
+  of course record any legal series of QEdit keystrokes here.)
+
+  4. Select MacroRecord again to end the macro, like step 1 above.
+
+  5. Now, you can press <Ctrl F10> to search for the word "the" in your text
+  in just one step.
+
+  Saving the Macro:
+  ~~~~~~~~~~~~~~~~
+  6. Let's write this macro to disk in a file that QMac can use. Select
+  MacroWrite from the pull down menus, by pressing <Escape> then <M><W>.
+
+  7. Give it a filename of "FIND.MAC", and press Return to save this macro on
+  disk.
+
+  Converting the Macro to Text:
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  8. Press Dos <Alt F9> to send a command to MS-DOS. Type:
+
+       QMAC FIND.MAC FIND.TXT /A- /T
+
+  to convert FIND.MAC to a text form in the file FIND.TXT. Press Return.  (The
+  /T selects text output).
+
+  9. Press EditFile <Alt E> to load this file into QEdit. Type "FIND.TXT" to
+  load the text file you just created with QMac. Press Return.  You should see
+  something like this on the screen:
+
+       * * Converted by QMAC from: C:\FIND.MAC * ^f10
+       MacroBegin Find "the" Return "IW" Return
+
+  Which is, of course, a text representation of the keystrokes you just
+  recorded.
+
+  10. You can now edit your macro if need be.  Let's change the word "the" to
+  "and", and save the file back to disk by pressing File <Ctrl KX>.
+
+  Converting the Macro from Text back to Binary:
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  11. Press Dos <Alt F9> to send a another command to MS-DOS. This time, type:
+
+       QMAC FIND.MAC FIND.TXT /A- /B
+
+  to convert FIND.TXT back to its BINARY form, FIND.MAC. (NOTE that we use /B
+  to tell QMac to make the binary file from the text file we just edited).
+  Press Return.
+
+  QMac Additional Notes:
+  ~~~~~~~~~~~~~~~~~~~~~
+  QMac will create whichever of the two files (binary or text) that did not
+  exist already:  If the text macros already exist, it will convert them to
+  binary.  Or if the binary macros already exist, it will convert them to
+  text.
+
+  However, if both files exist, you must supply one of the optional switches
+  to determine the direction.  The switch /B tells QMac to create a Binary
+  file, while /T tells it to create a text file.
+
+  If the output file already exists, you must also supply a /A+ or /A- switch
+  to tell QMac whether to "append" to the existing file. With /A+ it will
+  append, /A- tells QMac to overwrite the existing file.
+
+  Anywhere an asterisk ("*") appears on a line, outside of a quoted string,
+  the rest of the line is treated as a "comment" and is ignored by QMac.  You
+  can use this to include notes to yourself about how your macros work, or
+  what they are supposed to do.  Comments are not included in the binary macro
+  file that QEdit loads, so there is no penalty for including them in your
+  text macro files.
+
+  A macro can continue onto more than one line, simply indent the second and
+  subsequent lines of the macro one or more spaces. The macro continues until
+  QMac runs out of text or encounters another key at the beginning of a
+  subsequent line.
+
+  Lines in your text macro files can be up to 512 characters long.
+
+
+QEdit in 43/50 Line Mode on Startup
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  If you want to have QEdit start-up in 43/50 line mode, you can select the
+  "Startup video mode" option under Colors/Screen in the QCONFIG program.
+  Using this option, you can force QEdit to come up in 28 or 43/50 line mode.
+
+
+Saving Files and Exiting
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  QEdit provides several different ways to save files, discard files, and exit
+  the editor.  A set of five basic commands provides various combinations of
+  saving, discarding, and exiting in order to suit individual preferences.
+
+  We recommend selecting one or two methods with which you feel most
+  comfortable and use them consistently.  Below is a description of the basic
+  commands for both single and multiple files along with our default key
+  combinations.
+
+  1)  SaveFile <Ctrl K><S> - save the currently edited file to disk. The file
+          remains loaded into the editor for further editing.
+
+      GSave <Alt Y> - Like the SaveFile command but it issues the SaveFile
+          command for all the files that have been modified.
+
+  2)  File <Ctrl K><X> - Unconditionally saves and then discards the current
+          file.  It then either goes to the next file in the QEdit file ring
+          or the file to edit prompt.
+
+      GFile <Alt F><G> - Like the File command but it instructs the editor to
+          save all files that have been modified and then discards all the
+          files that are loaded and exits.
+
+  3)  Exit <Ctrl K><D> - Conditionally discards the currently edited file.  If
+          the file has not been modified, the file is discarded without
+          prompting and the editor is exited.  If the file has been modified,
+          the editor will prompt "Save Changes (Y/N)?"  Selecting <Y> will
+          save and discard the file, then exit.  Selecting <N> will discard
+          the file without saving any changes and exit.
+
+      GExit <Alt X> - Like the Exit command but it issues the Exit command for
+          all loaded files.  If no files have been modified, it will
+          immediately exit the editor.  If any files have been modified, the
+          "Save Changes (Y/N)?" prompt will be displayed for each modified
+          file.
+
+  4)  PQuit <Ctrl K><Q> -  A protected quit that will warn the user of a
+          modified file before discarding the file.  If the file has not been
+          modified, it is discarded without prompting. If the file has been
+          modified, the editor will prompt "Lose Changes (Y/N)?"  Selecting
+          <Y> will discard the current file without saving changes and then
+          either go to the next file in the QEdit file ring or the file to
+          edit prompt. Selecting <N> will return you to the file to resume
+          editing.
+
+      GPQuit <F3> - Like the PQuit command but it issues the PQuit command for
+          all loaded files.  If no files have been modified, it will
+          immediately exit the editor.  If any files have been modified, the
+          "Lose Changes (Y/N)?" prompt will be displayed for each modified
+          file and then the editor is exited.
+
+  5)  Quit - An unconditional quit.  The current file is discarded regardless
+          of any changes made to it.  NOTE: Use this command with caution!
+          The Quit command is not assigned to a default keystroke.
+
+  The Exit, File, PQuit commands can be configured to terminate or not
+  terminate the editor and ask for another file to edit. This option can be
+  customized using the configuration program QCONFIG.EXE.  Run QCONFIG.EXE,
+  select G)eneral Options, and return till you get to the option that reads:
+
+      Do you want the PQuit, Exit and File commands to return to "EditFile"
+      prompt (Y/N)? [Y]
+
+  The default configuration is set to <Y> and will return you to the EditFile
+  prompt upon executing the PQuit, Exit, and File commands or go to the next
+  file in the QEdit file ring.  If set to <N>, it will terminate QEdit upon
+  executing the above commands.  The SaveFile and Quit commands are not
+  affected by this setting.
+
+  A Few Recommendations:
+  ~~~~~~~~~~~~~~~~~~~~~
+  *  If you know what you are doing and want to get in and out of the editor
+     quickly, use the GFile command.
+
+  *  If you want to make one more final check before you exit the editor, use
+     the GExit.
+
+  *  PQuit/GPQuit and Exit/GExit are not intended to be used at the same time,
+     but to give the user opposing approaches to saving files and exiting the
+     editor.
+
+
+Types of Block Marking and Unmarking
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  A block is a portion of a text file which has been defined by using QEdit's
+  Block marking commands.  QEdit has a rich set of Block commands.  These
+  commands mark Blocks by lines, columns, and characters.
+
+  To define a block, you must first "mark" or outline a Block. There are four
+  Block types in QEdit: line, column, inclusive character blocks, and
+  non-inclusive character blocks.  The one you choose will depend on the
+  editing situation and what you feel most comfortable using.  Below is a
+  description of the commands along with our default key combinations.
+
+  MarkLine <Alt L> - will mark only complete lines and no portions of lines.
+      To use this command, place the cursor anywhere on the first line of the
+      text you want to mark and press <Alt L>.  Now move the cursor to the
+      last line of text you wish to be marked and press <Alt L> again.
+
+  DropAnchor <Alt A> - will mark a Block one character at a time. The Block
+      will contain a stream of characters and can span over multiple lines.
+      To use this command, place the cursor over the first character of text
+      you wish to mark and press <Alt A>.  Now move the cursor toward the end
+      of text to be marked. (Notice that the Block "follows" the cursor
+      position.)  Once the cursor is placed over the last character to be
+      marked, press <Alt A> again.
+
+  MarkCharacter - will work just like DropAnchor except that while the Block
+      is being marked, the cursor is _not_ included within the Block.
+      MarkCharacter is not assigned to a default keystroke.
+
+  MarkColumn <Alt K> - will mark one or more columns of text. To use this
+      command, place the cursor over the upper left-hand character of the text
+      you wish to mark and press <Alt K>. Now move the cursor to the right
+      and/or downward toward the end of text to be marked.  (Notice that the
+      Block "follows" the cursor position.)  Once the cursor is placed over
+      the lower right-hand character of the Block, press <Alt K> again.
+
+  MarkBlockBegin <Ctrl K><B> and MarkBlockEnd <Ctrl K><K> - will mark one
+      character at a time.  These commands do _not_ show the block until
+      MarkBlockEnd is executed.  To use this command, place the cursor over
+      the first character of the text you wish to mark and press <Ctrl K><B>.
+      Now position the cursor one character past the end of the text that is
+      to be marked and press <Ctrl K><K>.
+
+  MarkWord <Ctrl K><T> - will mark a single word.  To use this command, place
+     the cursor at the first character of the word you wish to mark and press
+     <Ctrl K><T>. (If no word is at the current cursor position, then no
+     action is taken.)
+
+  UnMarkBlock <Alt U> - will cause the currently marked Block to be unmarked.
+
+  A few side notes:
+  ~~~~~~~~~~~~~~~~
+  *  QEdit allows you to mark one Block at a time.
+
+  *  If you mix Block types, QEdit will mark the Block according to the last
+     command entered.
+
+  *  MarkCharacter is provided as a replacement for the DropAnchor command.
+     If you want the cursor position included in the character Blocks, then
+     continue to use DropAnchor; otherwise, replace the DropAnchor command
+     with MarkCharacter in the QCONFIG.DAT file.
+
+  *  When using MarkLine, MarkCharacter, MarkColumn, and DropAnchor commands,
+     it is not necessary to mark the end of the Block.  QEdit will assume the
+     end of the Block to be the current cursor position and/or line depending
+     on the command being used.  Marking the end of the Block is only
+     necessary when moving or copying text within the same file.
+
+
+Manipulating Marked Blocks (Part A)..
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  QEdit provides several ways to manipulate a marked Block. Manipulation can
+  be done directly, using the scrap buffer (Clipboard), or using the scratch
+  buffers.  Following is a description of each of QEdit's block manipulation
+  commands along with our default key combinations.
+
+  Manipulating Directly
+  ~~~~~~~~~~~~~~~~~~~~~
+  The following commands allow you to manipulate a marked Block directly.
+
+  CopyBlock <Alt C> - will make a copy of the marked Block and insert it where
+      you decide.  This can be either in another place in the same file, or in
+      another file.  To use this command, mark the Block and move the cursor
+      to the position where you wish to insert the marked text. Now press <Alt
+      C> and notice the Block will be inserted at the new position. To unmark
+      the copied Block, enter the UnmarkBlock command.
+
+  CopyOverBlock <Alt Z> - will work just like the CopyBlock command except the
+      Block is copied to the current cursor position by overlaying the
+      existing text.  The command can _only_ be used with column Blocks.  The
+      Block will be inserted without shifting the text to the right.
+
+  MoveBlock <Alt M> - will work just like the CopyBlock command except that
+      upon entering the MoveBlock command, the original marked Block is
+      deleted from the file.
+
+  DeleteBlock <Alt G> - will delete a marked Block of text from the file.  To
+      use this command, mark the Block of text to be deleted, then enter the
+      DeleteBlock command.
+
+  ShiftLeft <Shift 7> and ShiftRight <Shift F8> - will shift the text
+      contained in a marked Block one column to the left or right.  To use
+      these commands, mark the Block and enter the ShiftLeft or ShiftRight
+      command.  If there is not a marked Block or the cursor is outside of the
+      Block, the current cursor line will be shifted.
+
+  Manipulating Using the Scrap Buffer (Clipboard)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  The Scrap Buffer is a temporary holding area for marked Blocks of text.  The
+  commands Cut, Copy, Paste, and PasteOver are solely responsible for
+  manipulating text to and from the Scrap Buffer.
+
+  Cut <grey -> - will copy the marked Block into the Scrap Buffer. The Block
+      is then deleted from the file being edited.  If no Block is marked, the
+      cursor line is cut into the Scrap Buffer.
+
+  Copy <grey +> - will copy the marked Block into the Scrap Buffer and then
+      unmark the Block.  If no Block is marked, the cursor line is copied into
+      the Scrap Buffer.
+
+  Paste <grey *> - will insert the contents of the Scrap Buffer to the current
+      cursor position.  If the Scrap Buffer contains a character or column
+      Block, it is inserted at the cursor position.  If the Scrap Buffer
+      contains a line Block, it is inserted before or after the cursor line
+      depending on the configuration setting.
+
+  PasteOver <Ctrl PrtSc> - will work like the Paste command, but for column
+      Blocks.  It takes a column Block which has been loaded into the Scrap
+      Buffer using the Cut or Copy commands and places it at the current
+      cursor position by overlaying the existing text and without shifting
+      text to the right.
+
+  When you issue a Copy or Cut command, the marked Block is placed in the
+  Scrap Buffer.  The next time you Copy or Cut a Block into the Scrap Buffer,
+  the previous contents of the Scrap Buffer are deleted and replaced with the
+  new Block.
+
+  You can use the Paste and PasteOver commands as many times as needed to
+  insert a copy of the Block held in the Scrap Buffer at multiple positions in
+  your file or files.  The Paste and PasteOver commands will not purge the
+  contents of the Scrap Buffer.
+
+  The Cut and Copy commands can be configured to act on the current cursor
+  line if no Block is marked.  This option can be customized using the
+  configuration program QCONFIG.EXE.  Run QCONFIG.EXE, select A)dvanced
+  options, and return till you get to the option that reads:
+
+          Should Cut and Copy use the current line if no block marked (Y/N)?
+          [N]
+
+  The default configuration is set to <N> and will result in no action if the
+  Cut and Copy commands are used outside of a block. If set to <Y>, QEdit will
+  take use the current cursor line if the Cut and Copy commands are issued.
+
+  Manipulating Using the Scratch Buffer
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  A Scratch Buffer is a special type of buffer to which you assign a name.
+  QEdit allows you to create and name up to 99 Scratch Buffers for each
+  editing session.  These can be useful if you have several different Blocks
+  of text that you want to insert in multiple locations.  The commands
+  StoreScrbuff, AppendScrbuff, and GetScrbuff are used to place text in, and
+  retrieve text from, a Scratch Buffer. Whenever you issue one of these
+  commands, QEdit will ask you for the name of the Scratch Buffer. The
+  contents of all Scratch Buffers are discarded when the editor is terminated.
+
+  StoreScrbuff <Ctrl B><S> - will copy the marked Block to the named Scratch
+      Buffer.  The editor will prompt for the name of the Scratch Buffer.
+
+  AppendScrbuff <Ctrl B><A> - will append the marked Block to the end of the
+      named Scratch Buffer.  The existing contents of the named Scratch
+      Buffers are _not_ lost.  If the named Scratch Buffer does not exist, a
+      new Scratch Buffer will be created.
+
+  GetScrbuff <Ctrl B><L> - will insert the contents of the named Scratch
+      Buffer at the cursor position.
+
+
+Manipulating Marked Blocks (Part B)..
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  QEdit provides several other ways to manipulate a marked Block. Manipulation
+  of Marked Blocks can be done by using the Upper, Lower, Flip, Sort, Fill,
+  Print, and WriteBlock commands. Following is a description of each of
+  QEdit's block manipulation commands along with our default key combinations.
+
+  Upper <Alt 1> - will change all characters in a marked block to upper case.
+
+  Lower <Alt 2> - will change all characters in a marked block to lower case.
+
+  Flip <Alt 3> - will reverse the case (upper to lower and lower to upper) of
+      all characters in a marked block.
+
+  The Upper, Lower, and Flip commands must be used within the marked block.
+  If the cursor is outside of the marked block or if no block is marked, the
+  character at the current cursor position is changed to upper case.
+
+  Sort <Shift F3> - will sort a range of lines in ascending order. The sort
+      key is determined by a marked column block.  The length of the column
+      block determines the range of lines to be sorted.
+
+      This command can _only_ be used with a single, nonzoomed window on the
+      screen.
+
+  FillBlock <Ctrl K><L> - will fill an entire block with any ASCII character.
+      FillBlock is recommended for use with column and word blocks only
+      because it will fill other type blocks with characters beyond column 80.
+
+  PrintBlock <Alt P><B> - will print the entire contents of the marked Block.
+      The marked Block must be in the current file.
+
+  WriteBlock <Alt W> - will write the marked Block to the named file.  The
+      editor will prompt for the name of the file.
+
+      This feature will also allow you to save your current file under a
+      different name.  To do so, press <Alt W> with no marked blocks in the
+      file.  QEdit will prompt you for a filename. If the filename already
+      exists, QEdit will prompt you with "Overlay existing file" and "Append
+      to file." Select the option you desire or press escape to abort.
+
+      If there is a marked block in the file, the WriteBlock command will, as
+      before, write the current marked block to the named file.
+
+
+QEdit's Keyboard Configuration
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  Are you tired of signing your names to all those messages you write in
+  QEdit?  Would you like to change the help screen to the F10 key like it was
+  in your "other" editor?  This is where QEdit's flexible keyboard
+  configuration is extremely helpful. It will provide you with the ability to
+  assign editor commands and macros to almost any key you prefer.  Below you
+  will find an explanation of QEdit's keyboard definition file (QCONFIG.DAT)
+  and how to modify it to meet _your_ needs.
+
+  What is QCONFIG.DAT?
+  ~~~~~~~~~~~~~~~~~~~~
+  It is QEdit's keyboard definition file which contains the default settings
+  for the keyboard.  This file contains a list of all the keys to which
+  commands may be assigned.
+
+  The configurable keys are on the left side of the file with the commands or
+  macros assigned to the keys on the right.  Blank lines and lines starting
+  with an asterisk "*" are ignored.  The control, alternate, and shift keys are
+  used within QCONFIG.DAT to assign to commands.  The following are some
+  examples of each.
+
+       - Control keys are specified with a "^". (i.e. - ^F1 means Control F1
+         and ^PgUp means Control Page Up)
+
+       - Alternate keys are specified with a "@". (i.e. - @F1 means Alternate
+         F1 and @PgUp means Alternate Page Up)
+
+       - Shift keys are specified with a "#". (i.e. - #F1 means Shift F1)
+
+  The case of the commands, as well as underscores in command names, are
+  ignored by the configuration program (QCONFIG.EXE). This means that
+  CursorDown, cursor_down, and Cursor_Down all refer to the same command.
+
+  What are twokeys?
+  ~~~~~~~~~~~~~~~~~
+  A twokey is a keystroke sequence assigned to two distinct keystrokes.  This
+  allows for more key assignment possibilities. To assign a command to a
+  twokey, enter both of the keystrokes of the twokey in the first column
+  separated by an underline. The key here is that the commands must be
+  separated by a '_'.  For example, to assign the Exit command to the twokey,
+  <Ctrl F1><F2>, enter the following into your keyboard definition file:
+
+          ^F1_F2  Exit
+
+  Any QEdit command can be assigned to a twokey, including macros.
+
+  How can I modify MY QEdit keys?
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Any QEdit user can modify his/her keys to suit their needs.  It is easy and
+  simple.  Just follow the steps below to modify your QCONFIG.DAT file.
+
+          1.  Edit QCONFIG.DAT  (i.e. - q QCONFIG.DAT).
+          2.  Make the appropriate changes to your QCONFIG.DAT file.  (i.e. -
+              change the definitions of @0 and ^F2 to be:
+
+              @0      InsertDate
+
+              ^F2     MacroBegin "Matthew Giles" Return "SemWare Technical
+                      Support"
+
+              Remember that the first line of a command assignment must start
+              in column 1.  Command assignments can wrap or continue for
+              multiple lines, as long as each succeeding line starts in a
+              column greater than 1.
+
+              Also remember that text should be enclosed in single or double
+              quotes.
+
+          3.  Save your QCONFIG.DAT file.
+          4.  Run QCONFIG.EXE, enter program name and select K)eys
+          5.  Enter keyboard definition name
+          6.  Select S)ave options and quit
+
+  You have now installed your new keyboard definitions into QEdit. Next time
+  the editor is loaded your new keys will be in effect.
+
+  What if I liked the keys assignments on my "other" editor?
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  There are many keyboard definition files written by QEdit users and staff
+  that will allow you to customize your editor to run like another editor.
+  You may find these additional keyboard definition files on the SemWare
+  Support BBS.  To install and/or edit the other keyboard definition file,
+  follow the steps above with the addition of entering the new filename when
+  it prompts you for the keyboard definition filename.
+
+
+QEdit TSR's Benefits
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  Have you ever been in a program and wanted to simply jot a note to yourself?
+  Have you ever had the need to take a quick look at a document, but the
+  program you were in had no shell option? Then, QEdit TSR, the memory
+  resident version of QEdit, is for you!
+
+  As a memory-resident version of QEdit Advanced, QEdit TSR (Terminate and
+  Stay Resident) resides in the background, giving you the power of QEdit with
+  a single keystroke, but without having to exit the file you're working in.
+  Unlike more familiar TSR programs, QEdit TSR utilizes a unique swapping
+  feature to provide the benefits of a TSR without draining precious memory.
+  QEdit TSR uses less than 9k memory, and when popped up swaps your current
+  applications out of memory and into extended/ expanded memory or to disk.
+  In this configuration, you can edit files up to 400k in size.
+
+  QEdit TSR contains all of the QEdit v2.15 commands plus four additional
+  commands.  These are described below along with the default key combination
+  for each.
+
+  GrabScreen <Ctrl F10> - reads in the contents of the screen, as it appeared
+      when you popped up QEdit TSR as a marked block at your current cursor
+      position, and inserts it into the current file as a marked block. The
+      GrabScreen command behaves as if you were using the QEdit Advanced
+      ReadBlock command.
+
+  GoBack <ESC><Q><G> - returns you to your DOS application, in the exact
+      configuration as when you left it.  The GoBack command can be customized
+      to prompt you to save edited files.  This is done by using QTCONFIG,
+      QEdit TSR's configuration program.
+
+  Purge <ESC><Q><P> - purges QEdit TSR from memory after first prompting the
+      user to save any changed files.
+
+  TsrPaste - "pastes" a marked block into the foreground application.
+      TsrPaste does not have a default keyboard assignment.  To use this
+      command, follow these steps:
+
+      1) When the foreground application is waiting for input, pop up QEdit
+         TSR.
+
+      2) Within QEdit TSR, mark a block of text and stuff it into the keyboard
+         buffer with the [TsrPaste] command (available as the last item on the
+         "Quit" pulldown menu).
+
+      3) Quit QEdit TSR and return to the foreground application by issuing
+         the [GoBack] command, and the text will be immediately pasted into
+         the foreground application.
+
+  Notes: Each line that is pasted, including single lines, has a carriage
+      return appended to it.
+
+  Although QEdit TSR has all the features QEdit Advanced is famous for, most
+  users want a non-TSR editor as well.  For this reason, QEdit TSR currently
+  comes bundled with a separate copy of QEdit Advanced.  Registered users may
+  purchase only the TSR software at a discount over the full TSR package
+  price.  Please call us at 404-641-9002 M-F 9a-5p EST for details!
+
+QEdit's Line/Box Drawing
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  Do you want to spice up your memos?  Do you want to draw boxes around text
+  to emphasize it?  Then QEdit's Line/Box drawing feature is for YOU!  Give
+  emphasis to your documents without the need to use a drawing program.  It's
+  simple and easy to use!
+
+  QEdit contains two line drawing commands.  These are described below along
+  with the default key combination for each.
+
+  ToggleBoxDraw <Shift F1> - this mode of operation can be switched ON or OFF.
+      In the ON position, the cursor movement keys (up, down, right, and left)
+      can be used to "draw" lines in the text.  To switch Line/Box Drawing
+      mode ON, enter <Shift F1>. To switch it OFF, enter <Shift F1> again.
+
+  ToggleBoxType <Alt F1> - this command prompts the user to select from
+      various line drawing styles for use in the Line/Box Drawing mode.  The
+      selectable options are:  single, double top, double side, double, and
+      eraser.
+
+  The status line indicates when the line/box drawing mode is on. The letter
+  'B' is displayed on the status line whenever line/box drawing mode is
+  selected.
+
+  To print the lines/boxes you have drawn in your text file, first set your
+  printer to use the IBM graphics character set.  Then use any of QEdit's
+  printing options.
+
+
+QEdit's Conditional Logic for Macros
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  Have you ever wanted to test to see if the cursor is at the beginning of the
+  line?  Have you ever wanted to perform a task only if you find what you are
+  searching for in a macro?  QEdit brings you all the power of looping and
+  branching in it's conditional logic commands.
+
+  There are three commands in QEdit for use within macros: Jump, JTrue, and
+  JFalse.  Placing one of these commands following another QEdit command in a
+  macro allows for branching or looping during macro execution.
+
+  All QEdit commands set an internal result code to either "true" for
+  successful execution, or "false" for unsuccessful execution or if no action
+  occurs.  The Jump command makes an unconditional jump.   The JTrue command
+  makes a jump only when a result code of "true" is returned.  Likewise, the
+  JFalse makes a jump only for a result code of "false".
+
+  Labels can be defined for branching, in the format "label:". The maximum
+  label length is 15 characters.
+
+  For example, here is a macro to delete from the cursor position to the
+  beginning of the line, and assigned to the f10 key:
+
+          f10     MacroBegin
+                  begin:
+                     CursorLeft
+                     JFalse done:
+                     DelCh
+                     Jump begin:
+                  done:
+
+
+Little known QEdit Commands
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  Have you ever wanted to adjust some of your settings temporarily?  Have you
+  wanted to turn off the sound while performing a repeated find command?  Have
+  you wanted to find the decimal code for a character?  QEdit Advanced lets
+  you accomplish these tasks and more!  These additional general and advanced
+  macro commands increase the power of QEdit.  The following is a list of the
+  commands added to QEdit in version 2.15 with a brief description of each,
+  plus several examples.
+
+  General Commands:
+  ~~~~~~~~~~~~~~~~
+  AsciiChart - Displays a scrollable ASCII chart on the screen.
+
+  ListFiles -  Displays a list of the currently loaded files. To switch to
+      another file, move the cursor to the appropriate file and press <Enter>.
+      To resume editing the current file, press <Escape>.
+
+  FirstNonWhite -  Intended as a replacement and/or supplement to the BegLine
+      command. Places the cursor at the first non-white character on the line,
+      or column 1 if the line doesn't have any non-white characters. "White"
+      characters are tabs or spaces. A useful macro would be:
+
+          Home MacroBegin BegLine JTrue done: FirstNonWhite done:
+
+      (Explanation: If already at the start of a line, go to the first
+      non-white character on the line; otherwise, if not already at the start
+      of a line, go to the start of the line.)
+
+  Advanced Macro Commands:
+  ~~~~~~~~~~~~~~~~~~~~~~~
+  The following commands, intended primarily for QEdit macro writers, are
+  designed to simplify the writing of certain kinds of macros.  This group of
+  macro commands forces the indicated mode or setting.  If the setting is
+  already in that condition, they set QEdit's result code to TRUE; otherwise,
+  they set it to FALSE.
+
+  In some cases, a macro can behave differently based on the currently set
+  QEdit modes.  The following three commands give some control in establishing
+  the proper environment so that your macro will always work as intended.
+
+  SetInsMode - Sets Insert mode on. To set Insert mode "off" (that is, set
+      overwrite mode "on"), do the following: SetInsMode ToggleInsert
+
+  SetAutoIndentMode - Sets AutoIndent mode "on". To set AutoIndent mode off,
+      do the following: SetAutoIndentMode ToggleIndent
+
+  SetWordWrapMode - Sets WordWrap mode "on". To set WordWrap mode off, do the
+      following: SetWordWrapMode ToggleWordWrap
+
+  The Find command sounds a tone when the search string cannot be found. This
+  can be irritating in the case of a long-running macro that may possibly
+  execute hundreds of finds that fail. The following commands allow you to
+  selectively turn the sound "on" and "off".
+
+  SetSoundOn - Sets sound "on".
+
+  SetSoundOff - Sets sound "off".
+
+  Most macros execute dozens of QEdit commands, sometimes hundreds of times.
+  This can cause the screen to flash rapidly as the macro runs. Not only is
+  this disconcerting to watch, it actually decreases the speed of some macros.
+  The following commands allow you to temporarily suspend or resume screen
+  updating, while a macro is running.
+
+  SetScreenOn - Turns screen updating "on".
+
+  SetScreenOff - Turns screen updating "off". You must turn screen updating
+      back on before your macro prompts for input, or if there is some output
+      from the macro that you want displayed on the screen.
+
+  NOTE: QEdit will AUTOMATICALLY turn screen updating back on when the macro
+  has finished executing. Thus, it is not necessary to issue the SetScreenOn
+  command at the end of the macro.
+
+  Many times, it would be nice for a macro to force a few settings, do its
+  assigned task, and then restore the original settings. The following
+  commands allow you to do just that. Note that each time SaveSettings is
+  executed, the previous settings saved with SaveSettings are overwritten.
+
+  SaveSettings - Saves the current settings of: Insert, AutoIndent, WordWrap,
+      Sound, and Screen Updating.
+
+  RestoreSettings - Restores the saved settings listed above.
+
+  The following commands set QEdit's result code to TRUE or FALSE based on the
+  condition being tested. These commands make certain types of macro tests
+  easier and more reliable.
+
+  isBegLine - Returns TRUE if the cursor is at column 1; otherwise, FALSE is
+      returned.
+
+  isEndLine - Returns TRUE if the cursor is past the last non-white character
+      on the current line; otherwise, FALSE is returned, including the case
+      when the cursor is on an empty line.
+
+  isEmptyLine - Returns TRUE if the current line is empty or contains only
+      white space; otherwise, FALSE is returned.
+
+  isLastLine - Returns TRUE if the cursor is on the last line of the currently
+      edited file; otherwise, FALSE is returned.
+
+  isFirstLine - Returns TRUE if the cursor is on the first line of the
+      currently edited file; otherwise, FALSE is returned.
+
+  isCursorInBlock - Returns TRUE if the cursor is inside a marked block;
+      otherwise, FALSE is returned.
+
+  To demonstrate how these concepts tie together, consider the following
+  simple macro to delete all the blank lines in a marked block. The cursor
+  should be at the beginning of the block when the macro is invoked.
+
+  ^f9  MacroBegin
+       SetScreenOff                  * turn off screen for speed
+  begin:
+       isCursorInBlock jFalse done:  * exit if not in block
+       isEmptyLine     jFalse next:  * skip if not empty line
+       isLastLine      jTrue  last:  * special handling for last
+                                     * line
+       DelLine         jump  begin:  * delete empty lines
+  next:
+       CursorDown      jTrue begin:  * try next line
+       jump done:                    *
+  last:
+       DelLine                       * delete the last line
+  done:                              * that's all, folks!
+
+
+Replacing a CR with a CR/LF
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  Have you ever loaded a file and gotten the message "long line splits"?  Have
+  you ever had a database file that just had a carriage return at the end of
+  line of text?  We have developed a small macro that allows you to replace a
+  visible carriage return (CR) with a carriage return/line feed (CR/LF).
+
+  The DOS standard specifies that a CR/LF be appended to each line of text in
+  an ASCII text file.  Some databases, as well as the Macintosh, only use
+  carriage returns at the end of their lines of text in files.  The following
+  macro can be used when you see the carriage return (it will appear as a
+  musical note) in your text. The macro will replace the carriage return
+  (ASCII 13) with a carriage return/line feed (ASCII 13/10).
+
+  <key>    MacroBegin SetScreenOff Find #13 Return 'i' Return top: Delch
+           SplitLine CursorDown JoinLine BegLine RepeatFind JTrue top
+
+  NOTE: <key> is the key to which you should tie this macro.  In addition, the
+        macro must all be on one line in your QCONFIG.DAT file.  Once you have
+        added the macro to your keyboard, run QCONFIG.EXE to install the
+        changes. To use QCONFIG.EXE, run it, press return to accept Q.EXE,
+        press K for keys, press return to accept QCONFIG.DAT, then press S to
+        save your changes.
+
+
+Eliminating all tabs in your file
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  Have you ever wanted to get rid of _all_ the tabs (ASCII 9) that
+  are in your text file?  It gets pretty frustrating trying to
+  figure out how to do this, right?  This is a question that the
+  SemWare Technical Support Staff is often asked.  In response, in
+  QEdit 3.0, the TabsToSpaces command has been added.  From the
+  reference manual:
+
+  TabsToSpaces        <Esc><O><X>
+  ------------------------------------------------------------
+  Expands tab characters to the appropriate number of spaces. Tabs within
+  quotes (single and double) are not expanded.  If the cursor is within a
+  marked Block when this command is executed, only tabs within the Block are
+  expanded; otherwise, this command operates on the entire file.
+
+
+Drawing Boxes in Text
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  Have you ever wanted to box in parts of a text file for emphasis, or to
+  spice up messages with fancy boxes?  We have developed a simple one-key step
+  for boxing in your text with QEdit.
+
+  QEdit has a versatile line/box drawing capability. But since most of us like
+  to make text editing as simple as possible, we took QEdit's box drawing
+  feature and incorporated it into two different versions of a macro.  Each
+  version takes a _column block_, _marked word_, or _character block_ that the
+  user marks and draws a box around the text.  Then, depending on which
+  version is used, it reinserts the boxed text into your file in one of two
+  ways: "insert" or "overwrite."
+
+  Give one of the versions of the macro a try and see how it gives your text
+  files an exciting new look!
+
+  This version of the macro will box the text and re-insert it _without_
+  overwriting other text in the file.
+
+  <key>   MacroBegin SetScreenOff EditFile "nul" Return Quit GotoBlockEnd
+          AddLine GotoBlockBeg InsertLine Cut EditFile Return GotoColumn '2'
+          Return Paste InsertLine GotoBlockEnd ToggleBoxDraw upagainr:
+          CursorUp JTrue upagainr leftagaint: CursorLeft JTrue leftagaint
+          GotoBlockEnd CursorDown leftagainb: CursorLeft JTrue leftagainb
+          upagainl: CursorUp JTrue upagainl CursorRight ToggleBoxDraw
+          UnMarkBlock BegFile MarkColumn EndFile CursorLeft Copy Quit Paste
+          UnMarkBlock
+
+  This version of the macro will box the text and re-insert it into the file
+  while overwriting text surrounding the block with the new box.
+
+  <key>   MacroBegin SetScreenOff EditFile "nul" Return Quit GotoBlockBeg Cut
+          Paste FillBlock " " Return CursorUp CursorLeft EditFile Return
+          GotoColumn '2' Return Paste InsertLine GotoBlockEnd ToggleBoxDraw
+          upagainr: CursorUp JTrue upagainr leftagaint: CursorLeft JTrue
+          leftagaint GotoBlockEnd CursorDown leftagainb: CursorLeft JTrue
+          leftagainb upagainl: CursorUp JTrue upagainl CursorRight
+          ToggleBoxDraw UnMarkBlock BegFile MarkColumn EndFile CursorLeft Cut
+          Quit PasteOver UnMarkBlock
+
+  NOTE: <key> is the key to which you should tie each macro.
+
+      Once you have added the macro to your QCONFIG.DAT file, run QCONFIG.EXE
+      to install the changes. To use QCONFIG.EXE, run it, press return to
+      accept Q.EXE, press K for keys, press return to accept QCONFIG.DAT, then
+      press S to save your changes.
+
+
+Loading a Filelist into QEdit
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  Do you often work with the same group of files?  Does it take you awhile to
+  load these files?  If so, you are like many others who use the same files
+  quite often and who spend a lot of time loading them into the editor.  Now
+  you can use the flexibility of QEdit to load _all_ those files with a single
+  keystroke.
+
+  To use the following macro to load your list of files, first create a file
+  (ie - FILELIST).  Then list each one of the files you need to load
+  (including it's path) on separate lines. Finally, save that file for future
+  use (note that you may have several lists of files for different needs).  In
+  the future you can just load your filelist into the editor and run the
+  macro. Notice that since you have not actually viewed the files yet, they
+  will not be loaded until you move to them the first time . This will permit
+  the user to take care of any "Press Escape" prompts.
+
+  The end result will be to load each of the files in the filelist into the
+  editor in the order that they were listed and to remove the FILELIST from
+  the current file ring.
+
+  <key>     MacroBegin SetScreenOff EndFile REPEAT: UnMarkBlock MarkLine Copy
+            EditFile CurrentFilename " " Paste Return CursorUp JTrue REPEAT:
+            Quit NextFile
+
+  NOTE: <key> is the key to which you should tie this macro. Once you have
+      added the macro to your QCONFIG.DAT file, run QCONFIG.EXE to install the
+      changes. To use QCONFIG.EXE, run it, press return to accept Q.EXE, press
+      K for keys, press return to accept QCONFIG.DAT, then press S to save
+      your changes.
+
+
+Macro Table is Full
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  Are you running out of macro space in QEdit?  Does QEdit respond with a
+  MACRO TABLE FULL error when installing your keys?  Then, it looks like you
+  need more space for QEdit macros.  Although the configuration area for key
+  definitions is fixed in the editor, there still is a solution.  Setting up
+  external macro files are a good way to add macros to the editor when the
+  macro table is full.
+
+  The configuration area for key definitions holds approximately 2000 bytes of
+  information.  When that space is full, you will receive an error message:
+  'macro table full at line #:'.  One solution is to go into your keyboard
+  definition file (normally QCONFIG.DAT) and delete macros that are no longer
+  needed. Alternatively you can move several of your larger macros to an
+  external macro file and compile it with QMAC, QEdit's external macro
+  compiler.  Each of these external macro files can be up to 4k in size and
+  you can generate as many such files as needed. Thus, users have access to an
+  unlimited amount of macro space through the use of external macro files.
+
+  For example, create a macro file named MYMACS.MAC that has several of your
+  larger macros included in it.  Next create a batch file, such as Q.BAT, to
+  run QEdit, and load your macros. To eliminate confusion about where you
+  execute Q.BAT, rename Q.EXE to QEDIT.EXE.  The batch file will then be
+  similar to the following:
+
+       qedit %1 %2 %3 %4 %5 %6 %7 %8 %9 -lc:\qedit\mymacs.mac
+
+  The batch file loads QEdit, loads up to nine files on the command line, and
+  loads the external macro file.  Modifications to the 'c:\qedit\mymacs.mac'
+  section of the batch file may be needed, depending on the name of your macro
+  file and it's location on your system.
+
+  The end result is a keyboard definition file with more space available, plus
+  an easy way to load the deleted macros in an external macro file.  All this
+  with still just the touch of one keystroke!
+
+
+Printing to LPT1 and LPT2
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+  Have you ever wanted to print to another printer port in QEdit? Do you have
+  two printers and want to toggle between them?
+
+  As shipped, QEdit's printer routines output all data to PRN, which usually
+  points to LPT1.  A number of users have expressed a need to print to LPT2,
+  or to toggle between LPT1 and LPT2.  In response, in QEdit 3.0, you can
+  select the device to print to, PRN, LPT1, LPT2, LPT3, or even a disk file.
+
+  This printer output device can be set permanently via QCONFIG, or
+  temporarily inside QEdit via the Print pulldown menu.

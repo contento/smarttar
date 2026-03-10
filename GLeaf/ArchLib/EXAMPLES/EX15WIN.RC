@@ -1,0 +1,116 @@
+//Microsoft App Studio generated resource script.
+//
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#include "ex15win.h"
+
+/////////////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+ALMAINDIALOG DIALOG DISCARDABLE  0, 0, 221, 246
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        AL_DIR_MASK,93,108,115,13
+    PUSHBUTTON      "E&xit",AL_EXIT,70,228,45,12
+    LISTBOX         AL_INPUT_FILES,22,36,80,77,LBS_SORT | LBS_EXTENDEDSEL | 
+                    WS_VSCROLL | WS_TABSTOP
+    CTEXT           "Get Archive Status",IDC_STATIC,16,6,168,11
+    RTEXT           "Archive Name:",IDC_STATIC,23,124,62,13
+    EDITTEXT        AL_ARCHIVE_NAME,93,124,115,13,ES_LOWERCASE | ES_READONLY | 
+                    NOT WS_TABSTOP
+    LISTBOX         AL_ARCHIVE_LISTING,127,36,74,72,LBS_SORT | 
+                    LBS_EXTENDEDSEL | WS_VSCROLL
+    RTEXT           "Dir mask:",IDC_STATIC,34,108,51,15
+    CTEXT           "Double Click on Archive",IDC_STATIC,22,19,161,10
+    EDITTEXT        AL_ARCHIVE_VERSION,93,140,115,13,ES_LOWERCASE | 
+                    ES_READONLY | NOT WS_TABSTOP
+    RTEXT           "Archive Version:",IDC_STATIC,23,140,62,13
+    EDITTEXT        AL_ARCHIVE_STATUS_CODE,93,156,115,13,ES_LOWERCASE | 
+                    ES_READONLY | NOT WS_TABSTOP
+    RTEXT           "Archive Status Code:",IDC_STATIC,14,156,71,13
+    EDITTEXT        AL_ARCHIVE_STATUS_STRING,93,172,115,13,ES_LOWERCASE | 
+                    ES_READONLY | NOT WS_TABSTOP
+    RTEXT           "Archive Status String:",IDC_STATIC,7,172,78,13
+    RTEXT           "Archive Status Detail:",IDC_STATIC,7,188,78,13
+    EDITTEXT        AL_ARCHIVE_STATUS_DETAIL,93,188,115,13,ES_LOWERCASE | 
+                    ES_READONLY | NOT WS_TABSTOP
+    RTEXT           "First Duplicate Entry:",IDC_STATIC,7,204,78,13
+    EDITTEXT        AL_DUPLICATE_ENTRY_NAME,93,204,115,13,ES_LOWERCASE | 
+                    ES_READONLY | NOT WS_TABSTOP
+END
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+ALICON                  ICON    DISCARDABLE     "ALICON.ICO"
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+ALMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "E&xit",                       AL_EXIT
+    END
+END
+
+#ifdef APSTUDIO_INVOKED
+//////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""ex15win.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+/////////////////////////////////////////////////////////////////////////////////////
+#endif    // APSTUDIO_INVOKED
+
+
+#ifndef APSTUDIO_INVOKED
+////////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

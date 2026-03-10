@@ -1,0 +1,38 @@
+*
+* QCP.TXT -- Sample QEdit macros for QCP, version 2.08
+* Author:  Tim Farley
+* Date:    20-March-1990
+*
+* Modified: 5-Nov-1993  Kevin A. Carr   Modified to handle the Extended Attribute
+*                                       prompt from the SaveFile in the OS/2 version.
+*
+
+*
+* ^F9 is our "Compile" macro
+*
+*  Note that this macro causes the the Output file name ($O) to be ERRORS.LST
+*  in the current directory, and the Macro file name ($M) to be ERRORS.MAC,
+*  also in the current directory.  This is forced via the /M and /O command
+*  line switches.
+*
+*  If you have a RAM disk, you will probably want to edit this macro
+*  (and/or change the ..O and ..M values in your QCP.DAT) to locate these
+*  files on the RAM disk for faster operation.  If you configure QCP
+*  properly, making sure the filenames used for $O and $M are always the
+*  same as those referenced in this macro, then you can remove the /O and
+*  /M options below, saving some space here (since QCONFIG has a limited
+*  space for macros).
+*
+^f9     SaveFile Jump continue Escape continue:
+        OneWindow UnmarkBlock MarkLine
+        EditFile 'errors.lst' Return
+        Quit GotoBlockBeg
+        Dos 'QCP/O.\errors.lst /M.\errors.mac ' CurrentFilename Return
+        " " HorizontalWindow
+        EditFile Return
+        PrevWindow
+        MacroRead 'errors.mac' Return
+        UnMarkBlock
+
+*
+* EOF: QCP.TXT *

@@ -1,0 +1,2 @@
+@echo off
+astyle --style=ansi --mode=c --indent=spaces=4 %1

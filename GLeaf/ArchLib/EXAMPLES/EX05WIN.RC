@@ -1,0 +1,96 @@
+//Microsoft App Studio generated resource script.
+//
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#include "ex05win.h"
+
+/////////////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+ALMAINDIALOG DIALOG DISCARDABLE  11, 30, 115, 149
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Windows Example 05"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "E&xit",AL_EXIT,13,125,88,12
+    PUSHBUTTON      "About",AL_ABOUT,13,107,88,12
+    CTEXT           "Test ObjectGuard Features",IDC_STATIC,6,7,100,9
+    PUSHBUTTON      "Destroy object twice",AL_DESTROY_TWICE,13,27,88,12
+    PUSHBUTTON      "Write past end of array",AL_WRITE_PAST_END,13,76,88,12
+    PUSHBUTTON      "Delete Invalid Pointer",AL_DELETE_BAD_POINTER,13,44,88,
+                    12
+    PUSHBUTTON      "Exercise the heap",AL_EXERCISE,13,92,88,12
+    PUSHBUTTON      "Undershoot error",AL_UNDERSHOOT,13,61,88,12
+END
+
+ALABOUTDIALOG DIALOG DISCARDABLE  0, 0, 145, 70
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,47,51,50,14
+    ICON            "ALIcon",IDC_STATIC,6,6,18,20
+    CTEXT           "Greenleaf Archive Library 2.1",IDC_STATIC,31,10,103,12
+    CTEXT           "Copyright (c) 1994-1997",IDC_STATIC,37,23,87,12
+END
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+ALICON                  ICON    DISCARDABLE     "ALICON.ICO"
+#ifdef APSTUDIO_INVOKED
+//////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""ex05win.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+/////////////////////////////////////////////////////////////////////////////////////
+#endif    // APSTUDIO_INVOKED
+
+
+#ifndef APSTUDIO_INVOKED
+////////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

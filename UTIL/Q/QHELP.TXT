@@ -1,0 +1,25 @@
+лллллллллллллллллллл Selected QEdit Commands By Function ллллллллллллллллллллллл
+Г                                                                              Г
+Г   Cursor Movement                 Toggles              Block/Scrap Buffer    Г
+Г   ФФФФФФФФФФФФФФФ                 ФФФФФФФ              ФФФФФФФФФФФФФФФФФФ    Г
+Г GotoBlockBeg   ^QB          ToggleBoxDraw    #F1       MarkLine      @L      Г
+Г GotoBlockEnd   ^QK          ToggleBoxType    @F1       MarkColumn    @K      Г
+Г GotoLine       ^J           ToggleIndent     ^QI       DropAnchor    @A      Г
+Г PrevPosition   ^QP          ToggleSmartTabs  ^QT       Cut           Grey-   Г
+Г ScreenLeft     ^F7          ToggleTabsExpand @V        Copy          Grey+   Г
+Г ScreenRight    ^F8          ToggleTabsOut              Paste         Grey*   Г
+Г ScrollUp       ^W           ToggleWordwrap   ^OW       PasteOver     ^PrtScr Г
+Г ScrollDown     ^Z           43/50 line mode  ^F1       UnmarkBlock   @U      Г
+Г                                                                              Г
+Г        File                       Editing                    Other           Г
+Г        ФФФФ                       ФФФФФФФ                    ФФФФФ           Г
+Г ChangeFilename ^F2          AddLine          ^N        CenterLine     ^OT    Г
+Г EditFile       F3           DelLine          ^Y        Upper          @1     Г
+Г Exit           ^KD          DelToEol         ^QY       Lower          @2     Г
+Г GlobalExit     @X           DelRtWord        ^T        Flip           @3     Г
+Г GlobalSave     @Y           DupLine          @D        Dos Shell      @F10   Г
+Г NextFile       F4           JoinLine         @J        Sort           #F3    Г
+Г ReadBlock      @R           Literal          ^P        UndoCursorline ^QL    Г
+Г WriteBlock     @W           SplitLine                  WrapPara       @B     Г
+Г SaveFile       F2           UnKill           ^U        RepeatCmd      ^QQ    Г
+дЭЭЭЭЭЭЭ <F10> for Menus    # = <Shift>     @ = <Alt>     ^ = <Ctrl> ЭЭЭЭЭЭЭЭЭЭО

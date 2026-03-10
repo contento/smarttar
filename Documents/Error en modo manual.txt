@@ -1,0 +1,50 @@
+se realizaron las siguientes pruebas y se encontraron los siguientes resultados.
+
+
+1 CASO.
+el sistema se encuentra en modo manual, no hay llamadas acumuladas en la
+cabina, se hace una llamada normalmente, (esta llamada tiene valor de $100),
+se cuelga, se realiza una nueva llamada , pero esta llamada tiene valor
+de $0, 
+se termina la llamada y se cuelga el teléfono (ya hay dos llamadas acumuladas
+en esa cabina, la primera de $100 y la segunda de $0), se descuelga y se
+genera una nueva llamada (tercera para esa cabina)(esta llamada tiene valor
+diferente de $0), cuando llega la señal de contestación el sistema corta
+la llamada y genera el mensaje de error:
+
+
+           B=6,T=1,TS=0,V=0.00
+
+2. CASO.
+
+no hay llamadas acumuladas en la cabina, se descuelga el teléfono y se hace
+una llamada, se termina esta y tiene valor de $0, se descuelga nuevamente
+para realzar una segunda llamada, (esta llamada tiene un valor cualquiera
+por ejemplo $100), cuando le contestan el sistema corta la llamada y genera
+el siguiente mensaje de error:
+
+           B=4,T=1,TS=0,V=0.00
+
+3. CASO.
+
+No hay llamadas acumuladas en la cabina, se descuenga y se realiza una llamadas
+con valor de $0, se termina la llamadas, se descuelga nuevamente para hacer
+una segunda llamada pero la segunda llamada  también tiene valor de $0,se
+termina la llamada, se descuelga para hacer la tercera llamada (pero esta
+llamada tiene un valor diferente de $0), cuando le contestan el sistema
+le corta la llamada y genera un mensaje de error:
+
+          B=8,T=1,TS=0,V=0.00
+
+
+EN CONCLUSIÓN:
+
+DESPUÉS DE HABER REALIZADO UNA LLAMADA CON VALOR DE $0, EL SISTEMA CORTA
+LA SIGUIENTE LLAMADA (PERO ESTA LLAMADA TIENE QUE TENER UNA VALOR DIFERENTE
+DE 0).
+
+
+si tienes alguna inquietud, por favor nos la comunica....
+
+
+Alex Rico.

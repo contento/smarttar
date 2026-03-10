@@ -1,0 +1,18 @@
+DIR            Description
+-------------------------------------------
+
+B5X            Borland 5.0
+BCB10          Borland C++ Builder
+DELPHI.20      Delphi 2.0
+DELPHI.30      Delphi 3.0
+DOCS           Documentation
+EXAMPLES       DOS and Win16 examples
+EXAMPLES.BCB   Borland C++ Builder examples
+EXAMPLES.MFC   MFC 4.2 examples
+H              Header files
+HELP           Windows help file
+SFX            Self extracting example
+V1X            Microsoft Visual 1.X
+V50            Microsoft Visual 5.0
+VB40.32        Visual Basic 4.0/32 bit
+VB50           Visual Basic 5.0

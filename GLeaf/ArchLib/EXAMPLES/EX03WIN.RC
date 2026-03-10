@@ -1,0 +1,130 @@
+//Microsoft App Studio generated resource script.
+//
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#include "ex03win.h"
+
+/////////////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+ALMAINDIALOG DIALOG DISCARDABLE  0, 0, 282, 222
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        AL_INPUT,34,124,77,12
+    PUSHBUTTON      "Read Archive",AL_READ_INPUT,37,104,56,12
+    PUSHBUTTON      "&Delete",AL_DELETE,119,8,42,12
+    PUSHBUTTON      "&Abort",AL_ABORT,119,45,42,12
+    PUSHBUTTON      "E&xit",AL_EXIT,119,82,42,12
+    EDITTEXT        AL_OUTPUT,177,126,77,12,ES_READONLY | NOT WS_TABSTOP
+    LTEXT           "&Input:",-1,3,125,27,11
+    CONTROL         "",AL_PROGRESS_BAR,"ALGauge",0x0,10,178,118,12
+    CTEXT           "Progress Text Window",AL_PROGRESS_TEXT,10,158,118,11
+    LISTBOX         AL_INPUT_LIST,22,6,87,89,LBS_EXTENDEDSEL | WS_VSCROLL
+    LISTBOX         AL_OUTPUT_LIST,170,6,87,89,WS_VSCROLL
+    LTEXT           "Backup:",-1,138,127,30,9
+    EDITTEXT        AL_DEBUG,148,150,124,63,ES_MULTILINE | ES_AUTOVSCROLL | 
+                    ES_AUTOHSCROLL | WS_VSCROLL | WS_HSCROLL | NOT 
+                    WS_TABSTOP
+END
+
+ALABOUTDIALOG DIALOG DISCARDABLE  0, 0, 145, 70
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,47,51,50,14
+    ICON            "ALIcon",IDC_STATIC,6,6,18,20
+    CTEXT           "Greenleaf Archive Library 2.1",IDC_STATIC,31,10,103,12
+    CTEXT           "Copyright (c) 1994-1997",IDC_STATIC,30,23,103,12
+END
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+ALICON                  ICON    DISCARDABLE     "ALICON.ICO"
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+ALMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "E&xit",                       AL_EXIT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About",                      AL_ABOUT
+    END
+END
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+ALACCELERATOR ACCELERATORS MOVEABLE PURE 
+BEGIN
+    "I",            AL_GOTO_INPUT,          VIRTKEY,ALT
+END
+
+#ifdef APSTUDIO_INVOKED
+//////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""ex03win.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+/////////////////////////////////////////////////////////////////////////////////////
+#endif    // APSTUDIO_INVOKED
+
+
+#ifndef APSTUDIO_INVOKED
+////////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

@@ -1,0 +1,18 @@
+problema version 2.30.1 
+-----------------------------------------
+Hola Gonzalo...
+ 
+te detallo el problema con la versión.
+ 
+este problema se detecto en la version 2.30.1. buil 15 en adelante.
+ 
+ 
+solo se ocaciona si el sistema ebta en modo manual, en modo automatico no ocurre.
+ 
+la persona entra a una cabina, (no importa si es la primera llamada, la segunda etc)  realiza una llamada, esta se efectua normalmente..  pero la llamada tiene un valor de $0,   (puede ser una llamada no incluida, una llamada gratuita etc), lo importante es que la llamada el valor es de $0, cuando la persona termina y desea realizar otra llamada el sistema le permite marcar, pero cuando llega la señal de contestación el programa corta la llamada y genera un mensaje de error que dice  " el valor excede prepago cabina X" y no permite realizar mas llamadas por esa cabina,   solo cuando imprimimos las llamadas que estan acumuladas en esa cabina se libera esta y permite hacer mas llamadas.
+ 
+ 
+en conclusión, cuando una persona realizar una llamdas cuyo valor sea $0,  el sistema corta las siguientes llamadas que se hagan en esa cabina, creyendo que se a activado un prepago......
+ 
+en ningun momneot se coloco perpago en las cabinas.
+

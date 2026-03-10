@@ -1,0 +1,11 @@
+There are the 3 steps required in creating MAKESFX.EXE
+
+1)  Compile UNZIP.CPP
+2)  Compile MAKESFX.CPP
+3)  copy /B makesfx.exe + unzip.exe
+
+Step 3 appends UNZIP.EXE to MAKESFX.EXE.  See comments in each source file
+for more info.
+
+Marc
+mleger@connect.net

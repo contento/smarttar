@@ -1,0 +1,32 @@
+From: Alexander Rico [alricoa@epm.net.co]
+Sent: Wednesday, July 02, 2003 9:14 PM
+To: Gonzalo Contento
+Cc: microdis@geo.net.co; microdis@epm.net.co; avacomsa@geo.net.co
+Subject: problema encontrado version 2.33.3. build 4
+
+Importance: High
+
+Hola Gonzalo.
+
+la ultima versión esta funcionando correctamente, pero tiene un detalle que se puede corregir.
+
+
+El sistema se encuentra operando en modo Manual.
+
+La variable MULTIPLE_PREPAID_CALLS=1, lo que hace que se puedan generar multiples llamadas con un prepago.
+te recuerdo la idea de este funcionamiento.
+Un usuario da un deposito de $100.000 y este necesita realizar muchas llamadas, con esta variable en 1 el sistema le permite realizar X llamadas esta que se agote el prepago.   Despues que se agota el prepago no se permite realizar mas llamadas.
+
+Como funciona en esta versión:
+El operario realiza un prepago de X plata, el usuario empieza a realizar llamadas,  cuando el prepago (que se ha ido restado), tiene un valor muy pequeño (no supera el valor minimo de una llamada, ni es igual a cero (0)) el sistema le impide realizar mas llamadas. (Tiene que quedar algun valor en el deposito diferente de (0)).   Esto funciona correctamente.
+El problema se origina cuando el prepago es consumido totalmente, no quedando nada en el deposito.
+El operario programa un  valor es de $1000, el usuario ingresa y realiza una llamada cuyo valor minuto es de $1000, el sistema corta la llamada cuando llega al valor (hasta aqui todo funciona perfectamente), el usuario va a realizar otra llamada (el valor del prepago es de $0 que se consumienron en la anterior llamada) el sistema le permite hacer esta llamada y otras mas (aqui esta el problema, debido a que esta cabina tenia ya un prepago y se consumio totalmente no debe permitir hacer mas llamadas).
+
+Conclusion:
+si se realiza un prepago y este se consume totalmente, el sistema permite realizar mas llamadas, ( no debe permitir hacer llamadas), pero si queda algun valor, osea que el prepago no se consume totalmete, el sistema observa que este valor es inferior al valor minimo de una llamada, no permitiendo al usuario hacer mas llamadas.
+Actualmente para solucionar este problema, se le dice al operario que cuando realice un prepago este tiene que tener un valor de $1 de mas, osea que si el usuario quiere un prepago de $5000, el operario debe de hacer el prepago de $5001, este valor nunca se consumira en su totalidad debido al redondeo y valores de tarifas actuales, quedando siempre un valor sobrante en el prepago. (no quedando el prepago en 0).
+espero que esto te ayude a solucionar el problemas, si tienes alguna inquietud por favor me lo comunicas..
+
+Bye Bye.
+
+Alexander Rico

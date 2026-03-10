@@ -1,0 +1,79 @@
+Comm++ 3.0 supports three different 32 bit DOS Extenders:
+
+    Tenberry Software (formerly Rational Systems) DOS/4G v1.97
+
+    Phar Lap TNT DOS-Extender 7.0
+
+    Borland PowerPack
+
+The easiest way to determine what extenders are supported by your
+compiler is simply to execute the BUILD.EXE program without any
+arguments.  This will print a list of supported libraries.  DOS/4G
+libraries will always be named CPFR32.LIB.  Phar Lap libraries will be
+named CPFP32.LIB, and PowerPack libraries will be named CPX32.LIB.
+
+To use the 32-bit DOS extenders with Comm++, you must use the class
+GFI8250.  This is the only platform class that includes DOS extender
+support.
+
+The most difficult thing about using a 32 bit DOS Extender is getting
+your compiler and linker options set up properly.  You usually have to
+add new libraries and include files to your path, as well as changing
+compiler options, and perhaps changing the compiler itself.
+
+To help you get a good compile and link, our BUILD utility can be used
+to properly build our demo and example programs.  You can test your
+installation by making a protected mode version of our demo program
+VIDTERMD, or many of our examples.
+
+If you have trouble building your application, first make sure your
+installation is done properly.  A good way to start is to build a simple
+program like this:
+
+    #include <stdio.h>
+    #include <stdlib.h>
+
+    main( void )
+    {
+        long kbytes = 0;
+        int i;
+
+        for ( i = 0 ; i < 500; i ++ ) {
+            if ( malloc( 10000 ) == 0 )
+                 break;
+            kbytes += 10;
+        }
+        printf( "Allocated %ld Kbytes\n", kbytes );
+        return 1;
+    }
+
+If you are linking properly with the DOS Extender, you should be able to
+allocate a few megabytes of memory.  If your DOS Extender isn't working,
+you will be limited to some number less than 640K.
+
+Once you have this working, you can try building VIDTERMD with our
+library, using the appropriate BUILD utility.  You should be able
+to run VIDTERMD and talk to your port properly.  Run it as "VIDTERMD
+SPLIT", and you can see if you are getting any real mode interrupts.
+You won't see any in a Windows DOS Box, but you should from vanilla DOS.
+
+If you get this far without problems, and your protected mode app is
+still not working properly, there is one helpful thing you can do before
+calling Tech Support.  First, build a debug version of the extended
+library using BUILDxxx.EXE.  Then, link your application to the debug
+library, and generate a link map.  Many of the problems with DOS
+Extenders turn out to be linker related.  The debug version of the
+library has many assertions that flag problems.  In addition, the debug
+version has some display code inside the ISR that can be turned on for a
+sanity check.
+
+DOS Extender Macros
+If you are building an application using the DOS/4G or TNT DOS Extenders,
+you need to define either GCPP_DOS4G or GCPP_DOSX386 on the command line,
+respectively.  This will inform the library that you are creating a DOS
+Extended application and the proper header files will be included.  If
+you are using the Borland PowerPack DOS Extender you will not need to
+define any macros since the compiler defines an internal macro that our
+header files will detect.
+
+DOS Extenders are hard to use.  Good Luck!

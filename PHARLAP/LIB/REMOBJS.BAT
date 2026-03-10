@@ -1,0 +1,27 @@
+@rem $Id: remobjs.bat 1.11 1993/12/06 12:09:16 clark Exp $
+del setargv.obj
+del segheap.obj
+del farheap.obj
+del loadprog.obj
+del doscmd.obj
+del ctrlbrk.obj
+del spawn.obj
+del crtinit.obj
+del ioctl.obj
+del int86.obj
+del signal.obj
+del fcorelft.obj
+del system.obj
+del intr.obj
+del delay.obj
+del harderr.obj
+del hard.obj
+del h_pada.obj
+del h_padd.obj
+del h_pina.obj
+del h_psbh.obj
+del pcmp.obj
+del brk.obj
+del ioerror.obj
+del strchr.obj
+del strchrx.obj

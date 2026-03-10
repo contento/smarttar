@@ -1,0 +1,321 @@
+QEdit common questions and answers:
+
+ KEYBOARD
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+
+QUESTION:   I try to use the "*","-", and "+" key on my numeric keypad and it
+doesn't seem to work.
+
+ANSWER:     By default QEdit has the Paste, Cut, and Copy commands assigned to
+these keys. They are referred to as the "grey*", "grey-", and "grey+" keys. If
+you want to use these keys at "Face-value", then unassign them in your
+keyboard definition file. See the printed manual for a listing of these keys.
+
+
+QUESTION:   I have a NorthGate keyboard that has an additional "*" key, but it
+doesn't seem to work.
+
+ANSWER:     This extra "*" key is the same as the "grey*" key. Please see the
+previous Question and Answer.
+
+
+QUESTION:   I can't get the F11 and F12 keys to work.
+
+ANSWER:     The F11 and F12 keys are present on "Enhanced Keyboards", also
+known as the 101-key keyboards.
+
+By default, QEdit has enhanced keyboard testing turned off. Run Qconfig.exe,
+select Advanced options, and answer Yes to "Test for presence of enhanced
+keyboard (Y/N)? ". Be sure that you Save your changes when you quit
+Qconfig.exe. As long as you have an "Enhanced Keyboard" and also a Rom Bios
+that recognizes the Enhanced keyboard, you will be able to use these
+additional keys. For a list of the "Enhanced Keyboard" keys, see the printed
+manual.
+
+
+QUESTION:   My TSR will not pop up over QEdit, why?
+
+ANSWER:     Some TSR's will not pop-up when Enhanced keyboard calls are being
+made. Run Qconfig.exe, select Advanced options, and answer NO to "Test for
+presence of enhanced keyboard (Y/N)? ". Be sure that you Save your changes
+when you quit Qconfig.exe. This should allow your TSR to pop-up. If you have
+Enhanced Keyboard testing turned off, you will not be able to access commands
+that you have assigned to the F11, F12, and other enhanced keys. For a list of
+the Enhanced keyboard keys, see the printed manual.
+
+
+QUESTION:   My Tab key doesn't seem to work right. What is wrong?
+
+ANSWER:     It's possible that you have ToggleSmartTabs ON. Make sure that
+ToggleSmartTabs is OFF.  Please see the printed manual for a description of
+the ToggleSmartTabs command.
+
+
+ TEXT ENTRY AND MANIPULATION:
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+
+QUESTION:   How can I enter _ANY_ ASCII character in QEdit?
+
+ANSWER:     Any ASCII character having a decimal value of 0-255 can be entered
+into a text file while in QEdit using one of the following methods:
+
+                                ASCII 1-255:
+
+Press and hold the <ALT> key. Now, using the numeric keypad (this is the
+keypad that is usually located on the right hand side of the keyboard), type
+the decimal value of the Ascii character that you want. Now release the <ALT>
+key and you should have the character placed in your text. (If you have a
+problem entering an ASCII 240, see the discussion in this section.)
+
+                                  ASCII 0:
+
+To enter the NULL character (Ascii 0) into your text, first use QEdit's
+literal command (our default <CTRL P> ) and then press <CTRL @>. You will get
+the NULL character placed in your text (it will look like a space).
+
+For more information on the Alt numeric keypad see the QEdit tip on page 1-26
+of the printed manual. For more information on the Literal command see the
+printed manual.
+
+
+QUESTION:   How can I change a lower case character to an Upper case one or
+Vice-versa?
+
+ANSWER:     QEdit has 3 case changing commands. They are Upper, Lower, and
+Flip. These commands can be used to force uppercase, lowercase, or togglecase
+at the cursor position OR on all characters in a marked block (if the cursor
+is within the marked block).
+
+
+QUESTION:   How can I enter page breaks into my text?
+
+ANSWER:     You can enter a Form-feed character into your text by using the
+Literal command (our default <CTRL P> ) followed by <CTRL L>. You can also use
+the Alt-numeric keypad method (described previously). Hold the <ALT> key and
+type 12 on the numeric keypad, then release the <ALT> key.
+
+
+QUESTION:   I am writing batch files and QEdit puts a carriage return/line
+feed on the last line of a file. How can I keep from getting the double Dos
+prompt when my batch file is done?
+
+ANSWER:     QEdit writes a carriage return/line feed pair at the end of each
+line whenever a file is saved. If you don't want the carriage return/line feed
+on the last line of a batch file to be "SEEN" by Dos, then enter a Ctrl Z as
+the last character on the last line. Dos will stop processing the batch file
+when the ctrl Z is reached so you won't get the double prompt.
+
+
+QUESTION:   How do I enter a NULL character into my text?
+
+ANSWER:     Use QEdit's Literal command (our default <CTRL P>) immediately
+followed by <CTRL @>. This will place a NULL (ASCII 0) character in your text.
+Please see the discussion of the Literal command in this section.
+
+
+QUESTION:   How can I draw boxes in QEdit?
+
+ANSWER:     Use the ToggleBoxDraw command (our default <SHIFT F1>). When box
+drawing mode is on, a "B" will be present in the Status line. You can now use
+the cursor keys to draw boxes in your text. To turn box drawing off, issue the
+ToggleBoxDraw command again. The "B" will be gone from the status line. You
+can also select several Box Styles, plus an eraser mode, by using the
+ToggleBoxType command (our default <ALT F1>).
+
+
+QUESTION:   I try to enter an ASCII 240 using the Alt numeric keypad and my
+system seems to hang. What can I do?
+
+ANSWER:     There is a "Known" problem with some versions of the Phoenix Bios
+that occurs when an ASCII 240 is being generated from the numeric keypad and
+"Enhanced Keyboard" calls are being made.
+
+Internally, the bios code enters an infinite loop. To break out of this loop,
+Press <CTRL BREAK> and you will again have control of your keyboard. *NOTE:
+<CTRL C> will NOT get you out of the loop, you must use <CTRL BREAK>. If you
+have enhanced keyboard testing turned off in QEdit, you will not have this
+problem.
+
+As a side note, DOS 4.0 and above also make enhanced keyboard calls and the
+above discussion applies there as well.
+
+
+QUESTION:   How can I change all the Tab characters in a file to spaces?
+
+ANSWER:     Use the TabsToSpaces command (<Esc><O><X>)
+
+
+
+ FINDING TEXT
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+
+QUESTION:   How can I limit a "FIND" or "SEARCH and REPLACE" operation to a
+specified area?
+
+ANSWER:     The "L" option was added as a way for the user to limit a search
+operation to within a marked block area. When prompted for options, just
+include "L" with the other options.
+
+
+QUESTION:   How can I do a Find and place the found item on the center of the
+screen.
+
+ANSWER:     Set the "Center Finds" option on (<Esc><S><C>)
+
+
+
+ CURSOR MOVEMENT
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+
+QUESTION:   When I use the cursor key in QEdit to move to the right or left,
+the cursor stays on the same line when I come to the beginning or end of the
+line. How can I have the cursor move to the start of the next line when I
+reach the end of the current line OR move to the end of the previous line when
+I reach the beginning of the current line?
+
+ANSWER:     Assign the following macro in your Qconfig.dat file:
+
+cursorleft  MacroBegin CursorLeft JTrue end: CursorUp JFalse end: EndLine end:
+
+cursorright MacroBegin IsEndLine JTrue down: CursorRight Jump end: down:
+    CursorDown JFalse end: BegLine end:
+
+
+QUESTION:   When I am inserting text on a line, wordwrap does not seem to
+work.
+
+ANSWER:     In order for wordwrap to operate, the cursor has to exceed the
+right margin that has been set. Once the right margin has been exceeded and
+you type a non-wordset character, the line will wrap.
+
+
+ PRINTER
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+
+QUESTION:   How can I enter Printer control codes in QEdit?
+
+ANSWER:     Please see the TEXT ENTRY AND MANIPULATION section. You will need
+to know the ASCII values of the control characters. These values will be
+mentioned in your printer manual.
+
+
+QUESTION:   I print a file that I have in QEdit, but the Box drawing
+characters do not print on my printout.
+
+ANSWER:     Check your printer manual and make sure that you have the printer
+set up to utilize the Character Graphics Set.
+
+
+QUESTION:   How can I have QEdit print to LPT2 or Com1?
+
+ANSWER:     Set the appropriate print device via the QCONFIG program, or set
+it interactively via the Print pulldown menu.
+
+
+QUESTION:   How can I get double spaced lines on my printout?
+
+ANSWER:     You can use the "print left margin" setting to obtain double and
+triple spaced text in most cases. If you have your printer set up so that it
+prints 80 characters on a line, then set the "print left margin" in QEdit to
+80. This will cause QEdit to send 80 spaces before printing each line, so
+effectively get double spaced lines. If you want triple spacing, then make the
+setting 160.
+
+
+QUESTION:   I have QEdit sending formfeeds to the printer, but am getting
+parts of a page AND some blank pages on my printout.
+
+ANSWER:     Make sure that your text does not have some long lines that are
+being wrapped by the printer. If your printer wraps at 80 characters on a
+line, make sure that your file does not have lines longer than 80 characters.
+
+
+ CONFIGURATION
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+
+QUESTION:   I make some changes to QEdit using Qconfig.exe and they do not
+take effect.
+
+ANSWER:     Make sure that you are using the copy of QEdit that you just
+configured. If you are not in the current directory where your newly
+configured copy of QEdit is, then check your path to see if you are getting a
+different copy of QEdit. Be sure to look for batch files as well as EXE's and
+COM's that share the same primary name. I.E. Look for Q.exe, Q.com, Q.bat
+along your path.
+
+
+ QEDIT COMMANDS
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+
+QUESTION:   When I use the CenterLine command, my text is not centered on the
+screen.
+
+ANSWER:     The centerline command uses column 1 and the right margin that you
+have set as the basis for centering text. If you want the text centered on the
+screen, assuming that your screen is 80 columns wide, you can set your right
+margin to 80 and then issue the centerline command. If you don't want to
+change your right margin, you can use column block marking to mark your left
+and right hand margins, then issue the centerline command.
+
+
+QUESTION:   How do I get the Sort command to work?
+
+ANSWER:     In order to use the Sort command, you must be in a single,
+nonzoomed window. You must use the MarkColumn command to mark the range of
+lines to sort, and the width of the field to sort on as the key. If you use
+any other type of blocking, the sort command will not work.
+
+
+ QEDIT COMMAND LINE OPTIONS
+컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+
+QUESTION:   How can I have QEdit run a macro on start-up?
+
+ANSWER:     The "-Emacroname" or "/Emacroname" command line switch, will
+execute the first macro in macroname. Be sure to specify a path to macroname
+if it is not in the current directory. E.G.  Q ABC -Ec:\path\mymacro.mac will
+load file ABC and execute the first macro in c:\path\mymacro.mac. Please note
+that this switch does not load macroname. If you also want to load macroname,
+then use the -L or /L option described in this section.
+
+
+QUESTION:   How can I have QEdit pre-load a macro set?
+
+ANSWER:     The "-Lmacroname" or "/Lmacroname" command line switch, will load
+macroname. Be sure to specify a path to macroname if it is not in the current
+directory. E.G.  Q ABC -Lc:\path\mymacro.mac will load file ABC and load the
+macrofile c:\path\mymacro.mac.
+
+
+QUESTION:   I used to be able to have QEdit load a file and then go to a
+certain line number, but now it does not work.
+
+ANSWER:     In versions of QEdit prior to version 2.1, going to a specified
+line on startup was a configuration program option. This has been replaced
+with a command line switch of the format -nLINE# or /nLINE#. I.E. To load file
+ABC and immediately go to line# 35 type:  Q ABC -n35
+
+
+QUESTION:   How can I have QEdit come up in 43/50 line mode?
+
+ANSWER:     Set the appropriate option via the QCONFIG program.  See the
+Colors/Screen section.
+
+
+QUESTION:   How do I use a QEdit command that is not tied to a key?
+
+ANSWER:     If you would like to have the command available at all times, just
+assign the command to a key in your keyboard definition file. Once you have
+modified your keyboard file, be sure to run the Qconfig.exe program. Select
+the Keys option, supply the name of your Keyboard file, then save your changes
+and quit the program.
+
+You may use all the QEdit commands when creating macros.

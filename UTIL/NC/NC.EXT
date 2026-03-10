@@ -1,0 +1,3 @@
+mak: make -f!
+asm: tasm !.!
+prj: bc

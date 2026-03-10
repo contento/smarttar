@@ -1,0 +1,391 @@
+*
+* File: MACROS.TXT  --  Miscellaneous useful macros for use with QEdit
+*
+* Last revised: 4-November-1993
+*
+* To use these macros, select the ones you like, copy them to your keyboard
+* configuration file (QCONFIG.DAT), (editing the key assignment if need be)
+* and then run the configuration program (QCONFIG) to install the new key
+* assignments into your copy of QEdit.
+*
+* Most of these macros assume you are using QEdit 3.0 or greater.
+* (Or the equivalent QEdit TSR 3.0 or QEdit for OS/2 3.0 or greater).
+*
+
+*
+*  Title: Fancy home macro.
+*
+*  If already at the start of a line, go to the first non-white character
+*  on the line; otherwise, if not already at the start of a line, go to the
+*  start of the line.
+*
+Home        BegLine MacroQuitTrue FirstNonWhite
+
+*
+*  Title: Block Cut with blank fill
+*
+*  This does the same thing as Cut <Grey ->, but it fills the original block
+*  with spaces.  This is most useful with column blocks, when you don't want
+*  the text "around" the block to "fill in" where the removed text was. The
+*  macro assumes a block is already marked.  The block will be [Cut] to the
+*  clipboard or system scrap buffer. You can then insert the block where you
+*  like by pressing the [Paste] key <Grey *>.
+*
+*  Note: the block must be closed before this macro will work.
+*
+f10         GotoBlockBeg MacroQuitFalse
+            Cut Paste
+            FillBlock ' ' Return
+            UnmarkBlock
+
+*
+* Title: Find with Options prompt removed.
+*
+* The first one forces a forward case-insensitive search, the second backward.
+*
+f7          Find Pause Return 'i' Return
+
+#f7         Find Pause Return 'ib' Return
+
+*
+* Title: Find next occurrence of the Word sitting at the cursor position
+* Note: if cursor is not in a word, we check left and right for a word,
+* if we still can't find a word, we quit.
+*
+@=          MarkWord MacroQuitFalse Copy
+            Find Paste Return Return
+*
+* Title: Find Word at cursor backwards
+*
+^f1         MarkWord MacroQuitFalse Copy
+            Find Paste Return "ib" Return
+
+*
+* Title: "Safer" WriteBlock
+*
+* All the file prompts come up with a default of the last file loaded.
+* However, when using WriteBlock, accepting the default could overwrite
+* a file you have in the editor.  Here's a macro to replace <Alt W> that
+* makes sure the prompt comes up blank, and that the Overwrite/Append always
+* comes up defaulted to Append no matter what.
+*
+@w          WriteBlock DelLine Pause Return
+            Jump done:
+            EndLine
+            done:
+
+*
+* Title: Delete to beginning of line
+*
+^backspace  SplitLine DelLine BegLine
+
+*
+* Title: Duplicate "n" Lines
+*
+* The built in DupLine function duplicates the current line, and moves the
+* cursor down onto the duplicate.  This macro does the same thing for X lines
+* starting from the cursor line going "UP".  It will stop and prompt for the
+* number of lines.  Press ESCAPE twice at the prompt to abort.
+*
+@d          UnmarkBlock MarkLine AddLine 2 CursorUp
+            RepeatCmd Pause Return
+            MarkLine GotoBlockEnd CopyBlock GotoBlockEnd
+            CursorDown DelLine 2 CursorUp
+*
+* If "Insert line blocks ABOVE cursor line?" is set to YES, use this instead:
+*
+*@d         UnmarkBlock MarkLine AddLine 2 CursorUp
+            RepeatCmd Pause Return
+            MarkLine GotoBlockEnd CursorDown CopyBlock GotoBlockEnd
+            CursorDown DelLine 2 CursorUp
+
+*
+* Title: Alternate Help File
+*
+* This allows you to have a help file much larger than one screen, by loading
+* it into QEdit into an editing buffer.
+*
+* Change the directory & filename here to the help or doc file that you use.
+*
+f1          EditFile 'c:\qedit\help.dat' Return
+
+*
+* Title: Load a file whose name is at the cursor
+*
+* This picks up a filename that is sitting at the cursor position in the
+* editor, and loads it into another buffer.
+*
+^]          AltWordSet MarkWord jFalse done: Copy
+            EditFile Paste Return
+    done:   DefaultWordSet
+
+*
+* Title: Alternate WrapPara
+*
+* WrapPara assumes you have moved the cursor to the top of the paragraph
+* you wish to wrap.  This macro removes this requirement by moving the
+* cursor there for you.  This macro will re-wrap the current paragraph, no
+* matter where the cursor is currently sitting in it.
+*
+@b          CursorDown PrevPara WrapPara NextPara
+
+*
+* Title: Wrap entire file
+*
+* WrapPara only affects the current paragraph.  This macro repeats WrapPara
+* from the cursor position to the end of the file, reformatting the entire
+* file.  NOTE:  all paragraphs will be reformatted to the same margins, so
+* be sure this is what you want.
+*
+^f6         EndFile
+            AddLine
+            BegFile
+            BegLine
+     again: WrapPara    JTrue again:
+            EndFile
+            DelLine
+            CursorUp
+
+*
+* Title: Absolutely Quit the Editor
+*
+* This key, when hit, will absolutely discard all files from the editor,
+* and exit to the DOS prompt, no questions asked.
+*
+* !WARNING!: Be careful with this one-- it will NOT prompt you to save your
+*            work.   You will lose all your work if you haven't saved it!
+*
+^f12 again: Quit        JTrue again:
+            Escape
+
+*
+* Title: Delete redundant blank lines in entire file
+*
+* This macro deletes all blank lines that are adjacent to another blank line.
+* Useful for cleaning up files or screen captures that have too much excess
+* white space in them.
+*
+^f11 fndnxt:
+            EndPara
+            CursorDown 2    JFalse end:
+     blank: EndLine
+            BegLine         JTrue fndnxt:
+            DelLine         JTrue blank:
+       end:
+
+*
+* Title: Worry-free Sort
+*
+* Sort only works if there is a single, non-zoomed window on the screen.
+* Well, rather than worry about that, how about have a macro take care of it:
+*
+#f3         GotoBlockBeg OneWindow Sort
+
+*
+* Title: Reload Current file
+*
+* QEdit normally never reloads a file from disk once in memory.  But
+* sometimes the copy on disk might change while you are inside QEdit, and you
+* may want to see the new copy.  (This could happen on a network, or if you
+* run a utility that can modify files, from inside QEdit using "Dos").
+*
+* Hit this key, and no matter the state of the editing buffer, the
+* original copy of this file will be reloaded into the editor.  This
+* will LOSE any and all changes you haven't saved, so BE CAREFUL!
+*
+^f2         SplitLine
+            EditFile CurrentFilename Return
+            NewFile "N" Return
+
+*  Here's a safer version:  this one stops to let you answer the
+*  "Save Changes?" prompt.  You will have to hit RETURN to confirm the
+*  reload of the file.
+*
+^f3         EditFile
+            CurrentFilename Return
+            NewFile
+
+*
+* Title: An Editing Log macro
+*
+* This macro allows you to keep a "log" of the files you have edited with
+* QEdit.  This could be useful to keep track of large multi-file projects.
+*
+* It keeps the log in the file C:\Q.LOG.  When you are "done" with a file,
+* hit this key and it will be saved to disk, and the time and date recorded
+* in the LOG file.
+*
+^f5         HorizontalWindow
+            EditFile "C:\Q.LOG" Return
+            EndFile AddLine BegLine
+            InsertDate InsertTime " @" BegLine
+            PrevWindow
+            FindReplace "@" Return CurrentFilename Return Escape
+            NextWindow
+            FindReplace Return Return "N" Return
+            SaveFile
+            CloseWindow
+            File
+
+*
+* Title: Run a Compiler Macro
+*
+* As written here, this macro will run the Turbo Pascal compiler (TPC) on the
+* current file, and bring the resulting error messages into a window below
+* the current one.  Edit where it says "TPC /Q >ERRS.LST " to invoke whichever
+* language compiler you most often use.
+*
+@f9         OneWindow UnmarkBlock DropAnchor
+            EditFile 'ERRS.LST' Return
+            KillFile Quit
+            GotoBlockBeg UnmarkBlock
+            Dos 'TPC /Q >ERRS.LST ' CurrentFilename Return Return
+            HorizontalWindow
+            EditFile Return
+            PrevWindow
+
+* Title: Delete all blank lines in a marked block
+*
+* The cursor should be at the beginning of the block when the macro is
+* invoked.
+*
+#f9         SetScreenOff                    * turn off screen for speed
+    begin:  isCursorInBlock                 *
+            MacroQuitFalse                  * exit if not in block
+            isEmptyLine     jFalse next:    * skip if not empty line
+            isLastLine      jTrue  last:    * special handling for last line
+            DelLine         jump  begin:    * delete empty lines
+    next:   CursorDown      jTrue begin:    * try next line
+            MacroQuit                       * that's all, folks!
+    last:   DelLine                         * delete the last line
+
+*
+* Title: WordStar-like cursor left/right
+*
+* Left and Right cursor definitions that wrap to previous/next line
+* like WordStar does
+*
+cursorleft  CursorLeft                       * try to go left
+            MacroQuitTrue                    * succeed!  then we are done
+            CursorUp                         * else try to go to prev line
+            MacroQuitFalse                   * if fail, then at top of file. done
+            EndLine                          * jump to end of previous line.
+
+cursorright isEndLine       jTrue Down:      * are we at end of line? Go down
+            CursorRight                      * else right one
+            MacroQuit                        * Quit macro
+      Down: CursorDown                       * try to go to next line
+            MacroQuitFalse                   * if not goto end
+            BegLine                          * else goto beginning of line
+
+*
+* Title: repeat GetPrev down
+*
+* A very useful QEdit command, GetPrev, copies a character from the line
+* immediately above the cursor line, onto the cursor line.  Often it is
+* necessary to copy this character to several succeeding lines in the
+* same column.  The GetPrev command, used in a macro, makes this
+* function easy.  Assign this macro to the <Alt 4> key (for example) in
+* QCONFIG.DAT as follows:
+*
+@4          GetPrev CursorLeft CursorDown
+
+*
+* Title: enhanced AddLine/DelLine
+*
+* QEdit's AddLine and DelLine commands do not change the cursor
+* position.  Many would prefer that the cursor move to column one when
+* these commands are executed.  A solution is to change the QCONFIG.DAT
+* file as follows:
+*
+* Default QCONFIG.DAT file:
+*
+* f2    AddLine
+* ^y    DelLine
+*
+* Customized QCONFIG.DAT file:
+*
+f2          AddLine BegLine
+
+^y          DelLine BegLine
+
+*
+* Title: Enhanced Copy/Move block
+*
+* QEdit's CopyBlock and MoveBlock commands leave the copied or moved
+* Block marked.  Many would prefer the Block to be unmarked.  A solution
+* is to change the QCONFIG.DAT file as follows:
+*
+* Default QCONFIG.DAT file:
+*
+* @c    CopyBlock
+* @m    MoveBlock
+*
+* Customized QCONFIG.DAT file:
+*
+@c          CopyBlock UnmarkBlock
+
+@m          MoveBlock UnmarkBlock
+
+* Title: Alternate DropAnchor
+*
+* QEdit's DropAnchor command ends or extends a Block if executed after a
+* Block has been initially or entirely marked.  Some editors have a
+* similar command, except that it acts as a toggle.  That is, if you are
+* already marking a Block, and you press DropAnchor again, the Block is
+* unmarked and marking begins again at the current cursor position.  To
+* implement this behavior, change the QCONFIG.DAT file as follows:
+*
+* Default QCONFIG.DAT file:
+*
+* @a    DropAnchor
+*
+* Customized QCONFIG.DAT file:
+*
+@a          UnmarkBlock DropAnchor
+
+
+* Title: Load sorted list of files in the current directory.
+*
+* This macro allows you to edit a sorted list of files of the current
+* directory.  Assign this macro to the <Alt 5> key (for example) in
+* QCONFIG.DAT as follows:
+*
+@5          Dos "dir *.* | sort>filedir.tmp" Return Return
+            EditFile "filedir.tmp" Return
+            DelLine 4
+
+*
+* Title: Transpose character
+*
+* macro to "twiddle" the character at the cursor, and the one to the right
+* of the cursor
+*
+@f10        UnMarkBlock DropAnchor
+            StoreScrBuff "%%%" return
+            DelCh CursorRight
+            GetScrBuff "%%%" return
+            UnMarkBlock CursorLeft
+
+*
+* Title: PE2 like joinline
+*
+* Macro to make QEdit's joinline act line PE's joinline, e.g., force
+* QEdit's joinline to always concatenate the next line to the end of the
+* current line, regardless of the current cursor position.
+* Notes:  Requires QEdit 2.1.
+* Must be on one line if processed by qconfig.exe.
+* Works better if "removing trailing spaces=yes" (our default) in qconfig.exe
+*
+@j          isLastLine       * force blank removal, and check for eof
+            MacroQuitTrue    * if at eof, we can get out now
+            CursorRight      * force some movement that we can easily undo
+            EndLine          *
+            JoinLine         * concatenate the lines
+            PrevPosition     * back to where we were before the endline
+            CursorLeft       * and undo the cursorright
+
+*
+* Title: Copy line above to EOL
+*
+@f1   top:  GetPrev     JTrue top:

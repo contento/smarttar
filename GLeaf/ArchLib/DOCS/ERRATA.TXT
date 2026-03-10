@@ -1,0 +1,108 @@
+Simplified Interface
+--------------------
+
+The simplified archive lib interface isn't mentioned in the manual,
+but it does have its own very brief printed manual.  If all you need
+to do is insert or extract files from ZIP archive, the simplified
+interface is made for you.  Try that first.
+
+
+Visual Basic 3.0
+----------------
+
+The existing simplified interface manual contains some code samples
+that will work properly with VB 4.0, but not with VB 3.0.  The samples
+on disk have been updated to properly use VB 3.0 and 4.0.
+
+In VB 3.0, the elements in ALZipDir that were of type Byte have been
+changed to String * 1.  The data is equivalent, but needs to be accessed
+using string constants instead of integers.  This means you need to write:
+
+   If z(i).r = Chr(0)
+
+instead of
+
+  If z(i).r = 0
+
+To help make this easier, we added values called AL_SET and AL_CLEAR
+to ARCLIB.BAS.  You can test against those and expect better results.
+
+Visual Basic 4.0
+----------------
+
+The ALWinMemory objects no longer work with strings.  Instead, you will
+pass and receive byte Arrays.  This is somewhat of an inconvenience, since
+you will have to pass a dummy argument to newALWinMemory even if you are
+expecting ArchiveLib to supply you with memory.  Sorry.  I have provided
+a constant called AL_DUMMY that you can use.
+
+Also, if you pass a byte array to newALWinMemory as an argument, the
+memory object will not use that array as its buffer.  Instead, it makes
+a copy of that buffer and uses that.  You can get back a copy of the
+resulting buffer by calling ALWinMemoryGetBuffer(), which likewise does
+a copy.
+
+VB 4.0 uses DLLs AL20FVB.DLL and AL20FVBD.DLL.
+
+Time/Date Stamps
+----------------
+
+VB and Delphi programmers don't have the ability to set time and date
+stamps using struct *tm, which is what C and C++ programmers use.  So
+four new access functions were added to the library:
+
+  ALStorageGetTime()
+  ALStorageGetDate()
+  ALStorageSetTime()
+  ALStorageSetDate()
+
+The functions are documented in CPP_ALL\CXL_STOR.CPP.
+
+
+MFC examples
+------------
+
+There is a directory named EXAMPLES.MFC.  It has a few example programs
+that will work with VC++ 4.0.  To build these examples from your
+IDE, just Open|Project workspace, and open the appropriate project file.
+Then select Tool|Options and add AL211/H to the list of include directories,
+and AL211/V4X or AL211/V42 to the Lib directories.  You should be able to
+build the projects at that point.
+
+The MFC projects have a slightly modified directory structure, but they
+will still work with the environment and Class Wizard.  The only hitch
+you might run into is when you are making debug versions of your
+project.  These require the debug versions of the library, which you
+will have to build from the command line.
+
+Visual C++ 4.X
+--------------
+
+Visual C++ 4.X has four libraries defined that don't show up in the
+manual.  They are: ALMFC.LIB, ALMFCD.LIB, AL21MFC.DLL, and AL21MFCD.DLL.
+They are designed to work with your MFC projects.  Use these instead
+of ALFW.LIB and its siblings.  Also, when using MFC with our DLL, don't
+define AL_USING_DLL.  This is contrary to the instructions in our
+manual, but is necessary for us to cooperate with MFC's memory leak
+checking routines.
+
+Path Stripping
+--------------
+
+There are two public members in ALArchive that aren't described in the
+manual:
+
+ALEntry::mfStripPathOnInsert.  This is a public member that can be
+set manually.  C, VB, and Delphi users can set it via a call to the
+new function ALEntrySetStripOnInsert().
+
+ALEntry::mfStripPathOnExtract.  This is a public member that can be
+set manually.  C, VB, and Delphi users can set it via a call to the
+new function AEntrySetStripOnExtract().
+
+IBM Visual Age
+--------------
+
+You cannot link C files with the DLL versions of ArchiveLib for the IBM
+Visual Age C++ compiler.  Until we figure out why not, you will have to
+stick with the static libraries for your C projects.

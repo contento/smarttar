@@ -1,0 +1,109 @@
+//Microsoft App Studio generated resource script.
+//
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#include "ex12win.h"
+
+/////////////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+ALMAINDIALOG DIALOG DISCARDABLE  0, 0, 198, 215
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    LISTBOX         AL_INPUT_FILES,22,36,80,78,LBS_SORT | LBS_EXTENDEDSEL | 
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Rename",AL_RENAME,114,39,72,12
+    PUSHBUTTON      "Rename to Backup",AL_RENAME_TO_BACKUP,114,54,72,12
+    PUSHBUTTON      "UnRename",AL_UNRENAME,114,69,72,12
+    PUSHBUTTON      "E&xit",AL_EXIT,114,99,72,12
+    EDITTEXT        AL_FILE_NAME,94,122,93,13
+    EDITTEXT        AL_NEW_NAME,94,139,93,13,ES_LOWERCASE
+    CTEXT           "Get Archive Status",IDC_STATIC,16,6,168,11
+    RTEXT           "New Name:",IDC_STATIC,23,140,62,13
+    RTEXT           "Current File Name:",IDC_STATIC,7,122,78,15
+    CTEXT           "Select a file, enter a new name, then click",IDC_STATIC,
+                    22,19,161,10
+    EDITTEXT        AL_OLD_NAME,94,156,93,13,ES_LOWERCASE | ES_READONLY | 
+                    NOT WS_TABSTOP
+    RTEXT           "Old Name:",IDC_STATIC,23,156,62,13
+    EDITTEXT        AL_STATUS,94,173,93,34,ES_MULTILINE | ES_READONLY | NOT 
+                    WS_TABSTOP
+    RTEXT           "Status:",IDC_STATIC,23,172,62,13
+    PUSHBUTTON      "Perform Seek Test!",AL_SEEK,114,84,72,12
+END
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+ALICON                  ICON    DISCARDABLE     "ALICON.ICO"
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+ALMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "E&xit",                       AL_EXIT
+    END
+END
+
+#ifdef APSTUDIO_INVOKED
+//////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""ex12win.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+/////////////////////////////////////////////////////////////////////////////////////
+#endif    // APSTUDIO_INVOKED
+
+
+#ifndef APSTUDIO_INVOKED
+////////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

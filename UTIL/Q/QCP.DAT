@@ -1,0 +1,135 @@
+File:    QCP.DAT - configuration info for QCP version 2.08
+Author:  Tim Farley
+Date:    20-March-1990
+
+See QCP.DOC for full description of this format, and which compilers are
+supported below.
+
+Ext.   Default Command Line
+----   --------------------
+       Borland's Turbo Assembler
+.asm   "tasm $F >$O"  "** $F"
+
+       Microsoft BASIC Compiler
+.bas   bc  /Z    $F;  >$O
+
+       Borland's Turbo C
+.c     tcc -c -w $F   >$O
+
+       Microsoft FORTRAN 4.0
+.for   fl  /c    $F   >$O
+
+       FST Modula-2 v2
+.mod   "m2comp $F >$O"  "File: $F"  ", Line "
+
+       Borland's Turbo Pascal
+.pas   tpc /q    $F   >$O
+
+       Bumblebee Software's DBFAST v1.03.  See QCP.DOC for contents of DBC.BAT
+.prg   "dbc.bat   $N    $O"  "Line #:"
+
+       Telix 3 SALT Script compiler
+.slt   cs        $F   >$O
+
+
+     Temporary scratch file name
+..t  $QCP$.TMP
+
+     Error output file name.  Direct this to a RAMdisk if possible.
+..o  .\ERRORS.LST
+
+     Macro file name.  Direct this to a RAMdisk if possible.
+..m  .\ERRORS.MAC
+
+  QEdit Macro to jump to errors.
+..q  @$K MacroBegin NextWindow BegLine GotoLine "$R" Return MakeCtrOfScreen PrevWindow BegLine GotoLine "$S" Return GotoColumn "$C" Return MakeCtrOfScreen
+
+  Command line for QMAC
+  You could modify this to take advantage of QMAC's append feature if need be.
+..c  QMAC $M $T B N
+
+  "Guess extensions" defaults to ON
+..g ON
+
+  "reWrite error file" defaults to ON
+..w ON
+
+  "Previous Error" macro key
+..p #f9  MacroBegin NextWindow BegLine Find "$U" Return "IB" Return BegLine Find "$I" Return "I" Return &
+         CursorRight MarkWord Copy PrevWindow GotoLine Paste Return NextWindow RepeatFind CursorRight MarkWord Copy BegLine MakeCtrOfScreen PrevWindow GotoColumn Paste Return MakeCtrOfScreen
+
+  "Next Error" macro key
+..n #f10 MacroBegin NextWindow EndLine Find "$U" Return "I" Return BegLine Find "$I" Return "I" Return &
+         CursorRight MarkWord Copy PrevWindow GotoLine Paste Return NextWindow RepeatFind CursorRight MarkWord Copy BegLine MakeCtrOfScreen PrevWindow GotoColumn Paste Return MakeCtrOfScreen
+
+  "Insert Character" for flagging row/column in rewritten error file
+..i 255
+
+===========================================================================
+
+COMMENTS:
+
+File extensions must begin in the 1st column, with a period.
+Lines not beginning with a period, or less than 5 chars long are ignored.
+Up to 10 extensions may be specified.  Any more will be ignored.
+There must be at least 1 space between the file extension and the command line.
+
+The following substitution strings can be put into the command line:
+    $F      fully qualified drive/path name of the target file.  Includes
+            drive letter and a full path from the root.
+    $D      drive letter of the target file.  One char, does not include ':'.
+    $P      full path specification to target file.  Includes a '\' as
+            the first character, but no trailing '\' is included.
+    $N      8-character name of the file.
+    $E      3-character extension of the file.  No '.' included.
+    $#      where # is a single digit from 1 to 9, is substituted for
+            additional params on the QCP command line.
+    $$      puts a single '$' on the target command line.
+    $T      is the name of the Temp file used by QCP.
+    $O      is the name of the Output file.
+    $M      is the name of the binary Macro file created by QMAC
+            from the temp file written by QCP.
+
+Within this file, some pseudo-ops are also recognized, in addition to the
+normal file extension definitions:
+    ..T     sets the name of the Temp file used by QCP to build QEdit macros
+    ..O     sets the name of the Output file created by the redirected
+            messages of your compiler and read by QMAC.
+    ..M     sets the name of the binary Macro file to be created by QMAC.
+    ..Q     sets the Qedit macro template.  If error messages from the compiler
+            exist, macros fitting this form will be generated.
+    ..Q ON  is an alternate form, that simply reactivates macro generation
+            in a copy of QCP.EXE in which it has been turned off.
+    ..Q OFF deactivates macro generation.
+    ..C     sets the QMAC Command line to be executed if macros
+            need to be created
+    ..#     where # is a single digit from 1 to 9, is just like a
+            file extension definition, but these command lines
+            correspond to the /1 through /9 command line options
+            recognized by QCP itself.  See QCP.DOC for examples
+            on how to use this.  This pretty much assumes that macro
+            generation is turned on, at least to be truly useful.
+    ..B     is the batch mode startup macro template.
+    ..G ON  sets the default for "guess file extensions"
+    ..W ON  sets the default for "rewrite error file"
+    ..N     is the "next error" macro template.
+    ..P     is the "previous error" macro template.
+
+Some extra $x substitutions exist for use in the above pseudo-ops, in
+addition to the ones defined earlier:
+    $K      is the Key number for the QEdit macro.  If the macro
+            definition begins with "@$K", then this number will
+            range from 1 to 9, and then 0, to assign the
+            Alt-numeric keys.  For any other macro template, $K
+            will range from 1 to 12, to assign function keys.
+    $S      is the Source line number reported by your compiler
+    $R      is the Result line number, the line in the Output
+            file on which the error MESSAGE occurred.
+    $C      is the Column number reported by your compiler, corresponds
+            with the location indicated by $S.
+    $I      is the inserted character used when rewriting the error file
+            See documentation for details.
+    $U      is the unique string for this compiler
+    $L      is the leadin string for this compiler
+
+* EOF: QCP.DAT

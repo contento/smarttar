@@ -1,0 +1,31 @@
+Comm++ 3.0 has added several new features.  The new features found in
+this version are:
+
+32-bit DOS extender support
+    Borland PowerPack
+    Phar Lap TNT DOS-Extender
+    Tenberry Software DOS/4G
+
+Microsoft Win32 support
+    32-bit Windows
+    32-bit Console
+
+Microsoft Win32s support
+    Complete thunking layer for communications
+
+Windows Comm Notification
+    WM_COMMNOTIFY message support
+
+NASI support
+    Both DOS and Windows 3.1 supported.
+
+New File Engine Support
+    Extract all file handling for the file transfers into your own class.
+    Redirect file tranfers from memory.
+
+ZMODEM Sliding Window and File Management Options
+    Better error recovery.
+    Sender can tell receiver to append, overwrite, or skip files.
+
+CompuServe B+ File Transfers
+    Transfer files quickly and reliably when connected to CIS.

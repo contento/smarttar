@@ -1,0 +1,1097 @@
+
+
+
+
+
+
+
+
+                QCP  --  QEdit(R) Compiler Program
+
+
+            A program to ease invocation of compilers
+         and other software tools from a function key in 
+                        QEdit(R) version 2
+
+                     ABRIDGED DOCUMENTATION
+
+
+                       Author: Tim Farley
+                         Revision: 2.08
+                    Date:  November 17th, 1989
+
+            QCP is Copyright (C) 1989, by Tim Farley
+
+
+         QEdit(R) and QMac are Copyright (C) 1985-1993 by
+                       SemWare Corporation
+                  All Rights Reserved Worldwide
+
+
+DESCRIPTION
+-----------
+QCP is a program to run compilers & other utilities from within
+QEdit 2.08+.  You hit a function key in QEdit, QCP decides which
+program to run based on the name of the file you are editing,
+runs it, and then "reads" the error messages from the compiler to
+tell QEdit how to jump to the errors in your source code.
+
+QCP can interface in the same manner to any external utility that
+generates redirectable output containing "line numbers" that
+refer to your original source file.
+
+QCP works in conjunction with QMAC.EXE, also found on your
+registered diskette.
+
+
+QCP 2.08 Documentation                                    Page 2
+
+
+TABLE OF CONTENTS
+-----------------
+Description ................................................   1
+Table Of Contents ..........................................   2
+File List ..................................................   3
+Quick Installation .........................................   3
+Quick Start ................................................   4
+Running QCP ................................................   5
+Command Line Switches and QCP ..............................   6
+     /R -- Read Config Info from Disk ......................   7
+     /C -- Configure QCP.EXE's Defaults ....................   7
+     /S -- Show QCP.EXE's Current Defaults .................   7
+     /W -- Write New Error Output File .....................   7
+     /O -- Output File Name ................................   7
+     /M -- Macro File Name .................................   8
+     file -- File to Compile ...............................   8
+     options -- Compiler Options ...........................   8
+QEdit Macro Key Customization ..............................   9
+Compiler Compatibility .....................................   9
+     Custom Compiler Configurations ........................   9
+     Compatible Compilers ..................................  10
+     I/O Redirection Problems, Tips ........................  12
+          Microsoft Fortran 3.x ............................  12
+          Microsoft MASM 4.0 ...............................  13
+          DBFAST 1.03 ......................................  13
+          Norton Guides Database Compiler 1.04 .............  14
+          Microsoft Quick Pascal 1.00 ......................  14
+     Incompatible Compilers ................................  15
+Configuration Via QCP.DAT ..................................  15
+     Substitution Strings ..................................  16
+     QCP Configuration Commands ............................  16
+Summary of Command Line Switches ...........................  17
+Summary of Substitution Strings ............................  17
+Summary of Configuration Commands ..........................  18
+Error Messages .............................................  18
+Informative & Warning Messages .............................  20
+Acknowledgements & Contacts ................................  21
+Revision History ...........................................  22
+
+
+QCP 2.08 Documentation                                    Page 3
+
+
+FILE LIST
+---------
+The following files constitute QCP:
+
+     QCP.DOC        - this documentation file
+     QCP.EXE        - the QCP program
+     QCP.DAT        - the configuration data file
+     QCP.TXT        - partial QEdit keyboard file containing
+                      sample macros for use with QCP
+
+NOTE:  This version of the documentation is slightly abridged to 
+fit on the diskette with QEdit.  You can download a longer, more 
+detailed documentation file from SemWare's BBS and many other BBS 
+systems around the country.
+
+
+LICENSE
+-------
+QCP is part of your QEdit package, and is covered by the QEdit 
+license agreement.
+
+
+
+QUICK INSTALLATION
+------------------
+STEP 0
+------
+Set aside your original copies of all the QCP files in a safe 
+place.  Always work on a copy, not the original!
+
+
+STEP 1
+------
+PUT QCP.EXE AND QCP.DAT IN A CONVENIENT DIRECTORY ON YOUR DISK.  
+
+QCP.EXE should exist somewhere along your current PATH statement 
+so that it can be executed easily.   QCP.DAT can exist in one of 
+three places: (1) the current directory,  (2) the same directory 
+that QCP.EXE is in, or (3) somewhere along your current PATH 
+statement.  
+
+If you are going to use the macro creation feature of QCP, and 
+this is highly recommended, then make sure QMAC.EXE is accessible 
+along your PATH as well.
+
+We recommend keeping QCP.EXE (and QCP.DAT, if you use the /R 
+option) as well as QMAC.EXE on a RAMdisk, and listing that 
+RAMdisk drive letter first in your PATH= environment variable.  
+This allows QCP to operate very rapidly, even on relatively 
+"slow" systems.
+
+
+QCP 2.08 Documentation                                    Page 4
+
+
+
+
+STEP 2
+------
+EDIT QCP.DAT TO SUIT THE FILE EXTENSION(S) YOU USE AND THE 
+COMPILER OR UTILITY PROGRAM THAT SHOULD BE INVOKED FOR EACH ONE.  
+
+There are comments in the supplied QCP.DAT to help you 
+remember the syntax of commands, as well as several sample 
+command lines for popular compilers. 
+
+It is assumed that the command line you specify for your compiler 
+will redirect the error messages from the compiler to a file, by 
+default called ERRORS.LST.  This file can then be loaded into 
+QEdit for viewing, but more importantly it is read by QCP in 
+order to construct QEdit macros that will move your cursor to 
+each error in your file.  So, typically each command line you use 
+in QCP.DAT should end with ">$O", which causes the output to be 
+redirected to the error file.  
+
+If this is the only configuration you are going to use, you will 
+probably want to "install" these options into your copy of 
+QCP.EXE permanently by typing "QCP /C" at a DOS prompt.   
+
+
+STEP 3
+------
+ADD THE MACRO DEFINITION(S) FROM QCP.TXT INTO YOUR
+QCONFIG.DAT, AND USE QCONFIG TO INSTALL THESE KEY(S) INTO YOUR 
+COPY OF QEDIT.
+
+Note that the default macro is set up to always create and read 
+the ERRORS.LST and ERRORS.MAC file in the CURRENT directory.  If 
+you have a RAM disk or other fast disk drive, you will probably 
+want to edit the macro definition to put these files there.
+
+Within the macro, the /O and /M command line switches for QCP are 
+used to make sure the filenames match.  You may want to configure 
+these filenames into QCP permanently, and remove the references 
+to /O and /M in the macro definition.  
+
+
+QUICK START
+-----------
+Edit a file for which you created a definition in QCP.DAT.  I.e., 
+if you defined something for .C, then edit TEMP.C.  Put in a 
+deliberate syntax error, something that you know the compiler 
+will generate an error message for.  Save the file to disk.
+
+
+QCP 2.08 Documentation                                    Page 5
+
+
+Now, hit the function key you assigned in QCONFIG.DAT.  QEdit 
+will shell out, run QCP, which will run your compiler.  Errors 
+will be redirected to ERRORS.LST, and macros created.  When you 
+return to QEdit, your file will be in the top window, and your 
+error messages will be in the bottom.
+
+If your chosen compiler generates compatible error messages (see 
+Compiler Compatibility, below), you will be able to hit Alt-1 
+through Alt-0 to move to each of the errors your compiler issued, 
+both in the source and output windows.  Or, if you are using the 
+/W+ mode (rewrite error file), you should be able to just hit 
+Shift-F10 to step to each successive error message.
+
+And that's all there is to it!  
+
+There are some other features of QCP you may want to take 
+advantage of, read on to find out about those, as well as how to 
+configure QCP's behavior to suit your specific needs.
+
+
+RUNNING QCP
+-----------
+If you are having trouble getting QCP to work as described, more 
+than likely your file names are getting out of sync.  Please make 
+sure that the file names (1) in your QEdit macro key, (2) in QCP 
+itself, and (3) in any batch files you use to run compilers; all 
+agree as to where and under what name each file is placed.
+
+Also, when compiling this way, a pretty good bit of RAM is 
+required, all told.  This is because QEdit, your source file, 
+QCP, and your compiler (not to mention a couple copies of the 
+stub portion of COMMAND.COM) are all in memory at the same time.  
+Check out the ToggleSwap option in QEdit 2.1 if this gets to be a 
+problem.
+
+
+QCP 2.08 Documentation                                    Page 6
+
+
+COMMAND LINE SWITCHES AND QCP
+-----------------------------
+If you just type QCP at a DOS prompt, it will respond with this 
+screen of info.  (Display of defaults removed here to fit the 
+screen on a normal page):
+
+----------------------------------------------------------------
+QCP:  QEdit Compiler Program  x.yy   dd-mmm-yyyy
+Copyright (C) 1989, Tim Farley.  All Rights Reserved.
+
+QCP /R[file] /C[file] /S /G /Q /B /W /P /Ichar /Ofile /Mfile /#  FILE  opts...
+
+/R        Reads configuration info from specified file.  
+/C        Configures defaults into specified copy of QCP.
+/S        Shows QCP's current configurable defaults
+/G+ /G-   Guess or don't guess a missing file extension
+/Q+ /Q-   Create or don't create a QEdit binary macro file
+/B+ /B-   Batch mode:  create autoexec macro for QEdit
+/W+ /W-   Write or don't write copy of error file
+/P+ /P-   Pause or don't pause for keystroke after an error
+/Ichar    Char to be Inserted before row/col in output
+/Ofile    File to which Output will be redirected
+/Mfile    QEdit Macro file name to be generated
+/#        i.e. /1 thru /9, uses the specified special
+          extension definition instead of the file's extension
+FILE      is source file to compile.
+opts      are options to be passed to compiler command line
+
+/R, /C, and /S are mutually exclusive
+If none of them are present, internal defaults are used
+----------------------------------------------------------------
+
+All QCP switches MUST precede the file name.  Both "/" and "-" 
+are recognized as switch characters. However, each switch must be 
+preceded by its own switch character.  Each switch must be 
+separated from the others by at least one space.  
+
+The switches that contain file names (/M and /O, optionally on /C 
+and /R) MUST NOT contain a space between the switch and the file 
+name.
+
+The boolean switches, like /G and /Q, can have "+" or "-" behind 
+them to set the specified switch on or off.  If nothing is behind 
+the switch, it is set on.  If any character other than "+" or "-" 
+is behind a boolean switch, for instance "=", then the current 
+value is TOGGLED.  
+
+The most commonly used command line switches are explained in 
+detail below:
+
+
+QCP 2.08 Documentation                                    Page 7
+
+
+/R  -- READ CONFIG INFO FROM DISK
+---------------------------------
+When /R is present, QCP will always read its configuration data 
+from an external file at run time, overwriting the internal 
+defaults.  
+
+/C  -- CONFIGURE QCP.EXE'S DEFAULTS
+-----------------------------------
+The /C option causes QCP to read its configuration data from 
+QCP.DAT, and install this info as new defaults into QCP.EXE.  
+This allows you to permanently customize your copy of QCP.
+
+Please be aware that since /C writes data into the EXE file, it 
+is possible for your copy of QCP to be damaged by this operation.  
+Make sure you always have a clean, uninstalled copy of QCP safely 
+tucked away.
+
+In operation on networks, you may not wish to use the /C option, 
+if QCP.EXE will be located on a server drive to which you do not 
+have write access.  See /R above.
+
+/S  -- SHOW QCP.EXE'S CURRENT DEFAULTS
+--------------------------------------
+The /S option is a companion to /C.  It allows you to see the 
+current defaults installed into QCP.EXE.  
+
+Note that /R, /C and /S are mutually exclusive.  If you combine 
+them on a command line, the last one specified will take control.
+
+/W+ or /W-  -- WRITE NEW ERROR OUTPUT FILE
+------------------------------------------
+The /W switch controls whether QCP will write a new copy of the 
+compiler output file (normally ERRORS.LST).  The purpose of this 
+is to insert a certain ASCII character (see /I or ..I) 
+immediately to the left of the row and column numbers that QCP 
+found in the compiler output.   This allows the "next error" and 
+"previous error" macro keys to find row numbers and column 
+numbers without having any special knowledge of how the error 
+messages are formatted.
+
+Since this involves writing a new copy of ERRORS.LST, it can slow 
+down the process somewhat, hence the flag to turn it off.
+
+/O  -- OUTPUT FILE NAME
+-----------------------
+The /O option lets you specify the Output file name that will be 
+used by QCP.  This filename is substituted for "$O" (see below) 
+if present on your target compiler command lines.  This is also 
+the file that QCP will read back in after the compiler runs, to 
+attempt to locate any error messages.
+
+
+QCP 2.08 Documentation                                    Page 8
+
+
+
+The Output file name can also be configured with the "..O" 
+command in QCP.DAT, however if /O is present it will override the 
+value specified in QCP.DAT.
+
+The /O command line option is intended so that the filenames used 
+can be completely controlled by your QEdit function key macro.  
+
+/M  -- MACRO FILE NAME 
+----------------------
+The /M option is similar to /O, except it controls the name of 
+the binary macro file created by QCP and QMAC for use in finding 
+errors in your source code.  This file name is replaced wherever 
+"$M" appears in your target command line(s).
+
+The macro file name can also be configured using the "..M" 
+command in QCP.DAT, however if /M is present it will override the 
+value specified in QCP.DAT.
+
+On both of the above files, QCP will look for an environment 
+variable called TMP, to determine a suitable place to put "temp" 
+files.  This is the same as most Microsoft utilities which will 
+use the TMP environment variable to locate your RAM disk for 
+their use in writing scratch files.  If you invoke QCP with the 
+/S switch, you will see the result of this when the three file 
+names are listed.
+
+You may not want this to happen, especially if you want to insure 
+that the file names referred to in your QEdit macro key are the 
+same as those used by QCP.  If so, just include a drive and/or 
+path specification in the file name.  If you want them always to 
+be in the "current" directory, then use ".\" prior to each file 
+name. 
+
+FILE  -- FILE TO COMPILE
+------------------------
+The first non-switch parameter on the QCP command line is assumed 
+to be the file you wish to compile.  This is normally generated 
+using "CurrentFilename" in a QEdit macro key, but could be typed 
+by you.  This can be a full file specification including path.  
+
+options  -- COMPILER OPTIONS
+----------------------------
+Any parameters past the filename on the QCP command line are 
+assumed to be options for the target compiler's command line.  
+They are simply passed along, assuming you have put the 
+appropriate $1, $2 etc. strings on your compiler command line 
+templates in QCP.DAT.  
+
+
+QCP 2.08 Documentation                                    Page 9
+
+
+All of these options must be delimited on both sides by spaces.  
+Note that this is a restriction of QCP that might not be shared 
+by your compiler.  
+
+
+QEDIT MACRO KEY CUSTOMIZATION
+-----------------------------
+QCP is normally intended to be invoked from a QEdit macro key.  A 
+sample key is provided in QCP.TXT.  You could edit this
+before installing it in your QCONFIG.DAT, to make it behave 
+differently.
+
+
+COMPILER COMPATIBILITY
+----------------------
+The macro creation feature of QCP hinges on QCP's ability to read 
+the error messages created by your compiler.  By default, QCP 
+assumes that your compiler issues error messages in this form:
+
+  <text> FILENAME.EXT <non-numeric chars> XX <text> YY <message>
+
+where XX is the number of the source line on which the error 
+occurred, and YY is the column number on that line.  
+
+The default case allows for error messages similar to:
+
+          FILENAME.EXT (ROW,COL): MESSAGE
+          FILENAME.EXT: ROW: MESSAGE
+          "FILENAME.EXT", ROW COLUMN: MESSAGE
+          D:\PATH\FILENAME.EXT(ROW): MESSAGE
+
+Most all of CURRENT VERSIONS of the compilers put out by 
+Microsoft Corporation, and Borland International, and every C 
+compiler we know of, can be made to issue error messages in this 
+form, and thus will work fine by default.
+
+
+CUSTOM COMPILER CONFIGURATIONS
+------------------------------
+Non-standard compilers can still be handled by the appropriate 
+configuration line in QCP.DAT.  The syntax for this is as follows:
+
+          .ext  "command line" "unique string" [ "lead-in string" ]
+
+Either single or double quotes can be used, but they must match 
+on either end of a given string.  If you need to include a quote 
+mark inside one of the strings, use the other type of quote mark 
+to delimit it.  Any number of commas and/or spaces (if present) 
+between the strings will be ignored.
+
+
+QCP 2.08 Documentation                                    Page 10
+
+
+Command line is the normal compiler command line that would have 
+been on the line by itself.  
+
+The unique string is some string that is found in the compiler's 
+output ONLY in error message lines.  This typically might be 
+something like "***ERROR:".
+
+The lead-in string, if present, specifies a string that will 
+always be found in an error line to the left of the source line 
+number.  It is not mandatory, if not present it will default to 
+the same thing as the unique string.  The first numeric 
+characters to the right of the lead-in string must be the line 
+number.  Keep in mind that the file name itself, the error 
+message, or the line of source code itself (if echoed as part of 
+the error message) might contain numeric characters that could be 
+misinterpreted as a line number.
+
+Maximum length of the unique and lead-in strings is 16 characters 
+each, they will be truncated if longer.  You CAN include 
+substitution strings like $N and $F inside the unique string and 
+lead-in string.  The length limitation DOES NOT apply to the 
+strings AFTER they are expanded.  The strings ARE NOT case 
+sensitive when matching occurs.
+
+Example:
+
+Your compiler generates error messages like:
+
+          ***ERROR:  Syntax error on line 34
+
+You would set your unique string to "***ERROR" and your lead-in 
+string to "line".
+
+Choose your strings carefully, as some compilers generate very 
+inconsistent looking error messages.  A common mistake is to try 
+to key off the word "error" in the message, which will then cause 
+QCP to ignore "warning" messages.
+
+
+COMPATIBLE COMPILERS
+--------------------
+Below are some cases of specific compilers, and the command line 
+switches or other actions necessary to make them conform to what 
+QCP is expecting.  In many cases, you will want to add or 
+subtract switches to or from the sample command lines.  Consult 
+your compiler manual.
+
+
+QCP 2.08 Documentation                                    Page 11
+
+
+Most compilers allow you to specify either just a simple file 
+name, or a complete path specification on the command line. Keep 
+this in mind when selecting whether to use $F, or $N, or $N.$E, 
+etc.  for your filename on the command line.  The way you specify 
+the source file name on the command line, can affect how the 
+compiler echoes it in error messages.  You may want to experiment 
+with this, if you are defining specific unique or lead-in strings 
+that involve the filename.
+
+COMPILER                   LINE TO PUT IN QCP.DAT
+-------------------------  -------------------------------
+Clipper by Nantucket, 8/87 .prg  "clipper $N >$O","line "
+FoxBase Compiler v2.1      .prg  "foxpcomp -e $F >$O","Error in line "
+FST Modula-2 v2.0a         .mod  "m2comp $F >$O","File: $F",", Line"
+Microsoft Assembler 5.x    .asm  masm         $F;  >$O
+Microsoft BASIC            .bas  bc   /Z      $F;  >$O
+Microsoft C 5.x            .c    cl   /c /W3  $F   >$O
+Microsoft FORTRAN 4.0      .for  fl   /c      $F   >$O
+Microsoft Menu Maker v1.2  .def  "makemenu  $N >$O","Error ("
+Microsoft Pascal 4.0       .pas  pas1 /H      $F;  >$O
+     Alternative:          .pas  pl   /c /Zz  $F   >$O
+Microsoft Quick C 1.01     .c    qcl          $F   >$O
+QMac (QEdit macros) 2.x    .qm   "qmac $N.mac $F /B /A- >$O"  "QMAC "
+Telix 3.x Script Compiler  .slt  cs           $F   >$O
+TopSpeed Modula-2 1.14     .mod  m2 /c        $F   >$O
+Turbo Assembler 1.00       .asm  "tasm $F >$O"  "** $F"
+Turbo C 2.0                .c    tcc  -c -w   $F   >$O
+Turbo Pascal 4.0 & 5.0     .pas  tpc  /q      $F   >$O
+Watcom C 6.5               .c    wcl  /c      $F   >$O
+
+NOTES:
+     The /H switch for Microsoft Pascal is undocumented.
+     The Microsoft BASIC and FORTRAN, Clipper and FoxBase command 
+          lines have not been tested by us personally.
+     Microsoft Menu Maker comes with the Microsoft Mouse.
+     We recommend you use the /W+ option when working with 
+          Clipper, because of the way that Clipper writes its 
+          output.
+     
+Many compilers will compile files other than the one specified, 
+due to an automatic "make" function built into the compiler.  
+This can sometimes result in either (1) QCP ignoring error 
+messages from the compiler, because they don't pertain to the 
+current file or (2) QCP jumping to erroneous error lines in the 
+current file, because it was unable to distinguish that they did 
+not pertain to the current file.  Some of the compilers that are 
+prone to this are Clipper, Turbo Pascal, both of the Modula-2 
+compilers, and others.  We plan to address this in a future 
+version of QCP.
+
+
+QCP 2.08 Documentation                                    Page 12
+
+
+Below are some instances where just a simple command line will 
+not do the trick.  Even if you do not use one of them, you may 
+want to read through them to see what kinds of configuration 
+tricks are possible.
+
+
+I/O REDIRECTION PROBLEMS, TIPS
+------------------------------
+Many of the unusual compiler configurations listed below result 
+from problems redirecting the output to the compiler.  If a 
+program writes its screen output to the "Standard Output Device" 
+under DOS, then the text can be redirected normally, using the 
+">" character followed by a filename on the dos command line.  
+However, if the output is written to the "Standard Error Device", 
+redirection is impossible using DOS alone.
+
+We know of two utilities that can assist with compilers that use 
+Standard Error to display error messages.  One is ERROUT.EXE, 
+which is a utility Microsoft ships with many of its recent 
+compiler products.  
+
+The other is CONCOPY.EXE, which is a Freeware product by 
+Christopher J. Dunford and The Cove Software Group.  You can get 
+it on many BBS systems, including SemWare's.
+
+See the sections below for examples of the use of ERROUT and 
+CONCOPY with QCP.
+
+
+MICROSOFT FORTRAN 3.x
+---------------------
+Microsoft Fortran 3.x can work with QCP.  Its error messages look 
+like this:
+
+          ***** Error XXX,line YY -- ERROR MESSAGE
+
+To get this, we define the unique string and lead-in string as 
+follows:
+
+          .FOR   "for1  $N.$E;  >$O","*****",",line "
+
+You may wish to put this command line in a batch file instead of 
+invoking it directly, so that you can call up PAS2 and PAS3 of 
+the compiler as needed.  If so, be sure to pass $O to the batch 
+file as a command line parameter.
+
+
+QCP 2.08 Documentation                                    Page 13
+
+
+MICROSOFT MASM 4.0
+------------------
+Masm produces compatible error messages by default.  
+
+Unfortunately, MASM 4.0 writes the error messages to Standard 
+Error, so we have to use a utility to redirect it (see above).  
+Put one of these two lines in your QCP.DAT:
+
+          .ASM   ERROUT  /f $O  MASM  $N.$E;
+
+          .ASM   CONCOPY  $O  MASM $N.$E;  
+          
+The part to the left of MASM causes Standard Error to be redirected to 
+the output file.  
+
+Later versions of MASM write to Standard Output. 
+
+
+DBFAST 1.03
+-----------
+This dBASE III+ compatible compiler does not generate error 
+messages compatible with the default case.  They look like this:
+
+          MESSAGE TEXT. Line #:    XX
+
+where XX is the line number.  We will define a unique string in 
+order to make this work with QCP.
+
+Because of the way redirection occurs with DBCOMP, you need to 
+use a batch file to run the compiler.  Here is DBC.BAT:
+
+          ECHO OFF
+          DBCOMP %1 -W -PF
+          COPY   %1.ERR %2
+          DEL    %1.ERR
+
+The -PF switch redirects output to a file.  This file always has 
+the same root name as the file being compiled, with an extension 
+of "ERR".  The -W switch causes "warning" messages to also be 
+issued, which you may or may not desire.  Use this line in 
+QCP.DAT:
+
+          .PRG  "DBC $N $O","Line #:"
+
+which sets both the unique string and the lead-in string to the 
+string "Line #:"
+
+
+QCP 2.08 Documentation                                    Page 14
+
+
+It is important to use $N so that the ".ERR" can be appended in 
+the batch file.  Also, make sure you have the DBFAST RAM-resident 
+"engine" loaded into memory before you enter QEdit, as it is NOT 
+RECOMMENDED to attempt to load it from inside QEdit, since it is 
+a TSR program.
+
+
+NORTON GUIDES DATABASE COMPILER 1.04
+------------------------------------
+The tools supplied with the Norton Guides to create your own 
+online help databases can be used with QCP.  However, they 
+require both redirection help and a special unique/lead-in 
+string.
+
+Both of Norton's programs write the error messages to Standard 
+Error.  Put one of these two sets of lines in your QCP.DAT:
+
+          .NGC  "errout /f $O ngc  $F"  "Line "
+          .NGM  "errout /f $O ngml $F"  "Line "
+
+          .NGC  "concopy   $O ngc  $F"  "Line "
+          .NGM  "concopy   $O ngml $F"  "Line "
+
+Norton does not recommend particular extensions for the Database 
+source files or the Menu Link Control files.  For the sake of 
+this example, we have adopted ".NGC" for the former and ".NGM" 
+for the latter.
+
+
+MICROSOFT QUICK PASCAL 1.00
+---------------------------
+Quick Pascal's command-line compiler also uses Standard Error to 
+output error messages.  Put one of the following two lines in 
+your QCP.DAT:
+
+          .PAS  ERROUT  /f $O  qpl $F
+
+          .PAS  "CONCOPY  $O   qpl $F"  "error P"  "$N.$E"
+
+Quick Pascal issues "status messages" telling what line it is 
+currently compiling, to the console, just as Turbo Pascal does.  
+Unfortunately, unlike Turbo Pascal, Quick Pascal does not have a 
+/Q switch to turn this off.  
+
+As a result, if you use CONCOPY to redirect the output, you will 
+get a number of bare carriage returns in the output.  For this 
+reason, we recommend you use the /W+ mode of QCP when compiling 
+with Quick Pascal.  When the error file is rewritten by QCP, the 
+bare carriage returns will be converted to proper line breaks.  
+This is also the reason for the unusual Unique and Lead-in 
+
+
+QCP 2.08 Documentation                                    Page 15
+
+
+strings on the CONCOPY command line above.
+
+
+INCOMPATIBLE COMPILERS
+----------------------
+The following compilers cannot be made to work with QCP's macro 
+generation feature as far as we can tell.  If you can figure out 
+a way to make one of these work, we'll be glad to add that 
+information to a future version of this DOC file.
+
+A86 macro assembler, V3.20 (and earlier) by Eric Isaacson
+     Error messages do not include line numbers.  
+Microsoft Pascal, v3.32 and earlier
+     Error messages are too inconsistently formatted.
+Ryan-McFarland FORTRAN version 2.4
+     Error messages do not include line numbers.  
+Turbo Pascal 3.0 and earlier
+     This compiler is an integrated environment only.
+
+
+CONFIGURATION VIA QCP.DAT
+-------------------------
+QCP needs information on the file extensions and compilers you 
+use in order to do its job.  You supply this information by 
+editing the file QCP.DAT to suit your individual circumstances.  
+
+In addition, various options in the way QCP behaves can be 
+controlled via lines in QCP.DAT.  This includes those mentioned 
+above in the section on command line switches, but also some 
+others that you will normally change only rarely.
+
+An example QCP.DAT, which contains the same values with which 
+QCP.EXE is shipped, is supplied.  You can begin by editing this 
+file to suit your requirements.
+
+The main content of QCP.DAT is a list of file name extensions, 
+followed by the command line that will be executed for each one, 
+as follows:
+
+     Ext.    Default Command Line
+     ----    --------------------
+     .asm    masm   $F;  >$O
+     .c      tcc -c $F   >$O
+
+and so on.
+
+
+QCP 2.08 Documentation                                    Page 16
+
+
+It is legal to have an entry for a "nothing" file extension.  
+Just put a period by itself on a line, followed by at least one 
+space, and the command line to use.  
+
+Only the first 10 extensions found will be processed.  Any 
+additional ones, or duplicate ones, will be ignored.  A warning 
+message is issued to help you clean up your QCP.DAT.
+
+The raw command lines may not be longer than 64 characters, 
+though they can become a full 127 characters long when the $ 
+strings are expanded.
+
+QCP executes a child copy of COMMAND.COM, which is passed the 
+command line to execute.  This means that you can use internal 
+DOS commands, batch files and I/O redirection in invoking your 
+compiler.  COMMAND.COM is found using the 'COMSPEC' environment 
+variable, make sure yours is set correctly.  Putting COMMAND.COM 
+on a RAM disk and setting your COMSPEC variable to point to it 
+considerably speeds operation of QCP and other programs.  See 
+your DOS manual for details.
+
+
+SUBSTITUTION STRINGS
+--------------------
+Various sub-strings, in the form of "$c" where c is some 
+character, can be included in compiler command lines, macro key 
+templates and the QMAC command line template (see below), in 
+order to substitute values at run-time.  They can be included in 
+any order.  Some make more sense than others in certain contexts.  
+There is a chart listing all of them, with sample values, later 
+in this document.
+
+
+QCP CONFIGURATION COMMANDS
+--------------------------
+Some configuration commands can also be included in QCP.DAT to 
+customize QCP in special ways.  
+
+You need not supply all or any of these commands in QCP.DAT, you 
+can mix and match as you see fit.  Any that are not included will 
+default to the previously installed values in QCP.EXE.  If more 
+than one of the same directive occurs in QCP.DAT, the last one 
+takes precedence.
+
+See the chart later in this document, as well as QCP.DAT itself, 
+for more details.
+
+
+QCP 2.08 Documentation                                    Page 17
+
+
+Here are some summaries of the various switches, parameters, etc. 
+that QCP understands:
+
+
+SUMMARY OF QCP COMMAND LINE SWITCHES
+------------------------------------
+
+SWITCH      MEANING                   TYPICAL VALUE
+----------  ------------------------  --------------------------
+
+ /? or /H   show Help screen
+ /C         Configure QCP             /C or /CE:\MYDIR\MYQCP.EXE
+ /G         set Guess extension mode  /G+
+ /M         set Macro file name       /M.\errors.mac
+ /O         set Output file name      /O.\errors.lst
+ /P         set Pause after error     /P+
+ /Q         set QEdit macro creation  /Q+
+ /R         Read config from QCP.DAT  /R or /RE:\MYDIR\MYQCP.DAT
+ /S         See defaults              /S
+ /W         set reWrite error file    /W+
+
+
+SUMMARY OF SUBSTITUTION STRINGS
+-------------------------------
+
+STRING      MEANING                   TYPICAL VALUE
+----------  ------------------------  --------------------------
+
+  $$        single dollar sign        "$"
+  $1 to $9  Compiler options          varies with compiler
+  $C        source Column number      "1"
+  $D        Drive letter              "C"
+  $E        Extension of file         "PAS"
+  $F        Full filename             "C:\LANG\TURBO\MYFILE.PAS"
+  $I        Inserted character        CHR( 255 )
+  $K        macro Key number          "1" through "0"
+  $L        Lead-in string            "MYFILE.PAS"
+  $M        Macro file name           ".\ERRORS.MAC"
+  $N        Name of file              "MYFILE"
+  $O        Output file name          ".\ERRORS.LST"
+  $P        Path (directory) of file  "\LANG\TURBO"
+  $R        Result line number        "3"
+  $S        Source line number        "124"
+  $T        Temp file name            "$QCP$.TMP"
+  $U        Unique string             "MYFILE.PAS"
+
+
+QCP 2.08 Documentation                                    Page 18
+
+
+SUMMARY OF QCP.DAT CONFIGURATION COMMANDS
+-----------------------------------------
+
+STRING      MEANING                   TYPICAL VALUE
+----------  -----------------------   ---------------------------
+
+ ..C        QMac Command line         "QMAC $M $T B N"
+ ..G        Guess extension           "ON" or "OFF"
+ ..I        Insertion character       "255"
+ ..M        Macro file name           ".\ERRORS.MAC"
+ ..N        Next error macro          a valid macro
+ ..O        Output file name          ".\ERRORS.LST"
+ ..P        Previous error macro      a valid macro
+ ..Q        QEdit macro template      "ON", "OFF", or valid macro
+ ..T        Temp file name            "$QCP$.TMP"
+ ..W        reWrite error file        "ON" or "OFF"
+
+
+ERROR MESSAGES
+--------------
+Various error conditions can occur when QCP operates, in which 
+case it will issue the following error messages.  Each of these 
+will be preceded by "QCP Error:" to remind you that an error
+condition has occurred, and followed by a console beep.
+
+          QCP.DAT cannot be found
+               or
+          QCP.EXE cannot be found
+
+The data file or executable file could not be found in the 
+current directory, the directory the EXE came from, nor anywhere 
+along the path.  These can occur as the result of using the /R or 
+/C command line switches.
+
+          d:\dir\QCP.EXE is corrupted or wrong version
+
+You may have more than one QCP.EXE on your disk, or more than one 
+version of QCP present.  If that is not true, your copy of QCP 
+may have been damaged due to disk error.  Get a fresh copy from 
+your backup.
+          
+          DOS error on execution of target command line
+
+Some sort of DOS error (other than out of memory) occurred on 
+trying to load the child COMMAND.COM.  This would be very rare, 
+but might be caused by an invalid COMSPEC environment variable, 
+or an invalid copy of COMMAND.COM.
+
+
+QCP 2.08 Documentation                                    Page 19
+
+
+          Error reading d:\dir\QCP.DAT
+
+This means some sort of DOS error occurred while reading the data 
+file, either a bad sector, or premature EOF or something.
+
+          File name missing on /O or /M switch
+
+You specified /O or /M on the QCP command line without putting a 
+filename immediately behind the switch (no spaces).
+
+          File name missing
+
+After parsing out the various switches, QCP could not find an 
+actual file name to pass to your compiler.
+
+          I/O problem while attempting to write d:\dir\QCP.EXE
+
+Some sort of DOS error occurred while rewriting the defaults in 
+QCP.EXE.  This will only occur when you specify the /C command 
+line option.  Your copy of QCP.EXE may have been damaged by this, 
+get a new copy off your backup disk.
+
+          Improper macro continuation line
+
+When specifying multi-line QEdit macros in QCP.DAT, by putting 
+"&" on the end of the line, QCP does some rudimentary checking.  
+If the continuation line begins with a period ("."), it will 
+issue this message.  It could also happen if the end of QCP.DAT 
+was reached before finishing the macro.  This can occur while 
+reading any of the macro template commands in QCP.DAT.
+
+          No extensions found in d:\dir\QCP.DAT
+
+No lines in the specified copy of QCP.DAT began with a '.', so 
+QCP could not find any extensions to parse.
+
+          No matching command line found for extension "xxx"
+
+There was no extension/command line definition in QCP.DAT that 
+matched the extension of the file given on the command line (i.e. 
+"xxx").  If you specified /1 through /9 on the command line, then 
+there was no matching ..1 through ..9 command in your 
+configuration.
+
+          Not enough memory to execute command line
+
+There was not enough memory to load a child copy of COMMAND.COM 
+and execute your target command line.
+
+
+QCP 2.08 Documentation                                    Page 20
+
+
+          Unrecognized command switch "x"
+
+You specified a "/x" switch on the command line that QCP did not 
+recognize.  Check the documentation for valid switches.
+
+
+Only one of these errors will be displayed during any single run 
+of QCP. If any of these error messages were displayed, the DOS 
+ERRORLEVEL value will be set to 128 or higher when QCP exits.  
+
+
+INFORMATIVE & WARNING MESSAGES
+------------------------------
+QCP will also issue various informative messages during 
+operation.  These will be preceded by "QCP:" for messages, or 
+"QCP Warning:" for warnings.  No beep will sound, nor will the 
+ERRORLEVEL be set in these cases, as these are non-fatal 
+conditions.  The "press any key to continue" prompt, if enabled, 
+will not appear after these messages.
+
+          Duplicate definition for "xxx" ignored
+
+There is more than one definition line for extension "xxx" in 
+your QCP.DAT.  Edit your QCP.DAT so that there is only one.  If 
+you need to temporarily disable one definition to use another, 
+edit the line so that there is no "." in column 1, and QCP will 
+ignore that line.
+
+          Extension table full, extension "xxx" ignored
+
+You have more than 10 extension/command line definitions in your 
+QCP.DAT, and QCP ran out of table space.  "xxx" will be the 11th 
+or greater extension defined in the file.  Edit your QCP.DAT so 
+that there are 10 or less definitions.
+
+          Macro file created for QEdit
+
+This message appears after QCP is done running QMAC to create a 
+loadable binary macro file for QEdit.  
+
+          New defaults written to d:\dir\QCP.EXE
+
+This informs you that QCP has successfully re-written its 
+defaults as requested by /C, and where QCP.EXE was found.
+
+
+QCP 2.08 Documentation                                    Page 21
+
+
+          Reading configuration from d:\dir\QCP.DAT
+
+This message just informs you that a configuration is being read 
+to satisfy a /R or /C request, and it tells you where QCP.DAT was 
+found on the disk.
+
+          Unknown configuration command "..x" ignored
+
+QCP found a command named "..x" in your QCP.DAT, and did not 
+recognize it.  See elsewhere in this documentation for the list 
+of supported configuration commands.
+
+          Unmatched " in input line of d:\dir\QCP.DAT
+
+QCP was trying to read in a command line followed by a unique 
+string and/or a lead-in string, and could not find a matching 
+quote character.  Since you can mix and match single and double 
+quotes, double check your data file to be sure you paired them up 
+correctly.
+
+
+ACKNOWLEDGEMENTS & CONTACTS
+---------------------------
+Source code to QCP is no longer available.
+
+Special thanks to Tony Tortorelli, Randy Wallin, Gary Speegle, 
+David Chaika, Howard Kapustein and Sammy Mitchell for help in
+tracking down particular compiler command lines that would work 
+with QCP.  Also thanks to Mike Smedley and Jerry Houston for some 
+great ideas on which QCP is based.
+
+If you have any questions or suggestions, please contact:
+
+SemWare Corporation
+4343 Shallowford Road
+Suite C3A
+Marietta, GA  30062-5022
+
+Voice Phone: (404) 641-9002   9 a.m to 5 p.m. E.T., Mon-Fri.
+BBS:   (404) 641-8968
+FAX:   (404) 640-6213
+
+
+QCP 2.08 Documentation                                    Page 22
+
+
+REVISION HISTORY
+----------------
+Version 1.0 - 7-Feb-1989 - Initial release.
+
+Version 2.0 - 15-Mar-1989 - Substantial revision.
+              Added internal defaults.  
+              Added /R, /H, /? and /S command line switches.
+              Added self-configuration /C option.
+              Added construction of QMAC macros from error output.
+              Added support for environment variable 'TMP'.
+              Additional error checking and status messages.
+              Added "special extensions" for special-purpose macros
+              Added /M and /O cmd line options to make the 
+                invocation macro more self-contained.
+              Added /Q, made boolean switches more consistent.
+              Documentation file significantly rewritten.
+
+Version 2.08 - 17-Nov-1989 - Supports QEdit 2.08.
+              Detects column number along with line number.
+              Allows generic "next" and "previous" macros.
+              Allows compilers to be run outside of QEdit, with 
+                the editor being invoked via an autoexecute macro.
+              Pause after error messages.
+              QEdit macros that QCP writes can now be two lines.
+              Miscellaneous improvements.
+
+
+
+                              *** END ***
+

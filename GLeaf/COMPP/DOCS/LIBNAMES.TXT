@@ -1,0 +1,225 @@
+With version 3.0 of the Comm++ Library, Greenleaf is shipping multiple
+compilers on a single distribution package.  Because of this we
+have created a new library naming convention.
+
+All Comm++ libraries start with a CP prefix.  Additional letters will
+be appended to describe different qualities.
+
+    F   - for Flat
+    W   - for Windows
+    C   - for Console
+    X   - Borland PowerPack
+    P   - Phar Lap TNT DOS Extender
+    R   - DOS/4G DOS Extender
+    O   - OS/2
+    300 - Windows DLL
+    30  - Windows NT DLL
+
+Examples
+    Large DOS       - CPL.LIB
+    Large Windows   - CPLW.LIB
+    WIN 16 DLL      - CP300.LIB
+    WIN 32 Console  - CPFC.LIB
+    OS/2 Flat Model - CPFO.LIB
+
+
+************************** Borland C++ 3.1 ***************************
+
+Environment                  Libraries
+----------------------------------------------------------------------
+MS-DOS                      S, M, C, L, H, VC, VASM
+Win 16                      SW, MW, CW, LW, 300
+----------------------------------------------------------------------
+
+Note: The VC and VASM libraries are both used with VROOMM.  These
+      libraries are separated to make the linking process easier.
+
+Not Supported:  All Win32
+                All Win32s
+                All 32-Bit DOS Extenders
+                OS/2
+
+
+************************** Borland C++ 4.0 ***************************
+
+Environment                  Libraries
+----------------------------------------------------------------------
+MS-DOS                      S, M, C, L, H, VC, VASM
+Win 16                      SW, MW, CW, LW, 300
+PowerPack 32                FX32
+TNT DOS-Extender            FP32
+Win32 Flat Windows          FW, FWM, 30FW, 30FWM
+Win32 Flat Console          FC, FCM, 30FC, 30FCM
+----------------------------------------------------------------------
+
+Note: The VC and VASM libraries are both used with VROOMM.  These
+      libraries are separated to make the linking process easier.
+
+Not Supported:  Win32s
+                DOS/4G DOS Extender
+                OS/2
+
+
+************************** Borland C++ 4.5 ***************************
+
+Environment                  Libraries
+----------------------------------------------------------------------
+MS-DOS                      S, M, C, L, H, VC, VASM
+Win 16                      SW, MW, CW, LW, 300
+PowerPack 32                FX32
+TNT DOS-Extender            FP32
+Win32 Flat Windows          FW, FWM, 30FW, 30FWM
+Win32 Flat Console          FC, FCM, 30FC, 30FCM
+Win32s                      30FS, 30LS
+----------------------------------------------------------------------
+
+Note: The VC and VASM libraries are both used with VROOMM.  These
+      libraries are separated to make the linking process easier.
+
+Not Supported:	DOS/4G DOS Extender
+                OS/2
+
+
+*************************** Turbo C++ 3.0 ****************************
+
+Environment                  Libraries
+----------------------------------------------------------------------
+MS-DOS                      S, M, C, L, H, VC, VASM
+----------------------------------------------------------------------
+
+Note: The VC and VASM libraries are both used with VROOMM.  These
+      libraries are separated to make the linking process easier.
+
+Not Supported:  All Win16
+                All Win32
+                All Win32s
+                All 32-bit DOS Extenders
+                OS/2
+
+
+************************ Microsoft C++ 7.0 ***************************
+
+Environment                  Libraries
+----------------------------------------------------------------------
+MS-DOS                      S, M, C, L, H
+Win 16                      SW, MW, CW, LW
+----------------------------------------------------------------------
+
+Not Supported:  Win16 DLL
+                All Win32
+                All 32-bit DOS Extenders
+                OS/2
+
+
+***************** Visual C++ 1.x for DOS and Windows *****************
+
+Environment                  Libraries
+----------------------------------------------------------------------
+MS-DOS                      S, M, C, L, H
+Win 16                      SW, MW, CW, LW, 300
+----------------------------------------------------------------------
+
+Not Supported:  All Win32
+                All 32-bit DOS Extenders
+                OS/2
+
+
+****************** Visual C++ 1.x 32-bit for NT **********************
+
+Environment                  Libraries
+----------------------------------------------------------------------
+Win32 Flat Windows          FW, FWM, 30FW, 30FWM
+Win32 Flat Console          FC, FCM, 30FC, 30FCM
+TNT DOS-Extender            FP32
+Win32s                      30FS, 30LS
+----------------------------------------------------------------------
+
+Note: The 30LS model is built with the Visual C++ 1.x 16-bit compiler.
+
+Not Supported:  All regular DOS
+                All Win16
+                OS/2
+
+
+************************** Visual C++ 2.x & 4.0 **********************
+
+Environment                  Libraries
+----------------------------------------------------------------------
+Win32 Flat Windows          FW, FWM, 30FW, 30FWM
+Win32 Flat Console          FC, FCM, 30FC, 30FCM
+TNT DOS-Extender            FP32
+Win32s                      30FS, 30LS
+----------------------------------------------------------------------
+
+Note: The 30LS model is built with the Visual C++ 1.x 16-bit compiler.
+
+Not Supported:  All regular DOS
+                All Win16
+                Borland PowerPack
+                DOS/4G DOS Extender
+                OS/2
+
+
+************************** Watcom C/C++ 10.5 *************************
+
+Environment                  Libraries
+----------------------------------------------------------------------
+MS-DOS                      S, M, C, L
+Win 16                      SW, MW, CW, LW
+Win32 Flat Windows          FW, FWM, 30FW, 30FWM
+Win32 Flat Console          FC, FCM, 30FC, 30FCM
+TNT DOS-Extender            FP32
+DOS4/G DOS-Extender         FR32
+OS/2                        FO
+----------------------------------------------------------------------
+
+Not Supported:  Borland PowerPack
+                Win 16 DLL
+                Win32s
+
+
+************************** IBM C Set ++ 3.0 **************************
+
+Environment                  Libraries
+----------------------------------------------------------------------
+OS/2                        FO, FOM
+----------------------------------------------------------------------
+
+Not Supported:  All regular DOS
+                All 32-bit DOS Extenders
+                All Win16
+                All Win32
+                All Win32s
+
+
+************************ Symantec C/C++ 7.0 **************************
+
+Environment                  Libraries
+----------------------------------------------------------------------
+MS-DOS                      S, M, C, L
+Win 16                      SW, MW, CW, LW, 300
+Win32 Flat Windows          FW
+Win32 Flat Console          FC
+----------------------------------------------------------------------
+
+Not Supported:  X-Model
+                DOS/4G DOS Extender
+                Borland PowerPack
+                TNT DOS-Extender
+                OS/2
+                All Win32 DLLs
+                All Win32s
+
+
+********************** Borland C++ for OS/2 2.0 **********************
+
+Environment                  Libraries
+----------------------------------------------------------------------
+OS/2                        FO, FOM
+----------------------------------------------------------------------
+
+Not Supported:  All regular DOS
+                All 32-bit DOS Extenders
+                All Win16
+                All Win32
+                All Win32s

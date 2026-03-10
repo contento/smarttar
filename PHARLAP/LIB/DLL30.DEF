@@ -1,0 +1,22 @@
+; $Id: dll30.def 1.1 91/12/10 18:23:44 andreski Exp $
+LIBRARY GRAPHICS
+PROTMODE
+EXPORTS
+
+;
+; These exports must always be here
+;
+
+	BCC286_EXE
+	___plfifo
+	___plfifo_buffsize
+	___plfifo_head
+	___plfifo_tail
+	___plfifo_rserver_error
+	___plfifo_rserver
+	__gr_protudrvs
+
+;
+; Exports for linked in BGI drivers and fonts get appended here
+;
+

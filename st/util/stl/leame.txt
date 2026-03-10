@@ -1,0 +1,165 @@
+Formato de los Archivos Producidos por el STL
+==============================================
+Exceptuando por el encabezado, los espacios entre los registros y las
+terminaciones de l¡nea, el formato PRN y el formato LST son los mismos.
+
+RXDAT.LST
+---------
+	Posici¢n Longitud Descripci¢n
+	********************************************************
+- [ Com£n a Todos los Recibos]
+	[001]       04    Serial corto.
+	[005]       08    N£mero de recibo.
+	[013]       01    Tipo de recibo:
+											0 = Telefon¡a.
+											1 = Telefon¡a special.
+											2 = Telegrama.
+											3 = Fax.
+											4 = Tarjetas magn‚ticas.
+											5 = Otros.
+	[014]       04    Estado del recibo:
+											Bit 1: interno.
+											Bit 2: Indicador de recibo manual.
+											Bit 3: Indicador de imprimido.
+											Bit 4: interno.
+											Bits 5-8:
+												01 = No pagado.
+												02 = Pago revertido.
+												04 = Pagado.
+											Bits 9-14: atributos de llamada:
+												NO-EDA
+													0x09 = 00 1001 = Llamada especial.
+													0x0A = 00 1010 = Llamada local.
+													0x01 = 00 0001 = Llamada celular.
+													0x02 = 00 0010 = Llamada DDN.
+													0x31 = 11 0001 = Llamada DDI.
+													0x21 = 10 0001 = Llamada fronteriza.
+												EDA
+													0x09 = 00 1001 = Llamada especial.
+													0x0A = 00 1010 = Llamada EDATEL-EDATEL.
+													0x0B = 00 1011 = Llamada local EDATEL-EPM.
+													0x01 = 00 0001 = Llamada celular.
+													0x02 = 00 0010 = Llamada DDN EDA-EPM.
+													0x03 = 00 0011 = Llamada DDN EDA-TELECOM.
+													0x31 = 11 0001 = Llamada DDI EDA-TELECOM
+													0x21 = 10 0001 = Llamada fronteriza.
+											Bit 15: Indicador de cabina extensi¢n.
+											Bit 16: Indicador de Borrado.
+	[018]       08    Fecha.
+	[026]       06    Hora.
+	[032]       09    Valor.
+	[041]       04    Porcentaje de impuesto.
+	[045]       08    Impuesto.
+	[053]       09    Total.
+- [ Telefon¡a ]
+	[062]       02    Cabina.
+	[064]       16    N£mero telef¢nico.
+	[080]       20    Ciudad.
+	[100]       06    Duraci¢n de la llamada.
+	[106]       05    Minutos cobrados.
+	[111]       07    Valor por minuto.
+	[118]       05    Porcentaje de la tarifa.
+- [ Fax ]
+	[062]       02    No usado.
+	[064]       16    N£mero telef¢nico.
+	[080]       20    Ciudad.
+	[100]       06    No usado.
+	[106]       05    Cantidad de p ginas
+	[111]       07    Valor por p gina.
+- [ Telex ]
+	[062]       02    No usado.
+	[064]       16    No usado.
+	[080]       20    Ciudad.
+	[100]       06    No usado.
+	[106]       05    Cantidad de palabras.
+	[111]       07    Valor por palabra.
+- [ Otros ]
+	[062]       02    No usado.
+	[064]       06    Valor de la tarjeta 1.
+	[070]       02    Cantidad.
+	[072]       06    Valor de la tarjeta 2.
+	[078]       02    Cantidad.
+	[080]       06    Valor de la tarjeta 3.
+	[086]       02    Cantidad.
+	[088]       06    Valor de la tarjeta 4.
+	[094]       02    Cantidad.
+	[096]       02    No usado.
+	[098]       05    N£mero total de tarjetas.
+
+RXSTA.LST
+---------
+	Orden
+		- Turno.
+		- D¡a.
+		- Semana.
+		- Mes.
+		- A¤o.
+
+	Posici¢n Longitud Descripci¢n
+	********************************************************
+	[001]       04    Serial corto.
+	[005]       01    Tipo de acumulado.
+											04 = Turno.
+											03 = D¡a.
+											02 = Semana.
+											01 = Mes.
+											09 = A¤o.
+	[006]       08    Desde: Fecha
+	[014]       06    Desde: Hora.
+	[020]       06    Desde: N£mero.
+	[026]       08    Hasta: Fecha
+	[034]       06    Hasta: Hora.
+	[040]       06    Hasta: N£mero.
+	[046]       06    Recibos no pagados: Cantidad.
+	[052]       08    Recibos no pagados: Valor.
+	[060]       06    Pago revertido: Cantidad.
+	[066]       08    Pago revertido: Valor.
+	[074]       10    Valor tarifado.
+	[084]        9    Impuesto.
+	[093]       10    Total tarifado.
+	[103]       06    Errores de marcaci¢n.
+	[109]       06    Errores de comunicaci¢n.
+	[115]       07    Telefon¡a nacional autom tica: Cantidad.
+	[122]       08    Telefon¡a nacional autom tica: Minutos hablados.
+	[130]       08    Telefon¡a nacional autom tica: Minutos cobrados.
+	[138]       08    Telefon¡a nacional autom tica: Valor.
+	[146]       07    Celular: Cantidad.
+	[153]       08    Celular: Minutos hablados.
+	[161]       08    Celular: Minutos cobrados.
+	[169]       08    Celular: Valor.
+	[177]       07    Telefon¡a internacional autom tica: Cantidad.
+	[184]       08    Telefon¡a internacional autom tica: Minutos hablados.
+	[192]       08    Telefon¡a internacional autom tica: Minutos cobrados.
+	[200]       08    Telefon¡a internacional autom tica: Valor.
+	[208]       09    Valor de telefon¡a autom tica.
+	[217]       08    Impuesto de telefon¡a autom tica.
+	[225]       10    Total de telefon¡a autom tica.
+	[235]       05    Especiales telefon¡a nacional: Cantidad.
+	[240]       06    Especiales telefon¡a nacional: Valor.
+	[246]       05    Especiales telefon¡a celular: Cantidad.
+	[251]       06    Especiales telefon¡a celular: Valor.
+	[257]       05    Especiales fax nacional: Recibos.
+	[262]       05    Especiales fax nacional: Cantidad.
+	[267]       06    Especiales fax nacional: Valor.
+	[273]       05    Especiales telex nacional: Recibos.
+	[278]       05    Especiales telex nacional: Cantidad.
+	[273]       06    Especiales telex nacional: Valor.
+	[279]       05    Especiales telefon¡a internacional: Cantidad.
+	[284]       06    Especiales telefon¡a internacional: Valor.
+	[290]       05    Especiales fax internacional: Recibos.
+	[295]       05    Especiales fax internacional: Cantidad.
+	[300]       06    Especiales fax internacional: Valor.
+	[306]       05    Especiales telex internacional: Recibos.
+	[311]       05    Especiales telex internacional: Cantidad.
+	[316]       06    Especiales telex internacional: Valor.
+	[322]       05    Especiales tarjeta magnetica: Recibos.
+	[327]       06    Especiales tarjeta magnetica: Cantidad.
+	[333]       05    Especiales otros: Recibos.
+	[338]       06    Especiales otros: Cantidad.
+	[344]       10    Valor de servicios especiales.
+	[354]       08    Impuesto de servicios especiales.
+	[362]       10    Total de servicios especiales.
+
+__________________________________________________________________
+Gonzalo Contento
+Agosto de 1999.

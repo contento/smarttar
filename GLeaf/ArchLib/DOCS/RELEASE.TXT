@@ -1,0 +1,656 @@
+WHAT'S NEW IN ARCHIVELIB 2.12?
+------------------------------
+
+1)  The ability to strip path names on insertion or extraction was
+    previously being done on an Archive basis.  Setting the strip
+    flag caused path names to be stripped for every file in the
+    archive.  This release modified that to work on an entry by
+    entry basis, which means the two strip flags now reside in
+    ALEntry objects.  Several new C functions were created to set
+    the flags for entries and for every entry in a list.
+
+    C++ users can set or clear these member flags in an ALEntry
+    object directly:
+
+        ALEntry::mfStripPathOnInsert
+        ALEntry::mfStripPathOnExtract
+
+    C/VB/Delphi users have to use their particular versions of these
+    two functions:
+
+        ALEntrySetStripOnInsert()
+        ALEntrySetStripOnExtract()
+
+    There are also member functions for ALEntryList that can be used to
+    set or clear the flag in every entry in a list:
+
+        ALEntryList::SetStripOnInsert()
+        ALEntryList::SetStripOnExtract()
+
+    C/VB/Delphi programmers can use:
+
+        ALEntryListSetStripOnInsert()
+        ALEntryListSetStripOnExtract()
+
+    This of course means that the corresponding ALArchive data members
+    and functions are gone.
+
+2)  Added a new set of monitor messages.  The verbose messages help
+    pacify users during long operations.  For example, creating a
+    2000 entry directory may cause you to spend a lot of time
+    just reading and sorting directory entries.  Selecting the verbose
+    mode of the monitor will cause messages to be sent during these
+    operations as well.  This entails a new member function in the
+    ALMonitor class, and two new monitor types: AL_MONITOR_JOB_VERBOSE
+    and AL_MONITOR_OBJECTS_VERBOSE.
+
+    Please note that when you set the monitor type to one of these modes,
+    the actual type stored in the monitor object will still be one of
+    the old types: AL_MONITOR_JOB and AL_MONITOR_OBJECTS.  The difference
+    is that the new mfVerbose member will be set to true.  The monitors
+    that we supply check this flag before issuing verbose messages.
+
+3)  Fixed a bug in the way I handle daylight savings time on the 32
+    bit Windows file system.
+
+4)  Added an ALName::Compare() function that can be used to compare
+    file names.  I use this internally in the code that unmarks
+    duplicate entries in an ALEntryList.  To speed things up I now
+    sort the list before doing the checking.  Sorting means I need
+    a comparison routine.  Comparing file names presents some special
+    challenges, and this routine handles some of them.
+
+5)  Added the capability to create SFX files.  See the SFX directory
+    for details.
+
+6)  A small change has been made in the Simplified Interface in the
+    32-bit world.  The delimiter can be either a , or a \t.  The
+    <space> has been removed to better handle long file names with
+    spaces.  The above applies to ALEntryList::AddWildCardFiles().
+
+WHAT'S NEW IN ARCHIVELIB 2.10?
+------------------------------
+
+1) Addition of the Crypto class, with two derived classes called
+   ALXorCrypto and ALZipCrypto.  See CRYPTO.TXT for information
+   on how to use encryption.
+
+2) Two new error messages: AL_MISSING_CRYPTO and AL_INVALID_KEY.
+
+3) ALStorage objects now have an mpCrypto pointer.  If this pointer
+   is non-zero, it will be used to perform encryption or decryption
+   as data is loaded or stored via LoadBuffer() and FlushBuffer().
+
+4) Encryption is now supported for PKWare archives.  When reading
+   in a directory, the crypto bit in the general purpose flags
+   word is checked.  If it is true, the miEncrypted bit is set
+   in the ALEntry for that file, and an attempt is made to create
+   a copy of a crypto engine from the ALEntryList toolkit.
+   When writing data to a Zip format archive, the crypto bit in the
+   gp flag is set appropriately.  If a file is being encrypted,
+   I add the extended header information that immediately follows
+   the compressed and encrypted data.  The header file for the
+   base class is CRYPTO.H, and it is included by ARCLIB.H.
+
+5) A pointer to a crypto engine was added to the ALEntry object.  The
+   constructor for this object was modified to take a crypto pointer
+   as a fourth argument.  Note that it defaults to 0, so existing code
+   will not be broken.  Just like the other objects attached to the
+   ALEntry object, the crypto engine will be destroyed by the ALEntry
+   dtor.  The ALEntry object also has a new public flag called
+   miEncrypted.
+
+6) The Toolkit was updated to hold Crypto engines as well as compressors,
+   decompressors, and storage objects.  This meant that a whole slew
+   of new toolkit related functions were added:
+
+     ALToolKit::ALToolKit( ALCrypto & )
+     ALToolKit &ALToolKit::operator+( ALCrypto & )
+     ALToolKit operator+( ALCompressor &, ALCrypto & )
+     ALToolKit operator+( ALDecompressor &, ALCrypto & )
+     ALToolKit operator+( ALStorage &, ALCrypt & )
+     ALToolKit operator+( ALCrypto &, ALCompressor & )
+     ALToolKit operator+( ALCrypto &, ALDecompressor & )
+     ALToolKit operator+( ALCrypto &, ALStorage & )
+     ALToolKit operator+( ALCrypto &, ALCrypto & )
+     ALCrypto *ALToolKit::CreateCryptoEngine( int );
+
+7)  Greenleaf Archives now support encryption.  Encrypted objects have
+    the most significant bit in the storage object type set to 1.  Note
+    that this means encrypted objects can't be extracted using versions
+    of ArchiveLib less than 2.10.
+
+8)  The simple interface functions have had an encrypted member added
+    to the directory information.  You can check to see if an object
+    is encrypted, but at this time, the simple interface WILL NOT
+    support encryption for insertion or extraction.  The simple extract
+    functions clear the marks of any encrypted files, and will not
+    attempt to extract them.  The mark member of the simple interface
+    has been changed from a short int to an unsigned char.
+
+9)  The crypto base class adds the following functions:
+
+      ALCrypto::operator new( size_t )
+      ALCrypto::ALCrypto( ALCryptoType, char * )
+      ALCrypto::~ALCrypto()
+      int ALCrypto::StartEncrypt( ALStorage &, ALStorage &)
+      int ALCrypto::StartDecrypt( ALStorage &, ALStorage &)
+      void ALCrypto::Encrypt( unsigned char *, size_t )
+      void ALCrypto::Decrypt( unsigned char *, size_t )
+      int ALCrypto::EndEncrypt( ALStorage &, ALStorage &)
+      int ALCrypto::EndDecrypt( ALStorage &, ALStorage &)
+      ALCrypto *ALCrypto::Clone( int )
+      void ALCrypto::ClearError()
+      deleteALCrypto( hALCrypto )
+
+      Public data members of interest are:
+
+        ALCryptoType miCryptoType
+        char *mszCryptoType
+        ALStatus mStatus
+
+
+10)  The ALXorCrypto class adds the following functions:
+
+      ALXorCrypto::operator new( size_t )
+      ALXorCrypto::ALXorCrypto( char * )
+      ALXorCrypto::~ALXorCrypto()
+      void ALXorCrypto::Encrypt()
+      void ALXorCrypto::Decrypt()
+      int ALXorCrypto::StartEncrypt()
+      int ALXorCrypto::StartDecrypt()
+      ALCrypto *ALXorCrypt::Clone()
+      hALCrypto newALXorCrypto( char * )
+
+11) STORCRC.CPP has been renamed STORPROC.CPP.  Processing that computes
+    the CRC *and* encrypts/decrpyts is now performed in the
+    ALStorage::Process() function instead of UpdateCrc().  I added
+    a new parameter to Process() that flags whether the data is
+    being written or read.
+
+12) The debug package added three new class types for the three new
+    encryption objects.
+
+13) A new enumerated type called ALCryptoType was added.
+
+14) A new handle type was added for C/VB/Delphi programmers: hALCrypto.
+
+15) Added ALZipCrypto type with the following members:
+
+      ALZipCrypto::operator new( size_t )
+      ALZipCrypto::ALZipCrypto( char * )
+      ALZipCrypto::~ALZipCrypto()
+      void ALZipCrypto::Encrypt()
+      void ALZipCrypto::Decrypt()
+      int ALZipCrypto::StartEncrypt()
+      int ALZipCrypto::StartDecrypt()
+      ALCrypto *ALZipCrypt::Clone()
+      hALCrypto newALZipCrypto( char * )
+
+16) New files:
+      cpp_cryp\zsupport.cpp
+      cpp_cryp\zcrypto.cpp
+      cpp_all\storproc.cpp (used to be storcrc.cpp)
+      cpp_all\crypto.cpp
+      cpp_all\xorcrypt.cpp
+      h\crypto.h
+      h\xorcrypt.h
+      h\zipcrypt.h
+      h\crypto.inl
+      examples\ex29con.cpp
+
+17) I modified the Microsoft 16 bit DLL AL21LW.DLL to use a specially
+    compiled version of CRT0DAT.OBJ.  This version allows the DLL to
+    open up to 99 files, instead of the default value of 20.
+
+18) In 2.0, you couldn't access C functions from a C++ module, as their
+    prototypes were #ifdef'd out.  In 2.1, you can call C functions
+    freely from C or C++.
+
+19) I added a new example program, EX29CON.CPP.  It is used to test
+    our timestamping functions.  These functions had bugs in some of
+    the 32 bit libraries in 2.01.
+
+20) Added a single new function, ALTranslateError(), that translates
+    error codes into strings.  It is now part of the simplified
+    interface.
+
+21) Added new C interface functions that are used to add encryption
+    support:
+                ALEntryListAddXorCrypto()
+                ALEntryListAddZipCrypto()
+                ALEntryGetEncrypted()
+                ALEntrySetEncrypted()
+                ALEntryClearEncrypted()
+                ALEntryGetCryptoEngine()
+                ALEntrySetCryptoEngine()
+
+    These C functions are mentioned earlier in this document:
+
+                newALXorCrypto()
+                newALZipCrypto()
+                deleteALCrypto()
+                ALTranslateError()
+
+    The first two functions are used to add a crypto engine to an existing
+    entry list.  The middle three are used to examine or modify the state
+    of the miEncrypted flag in an ALEntry.  The final two functions in the
+    first group are used to set the crypto engine pointer in an ALEntry.
+
+22) A bug fix to the directory creation process.  In release 2.0, when
+    using Visual C++, extracting to a directory tree that was partially
+    constructed could fail.
+
+23) ALName objects now consider the forward slash and back slash to be
+    identical.  Thus, "C:\\TEMP.DAT" is identical to to "C:/TEMP.DAT".
+
+24) The debug versions of the library now override ::new[] and ::delete[]
+    as well as ::new and ::delete.  Please be aware that these modules
+    add significant overhead, particularly to deletions.  If your debug
+    project slows down, consider deleting _new.obj from your library and
+    relinking.
+
+25) Fixed a bug in archive creation that could crash your program in low
+    memory situations.
+
+WHAT'S NEW IN ARCHIVELIB 2.01?
+------------------------------
+
+1) Bug fixes in ALExtract() and ALDelete().
+
+2) Case preservation for file names under Win32.
+
+3) You can parse file names surrounded by double quotes in the wild card
+   expander.
+
+4) Borland C++ 5.0 is now supported.
+
+5) Delphi 2.0 is supported.
+
+6) Added an MFC example for the simplified interface.
+
+7) Fixed some bugs in PKWare archive handling relating to local
+   header file names.
+
+WHAT'S NEW IN ARCHIVELIB 2.0?
+-----------------------------
+
+Pkware support
+--------------
+
+You can now work with the PKWare ZIP archive format.  To work with PKZIP
+archives, you need to create objects of type ALPkArchive.  ALPkArchive
+has exactly the same member functions as ALGlArchive, so you can mix and
+match these archive types freely.
+
+ArchiveLib 2.0 doesn't support the following ZIP features:
+
+*	Extraction of PKZIP 1.0 file formats.  In particular, PKZIP 1.0 used
+    LZW compression to store files.  LZW compression is covered by a
+    patent. You probably don't want to pay royalties on your product.
+
+*	Encryption.  We need to sort out the export regulations on this
+    before we attempt to add this to our product.
+
+*	Disk spanning.  This is our number one feature for ArchiveLib 3.0.
+
+OS/2 support
+------------
+
+ArchiveLib now comes with complete support for OS/2 console and PM
+applications.  You can use BUILD.EXE to build examples using OS/2
+libraries, from Borland and Microsoft.  The examples directory contains
+a raft of examples named EX??CON.CPP, EX??CON.C and EX??PM.CPP that will
+all work with OS/2.
+
+Deflate engine
+--------------
+
+We have incorporated the ZLIB deflate engine written by Marc Adler and
+Jean-loop Gailly into ArchiveLib.  These files, found in CPP_ZLIB,
+implement the compression type needed to read and write ZIP files.  The
+two engines are instantiated using the classes ALPkCompressor and
+ALPkDecompressor.
+
+The deflate algorithm creates two big buffers to compress data.  The
+sliding window is a buffer with 2^(window_bits+2) bytes of storage.  In
+other words, a window bits value of 15 means you need 128Kbytes for the
+sliding buffer.
+
+The second buffer is 2^(mem_level+9) bytes long.  So a mem_level of 8
+will consume 128Kbytes.
+
+
+New class hierarchy for archive
+-------------------------------
+
+The archive class hierarchy is somewhat simpler than it used to be.  The
+abstract base class of ALArchive provides some infrastructure.  The two
+classes derived from it are ALPkArchive and ALGlArchive.  They provide
+the mechanism to create and manipulate the two different types of
+archives.
+
+New class hierarchy for compression engines
+-------------------------------------------
+
+In ArchiveLib 1.0, the ALCompressionEngine contained the code to both
+compress and decompress.  In an effort to be more granular, compression
+and decompression engines are now separated out into two base classes:
+ALCompressor and ALDecompressor.  If you are just using archives, you
+probably don't have to worry about this too much. However, if you are
+using the engines in a standalone mode, you do need to worry about it.
+
+
+Storage type binding done by entry list via toolkit
+---------------------------------------------------
+
+There is an architectural problem built in to ArchiveLib.  The problem
+is how to decide which compression engines and storage objects to
+include in your application.  In particular, it can be tough to decide
+which engines to include when you are writing a routine that is going to
+extract objects from an archive.  You might not know in advance what
+type of objects are going to be in the archive, in which case you
+probably should like in everything in sight.  On the other hand, you
+might only be extracting files using the deflate engine.  If this is the
+case, linking in memory objects and the Greenleaf compression engine is
+a waste of time.
+
+In ArchiveLib 1.0, storage object and engine linkage was accomplished by
+deriving new types of archive objects.  class ALArchive was the default
+class, and it linked in just about everything.
+
+In ArchiveLib 2.0, linkage is performed by the ALEntryList object.  This
+is a little more logical.  In addition, the linkage is more flexible,
+and doesn't require derivation.  In a nutshell, when you create an
+ALEntryList object, you give it a toolkit of storage objects, compression
+engines, and decompression engines that it will use to do its job.  By
+default, the toolkit contains all three compression engines, and two
+storage object types.  This is accomplished by virtue of the default
+value for the toolkit parameter in the ALEntryList constructor.  The
+default value of FullTools() creates a toolkit with everything but the
+kitchen sink.
+
+To build a more slim and trim application, you can construct your
+ALEntryList object with limited toolsets.  The ones we provide prebuilt
+in the library include:
+
+  *  PkTools(): File and memory storage objects, but only the deflate
+     engines.  You would use this in an application that was not using
+     Greenleaf's engine.
+
+  *  PKCompressTools(): Same as above, but just the deflate compression
+     engine.  A file that just creates Zip compatible archives could
+     save space by excluding the decompression engine.
+
+  *  PKDecompressTools(): Same as above, but just the deflate
+     decompression engine.  Use this in an extraction only application.
+
+Likewise, there are a corresponding set of toolkit builders known as
+GlTools(), GlCompressTools(), and GLDecompressTools().
+
+Finally, you can build your own toolkit in an argument to your
+ALEntryList object.  Just throw in copies of all the
+compression/decompression objects and storage objects you plan to use,
+like this:
+
+	ALEntryList list( ALFile() + ALGlCompressor() );
+
+Yes, you use the '+' operator to connect all these guys together into a
+toolkit.
+
+
+Some header files and class names redone
+----------------------------------------
+
+In ArchiveLib 1.0, ARCHIVE.H was used to define the Greenleaf archive
+class.  Now we have two archiving classes, so this job is being done by
+two different header files.  Note that the base class ALArchiveBase has
+been renamed to ALArchive.  In 1.0, an ALArchive was a Greenleaf format
+archive.  In 2.0, a Greenleaf format archive is an ALGlArchive.
+
+Use PKARC.H to define and use Zip compaptible archives.  Use GLARC.H to
+define and use Greenleaf proprietary archives.  ARC.H is used to define
+the base archive class.
+
+In 1.0, CMPENGN.H defined the base compression class, and GRENENGN.H
+defined the Greenleaf proprietary compression class.  Now, the base
+class is defined in ENGN.H, with derived classes showing up in PKENGN.H,
+GLENGN.H, and COPYENGN.H.
+
+
+Our header file, STORAGE.H, conflicts with an OLE 2.0 header file found
+in Borland's 4.5 release.  The file has been renamed as STOR.H, which
+means a few other header files had to have their contents renamed.
+Since STOR.H is automatically included by ARCLIB.H, you should be able
+to ignore this change.
+
+Directory and build structure redone
+------------------------------------
+
+In order to cut back on ifdefs, ArchiveLib has partitioned as much
+platform-specific code as possible into separate directories.  For
+example, platform-specific user interface code is now found in
+directories CPP_UI.TXT, CPP_UI.WIN, and CPP_UI.PM.  Similar partitioning
+is done for File Systems, Yield functions, and Memory.
+
+The default root directory for ArchiveLib is now AL200, to reflect the
+new release number.
+
+To make ArchiveLib a little more consistent with some of our other
+products, the directory naming scheme for compilers has been slightly
+modified.  The directories now being used are :
+
+    Borland C++ 2.0 for OS/2       AL200\B20
+    Borland C++ 3.1:               AL200\B31
+    Borland C++ 4.0:               AL200\B40
+    Borland C++ 4.5:               AL200\B45
+    IBM CSET 2.0                   AL200\I20
+    IBM Visual Age 3.0             AL200\I30
+    Microsoft C++ 7.0:             AL200\C70
+    Symantec C++ 7.x:              AL200\S7X
+    Delphi 1.0                     AL200\DELPHI.16
+    Visual Basic 3.0:              AL200\VB30
+    Visual Basic 4.0 16 bit:       AL200\VB40.16
+    Visual Basic 4.0 32 bit:       AL200\VB40.32
+    Visual C++ 1.0/1.5:            AL200\V1X
+    Visual C++ 2.x:                AL200\V2X
+    Visual C++ 4.0:                AL200\V40
+    Watcom 10.0:                   AL200\W10
+
+New memory classes
+------------------
+
+We now have three memory based storage classes derived from the base
+class ALMemoryBase. ALMemory uses standard calls to malloc(), calloc()
+and realloc().  ALWinMemory() instead uses GlobalAlloc() and its ilk.
+Finally, ALHugeMemroy use _farcalloc(), _halloc, and brethren.
+
+BUILD.EXE updated
+-----------------
+
+With CommLib 5.1 we modified our BUILD.EXE program slightly.  Each library
+directory now has its own naming scheme for BUILD.EXE and BUILD.INI.  For
+example, in the Borland C++ 4.5 directory, these two files are now named
+BUILDB45.EXE and BUILDB45.INI.
+
+This change was made to help with future patches.  The patch program we
+are using, RTPATCH, isn't happy when we have multiple copies of a file
+with the same name.
+
+With the initial release of ArchiveLib, we included a set of files with
+the name MAKE*.BAT.  These files were used to build demo programs.  This
+capability has been moved to BUILD*.EXE, so the batch files are now
+gone.  BUILD*.EXE will now let you build a demo or example using the
+library file of your choice.  To build demos, call BUILD*.EXE with the
+-exe switch.  For example, to build all C examples with the Borland C++
+4.0 Large Windows library, I would type this:
+
+    BUILDB40 -exe LW ..\examples\ex??win.c
+
+
+Debug libraries aren't being shipped
+------------------------------------
+
+Debug libraries take up a ton of disk space.  You usually can't use our
+prebuilt versions of the debug libraries anyway, because your source
+code path differs from ours.  Until we go to CD-ROM distribution, we
+will just ship the release libraries.  However, you can quickly build
+your own versions of the debug libraries using BUILD.EXE.
+
+
+ALArchive::AddWildCardFiles() is gone!
+--------------------------------------
+
+Now this function is ALEntryList::AddWildCardFiles().  It's first
+arg used to be an entry list, now its an archive.  When adding files
+to the entry list, this function uses the default storage object and
+compression engine recommended by the archive class.
+
+
+Converting your 1.0 Programs
+----------------------------
+
+You should follow these steps to convert an ArchiveLib 1.0 program to
+work with ArchiveLib 2.0:
+
+1) If any of your modules include ARCHIVE.H, change the reference to
+   GLARC.H. ARCHIVE.H no longer exists.  GLARC.H describes ALGlArchive,
+   which is the archive compatible with Version 1.0 archives.
+
+2) Replace every declaration of ALArchive with a declaration for
+   ALGlArchive. ALArchive is now the base class for both Greenleaf and
+   Zip compatible archives.  Replace any references to ALArchiveBase to
+   ALArchive.
+
+3) The compression engine used to insert new compressed objects into
+   archives is determined by the toolkit (new term) passed to your
+   ALEntryList object on construction.  The default toolkit is the
+   FullToolKit(), which will preferentially use the ZIP compressor.  If
+   you need your archives to be compatible with AL 1.0 archives, you
+   need to force your compression routines to use the Greenleaf
+   compressor.  You can do this by modifying your ALEntryList
+   constructor call to look like this:
+
+      ALEntryList list( &monitor, GlTools() );
+
+   Be sure to note that you might have created an entry list with no
+   parameter to specify a monitor.  In this case, you need to pass a 0
+   as the monitor argument.
+
+   If you are explicitly using the greenleaf engine, change every
+   reference to GRENENGN.H to GLENGN.H.
+
+   C programmers have a new batch of constructors for ALEntryList, with
+   each variation corresponding to a particular toolkit.  See the manual
+   to figure out which one you need to be using.
+
+4) AddWildCardFiles is a member function of the archive class in AL 1.0.
+   In AL 2.0, this function is now a member function of the entry list
+   class. Since the 1.0 function declaration was a static member of
+   ALArchive, and took an ALEntryList as its first parameter, you can
+   make the change using a fairly mechanical procedure.  Just eliminate
+   any reference to the archive object used to call the function, then
+   remove the list reference from the first parameter position.  Then
+   take that same list reference, and set it to be the object used to
+   call the function.
+
+   For example:
+
+   AL 1.0 call: archive.AddWildCardFiles( list, "input*.dat, *.bak" );
+
+   Converted to 2.0: list.AddWildCardFiles( "input*.dat, *.bak" );
+
+   Or:
+
+   AL 1.0 call: ALArchive::AddWildCardFiles( list, "input*.dat, *.bak" );
+
+   Converted to 2.0: list.AddWildCardFiles( "input*.dat, *.bak" );
+
+   MakeEntriesFromListBox() has to undergo exactly the same
+   transformation.
+
+5) Under 1.0, the AddWildCardFiles() function also had some optional
+   parameters that allow you to specify parameters used when creating
+   the greenleaf compression engine.  In 2.0, the decision as to what
+   parameters are used to create the engine is now under the control of
+   the toolkit passed to the ALEntryList object when constructed.
+
+   To create a toolkit that will use the parameters you want, you will
+   need to make one more modification to the toolkit parameter passed to
+   the entry constructor.  Just pass the desired compression level to
+   the GlTools() function. A sample is shown here:
+
+      ALEntryList list( &monitor, GlTools( AL_GREENLEAF_LEVEL_3 ) );
+
+   After you have done that, just delete the compression level parameter
+   from the call to AddWildCardFiles.
+
+6) AL 1.0 has compression engines with the base class ALEngine.  AL 2.0
+   has split these two up in the interests of modularity.  If you are
+   constructing engines to perform compression or expansion by hand, you
+   now have to decide which to use.  The new engine names are:
+
+   ALCopyCompressor               COPYENGN.H
+   ALCopyDecompressor             COPYENGN.H
+   ALGlCompressor                 GLENGN.H
+   ALGLDecompressor               GLENGN.H
+   ALPkCompressor                 PKENGN.H
+   ALPkDecompressor               PKENGN.H
+
+   Be sure to included the appropriate header file when constructing the
+   engine.
+
+   This change means you will need to search through your code, looking
+   for the type ALCompressionEngine, and change it to ALCompressor or
+   ALDecompressor.  References to ALGreenleafEngine need to be changed
+   to ALGlCompressor or ALGlDecompressor.  References to ALCopyEngine
+   need to be changed to ALCopyCompressor or ALCopyDecompressor.
+
+7) If you are creating ALEntry objects manually, you will have to
+   account for a change in the parameters list.  In AL 1.0, ALEntry
+   objects took a single ALCompressionEngine parameter.  AL 2.0 ALEntry
+   lists take two pointers: the first a pointer to an ALCompressor, the
+   second a pointer to an ALDecompressor.  Code that used to look like
+   this:
+
+   new ALEntry( list,
+                new ALMemory( "buffer", buffer, strlen( buffer ) ),
+                new ALGreenleafEngine );
+
+   Now looks like this:
+
+   new ALEntry( list,
+                new ALMemory( "buffer", buffer, strlen( buffer )),
+                new ALGlCompressor,
+                new ALGlDecompressor );
+
+8) If you are using compressed objects, you now have to pass the
+   compressed object constructor, ALCompressedObject(), a pointer to a
+   compressor, and a pointer to a decompressor.  The objects are now
+   passed as pointers instead of references, as well.  This means you
+   can pass a 0 for either of the engines, if your program won't be
+   using it.
+
+9) ALEntry objects used to have a single pointer to an engine, called
+   mpCompressionEngine. Now there are two pointers, mpCompressor and
+   mpDecompressor.
+
+10) You can no longer get a copy of the MS-DOS file attributes using the
+    member function GetDosAttributes().  Individual file attributes can
+    now be read using these member functions:
+
+        int ReadOnly();
+        int System();
+        int Hidden();
+        int Archive();
+        int Directory();
+
+   If you want to get all the bits at once, you need to call member
+   function PackedAttributes().
+
+11) The debug package added three new class types for the three new
+    encryption objects.
+
+12) A new enumerated type called ALCryptoType was added.
+
+13) A new handle type was added for C/VB/Delphi programmers: hALCrypto.

@@ -1,0 +1,29 @@
+This document is to inform all users of the Borland IDE, Microsoft Visual
+C++ IDE how to link to Greenleaf libraries.  The intergreted development
+environments require specific information on what source files to compile
+and which third party libraries to link.
+
+Normally when you compile a file the compiler places information in
+the object file so the linker knows the specific runtime libraries to link.
+Unfortunately, the compiler is not able to do this with third party
+libraries.  The IDEs require the programmer to create a project file or
+program list that specifies which source files to compile and which
+third party libraries to link.
+
+Create a project file as follows.
+
+  1.  Select the "PROJECT" option off the menu.
+  2.  "CREATE" to open the project file.
+  3.  Add files to the project.  Add the source files and the
+      Greenleaf library you wish to link with.
+  4.  You can now build the program.
+
+These are general directions to create a project file.  For
+compiler specific see your compiler manuals.
+
+Greenleaf technical support receives many calls from programmers
+having "unresolved external" error messages.  If you are using
+an IDE these errors are usually caused from not having a project
+file loaded for the files being built.  To obtain more information
+on project files, please examine the compiler user's guide.  It will
+contain specific information on project file creation and use.

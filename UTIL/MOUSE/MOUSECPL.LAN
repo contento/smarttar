@@ -1,0 +1,540 @@
+~~ English Language file for Mouse  Contorl panel
+
+~~ To test this  file copy it to mousecpl.lan and run mousecpl
+
+~~ Rows = 1 Cols = 22
+ORIENTATION_STRING
+oRientation...
+
+
+~~ Rows = 1 Cols = 1
+cORIENTATION
+R
+
+
+~~ Rows = 1 Cols = 10
+CANCEL_STRING
+cancel
+
+
+~~ Rows = 1 Cols = 12
+OK_STRING
+OK
+
+
+~~ Rows = 1 Cols = 1
+cOK
+O
+
+
+~~ Rows = 1 Cols = 17
+ACCELERATION_STRING
+Acceleration
+
+
+~~ Rows = 1 Cols = 1
+cACCELERATION
+A
+
+
+~~ Rows = 1 Cols = 20
+SEN
+Sensitivity
+
+
+~~ Rows = 1 Cols = 1
+cSLIDESEN
+S
+
+
+~~ Rows = 1 Cols = 20
+BUTTONS_STRING
+Buttons...
+
+
+~~ Rows = 1 COls = 1
+cBUTTONS
+B							 
+
+
+~~ Rows = 1 Cols = 22
+SETBUTTONS
+Set buttons
+
+
+~~ Rows = 1 Cols = 1
+cSETBUTTONS
+S
+
+
+~~ Rows = 1 COls = 20
+SETPOINTER_STRING
+Pointer...
+
+
+~~ Rows = 1 Cols = 1
+cSETPOINTER
+P
+
+
+~~ Rows = 1 Cols = 16
+START
+Start=>
+
+
+~~ Rows = 1 Cols = 1
+cSTART
+S
+
+
+~~ Rows = 1 Cols = 24
+CLICKLOCK
+clickLock enabled
+
+
+~~ Rows = 1 Cols = 1
+cCLICKLOCK
+L
+
+
+~~ Rows = 1 Cols = 12
+RESTORE
+Restore
+
+
+~~ Rows = 1 Cols = 1
+cRESTORE
+R
+
+
+~~ Rows = 1 COls = 18
+SIZETITLE
+Size
+
+
+~~ Rows = 1 Cols = 1
+cSIZE
+S
+
+
+~~ Rows = 1 COls = 19
+COLORTITLE
+Color
+
+
+~~ Rows = 1 Cols = 1
+cCOLOR
+C
+
+
+~~ Rows = 1 Cols = 35
+GROWTHTITLE
+Growth
+
+
+~~ Rows = 1 Cols = 20
+GROWTHON
+Pointer Growth Enabled
+
+
+~~ Rows = 1 COls = 1
+cGROWTH
+G
+
+
+~~ Rows = 1 Cols = 18
+THRESHOLDTITLE
+Threshold
+
+
+~~ Rows = 1 COls = 1
+cTHRESH
+T
+
+
+~~ Rows = 1 Cols = 18
+DELAYTITLE
+Delay
+
+
+~~ Rows = 1 Cols = 1
+cDELAY
+D
+
+
+/* NOTE: the spaces at the beginning and end are intentional. */
+
+~~ Rows = 1 Cols = 50
+MOUSETITLE
+IntelliPoint Tools & Controls
+
+
+~~ Rows = 1 Cols = 54
+ORIENTTITLE
+Orientation
+
+
+~~ Rows = 1 Cols = 46
+BUTTONSELTITLE
+Button Selection
+
+
+~~ Rows = 1  Cols = 44
+POINTERTITLE
+Pointer Options
+
+
+~~ Rows = 1 Cols = 9
+SIZESMALL
+Small
+
+
+~~ Rows = 1 Cols = 9
+SIZEMED
+Medium
+
+
+~~ Rows = 1 Cols = 9
+SIZELARGE
+Large
+
+
+~~ Rows = 1 Cols = 13
+COLOR1
+Normal
+
+
+~~ Rows = 1 Cols = 13
+COLOR2
+Reverse
+
+
+~~ Rows = 1 Cols = 13
+COLOR3
+Transparent
+
+
+~~ Rows = 1  Cols = 19
+THRESHOLDSLOW
+Slow
+
+
+~~ Rows = 1 Cols = 19
+THRESHOLDFAST
+Fast
+
+
+~~ Rows = 1 Cols = 19
+DELAYSHORT
+Short
+
+
+~~ Rows = 1 cols = 19
+DELAYLONG
+Long
+
+
+~~ Rows = 9 COls = 27
+ORIENTMESSAGE
+This option lets you
+coordinate onscreen pointer
+movement with mouse
+movement.
+
+Choose 'Start=>' to orient
+the mouse. Then move your
+mouse up, moving the arrow
+toward the target.
+
+
+
+
+~~ Rows = 2 Cols = 27
+BUTTONSELOPTION
+This option lets you select
+the primary and secondary buttons.
+
+
+
+
+~~ Rows = 2 Cols = 27
+BUTTONSELCHOOSE
+Choose 'Set buttons' to set the
+button.
+
+
+
+~~ Rows = 2 Cols = 27
+PRESSPRIMARY
+Press the Primary Button
+on your mouse now.
+
+
+
+~~ Rows = 1 Cols = 27
+RELEASEPRIMARY
+Release Primary Button
+
+
+
+
+~~ Rows = 1 Cols = 27
+PRIMARYDONE
+Primary Button is now set.
+
+
+
+
+~~ Rows = 2 Cols = 27
+PRESSSEC
+Press the Secondary Button
+on your mouse now.
+
+
+
+~~ Rows = 1 Cols = 27
+RELEASESEC
+Release Secondary Button
+
+
+
+
+~~ Rows = 1 Cols = 27
+SECDONE
+Secondary Button is now set.
+
+
+
+
+~~ Rows = 1 Cols = 27
+BUTTONSELERROR
+Only one button at a time
+
+
+
+
+~~ Rows = 2 Cols = 27
+SAMEBUTTONERROR
+The same button cannot be
+both primary and secondary.
+
+
+
+~~ Rows = 5 Cols = 80
+USAGESTATEMENT
+Configures mouse cursor behavior
+
+MOUSECPL [/V]
+  /V		Gives version number of IntelliPoint Tools & Controls
+
+
+
+
+
+~~ Rows = 1 Cols = 50
+LOGOMSG
+Microsoft (R) IntelliPoint Tools & Controls Version 
+
+
+
+~~ Rows = 1 Cols = 80 
+COPYRTMSG
+Copyright (c) Microsoft Corp 1986-1994.  All rights reserved.
+
+
+
+
+~~ Rows = 2 cols = 80
+WRONGSWITCH
+Unrecognized command-line switch
+
+
+
+
+~~ Rows = 2 cols = 80
+WRONGOPTION
+Invalid switch option
+
+
+
+
+
+~~ Rows = 2
+NOMOUSE
+Microsoft Mouse Driver is not installed.
+
+
+
+
+
+~~ Rows = 2 Cols = 80
+WRONGMOUSE
+Requires MS Mouse Driver 8.20 or later
+
+
+
+
+
+~~ Rows = 2 Cols = 80
+NOMEM
+CPanel requires more memory than is available
+
+
+
+
+
+~~ Rows = 1 Cols = 80
+HELP
+Help
+
+
+~~ Rows = 1 Cols = 1
+cHELP
+H
+
+
+
+~~ Rows = 4 Cols = 27
+WRONGORIENT
+To set the Orientation for your
+mouse properly, move the mouse in
+as straight a line as possible.
+Please try again.
+
+
+~~ Rows = 1 Cols = 13
+CANCEL
+cancel
+
+
+~~ Rows = 7 Cols = 33
+DOUBLEBARSINGLE
+            Vertical
+ ÚÄÂÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÂÄ¿
+ ³ ³³±±±±±±±±±±±±±±±±±±±±³³ ³
+ ³ÃÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄ´³
+ ³ ³³±±±±±±±±±±±±±±±±±±±±³³ ³
+ ÀÄÁÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÁÄÙ
+ Slow       Horizontal     Fast
+
+
+~~ Rows = 7 Cols = 33
+DOUBLEBARDOUBLE
+            Vertical
+ ÉÍËÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍËÍ»
+ º º³±±±±±±±±±±±±±±±±±±±±³º º
+ ººÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄºº
+ º º³±±±±±±±±±±±±±±±±±±±±³º º
+ ÈÍÊÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÊÍ¼
+ Slow       Horizontal     Fast
+
+
+
+
+
+~~ Rows = 1
+DISIN_NAME
+Name:
+
+~~ Rows = 1
+DISIN_ORG
+Organization:
+
+~~ Rows = 1
+DISIN_SER
+Product Number:
+
+~~ Rows = 1
+DISINHELPTITLE
+ Product Information 
+
+~~ The following items are for help
+~~ If the tag does not have TITLE in it then they may be up 
+~~ to 13 rows long and they all can be up to 44 wide.
+
+
+~~ Rows = 1 
+MAINHELPTITLE
+Main Help
+
+
+
+~~ Rows = 11
+MAINHELP
+Acceleration adjusts the rate of pointer 
+movement according to the speed of mouse 
+movement.
+
+Sensitivity sets the ratio of mouse versus
+pointer movement.
+
+Press Esc to exit any window.
+Press F1 for Help.
+Press Page Up and Page Down to browse 
+      through help.
+
+
+
+
+
+~~ Rows = 1
+ORIHELPTITLE
+Orientation Help
+
+
+
+~~ Rows = 4
+ORIENTHELP
+The Orientation Window lets you orient the
+movement of your mouse.  When you set 
+Orientation, you tell the software which 
+way is up.
+
+
+
+
+~~ Rows = 1
+SELECTHELPTITLE
+Button Selection Help
+
+
+
+~~ Rows = 10
+SELECTHELP
+The Buttons Window lets you set the primary
+and secondary mouse buttons.
+
+ClickLock, available for the BallPoint 
+mouse, lets you drag by clicking the button
+that is not primary or secondary. Click any
+button to stop the drag.
+
+
+
+
+
+~~ Rows = 1
+POINTHELPTITLE
+Pointer Options Help
+
+
+
+~~ Rows = 14
+POINTHELP
+Pointer Options let you set the size and 
+color of the pointer.
+
+Pointer Growth, available when a medium or
+large pointer is selected, helps you keep 
+track of the pointer on the screen.
+
+Threshold sets the mouse speed needed to 
+make the pointer grow, and Delay sets the 
+time period needed to make the pointer 
+return to normal.
+
+
+
+
+~~ Rows = 0
+

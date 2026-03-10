@@ -1,0 +1,133 @@
+//Microsoft App Studio generated resource script.
+//
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#include "ex23win.h"
+
+/////////////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+ALMAINDIALOG DIALOG DISCARDABLE  5, 18, 270, 239
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        AL_INPUT_FILES,53,80,131,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "&Greenleaf Compress",AL_COMPRESS_GREENLEAF,155,97,70,12
+    PUSHBUTTON      "About",AL_ABOUT,230,97,33,12
+    PUSHBUTTON      "&Abort",AL_ABORT,117,113,33,12
+    PUSHBUTTON      "E&xit",AL_EXIT,230,113,33,12
+    LTEXT           "Input files:",IDC_STATIC,3,80,42,8
+    LTEXT           "AL_PROGRESS_TEXT",AL_PROGRESS_TEXT,57,98,75,10
+    LTEXT           "Number",AL_PROGRESS_NUMBER,57,112,55,10
+    RTEXT           "File:",IDC_STATIC,8,98,42,10
+    RTEXT           "Byte Count:",IDC_STATIC,8,112,42,10
+    LISTBOX         AL_DATA,9,175,252,65,LBS_USETABSTOPS | WS_VSCROLL
+    EDITTEXT        AL_TOTAL_INPUT,80,135,52,13
+    EDITTEXT        AL_TOTAL_COMPRESSED,80,154,52,13
+    RTEXT           "Total input:",IDC_STATIC,17,136,59,12
+    RTEXT           "Total Compressed:",IDC_STATIC,6,155,70,12
+    EDITTEXT        AL_RATIO,200,135,52,13
+    EDITTEXT        AL_TIME,200,154,52,13
+    RTEXT           "Ratio:",IDC_STATIC,150,136,45,12
+    RTEXT           "Total Time:",IDC_STATIC,142,155,53,12
+    CONTROL         "Checkbox",AL_RUDE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    250,72,9,11
+    RTEXT           "Rude Mode:",IDC_STATIC,202,72,45,13
+    CONTROL         "Checkbox",AL_COMPRESS_ONLY,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,250,85,9,11
+    RTEXT           "Compress Only:",IDC_STATIC,187,85,59,8
+    LTEXT           "",AL_HELP,4,7,261,52
+    CTEXT           "This is a non-destructive test! None of your input files will be modified!",
+                    IDC_STATIC,5,59,260,9
+    PUSHBUTTON      "&Zip Compress",AL_COMPRESS_ZIP,155,113,70,12
+END
+
+ALABOUTDIALOG DIALOG DISCARDABLE  0, 0, 145, 70
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,47,51,50,14
+    ICON            "ALIcon",IDC_STATIC,6,6,18,20
+    CTEXT           "Greenleaf Archive Library 2.1",IDC_STATIC,31,10,103,12
+    CTEXT           "Copyright (c) 1994-1997",IDC_STATIC,41,24,80,12
+END
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+ALICON                  ICON    DISCARDABLE     "ALICON.ICO"
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+ALMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "E&xit",                       AL_EXIT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About",                      AL_ABOUT
+    END
+END
+
+#ifdef APSTUDIO_INVOKED
+//////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""ex23win.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+/////////////////////////////////////////////////////////////////////////////////////
+#endif    // APSTUDIO_INVOKED
+
+
+#ifndef APSTUDIO_INVOKED
+////////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

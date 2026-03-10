@@ -1,0 +1,143 @@
+; *******************************************
+;   Arbol de Numeraci¢n
+; 
+;        Fecha: 03/03/1999
+;         Hora: 15:02
+;     Entradas: 123
+; 
+;   Utilice SETUP para producir PH_INFO.DAT
+; *******************************************
+  
+;[ 0 ]
+;[ 1 ]
+;[ 2 ]
+Bogota Etb(Cun)      :  1 = 2
+;[ 3 ]
+Bogota Etb(Cun)      :  1 = 3
+;[ 4 ]
+Bogota Epm(Cun)      :  1 = 400-402,404,405,407,408
+Bogota Etb(Cun)      :  1 = 41-49
+;[ 5 ]
+Bogota Etb(Cun)      :  1 = 50,55
+Bogota Capitel(Cun)  :  1 = 52,53,54,56,57,580,592-594,596-597
+;[ 6 ]
+Bogota Epm(Cun)      :  1 = 600-602,606-608
+Bogota Etb(Cun)      :  1 = 61-69
+;[ 7 ]
+Bogota Etb(Cun)      :  1 = 7
+;[ 8 ]
+Zipaquira(Cun)       :  2 = 851,852
+El Rosal(Cun)        :  1 = 8240
+Zipacon(Cun)         :  1 = 8249
+Tocaima(Cun)         :  2 = 8340,8341
+Agua De Dios(Cun)    :  2 = 8342,8343,8345
+Ricaurte-pe¤alis(Cun :  2 = 8395,8396
+Apulo(Cun)           :  2 = 8397,8398
+Cachipay(Cun)        :  1 = 8442,8443
+La Pe¤a(Cun)         :  2 = 8449
+Nocaima(Cun)         :  2 = 8451
+Anolaima(Cun)        :  2 = 8454
+La Vega(Cun)         :  2 = 8457,8458
+Vergara(Cun)         :  2 = 8459
+Utica(Cun)           :  2 = 8460
+S.Juan-Rioseco(Cun)  :  2 = 8465
+Guaduas(Cun)         :  2 = 8466
+Sasaima(Cun)         :  2 = 8468
+Santandercito(Cun)   :  1 = 8473
+San Francisco(Cun)   :  2 = 8478
+Caqueza(Cun)         :  1 = 8480,8481
+Ubaque(Cun)          :  1 = 8487
+Gutierrez(Cun)       :  2 = 8489
+Fosca(Cun)           :  1 = 8490
+Quetame(Cun)         :  1 = 8492
+Puente Quetame(Cun)  :  1 = 8493
+Tena(Cun)            :  1 = 8494,84980,84981
+Guayabetal(Cun)      :  2 = 8495
+Gacheta(Cun)         :  2 = 8535
+Yacopi(Cun)          :  2 = 8546
+Caparrapi(Cun)       :  2 = 8547
+La Palma(Cun)        :  2 = 8549
+Ubate(Cun)           :  2 = 8552,8553,8890-8892
+Choconta(Cun)        :  2 = 8561,8562
+Villapinzon(Cun)     :  2 = 8565,8589
+Manta(Cun)           :  2 = 8567
+Guasca(Cun)          :  1 = 8573
+Tocancipa(Cun)       :  1 = 8574,8575
+Cucunuba(Cun)        :  2 = 8580
+Sutatausa(Cun)       :  2 = 8582
+Tausa(Cun)           :  2 = 8583
+Fuquene(Cun)         :  2 = 8585
+Guasca Ett(Cun)      :  1 = 8593
+Tenjo(Cun)           :  1 = 8645,8646
+Tabio(Cun)           :  1 = 8647,8648,86490-86494
+La Caro(Cun)         :  1 = 8650,8651
+Chinauta(Cun)        :  2 = 8679
+Icononzo(Tol)        :  2 = 8682
+La Mesa-telesys(Cun) :  2 = 8974
+Anapoima(Cun)        :  2 = 8990,8991,8993
+La Pradera(Cun)      :  2 = 82420
+Quipile(Cun)         :  2 = 84790,84791
+Capellania(Cun)      :  2 = 85581
+Silvania(Cun)        :  2 = 86830,86831,8684,8685
+Tibirita(Cun)        :  2 = 856600-856605
+Triunfo-boqueron(Cun :  2 = 87200-87204
+Cabrera(Cun)         :  2 = 86890-86893
+Pasca(Cun)           :  2 = 86880-86884
+Arbelaez(Cun)        :  2 = 86860-86862
+San Bernardo(Cun)    :  2 = 86800-86805
+Granada(Cun)         :  1 = 86690-86694
+Tibacuy(Cun)         :  2 = 86680-86682
+Pandi(Cun)           :  2 = 86670-86673
+Siberia(Cun)         :  1 = 86430-86437
+Gachancipa(Cun)      :  2 = 85780-85783
+Guatavita(Cun)       :  1 = 85770-85773
+Macheta(Cun)         :  2 = 85690-85694
+Sesquile(Cun)        :  2 = 85680-85683
+Suesca(Cun)          :  2 = 85630-85633
+Susa(Cun)            :  2 = 85590-85593
+Lenguazaque(Cun)     :  2 = 85570-85579
+Guacheta(Cun)        :  2 = 85560-85563
+Simijaca(Cun)        :  2 = 85550-85555
+Carmen-Carupa(Cun)   :  2 = 85540-85543
+Cogua(Cun)           :  2 = 85480-85484
+Nemocon(Cun)         :  2 = 85440-85445
+Gachala(Cun)         :  2 = 85375-85379
+Ubala(Cun)           :  2 = 85370-85374
+Gama(Cun)            :  2 = 85365-85369
+Junin(Cun)           :  2 = 85360-85364
+Une(Cun)             :  1 = 84880-84883
+Chipaque(Cun)        :  1 = 84840-84843
+La Union(Cun)        :  1 = 84830-84834
+Supata(Cun)          :  2 = 84795-84799
+El Triunfo(Cun)      :  1 = 84740-84744
+Alban(Cun)           :  2 = 84690-84693
+Guayabal-Siquima(Cun :  2 = 84635-84639
+Chaguani(Cun)        :  2 = 84610-84614
+S.Antonio-Teque(Cun) :  1 = 84500-84503
+Viani(Cun)           :  2 = 84410-84413
+Faca Rural(Cun)      :  1 = 84400-84403
+Nimaima(Cun)         :  2 = 84330-84334
+Fomeque(Cun)         :  1 = 84040-84044,8485
+Choachi(Cun)         :  1 = 84030-84034,8486
+Nilo(Cun)            :  2 = 83925-83929
+Jerusalen(Cun)       :  2 = 83700-83702
+Viota(Cun)           :  2 = 83485-83489,8349
+Mosquera(Cun)        :  1 = 82750-82775
+Subachoque(Cun)      :  1 = 82450-82453
+Bojaca(Cun)          :  1 = 82430-82433
+Fusagasuga(Cun)      :  2 = 8670-8678,8721,8722
+Cajica(Cun)          :  1 = 8660-8664
+Cota(Cun)            :  1 = 8640-8642
+Chia(Cun)            :  1 = 8620-8627,863
+La Calera(Cun)       :  1 = 8600-8606,8608,8609,8740-8742
+Sopo(Cun)            :  1 = 8570-8572
+Pacho(Cun)           :  2 = 8540-8542
+El Colegio(Cun)      :  1 = 8475-8477,89800,8981
+La Mesa(Cun)         :  2 = 8470-8472,8970,89710,89735-89739
+Villeta(Cun)         :  2 = 8444-8447
+Facatativa(Cun)      :  1 = 8421-8431,8434-8439
+Funza(Cun)           :  1 = 8257-8262
+Madrid(Cun)          :  1 = 8250-8253
+Puente De Piedra(Cun :  1 = 8246-8248
+Girardot(Cun)        :  2 = 830-833,8393,835,836
+;[ 9 ]
