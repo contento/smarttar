@@ -1,0 +1,103 @@
+----------------------------------------------------------------------
+--------------------- Zinc Application Framework ---------------------
+--------------------- Version 3.5 Upgrade Changes --------------------
+----------------------------------------------------------------------
+
+This file describes the changes in the library from version 3.0. 
+Please note that code written with version 3.0 should only need to be
+re-compiled to work with version 3.5.
+
+
+----------------------------------------------------------------------
+Initializing an application:
+       Change:    The UI_APPLICATION class has been added.
+	
+       Purpose:   This class initializes the Display (according to the
+                  environment being compiled for), the Event Manager,
+                  and the Window Manager.  Use of the class is
+                  optional, but using it will usually be more
+                  convenient than initializing an application manually.
+
+----------------------------------------------------------------------
+Graphics libraries:
+       Change:    Display classes are now in their own libraries
+                  instead of in the main Zinc library.
+
+       Purpose:   There are two reasons for this change.  The first
+                  is to relieve problems with linkers linking in
+                  unused display class modules unnecessarily.  The
+                  second reason is to facilitate the functionality of
+                  the UI_APPLICATION class.  This class sets up the
+                  proper display class based on which graphics
+                  library is linked in to the application.
+
+----------------------------------------------------------------------
+Display class:
+       Change:    Four functions were added to the UI_DISPLAY class
+                  and the classes derived from UI_DISPLAY.  They are:
+                  BitmapArrayToHandle, BitmapHandleToArray,
+                  IconArrayToHandle, and IconHandleToArray.
+                  In addition, The Bitmap function has been given two
+                  new parameters: HBITMAP *colorBitmap and
+                  HBITMAP *monoBitmap.
+
+       Purpose:   To allow objects to maintain a platform specific
+                  handle to their bitmaps, rather than holding the
+                  array.  Handles are generally smaller and work
+                  faster than bitmap arrays.
+
+----------------------------------------------------------------------
+DrawItem:
+       Change:    DrawItem is now a virtual function.
+
+       Purpose:   This allows UI_WINDOW_OBJECT to call the DrawItem
+                  function at the proper times if the WOS_OWNERDRAW
+                  flag is set rather than forcing you to trap
+                  messages in the Event function.
+
+----------------------------------------------------------------------
+VirtualGet, VirtualPut:
+       Change:    VirtualGet and VirtualPut must be used when making
+                  calls to display class functions.
+
+       Purpose:   VirtualGet sets up contexts properly so the drawing
+                  functions will draw in the proper locations. 
+                  VirtualGet must be called before a series of
+                  display functions and VirtualPut must be called
+                  when drawing is completed.
+
+----------------------------------------------------------------------
+#else:
+       Change:    For portability reasons, it is suggested that the
+                  programmer refrain from putting code in #else
+                  clauses.
+				
+       Purpose:   Due to the number of environments that have been added,
+                  and the ones to be added in the future, it is not
+                  possible to tell whether the code in the #else
+                  clause will work for all cases.
+
+----------------------------------------------------------------------
+_WINDOWS:
+       Change:    In Zinc 3.0, Windows specific code was contained in
+                  a #if defined(_WINDOWS) clause.  In Zinc 3.5
+                  Windows specific code should be contained in a
+                  #if defined(ZIL_MSWINDOWS) clause.
+
+       Purpose:   To be more consistent with defines for new
+                  environments. ZIL_MSDOS, ZIL_OS2, ZIL_PENDOS, and
+                  ZIL_MOTIF are also defined in Zinc 3.5.
+
+----------------------------------------------------------------------
+Fonts:
+       Change:    Zinc 3.5 standardizes on the ISO 8859-1 character
+                  set.  All extended characters (ASCII > 127) will
+                  map differently than in Zinc 3.0.  (For more
+                  details see ISO.TXT in root directory.)  This can
+                  be overridden by changing FONT=ISO in the makefile
+                  to FONT=OEM and recompiling the libraries.
+
+       Purpose:   To give a better cross platform standard for
+                  character mapping and also to give better support
+                  for international programs.
+     

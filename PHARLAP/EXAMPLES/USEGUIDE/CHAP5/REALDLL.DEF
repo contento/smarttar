@@ -1,0 +1,11 @@
+; REALDLL.DEF -- linker module description file
+;problems with VC++
+LIBRARY REALDLL
+;EXETYPE DOS4 
+DESCRIPTION 'SAMPLE REAL MODE DLL'
+EXPORTS
+    _get_str    ; void far get_str(char far *s)
+    _get_num    ; unsigned far get_num(void)
+    PUT         ; void far pascal put(char far *s, unsigned y)
+    _ticks      ; unsigned long far ticks(void)
+

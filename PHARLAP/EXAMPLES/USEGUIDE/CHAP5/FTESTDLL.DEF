@@ -1,0 +1,11 @@
+; FTESTDLL.DEF -- linker module description file
+LIBRARY FTESTDLL
+PROTMODE
+DESCRIPTION 'Sample Dynamic Link Library v. 1.0 (c) Phar Lap 1990'
+EXPORTS
+    _get_half   ; double far cdecl    get_half(void);
+    PUT         ; void far pascal     put(double y);
+    ; START     ; autoinit entry point doesn't need to be exported
+                ;   but may be useful for debugging with CVP
+IMPORTS
+	_r286printf=PHAPI._wilprintf

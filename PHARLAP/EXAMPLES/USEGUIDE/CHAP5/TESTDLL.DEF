@@ -1,0 +1,12 @@
+; TESTDLL.DEF -- linker module description file
+LIBRARY TESTDLL
+PROTMODE
+DESCRIPTION 'Sample Dynamic Link Library v. 1.0 (c) Phar Lap 1990'
+EXPORTS
+    _get_str    ; void far cdecl      get_str(char far *s);
+    _get_num    ; unsigned far cdecl  get_num(void);
+    PUT         ; void far pascal     put(char far *s, unsigned y);
+    ; START     ; autoinit entry point doesn't need to be exported
+                ;   but may be useful for debugging with CVP
+IMPORTS
+	_r286printf=PHAPI._wilprintf

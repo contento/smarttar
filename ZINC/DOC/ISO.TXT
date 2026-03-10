@@ -1,0 +1,66 @@
+----------------------------------------------------------------------
+--------------------- Zinc Application Framework ---------------------
+------------------ Version 3.5 International Support -----------------
+----------------------------------------------------------------------
+
+This file describes the current support in ZAF 3.5 for
+internationalized applications and briefly describes on-going
+development.  The details of future work may change; the information
+here is just for use as a guidline.
+
+----------------------------------------------------------------------
+
+    We have standardized on the ISO 8859-1 character set.  We
+chose this because it was an international standard, a multi-platform
+standard, and because of its relation to the Unicode two-byte
+standard.  Using the ISO set allows us to create programs and data
+files that are portable across the supported platforms and to future
+versions of ZAF.
+
+    Motif: The default fonts are ISO compatible.
+    MS-WINDOWS/NT: Most of the standard fonts are ISO compatible.
+    DOS GFX: We provide both ISO (default) and codepage 437 fonts.
+    DOS BGI: We provide both ISO (default) and codepage 437 fonts. 
+    DOS MSC: We use the HELVB.FON which is actually a codepage 850 font
+        and remap the characters to the proper positions.  (This
+        is actually what Microsoft does with Windows.)
+    DOS FG: We provide an 850 font and remap it.
+    OS/2: We use the 850 codepage and remap it.
+    DOS TEXT: We use the 850 codepage and remap it.  (User must be
+        using codepage 850.)
+
+You can load other fonts (on those platforms that support it) and you
+can remove the mapping function (by a flag in the make files).  Unless
+there is some compelling reason for this, we suggest you use the ISO
+fonts both to remain compatible with future versions and to allow the
+easiest internationalization of your application.
+
+    To input the ISO characters on various platforms in a Zinc
+application:
+
+    Motif: Hold the ALT or Extended char key down and type a key.
+    MS-WINDOWS/NT: Type the character on the keyboard or use the
+        ALT-nnn where nnn is the codepage value or ALT-0nnn
+        where nnn is the ISO value.  Both become ISO values.
+    DOS (Graphics mode): The fonts must use the ISO 8859-1 charcter
+        mapping.  (Fonts included with Zinc Application Framework 3.5,
+        follow this standard.)  Use Alt-nnn where nnn is the ISO
+        8859-1 value.
+    DOS (Text modes): Load codepage 850 (and any local keyboard driver)
+        and type the character, or use ALT-nnn where nnn is the
+        850 codepage value.  All are mapped to their ISO value.
+
+
+    The ISO 8859-1 character set is intended to be used by the
+following languages: Danish, Dutch, English, Faroese, Finnish, French,
+German, Icelandic, Irish, Italian, Norwegian, Portuguese, Spanish, and
+Swedish.  The semantics of these characters follows the Unicode
+standard, i.e. the diacritical marks are spacing marks (not
+overstrikes).  Other ISO character sets (-2, -3, -4, and -5) aren't
+supported in this version of ZAF.
+
+    The line-drawing and special graphics (0x00-0x1f and
+0x80-0x9f) characters are mapped only in the MS-DOS environment, not
+anywhere else.  They are mapped so that DOS TEXT mode can work
+properly.  Your program may not be portable to any other platform if
+you use these characters.

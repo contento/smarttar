@@ -1,0 +1,12 @@
+LIBRARY HANDLER
+;problems with VC++
+;EXETYPE DOS4
+DESCRIPTION 'REAL MODE MOUSE EVENT HANDLER'
+EXPORTS
+    _ev_handler
+    _full
+    _x
+    _y
+    _fini
+    _left
+

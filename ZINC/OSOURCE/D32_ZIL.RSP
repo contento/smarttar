@@ -1,0 +1,27 @@
+d32_zil.lib
++d_tdsp.o32+d_keybrd.o32+d_mouse.o32+d_cursor.o32 &
++d_border.o32+d_button.o32+d_combo.o32+d_group.o32 &
++d_hlist.o32+d_icon.o32+d_min.o32+d_max.o32+d_scroll.o32+d_string.o32 &
++d_sys.o32+d_text.o32+d_title.o32+d_popup.o32+d_popup1.o32+d_plldn.o32 &
++d_plldn1.o32+d_prompt.o32+d_tbar.o32+d_vlist.o32 &
++d_win.o32+d_win1.o32+d_win2.o32 &
++d_error.o32+d_intl.o32 &
++z_list.o32+z_list1.o32 &
++z_intl.o32+z_date.o32+z_time.o32+z_bnum.o32+z_bnum1.o32 &
++z_region.o32+z_dsp.o32+z_path.o32+z_store.o32 &
++z_device.o32+z_cursor.o32+z_event.o32+z_map1.o32+z_map2.o32 &
++z_border.o32+z_button.o32+z_combo.o32+z_date1.o32+z_fmtstr.o32 &
++z_group.o32+z_hlist.o32+z_icon.o32+z_int.o32+z_min.o32+z_max.o32 &
++z_bnum2.o32+z_scroll.o32+z_string.o32+z_sys.o32+z_text.o32+z_time1.o32 &
++z_title.o32+z_popup.o32+z_popup1.o32+z_plldn.o32+z_plldn1.o32 &
++z_prompt.o32+z_tbar.o32+z_real.o32+z_vlist.o32 &
++z_win.o32+z_win1.o32+z_win2.o32+z_utils.o32 &
++z_error.o32+z_help.o32 &
++g_bnum.o32+g_border.o32+g_date.o32+g_date1.o32 &
++g_device.o32+g_dsp.o32+g_event.o32+g_hotkey.o32 &
++g_jump.o32+g_perror.o32+g_phelp.o32+g_pnorm.o32+g_store.o32 &
++g_time.o32+g_time1.o32+g_win1.o32+g_win2.o32 &
++g_sys.o32+g_int.o32+g_real.o32 &
++i_ztcat.o32+i_mapfon.o32
+
+

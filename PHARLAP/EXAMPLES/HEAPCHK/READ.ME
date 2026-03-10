@@ -1,0 +1,17 @@
+This example directory contains the missing heap
+check functions of Borland C++ run-time library.  
+The following functions are available:
+
+heapcheck	check every block on the heap
+heapcheckfree	check all free blocks for a certain value
+heapchecknode	check one specific pointer to see if has been freed
+heapfillfree	fill all free blocks with a certain value
+heapwalk	walks the heap, block by block.
+
+These functions can be used in your program simply by linking
+with the file "heap_chk.obj".
+
+The program "heaptest.exe" is a test program for the heap check
+functions.
+
+

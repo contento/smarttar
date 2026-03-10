@@ -1,0 +1,4 @@
+d16_gfx.lib
++d_gfxdsp.o16+gfx_smal.o16+gfx_dial.o16+gfx_syst.o16+z_appgfx.o16
+
+

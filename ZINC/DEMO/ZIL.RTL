@@ -1,0 +1,147 @@
+###########################################################################
+#   Link script for virtualizing ZINC 3.5 interface library                #
+############################################################################
+SILENT
+
+MODULEWARNINGSOFF
+
+VIRTUALIZE CODE
+CODECLASS  CODE
+
+LIBRARY dos_zil 
+
+#--------------#
+# ROOT MODULES #
+#--------------#
+
+	#-------------------------------------#
+	# MODULES TOO SMALL FOR VIRTUAL PAGES #
+	#-------------------------------------#
+	LOCALON
+	MODULE g_bnum.cpp
+	MODULE g_border.cpp
+	MODULE g_cursor.cpp
+	MODULE g_date.cpp
+	MODULE g_date1.cpp
+	MODULE g_device.cpp
+	MODULE g_disp.cpp
+	MODULE g_dsp.cpp
+	MODULE g_event.cpp
+	MODULE g_hotkey.cpp
+	MODULE g_jump.cpp
+	MODULE g_keybrd.cpp
+	MODULE g_mscdsp.cpp
+	MODULE g_perror.cpp
+	MODULE g_phelp.cpp
+	MODULE g_pnorm.cpp
+	MODULE g_store.cpp
+	MODULE g_time1.cpp
+	MODULE g_win2.cpp
+	LOCALUNKNOWN
+
+	#----------------------------------------------------#
+	# INTERRUPT HANDLERS AND DATA ITEMS IN CODE SEGMENTS #
+	#----------------------------------------------------#
+	LOCSYM      _MouseISR
+	OKIFUNDEF   _MouseISR
+
+	#---------------------------#
+	# FREQUENTLY CALLED MODULES #
+	#---------------------------#
+	MODULE d_keybrd.cpp
+	MODULE d_mouse.cpp
+	MODULE d_mscdsp.cpp
+	MODULE d_cursor.cpp
+	MODULE i_mscat.cpp
+	MODULE z_bitmap.cpp
+	MODULE z_cursor.cpp
+	MODULE z_device.cpp
+	MODULE z_event.cpp
+	MODULE z_keybrd.cpp
+	MODULE z_list.cpp
+	MODULE z_mouse.cpp
+
+#-----------------#
+# VIRTUAL MODULES #
+#-----------------#
+VMBEGINPAGES
+  SEPARATE
+
+	LOCALON
+	MODULE z_map1.cpp
+	MODULE z_map2.cpp
+	MODULE g_time.cpp
+	LOCALUNKNOWN
+
+	MODULE d_border.cpp
+	MODULE d_button.cpp
+	MODULE d_combo.cpp
+	MODULE d_error.cpp
+	MODULE d_group.cpp
+	MODULE d_hlist.cpp
+	MODULE d_icon.cpp
+	MODULE d_max.cpp
+	MODULE d_min.cpp
+	MODULE d_pulldn.cpp
+	MODULE d_pulldn1.cpp
+	MODULE d_popup.cpp
+	MODULE d_popup1.cpp
+	MODULE d_prompt.cpp
+	MODULE d_scroll.cpp
+	MODULE d_string.cpp
+	MODULE d_sys.cpp
+	MODULE d_tbar.cpp
+	MODULE d_tdsp.cpp
+	MODULE d_text.cpp
+	MODULE d_title.cpp
+	MODULE d_vlist.cpp
+	MODULE d_win.cpp
+	MODULE d_win1.cpp
+	MODULE d_win2.cpp
+	MODULE z_bnum.cpp
+	MODULE z_bnum1.cpp
+	MODULE z_bnum2.cpp
+	MODULE z_border.cpp
+	MODULE z_button.cpp
+	MODULE z_combo.cpp
+	MODULE z_date.cpp
+	MODULE z_date1.cpp
+	MODULE z_dsp.cpp
+	MODULE z_error.cpp
+	MODULE z_fmtstr.cpp
+	MODULE z_group.cpp
+	MODULE z_help.cpp
+	MODULE z_hlist.cpp
+	MODULE z_icon.cpp
+	MODULE z_int.cpp
+	MODULE z_intl.cpp
+	MODULE z_list1.cpp
+	MODULE z_max.cpp
+	MODULE z_min.cpp
+	MODULE z_path.cpp
+	MODULE z_plldn.cpp
+	MODULE z_plldn1.cpp
+	MODULE z_popup.cpp
+	MODULE z_popup1.cpp
+	MODULE z_prompt.cpp
+	MODULE z_real.cpp
+	MODULE z_region.cpp
+	MODULE z_scroll.cpp
+	MODULE z_store.cpp
+	MODULE z_store1.cpp
+	MODULE z_string.cpp
+	MODULE z_sys.cpp
+	MODULE z_tbar.cpp
+	MODULE z_text.cpp
+	MODULE z_time.cpp
+	MODULE z_time1.cpp
+	MODULE z_title.cpp
+	MODULE z_vlist.cpp
+	MODULE z_win.cpp
+	MODULE z_win1.cpp
+	MODULE z_win2.cpp
+	MODULE g_proc.cpp
+	MODULE g_win1.cpp
+VMENDPAGES
+
+MODULEWARNINGSON

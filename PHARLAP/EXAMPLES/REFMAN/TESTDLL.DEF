@@ -1,0 +1,9 @@
+; TESTDLL.DEF -- linker module description file
+LIBRARY TESTDLL
+PROTMODE
+DESCRIPTION 'SAMPLE DYNAMIC LINK LIBRARY'
+EXPORTS
+    _get_str    ; void far cdecl get_str(char far *s);
+    _get_num    ; unsigned far cdecl get_num(void);
+    PUT         ; void far pascal put(char far *s, unsigned y);
+

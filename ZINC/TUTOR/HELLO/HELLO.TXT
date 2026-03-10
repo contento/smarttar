@@ -1,0 +1,43 @@
+--- HELP_GENERAL
+General Help
+The second "Hello, World!" tutorial shows you
+how to create two windows using Zinc Application
+Framework and how to initialize the help and error
+systems.
+
+For more information about one of the windows
+presented in this application press <F1> while 
+the window is at the front of the display.
+
+Press <Alt-F4> to continue...
+--- HELP_HELLO_WORLD
+Hello World Help
+
+This window contains basic window objects.  It uses 
+the following window objects:
+
+    UIW_WINDOW          \
+    UIW_BORDER          \
+    UIW_MAXIMIZE_BUTTON \
+    UIW_MINIMIZE_BUTTON \
+    UIW_SYSTEM_BUTTON   \
+    UIW_TITLE           \
+    UIW_TEXT            \
+
+
+Press <Alt-F4> to continue...
+--- HELP_WORLD_INFORMATION
+World Information Help
+
+This window contains information about the world. 
+This information is presented through the following 
+window objects:
+
+    UIW_PROMPT          \
+    UIW_STRING          \
+    UIW_SCROLL_BAR      \
+    UIW_VT_LIST         \
+    UIW_TEXT            \
+
+
+Press <Alt-F4> to continue...

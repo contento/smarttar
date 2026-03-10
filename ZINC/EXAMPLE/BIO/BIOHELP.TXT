@@ -1,0 +1,63 @@
+--- HELP_GENERAL
+General Help
+Enter dates in the birth date and chart date fields to display the
+biorhythms chart.  For further information about biorhythms select
+the  (Help | History) option from the menu.  The chart date entered
+by the user is marked by the center line and each hash mark represents
+a day along the line.
+
+This program is a simple demonstration of the features available to
+a programmer using Zinc Application Framework.  The intent of the program
+is to present programmers with ideas and solutions to programming with
+Zinc Application Framework.
+
+Press <Alt F4> to continue...
+
+--- HELP_HISTORY
+History
+According to the theory of biorhythms, life consists of three repeated
+cycles.  The emotional cycle (shown in red on the graph) repeats every
+23 days.  The cognitive or intellectual cycle (shown in blue on the graph)
+repeats every 28 days.  The physical cycle (shown in green on the graph)
+repeats every 33 days.
+
+Each cycle begins at birth and rises to a HIGH then drops to a LOW and then
+back during the given period of the cycle.
+
+A sin(x) function is used to plot the rise and fall of the cycles around
+the chart date.  A 'pseudoSin' is used in the source code to avoid
+linking in the floating point library (resulting in a smaller .EXE size).
+
+The number of days since the user's birth date is computed by finding
+the Julian Date (defined as 'a day count starting at 1200 UT on
+1 January -4713' by the U.S. Naval Observatory) for the birth date and
+subtracting it from the Julian Date of the chart date.  The algorithm
+used in the code is accurate for any date after January 1, 1700 and
+uses only integer arithmetic.  It can also be used to find the day of
+the week.
+
+Press <Alt F4> to continue...
+
+--- HELP_ABOUT
+About biorhythms
+Program name..	Biorhythms\
+Version.......	3.5\
+\
+COPYRIGHT (C) 1990-1993.  All Rights Reserved.\
+Zinc Software Incorporated\
+405 South 100 East, Second Floor\
+Pleasant Grove, Utah   84062\
+\
+Telephone:  (800) 638-TOOL(8665)\
+Zinc BBS:   (801) 785-8997\
+FAX:        (801) 785-8996\
+\
+Zinc Software (UK) Limited\
+58-60 Beresford Street\
+London, SE18 6BG United Kingdom\
+Tel: +44 (0)81 855 9918\
+Fax: +44 (0)81 316 7778\
+BBS: +44 (0)81 317 2310\
+ \
+ \
+Press <Alt F4> to continue...

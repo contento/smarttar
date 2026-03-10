@@ -1,0 +1,278 @@
+----------------------------------------------------------------------
+------------------- Zinc Application Framework 3.5 -------------------
+--------- Zinc Software Incorporated, Pleasant Grove Utah USA --------
+----------------------------------------------------------------------
+
+Welcome to Zinc Application Framework 3.5!  This file contains some
+important information concerning Zinc Application Framework.  Please
+read this file before installing Zinc Application Framework.
+
+This file contains the following sections:
+- INSTALLATION
+- TECHNICAL SUPPORT
+- SOURCE CODE
+- DOS EXTENDERS
+
+
+-------------------------
+---- PC INSTALLATION ----
+-------------------------
+
+To install Zinc Application Framework on systems running DOS, Windows, or 
+OS/2, insert the first "Zinc Engine" diskette into the desired drive
+(e.g., drive A) and type:
+
+  a:<Enter>
+  install<Enter>
+
+The installation program will ask you to select the drive to install
+to as well as which parts of the Framework you wish to install. 
+Please refer to "Chapter 2-Installation" of the Programmer's Guide
+for more information on installation procedures.
+
+
+----------------------------
+---- MOTIF INSTALLATION ----
+----------------------------
+
+The file 'motif.txt' explains how to install Zinc on workstations
+and other systems running Motif.
+
+
+---------------------------
+---- TECHNICAL SUPPORT ----
+---------------------------
+
+Zinc Software will continue to offer technical support to registered
+users at no charge.  You must register your Zinc 3.5 serial number(s)
+to receive this support, even if you have registered an earlier
+version.  When contacting Zinc's technical support staff, please have
+your serial number(s) ready (or include them in written or faxed
+correspondence).
+
+
+---------------------
+---- SOURCE CODE ----
+---------------------
+
+Source code is included for the entire library, including support
+utilities.  This code is provided as a further support facility and
+as a learning aid.  Source code is provided "as is"--modifications to
+the source are done at your own risk.  No technical support is
+available for the source code, so please do not ask technical support
+to "interpret" source code for you.
+
+
+-----------------------
+---- DOS EXTENDERS ----
+-----------------------
+
+The following DOS-Extender environments are supported with Zinc
+Application Framework 3.5:
+
+- Borland C++ 3.1 and Phar Lap 286|DOS-Extender 2.5 with the GFX
+  graphics library
+- Borland C++ 3.1 and Phar Lap 286|DOS-Extender 2.5 with the BGI
+  graphics library
+- Microsoft C/C++ 7.0 and Phar Lap 286|DOS-Extender 2.5 with the GFX
+  graphics library
+- Microsoft C/C++ 7.0 and Phar Lap 286|DOS-Extender 2.5 with the MSC
+  graphics library
+- Zortech C++ 3.1 and the Zortech Z-model 16-bit DOS-
+  Extender with the GFX graphics library
+- Zortech C++ 3.1 and the Zortech Z-model 16-bit DOS-
+  Extender with the FG graphics library
+- Zortech C++ 3.1 (NOT 3.0) and the Zortech X-model 32-bit DOS-
+  Extender with the GFX graphics library (Requires patch in
+  SOURCE\Z32MOUSE.  See note below under ---- Zortech ----)
+- Zortech C++ 3.1 (NOT 3.0) and the Zortech X-model 32-bit DOS-
+  Extender with the FG graphics library (Requires patch in
+  SOURCE\Z32MOUSE.  See note below under ---- Zortech ----)
+
+The following sections describe how to configure your computer for
+use with DOS-Extenders and how to build aplications with DOS-
+Extenders.  Each section discusses a specific compiler.
+
+------------------------
+---- VIRTUAL MEMORY ----
+------------------------
+
+The following virtual memory environments are supported with Zinc
+Application Framework 3.5:
+
+- Borland C++ 3.1 and Borland VROOM with the GFX graphics library
+- Borland C++ 3.1 and Borland VROOM with the BGI graphics library
+- Borland C++ 3.1 and RTLink 5.20 with the GFX graphics library
+- Microsoft C/C++ 7.0 Microsoft MOVE with the GFX graphics 
+  library
+- Microsoft C/C++ 7.0 Microsoft MOVE with the MSC graphics 
+  library
+
+
+---- Borland ----
+
+Building protected mode applications with the Borland compiler can
+only be done using a makefile or the command-line compiler and linker.
+The makefile template below shows the options and settings that should
+be used when building applications with the Phar Lap DOS-Extender.  
+Please note that the order of the LIBs is very important.
+
+# --- Use for PharLap Extended programs. ---
+CPP16=bcc286
+D16_LINK=tlink
+
+D16_CPP_OPTS=-c -ml -O -w
+D16_LINK_OPTS=/c /C /x
+
+D16_OBJS=c0pl
+# --- Use the next line for UI_GRAPHICS_DISPLAY ---
+D16_LIBS=phapi d16_zil d16_gfx bc_16gfx emu286 emu mathl bcl286
+# --- Use the next line for UI_BGI_DISPLAY ---
+#D16_LIBS=phapi d16_zil d16_bgi graph286 emu286 emu mathl bcl286
+
+.cpp.o16:
+       $(CPP16) $(D16_CPP_OPTS) -o$*.o16 {$< }
+
+D16_BIND=bind286
+PHARLAP_RTL=c:\pharlap\rtk
+D16_LOAD=run286a
+
+prog16.exe: prog.o16
+       $(D16_LINK) $(D16_LINK_OPTS) @&&!
+$(D16_OBJS)+prog.o16
+$*, , $(D16_LIBS),bprog16.def
+!
+      $(D16_BIND) @$$!
+$(PHARLAP_RTL)\$(D16_LOAD)
+$*
+-dll $(PHARLAP_RTL)\moucalls
+     $(PHARLAP_RTL)\int33
+     $(PHARLAP_RTL)\doscalls
+
+The module definition file (bprog16.def in the example above) must 
+contain the following information:
+
+PROTMODE
+STUB 'gorun286.exe'
+EXPORTS BCC286_EXE
+
+The environment's LIB and INCLUDE variables must be set to include a
+path to the Phar Lap directories that contain Borland support files.
+Please refer to the Phar Lap documentation for more help on configuring
+your environment for the Phar Lap DOS-Extender.
+
+The environment's PATH variable must have paths to the Phar Lap BIN 
+directory and also to the Borland BIN directory so that the various
+compilers and linkers can be invoked.
+
+The Borland TURBOC.CFG and TLINK.CFG files must also be modified to 
+include paths to the Zinc libraries and include files.
+
+
+---- Microsoft ----
+
+Building protected mode applications with the Microsoft compiler can 
+be done using either the PWB or a makefile.  The makefile template
+below shows the options and settings that should be used when building
+applications with the Phar Lap DOS-Extender.  Please note that the
+order of the LIBs is very important.
+
+# --- Use for PharLap Extended programs. ---
+D16_CPP=cl
+D16_LINK=link
+
+D16_CPP_OPTS=-c -AL -BATCH -Gs2 -nologo -DDOSX286 
+D16_LINK_OPTS=/NOD /NOI /BATCH /SEGMENTS:256 /STACK:8192 /FAR
+
+# --- Use the next line for UI_GRAPHICS_DISPLAY ---
+D16_OBJS=graphp.obj
+D16_LIBS=phapi d16_zil d16_gfx ms_16gfx llibcep graphics oldnames
+# --- Use the next lines for UI_MSC_DISPLAY ---
+#D16_OBJS=graphp.obj
+#D16_LIBS=phapi d16_zil d16_msc llibcep graphics oldnames
+
+D16_BIND=bind286
+PHARLAP_RTL=c:\pharlap\rtk
+D16_LOAD=run286a
+
+.cpp.o16:
+      $(D16_CPP) $(D16_CPP_OPTS) -Fo$*.o16 $<
+
+prog16.exe: prog.o16
+       $(D16_LINK) $(D16_LINK_OPTS) @<<zil.rsp
+$(D16_OBJS)+prog.o16
+$*,NUL,$(D16_LIBS),NUL
+<<
+      $(D16_BIND) @<<zil.rsp
+$(PHARLAP_RTL)\$(D16_LOAD)
+$*
+-dll $(PHARLAP_RTL)\moucalls
+     $(PHARLAP_RTL)\int33
+     $(PHARLAP_RTL)\doscalls
+<<
+      @del zil.rsp
+
+The environment's LIB and INCLUDE variables must be set to include a
+path to the Phar Lap directories that contain Microsoft support files
+and also to the Microsoft LIB and INCLUDE directories.  Please refer
+to the Phar Lap documentation for more help on configuring your 
+environment for the Phar Lap DOS-Extender.  
+
+The environment's PATH variable must have paths to the Phar Lap BIN
+directory and also to the Microsoft BIN directory so that the various
+compilers and linkers can be invoked.
+
+
+---- Zortech ----
+
+Building protected mode applications with the Zortech compiler can be
+done using either the ZWB or a makefile.  The makefile template below
+shows the options and settings that should be used when building
+applications with the Zortech DOS-Extender.  Please note that the
+order of the LIBs is very important.
+
+NOTE: Zortech 32-bit X-model library ZPS.LIB contains a bug with the
+      mouse support.  A .OBJ file with the correction has been
+      included in SOURCE\Z32MOUSE.  You should either link this file
+      in explicitly, before ZPS.LIB or, update ZPS.LIB.  
+
+# ----- 16-bit DOS extender compiler options ------------------------
+D16_CPP=ztc
+D16_LINK=blinkx
+
+D16_CPP_OPTS=-c -bx -mz -D$(FONT)
+D16_LINK_OPTS=/NOI
+
+D16_OBJS=
+# --- Use the next line for UI_GRAPHICS_DISPLAY ---
+#D16_LIBS=zpm d16_zil d16_gfx zt_16gfx
+# --- Use the next line for UI_FG_DISPLAY ---
+D16_LIBS=zpm d16_zil d16_fg fg
+
+.cpp.o16:
+       $(D16_CPP) $(D16_CPP_OPTS) -o$@ $<
+
+# ----- 32-bit DOS extender compiler options ------------------------
+D32_CPP=ztc
+D32_LINK=blinkx
+
+D32_CPP_OPTS=-c -bx -mx -D$(FONT)
+D32_LINK_OPTS=/NOI
+
+D32_OBJS=cx
+# --- Use the next line for UI_GRAPHICS_DISPLAY ---
+#D32_LIBS=d32_zil d32_gfx zt_32gfx
+# --- Use the next line for UI_FG_DISPLAY ---
+D32_LIBS=d32_zil d32_fg fgp
+
+.cpp.o32:
+       $(D32_CPP) $(D32_CPP_OPTS) -o$@ $<
+
+prog16.exe: prog.o16
+       $(D16_LINK) $(D16_LINK_OPTS) $(D16_OBJS)+prog.o16, $*, , $(D16_LIBS),
+zprog16.def
+
+prog32.exe: prog.o32
+       $(D32_LINK) $(D32_LINK_OPTS) $(D32_OBJS)+prog.o32, $*, , $(D32_LIBS),
+zprog32.def
+

@@ -1,0 +1,4 @@
+dos_gfx.lib
++d_gfxdsp.obj+gfx_smal.obj+gfx_dial.obj+gfx_syst.obj+z_appgfx.obj
+
+

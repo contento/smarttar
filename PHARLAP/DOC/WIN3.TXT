@@ -1,0 +1,96 @@
+               Windows 3 and DOS-Extended Applications
+               ---------------------------------------
+
+              Copyright 1991 by Phar Lap Software, Inc.
+
+
+    Applications produced with 286|DOS-Extender can run in the DOS
+box of all three modes of Microsoft Windows 3.0 and higher. This
+includes 386 Enhanced mode. 
+
+    You can tell which the mode you are in by selecting "About
+Program Manager..." from the Program Manager Help menu.
+
+
+                   Windows Standard and Real Modes
+                   -------------------------------
+
+    In Windows 3 Real and Standard mode, 286|DOS-Extender can get
+extended (XMS) memory from the HIMEM.SYS device driver that comes
+with Windows. You will need to set the XMS memory "KB Limit" in a
+Program Information File (PIF).
+
+    You can use the Phar Lap TELLME utility to make sure that your
+application is getting the extended memory it needs when running
+under Windows Real and Standard modes. For example, the following
+indicates that no XMS extended memory is available:
+
+C:\>tellme -xms
+
+-----XMS-------------------------------------------------------
+XMS version.....................................2.0
+Driver version..................................2.96
+HMA.............................................Present
+A20.............................................Off
+Size of largest XMS block.......................0K bytes
+Total free XMS memory...........................0K bytes
+
+    The easiest way to make sure that your DOS-extended programs get
+sufficient XMS memory in Windows Standard and Real mode is to use the
+Windows PIF Editor to create a _DEFAULT.PIF file with an XMS Memory
+KB Limit setting of several megabytes. Windows uses _DEFAULT.PIF if
+no application-specific .PIF file is available; _DEFAULT.PIF
+corresponds to a mythical program called _DEFAULT.EXE. Alteratively,
+you can create a COMMAND.PIF file for the DOS box, or a .PIF file
+that bears the name of your program.
+
+
+                  Using PHARLAP.386 in Enhanced Mode
+                  ----------------------------------
+
+    In Enhanced mode, 286|DOS-Extender uses the DOS Protected-Mode
+Interface (DPMI) services provided by Windows. You don't need to
+change any .PIF file settings. 
+
+    DOS-extended applications running under Windows 3 enhanced mode
+automatically get virtual memory. 
+
+    If you will be running 286|DOS-Extender under Windows 3.0
+Enhanced mode, and do not have an 80287 or 80387 numerics coprocessor
+or an 80486 processor (with built-in numerics), you will need to
+install PHARLAP.386. This 32-bit virtual device driver allows
+floating-point emulation to work properly under Windows 3.0 enhanced
+mode. 
+
+    PHARLAP.386 should be copied to your Windows subdirectory, and
+the following line should be added to the [386enh] section of your
+Windows SYSTEM.INI file:
+
+DEVICE=PHARLAP.386
+
+    The SYSTEM.INI file is a standard text file located in your
+Windows 3.0 subdirectory.
+
+
+                         Nested DOS Extenders
+                         --------------------
+
+    The DPMI server in Windows 3.0 only allows one DOS extender to be
+running at a time in a given DOS "box" (virtual machine). That is,
+DOS extenders cannot be "nested" under Windows 3.0 Enhanced mode. 
+
+    For example, you cannot run 286|DOS-Extender applications from
+inside the DOS shell of a DOS-extended application like Lotus 1-2-3
+Release 3.1, nor can you run DOS-extended applications like 1-2-3
+from within the DOS shell of a 286|DOS-Extender application. (A DOS
+shell would generally be created with the C system() function.)
+
+    If 286|DOS-Extender is started under the DOS shell of a
+DOS-extended application under Windows 3.0 Enhanced mode, it will
+issue an error message:
+
+Fatal Error 286.1090: Nested DOS Extenders cannot be run in Windows 3.0
+enhanced mode.
+
+                               - END -
+

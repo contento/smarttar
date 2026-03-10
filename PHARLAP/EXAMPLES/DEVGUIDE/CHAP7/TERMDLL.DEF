@@ -1,0 +1,7 @@
+; TERMDLL.DEF -- linker module description file
+LIBRARY TERMDLL
+DESCRIPTION 'REAL MODE DLL FOR COM1 ISR'
+EXPORTS
+    _real_irq4_hnd  ; void interrupt far *real_irq4_hnd(REGS16 r)
+    _xq         ; QUEUE xq;
+    _rq         ; QUEUE rq;

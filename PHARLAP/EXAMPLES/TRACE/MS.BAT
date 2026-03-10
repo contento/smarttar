@@ -1,0 +1,2 @@
+nmake -f trace.mak
+

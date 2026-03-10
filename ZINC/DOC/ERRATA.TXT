@@ -1,0 +1,172 @@
+----------------------------------------------------------------------
+--------------------- Zinc Application Framework ---------------------
+--------------------- Version 3.5 Upgrade Changes --------------------
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
+This file describes errors in the manuals shipped with version 3.5. 
+
+
+----------------------------------------------------------------------
+Programmer's Reference:
+
+        P.  16    The example code for UI_APPLICATION::Main() should
+                  call LinkMain() (a member of UI_APPLICATION). 
+                  Calling UI_APPLICATION::LinkMain() will ensure that
+                  the main() or WinMain() function defined by the
+                  library will be linked in to the application. 
+                  The function takes no parameters and has no return
+                  value.  It is merely a stub that will cause the
+                  appropriate module to be linked in.  Calling this
+                  function is necessary only when using certain (IBM, 
+                  Watcom) OS/2 C++ compilers.
+
+        p.  64    DTF_MILITARY is described incorrectly.  See p. 60
+                  of Programmer's Reference for correct description.
+
+        p.  89    It should be noted that for a window, true.left and
+                  true.top will be at different places in MS-Windows
+                  than in DOS.  In Windows, the top-left corner of
+                  the client area (i.e., immediately below the title
+                  and menu bar, and inside the border) is the true
+                  "origin," while in DOS the upper left corner of the
+                  window's region (top-left corner of the border) is
+                  the true "origin."
+
+        pp. 118-9 Code sample for UI_DISPLAY::Text() function is
+                  irrelevant.  For an example of how this function is
+                  used, see the GRAPH example program.
+
+        p.  137   The screen shot of the error window shows a title
+                  bar with an incorrect title.  The error window
+                  title always reads "Error."
+
+        p.  141   Currently, the modifiers member of UI_EVENT is only
+                  used in OS/2.
+
+        p.  372   Table states that GRAPHICS.LIB must not be linked
+                  in when using UI_GRAPHICS_DISPLAY. It must be
+                  linked in if UI_TEXT_DISPLAY is used in
+                  conjunction with the UI_GRAPHICS_DISPLAY.
+
+        p.  375   The description of the userObject member states it
+                  is not used by the library.  This statement is not
+                  entirely correct.  The UIW_COMBOBOX object does use
+                  this member.  This is the only place in the library
+                  where userObject is used.
+
+        p.  400   The example code is irrelevant.
+
+        p.  481   The description of GET_BITMAP_ARRAY is misleading. 
+                  GET_BITMAP_ARRAY does not copy the data, but merely
+                  returns a pointer to the array.  Thus, the data
+                  parameter should be a pointer to UCHAR, not an array.
+
+        p.  482   The description of GET_VALUE is incorrect.  The
+                  data parameter should be a pointer to EVENT_TYPE,
+                  not unsigned short.
+
+        p.  488   The WOF_BORDER flag is listed as available for
+                  UIW_COMBO_BOX.  This flag has no effect.
+
+        p.  489   WOAF_NO_DESTROY has no effect on a UIW_COMBO_BOX. 
+                  It should not be listed as available.
+
+        p.  498   DTF_MILITARY is described incorrectly.  The examples
+                  shown are also incorrect.  See p. 60 of Programmer's
+                  Reference for correct description and examples.
+
+        p.  541   The description of the iconName parameter states
+                  that it is the name of the 'bitmap' in the .DAT or
+                  .RES file.  It is the name of the 'icon' in the .DAT
+                  or .RES file.
+
+        P.  641   In the example code, the first call to the
+                  Information function passes in the address of text
+                  (i.e., &text).  This is incorrect.  The text
+                  pointer (i.e., text) should be passed.
+
+        p.  686   In the example code, the parameters for the
+                  UIW_BUTTON constructor are incorrect.  The
+                  parameters should be as follows:
+                         UIW_BUTTON(0, 0, 10, "BUTTON")
+
+        p.  725   The description of S_CLOSE_TEMPORARY is incomplete
+                  and misleading.  S_CLOSE_TEMPORARY closes only the
+                  current temporary window, if one exists.
+
+Programmer's Guide:
+
+        p.  13    Under the "Shipping Applications" section, three
+                  DLL's are mentioned.  Zinc does not recommend using
+                  DLL's, so no DLL's or makefiles to build DLL's are
+                  supplied.
+
+        pp. 56, 60, 64, 68
+                  Code creates an instance of the UI_APPLICATION
+                  class.  The comment also implies that this is how
+                  the UI_APPLICATION class is to be used.  The programmer
+                  should never create an instance of this class.  The
+                  programmer should only create the
+                  UI_APPLICATION::Main() function.  This function is
+                  called by the library-supplied main() function.
+
+        p.  117   Code shot shows ':' being used as delimiters. 
+                  Should be ';'.
+
+        p.  143   Ctrl+F5 is documented as beginning a Mark
+                  operation.  This applies to DOS only.  Other
+                  environments require Shift+arrow keys.
+
+Programming Techniques:
+
+        p.  76-7  The screen shot for the "LOOKUP" button's edit
+                  window does not show the updated stringID.  In the
+                  screen shot, the stringID field should contain
+                  "LOOKUP_BUTTON," as stated by the text.
+
+        p.  97    The first parameter in the CONTROL_WINDOW::Event
+                  function listing has the wrong name.  It should be
+                  called "object," not "data."  Also, there should
+                  not be a semi-colon after the "for-loop," and the
+                  first line following the for-loop should be
+                  indented another tab stop since it is the body of
+                  the for-loop code.
+
+        pp. 187-8 Sample lines for CONFIG.SYS file should include
+                  code page 850 to provide support for ISO character
+                  mapping.  For example, the DOS English setup would
+                  read:
+                         COUNTRY=001,850,C:\DOS\COUNTRY.SYS
+                  
+                  Also, the following line should be added to the
+                  CONFIG.SYS:
+                         device=c:\dos\display.sys CON=(EGA, 850, 2)
+
+                  Also, some modifications to the AUTOEXEC.BAT file
+                  should be made.  There are several approaches that
+                  can be taken.  The following will work with MS-DOS
+                  5.0 and DR-DOS 6.0:
+                         nlsfunc.exe c:\dos\country.sys
+                         mode con cp prep=((850, 437) c:\dos\ega.cpi)
+                         chcp 850
+
+        p.  316   The WOF_BORDER flag is listed as available for
+                  UIW_COMBO_BOX.  This flag has no effect.
+
+        p.  368   In the description of how to use the Borland IDE,
+                  in addition to the steps mentioned, it may also be
+                  necessary to change the libraries listed in
+                  Options|Directories to include a path to the Zinc
+                  libraries.
+
+        p.  372   In the "Comments" section describing the files
+                  needed to build DOS executables, it is stated that
+                  GRAPHICS.LIB should not be linked in when using the
+                  GFX library.  This is incorrect--GRAPHICS.LIB must
+                  be linked in.
+
+General:
+        It should be stated that child windows that are not MDI
+        windows should not be movable or sizable.
+

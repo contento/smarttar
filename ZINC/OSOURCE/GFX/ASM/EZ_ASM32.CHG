@@ -1,0 +1,60 @@
+*** old32.mac	Fri Feb 12 15:54:40 1993
+--- ez_asm32.mac	Sat Feb 13 16:34:32 1993
+***************
+*** 1,5 ****
+--- 1,6 ----
+  .386
+  USE_386 EQU 1
++ OPTION NOKEYWORD:<EXTERN .IF>
+  
+           ;     THE EZ_ASM.MAC LIBRARY OF MACROS WAS DEVELOPED
+           ;                          BY
+***************
+*** 1372,1382 ****
+  .$IF MACRO ARG1, JMP_COND, ARG2, LABEL, TYPE
+  	LOCAL .ARG1, .ARG2
+  	
+! 	IF ((.TYPE TYPE) AND 20H) EQ 0)
+! 		TYPE = 0
+  		ENDIF
+  
+! 	IF (TYPE NE 0)
+  	     .$SET_STATIC_NAME .ARG2, ARG2
+  		IF (.$ID_TYPE EQ .xSTACK)
+  			TEST .ARG2 ARG2, ARG1
+--- 1373,1390 ----
+  .$IF MACRO ARG1, JMP_COND, ARG2, LABEL, TYPE
+  	LOCAL .ARG1, .ARG2
+  	
+! ;	IF (((.TYPE TYPE) AND 20H) EQ 0)
+! ;		TYPE = 0
+! ;		ENDIF
+! 	IFIDNI <JMP_COND>, <.?BIT_IS_ON_IN>
+! 		XTYPE = TYPE
+! 	ELSEIFIDNI <JMP_COND>, <.?BIT_IS_OFF_IN>
+! 		XTYPE = TYPE
+! 	ELSE
+! 		XTYPE = 0
+  	ENDIF
+  
+! 	IF (XTYPE NE 0)
+  	     .$SET_STATIC_NAME .ARG2, ARG2
+  		IF (.$ID_TYPE EQ .xSTACK)
+  			TEST .ARG2 ARG2, ARG1
+***************
+*** 1383,1389 ****
+  		ELSE
+  			TEST	.ARG2, ARG1
+  			ENDIF                       
+! 	     IF (TYPE EQ 1)
+  	     	JZ	LABEL
+  	     ELSE 
+  	          JNZ	LABEL
+--- 1391,1397 ----
+  		ELSE
+  			TEST	.ARG2, ARG1
+  			ENDIF                       
+! 	     IF (XTYPE EQ 1)
+  	     	JZ	LABEL
+  	     ELSE 
+  	          JNZ	LABEL

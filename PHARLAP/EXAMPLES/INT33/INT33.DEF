@@ -1,0 +1,10 @@
+LIBRARY INT33
+
+DESCRIPTION 'Protected mode INT 33H mouse driver'
+
+IMPORTS
+  _xfer_rm_seg=PHAPI._xfer_rm_seg
+  _xfer_pm_sel=PHAPI._xfer_pm_sel
+  _xfer_size=PHAPI._xfer_size
+
+

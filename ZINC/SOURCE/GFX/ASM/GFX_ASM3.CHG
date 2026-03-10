@@ -1,0 +1,19 @@
+*** oldgfx3.mac	Fri Feb 12 15:54:42 1993
+--- gfx_asm3.mac	Thu Feb 11 13:17:22 1993
+***************
+*** 179,185 ****
+  FLOAT_SCALE	EQU	123
+  
+  .set_fcn_vec    MACRO vec_name
+! 	mov	cx, OFFSET vec_name
+  	IF (.$$CODE_SIZE EQ ._LARGE_CODE)
+  		mov	dx, SEG vec_name
+  		ENDIF
+--- 179,185 ----
+  FLOAT_SCALE	EQU	123
+  
+  .set_fcn_vec    MACRO vec_name
+! 	mov	ecx, OFFSET vec_name
+  	IF (.$$CODE_SIZE EQ ._LARGE_CODE)
+  		mov	dx, SEG vec_name
+  		ENDIF

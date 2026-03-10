@@ -1,0 +1,24 @@
+; For Microsoft Visual C
+ 
+LIBRARY DLL_2
+
+EXPORTS
+
+    ; If we will use floating point, we must export a special symbol
+    ; to tell the 286|DOS-Extender to apply WINDOWS-like rules to
+    ; the floating point instructions. In a DLL, the value of the symbol
+    ; is irrelevant. Even if we won't be using floating point, it's
+    ; a good idea to leave this in for the future.
+
+    ___GetEmDataSeg=_Msg
+
+IMPORTS
+
+    ; The 'wrapper' functions of the library routines of MAIN.EXE
+    ; that we will call have to be listed here.
+
+    _printf=MAIN._main_printf
+    _fwrite=MAIN._main_fwrite
+    _fclose=MAIN._main_fclose
+    _free=MAIN._main_free
+

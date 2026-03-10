@@ -1,0 +1,141 @@
+                      Using SWTEST and BIOSDUMP
+                      -------------------------
+
+              Copyright 1991 by Phar Lap Software, Inc.
+
+
+                                SWTEST
+                                ------
+
+    SWTEST is a diagnostic program used for testing the
+protected/real mode and A20 switching methods used by
+286|DOS-Extender. It is linked with the same mode-switching code as
+286|DOS-Extender, and can also load and run an external SWITCH.BIN
+file (see the 286|DOS-Extender -SWITCH switch, described in the
+document DOSX.TXT). The results of SWTEST can be sent to your
+applications developer or technical-support staff.
+
+    SWTEST can be run so that it simply outputs its results to the
+display, or it can run in an interactive mode, where user and machine
+information is interrogated and output to the SWTEST.OUT file along
+with the test results. When outputing to the SWTEST.OUT file, the
+file is opened in append mode so that any old information will be
+preserved. This allows easy testing of multiple machines by running
+the SWTEST program from a floppy disk (and writing the SWTEST.OUT
+file to the floppy). An additional file named SWTEST.INF is created
+and updated to save user and machine information for subsequent
+tests.
+
+    SWTEST reports the following information:
+
+(1)  The version of SWTEST and of the switch code.
+(2)  The BIOS "signature," a 32-bit checksum of selected portions of the
+     BIOS ROM.
+(3)  The date of the BIOS, if found in the location where the IBM PC 
+     stores its BIOS date.
+(4)  The Machine ID, a number which results from the identification of 
+     individual machines based on the BIOS signature or other techniques. 
+     A Machine ID of zero indicates that the individual machine could
+     not be identified.
+(5)  The A20 switch method name and number.
+(6)  The Reset method name and number.
+(7)  The Protected/Real Mode switch method name and number.
+(8)  The average, minimum, and maximum times (in microseconds) to switch
+     to protected mode, switch back to real mode, and the combined totals.
+
+    A number of options can be selected on the command line. Each
+option must start with a '/', and the options must each be separated
+by at least one space. The available options are:
+
+/h   = print out help information (don't run any tests)
+/s## = use switch method number ##
+/a## = use A20 method number ##
+/r## = use reset method number ##
+/n## = run ## test passes before reporting results (default is 1000 passes)
+/f## = set switch flags to ##
+/x   = use external switch.bin file
+/i   = create SWTEST.INF file if it does not exist
+/d   = output test results to display only
+
+    For example, the command line:
+
+swtest /s2 /a1 /i
+
+would use switch method number 2, A20 method number 1, and a
+SWTEST.INF file to be created if it didn't already exist.
+
+    If any of the method numbers are not given, the switch routines
+will determine a default method to use. The general intention is that
+appropriate method numbers will be chosen based on the machine ID or
+other identifying factors.
+
+    If neither the /i nor /d option is given, then the existence of
+the SWTEST.INF file will determine whether or not user and machine
+information is interrogated and output is written to the switch.out
+file. If the /i option is given, then the SWTEST.INF will be created
+if it doesn't already exist, and data will be always be written to
+the swtest.out file. If the /d option is given, then nothing will be
+output to the SWTEST.OUT file, even if the SWTEST.INF file already
+exists.
+
+    The current mode switch method numbers are:
+    
+1 = SURE
+2 = AT
+3 = SLOW
+4 = VCPI
+5 = 386
+
+    The current A20 switch method numbers are:
+
+1 = AT
+2 = PS2
+3 = VECTRA
+4 = 6300
+5 = XMS
+6 = ACER
+7 = ZENITH
+8 = NEAT
+9 = PHOENIX
+10 = TOSHIBA
+11 = WYSE
+
+    The current reset method numbers are:
+
+1 = STANDARD
+2 = 8042
+
+    It is possible to control certain operations with the switch
+flags. Each flag is a bit of the flags word, and multiple flags can
+be specified by adding their values together.  The /f## command
+option is used to set the flags, and the flags value is given as a
+decimal (base 10) number.  The current switch flags are:
+
+1 = Skip test for AT method.  Normally, if the machine cannot be
+    identified through the internal machine table, an attempt is made
+    during initialization to try the AT switching method, checking for a
+    reprogramming of the 8259 interrupt controllers and whether the BIOS
+    enables interrupts when switching.  This flag skips this test and
+    just chooses the SURE switch method, which is generally slower than
+    the AT method.  
+2 = Unused.  
+4 = Force A20 to be disabled whenever entering real mode.  Some mode
+    switch methods normally enable the A20 line during initialization and
+    leave it enabled throughout execution.  This flag causes the A20 line
+    to be disabled on every switch to real mode, and to be re-enabled on
+    every switch to protected mode.
+
+    The results of running SWTEST should be sent to your applications
+developer or technical-support staff.
+
+
+                               BIOSDUMP
+                               --------
+
+    BIOSDUMP can be used in case of serious mode-switching problems.
+Running BIOSDUMP.EXE creates a 64k file, BIOS.OUT, which contains an
+image of your ROM BIOS. The file BIOS.OUT can be sent to your
+applications developer.
+
+                               - END -
+

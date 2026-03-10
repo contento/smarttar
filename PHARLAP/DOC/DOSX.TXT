@@ -1,0 +1,507 @@
+                       286|DOS-Extender Options
+                       ------------------------
+
+              Copyright 1991 by Phar Lap Software, Inc.
+
+
+    The copy of Phar Lap's 286|DOS-Extender bound into this program
+can be configured with a number of command switches. Because
+286|DOS-Extender is self-configuring, and because it is compatible
+with all major industry standards (such as VCPI, DPMI, and XMS), it
+should almost never be necessary to use these switches. However,
+should the need arise to configure the DOS extender, this following
+provides information on the various switches and on the different
+ways to set them.
+
+    The following is a summary of 286|DOS-Extender switches:
+
+-A20 n              Set mode switch A20 address line method
+-CONTROL n          Set mode switch 80286 regain-control method
+-EXTBLOCK n         Set extended-memory block size
+-EXTFIRST           Allocate extended memory before conv. (Default)
+-EXTLIMIT n         Set max. bytes of extended memory used
+-EXTLOW addr        Set lowest extended memory address used
+-EXTHIGH addr       Set highest extended memory address used
+-ISTKSIZE n         Set size of interrupt stacks (1K blocks)
+-LDTSIZE n          Set number of LDT entries
+-LOADDLL dlls       Load one or more dynamic-link libraries
+-NISTACK n          Set number of interrupt stacks
+-REALBLOCK n        Set conventional-memory block size
+-REALFIRST          Allocate conventional memory before extended
+-REALLIMIT n        Set max. bytes of real memory used
+-RESET n            Set mode switch 80286 reset method
+-SWITCH name        Select mode switch method (AUTO, AT, 386,
+                        SURESWITCH, PS2, INBOARD, 6300, ACER,
+                        VECTRA, VCPI, or FAST)
+-SWITCHFILE name    Select external switching .BIN file
+-VDISK              Compatibility with programs that incorrectly
+                        implement the VDISK allocation standard 
+-XFERSIZE n         Set size of transfer buffer (1K blocks)
+-XMS option         Controls handling of XMS extended memory
+
+    There are additional 286|DOS-Extender switches for use by
+application developers. If you need information that doesn't seem to
+be provided in this document, please contact the vendor of your
+program.
+
+
+                     RUN286 environment variable
+                     ---------------------------
+
+    One way to set DOS extender switches is with a DOS environment
+variable named RUN286. For example:
+
+C:\>set run286=-realfirst
+
+    (Note that there is no space between the equals sign = and the
+dash -REALFIRST.)
+
+    Now when you run the DOS-extended program, the built-in copy
+of 286|DOS-Extender will use the -REALFIRST switch (which is
+explained below).
+
+    Placing an invalid switch in the RUN286 environment variable will
+produce a help screen of the most important switches the next time
+you run the program. For example:
+
+C:\>set run286=-help
+
+    To remove this (or any other) invalid switch so that you can 
+continue to run the program in the normal way, set RUN286 equal to
+nothing:
+
+C:\>set run286=
+
+    DOS environment variables such as RUN286 are not permanent. If
+you want to ensure that the RUN286 variable gets set each time you
+start your computer, place the SET command in your AUTOEXEC.BAT file.
+
+
+                            Using CFIG286
+                            -------------
+
+    Options can also be placed directly inside the DOS-extended
+program, using the CFIG286 utility. For example:
+
+C:\APROGRAM>cfig286 aprogram.exe -realfirst
+
+    The CFIG286 utility can also be used to tell 286|DOS-Extender to
+use a command file, or an environment variable with a different name
+from RUN286 (this is particularly useful if you have more than one
+program which uses 286|DOS-Extender). For example:
+
+C:\APROGRAM>cfig286 aprogram.exe %aprogram
+
+C:\>set aprogram=-realfirst
+
+C:\>aprogram
+
+    See the file CFIG286.TXT for a complete description of the 
+CFIG286 utility.
+
+
+                               Switches
+                               --------
+
+    The 286|DOS-Extender switches can be divided into several
+categories:
+
+Memory Allocation:
+  -EXTBLOCK n       Set extended-memory block size
+  -EXTFIRST         Allocate extended memory before conv. (Default)
+  -EXTLIMIT n       Set max. bytes of extended memory used
+  -EXTLOW addr      Set lowest extended memory address used
+  -EXTHIGH addr     Set highest extended memory address used
+  -REALBLOCK n      Set conventional-memory block size
+  -REALFIRST        Allocate conventional memory before extended
+  -REALLIMIT n      Set maximum bytes of real memory used
+  -XMS option       Controls handling of XMS extended memory
+
+Mode Switching:
+  -A20 n            Set mode switch A20 address line method
+  -CONTROL n        Set mode switch 80286 regain-control method
+  -RESET n          Set mode switch 80286 reset method
+  -SWITCH name      Select mode switch method (AUTO, AT, 386,
+                        SURESWITCH, PS2, INBOARD, 6300, ACER,
+                        VECTRA, VCPI, or FAST)
+  -SWITCHFILE name  Select external switching .BIN file
+
+Interrupt Stacks:
+  -ISTKSIZE n       Set size of interrupt stacks (1K blocks)
+  -NISTACK n        Set number of interrupt stacks
+
+Miscellaneous:
+  -LDTSIZE n        Set number of LDT entries
+  -LOADDLL dlls     Load one or more dynamic-link libraries
+  -VDISK            Compatibility with programs that incorrectly
+                    implement the VDISK allocation standard 
+  -XFERSIZE n       Set size of transfer buffer (1K blocks)
+
+    In the remainder of this section, these switches are described in
+alphabetical order. 
+
+    In most cases, the full name of the switch does not need to be
+provided. In the following descriptions, square brackets are used to
+indicate optional charatcers. For example, -l[dt]s[size] means that
+this switch can be specified as -ldtsize, -ls, -LDTSIZE, or -LS.
+
+    Where two or more switches are mutually exclusive, the default
+switch is designated as "(Default)." For example, in the entries for
+-REALFIRST and -EXTFIRST, the entry for -EXTFIRST carries the
+designation (Default), indicating that it is generally not necessary
+to specify this switch, since it is already 286|DOS-Extender's
+default operation.
+
+    Note that any switches which take numeric arguments can take
+either decimal numbers or hexadecimal numbers (for example, 7Bh).
+Hexadecimal numbers may contain an underbar separator for readability
+(for example, 40_000h).
+
+    Examples provided below are always shown using the SET RUN286=
+syntax. However, all these switches may also be set using the CFIG286
+utility, a command file, or an application-specific environment
+variable. See CFIG286.TXT for details.
+
+
+                         -A20[METHOD] method#
+                         --------------------
+
+    One of 286|DOS-Extender's jobs is to figure out the best way to
+switch the machine between real and protected mode. It does this
+automatically, without user intervention. However, sometimes greater
+control might be needed. The -SWITCH option provides high-level
+control over mode-switching techniques; the -A20, -CONTROL, and
+-RESET switches provide low-level control over the technique
+286|DOS-Extender uses to switch between real and protected modes.
+This is almost never necessary, since 286|DOS-Extender almost always
+does the right thing. However, these options might be necessary on
+strange hardware. 
+
+    The -A20 switch selects one of the following techniques for
+enabling and disabling of the processor's A20 address line:
+
+-A20 method#
+    0 = default
+    1 = IBM AT
+    2 = IBM PS/2
+    3 = HP Vectra
+    4 = AT&T 6300
+    5 = use XMS (eXtended Memory Specification)
+
+    For example:
+
+C:\>set run286=-a20 1 -reset 2 -control 2
+
+
+                       -CONTROL[METHOD] method#
+                       ------------------------
+
+    The -CONTROL switch selects one of the following techniques for
+regaining control after the reset of an 80286 processor:
+
+-CONTROL method#
+    0 = default
+    1 = old IBM ATs
+    2 = standard IBM ATs
+    3 = slow IBM AT technique
+    4 = IBM PS/2
+    5 = 80386
+    6 = VCPI
+    7 = HP Vectra
+    8 = AT&T 6300
+
+(See -A20 for an example.)
+
+
+                            -EXTB[LOCK] n
+                            -------------
+
+    -EXTBLOCK sets the extended-memory block size. The default block
+size is 512k bytes. When -EXTBLOCK is a large number, 286|DOS-Extender
+does not have to allocate extended memory as frequently, but it may
+waste memory. Using -EXTBLOCK, you can control this time vs. space
+tradeoff. For example, the following changes the extended-memory block
+size to 256k (40000 hex) bytes:
+
+C:\>set run286=-extblock 40_000h
+
+
+                        -EXTF[IRST] (Default)
+                        -----------
+
+    The -EXTFIRST option corresponds to the default 286|DOS-Extender
+memory allocation strategy: allocate extended memory before
+conventional memory. This can be changed with the -REALFIRST option.
+
+
+                            -EXTLI[MIT] n
+                            -------------
+
+    The -EXTLIMIT option sets the maximum bytes of extended memory to
+be used by a protected-mode program. For example, the following both
+limit MEM to one megabyte of extended memory:
+
+C:\>set run286=-extlimit 1048576
+
+C:\>set run286=-extli 100000h
+
+    To prevent the program from using *any* extended memory:
+
+C:\>set run286=-extli 0
+
+
+                            -EXTL[OW] addr
+                            -EXTH[IGH] addr
+                            ---------------
+
+    The -EXTLOW and -EXTHIGH options set the lowest and highest
+extended memory address to be used by the program. By default, all
+extended memory (memory above one megabyte) that is not already
+allocated to other programs is available for use by applications. Use
+the -EXTLOW and -EXTHIGH switches to keep 286|DOS-Extender from using
+extended memory owned by another program that is incompatible with
+any of the industry standards for extended memory use. 
+
+    For example, you have installed a 1/2 megabyte disk cache
+starting at 100000h (one megabyte) which does not properly follow the
+INT 15h rules for allocating memory, you can use -EXTLOW to keep
+286|DOS-Extender from trying to allocate this same block of memory.
+It's also a good idea to specify an additional 64k bytes slopover,
+just to be safe. In the following, 286|DOS-Extender will not use INT
+15h memory allocation for any address below 100_000h (one megabyte) +
+80_000h (1/2 megabyte) + 10_000h (64k) = 190_000h:
+
+C:\>set run286=-extlow 190_000h
+
+
+                            -IS[TKSIZE] n
+                            -------------
+
+    The -ISTKSIZE and -NISTACK switches are used to control how much
+memory is allocated to the buffers used to provide stack space when
+switching from protected to real mode. For the vast majority of
+application programs, the default settings of these parameters are
+adequate. 
+
+    The -ISTKSIZE option sets the size of 286|DOS-Extender interrupt
+stacks. The argument n is in 1k blocks. The default interrupt stack
+size is 1k. For example:
+
+C:\>set run286=-ni 6 -istk 2
+
+
+                            -L[DT]S[IZE] n
+                            --------------
+
+    The -LDTSIZE option determines the size of a protected mode
+program's Local Descriptor Table (LDT), where n is the number of
+selectors. The default LDT size is 512 selectors. Select a larger
+number if the program runs out of selectors; select a smaller number
+to conserve memory if the program doesn't require 512 selectors (each
+selector requires 8 bytes). For example, the following increases
+the size of the LDT:
+
+C:\>set run286=-ldtsize 1024
+
+
+                            -LOADDLL dlls
+                            -------------
+
+    The -LOADDLL switch is used to force-load one or more dynamic
+link libraries (DLLs) before a DOS-extended program starts. The
+switch takes as an argument a list of one or more DLLs to be loaded.
+Names in the list are separated by commas. For example:
+
+C:\>set run286=-loaddll moe,curly,larry
+
+    286|DOS-Extender loads the DLLs specified with the -LOADDLL
+switch after it completes initialization and before an application is
+loaded and run. If DLLs are not located in the same directory as
+the DOS-extended application, specify the full pathname:
+
+C:\>set run286 =-loaddll \addins\phoobar.dll
+
+    An application may use the -LOADDLL switch as part of an add-in
+facility.
+
+
+                             -NI[STACK] n
+                             ------------
+
+    The -ISTKSIZE and -NISTACK switches are used to control how much
+memory is allocated to the buffers used to provide stack space when
+switching from protected to real mode. For the vast majority of
+application programs, the default settings of these parameters are
+adequate. 
+
+    The -NISTACK option sets the number of 286|DOS-Extender interrupt
+stacks. By default, there are 6 interrupt stacks.
+
+    For example, the following program allocates an very large number
+of big interrupt stacks (ten 6k stacks):
+
+C:\>set run286=-istksize 6 -nistack 10
+
+
+                            -REALB[LOCK] n
+                            --------------
+
+    -REALBLOCK sets the conventional-memory block size. The default
+block size is 64k bytes. When -REALBLOCK is a large number, 
+286|DOS-Extender does not have to allocate conventional memory as
+frequently, but it may waste conventional memory. Using -REALBLOCK,
+you can control this time vs. space tradeoff. For example, the
+following lowers the conventional-memory blocksize to 32k bytes:
+
+C:\>set run286=-realblock 8000h
+
+
+                             -REALF[IRST]
+                             ------------
+
+    By default, 286|DOS-Extender uses extended memory before
+conventional (real) memory. This default is the -EXTFIRST strategy;
+it is generally what one wants, because it leaves the precious memory
+below the one-megabyte line free for as long as possible, while still
+allowing a protected-mode program access to conventional memory once
+extended memory is exhausted. 
+
+    However, you might want to leave *extended* memory free for as
+long as possible, perhaps so that another program built with
+286|DOS-Extender or 386|DOS-Extender had more extended memory. In
+this case, you would use the -REALFIRST option:
+
+C:\>set run286=-realfirst
+
+
+                            -REALLI[MIT] n
+                            --------------
+
+    The -REALLIMIT option selects the maximum number of bytes of real
+(conventional) memory your protected mode program can access. Use
+this switch if you need to reserve memory for real mode TSRs, network
+drivers, etc. The default -REALLIMIT is one megabyte (that is, no
+limit). For example, the following both prevent a DOS-extended
+program from using more than 256k bytes of conventional memory:
+
+C:\>set run286=-reallimit 262144
+
+C:\>set run286=-realli 40000h
+
+    To prevent it from using *any* conventional memory:
+
+C:\>set run286=-realli 0
+
+
+                           -RESET[METHOD] n
+                           ----------------
+
+    The -RESET switch selects one of the following techniques for
+resetting 80286 processors:
+
+-RESET method#
+    0 = default
+    1 = triple fault
+    2 = OUT to 8042 keyboard controller
+
+(See -A20 for an example.)
+
+
+                            -SW[ITCH] name
+                            --------------
+
+    In contrast to the micro control provided by the -A20, -RESET,
+and -CONTROL options, the -SWITCH switch selects one of the following
+macro switching techniques:
+
+    AUTO        default
+    AT          force use of old IBM AT technique
+    FAST        force use of standard IBM AT technique
+    386         force use of 80386 instruction set technique
+    SURESWITCH  force use of Phar Lap SureSwitch (TM) technique
+    PS2         force use of PS/2 technique
+    INBOARD     force use of Intel InBoard technique for PC/XT
+                    with 286/386 accelerator
+    6300        force use of AT&T 6300 technique
+    ACER        force use of Acer technique
+    VECTRA      force use of HP Vectra technique
+    VCPI        force use of VCPI technique
+
+    For example:
+
+C:\>set run286=-switch inboard
+
+    Obviously, you should not specify -SWITCH 386 on an IBM AT, or
+-SWITCH VECTRA on a Compaq 386! Furthermore, you should almost never
+have to use this switch in the first place, because 286|DOS-Extender
+will take care of such details automatically.
+
+
+                         -SW[ITCH]F[ILE] name
+                         --------------------
+
+    The -SWITCHFILE option uses switching code in an external
+.BIN file. For example:
+
+C:\>set run286=-switchfile wow586.bin
+
+
+                                -VDISK
+                                ------
+
+    The -VDISK switch is a workaround for compatibility problems with
+other programs which do not correctly follow the VDISK standard for
+allocating extended memory. If 286|DOS-Extender refuses to run a
+program because of inconsistent VDISK allocation signatures, this
+switch can be used to force 286|DOS-Extender to run the program
+anyway. The larger of the two VDISK allocation marks present will be
+used. Before using this switch, you should check the allocation sizes
+printed out with the error messages when 286|DOS-Extender refuses to
+run the program. If the larger of the two numbers printed out does not
+seem reasonable, it will be necessary to calculate how much extended
+memory is in use by other programs to use the -EXTLIMIT switch to
+inform 286|DOS-Extender of the correct value.
+
+
+                            -XFER[SIZE] n
+                            -------------
+
+    The -XFERSIZE option sets the size of the conventional-memory
+transfer buffer used for DOS and BIOS calls. Whenever a
+protected-mode program makes an INT 21h or BIOS request that uses a
+pointer to a buffer, behind the scenes 286|DOS-Extender copies the
+data from your protected mode buffer to the conventional memory
+transfer buffer, or vice versa. Requests involving buffers larger
+than the conventional memory transfer buffer are split into smaller
+requests (invisibly to your program, of course). Protected mode
+programs that make many DOS file I/O requests with large blocks might
+benefit from using a larger transfer buffer. The size is specified in
+1k increments. For example, to make the transfer buffer 8k:
+
+C:\>set run286=-xfersize 8
+
+
+                             -XMS option
+                             -----------
+
+    The -XMS controls how 286|DOS-Extender handles XMS extended
+memory. The following options are provided:
+
+    OFF         Do not use XMS memory.
+
+    AUTO        [Default] If running under Qualitas 386MAX, do not use
+                XMS memory. Otherwise, use XMS memory and assume that the
+                XMS driver uses physical addresses.
+
+    LIN[EAR]    Not supported at present. Implemented as OFF in this
+                release.
+
+    PHYS[ICAL]  Use XMS memory if present and assume the XMS driver uses
+                physical addresses.
+
+    This switch is necessary because some XMS memory managers (such as
+Qualitas 386MAX) return linear addresses, whereas others (such as
+Microsoft HIMEM.SYS and Quarterdeck QEMM) return physical addresses.
+
+                               - END -
+

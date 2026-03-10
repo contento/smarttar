@@ -1,0 +1,2 @@
+nmake -f ms.mak
+

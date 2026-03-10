@@ -1,0 +1,13 @@
+LIBRARY rmdlllib
+EXETYPE  WINDOWS
+DESCRIPTION 'SAMPLE REAL MODE DLL'
+EXPORTS
+   _My_Draw_Line
+   _My_foo
+   _My_Fill_In_Params
+   _real_variable
+   _test_malloc
+IMPORTS
+   _RM_malloc=mainapp._RM_malloc
+   _RM_free=mainapp._RM_free
+

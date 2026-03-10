@@ -1,0 +1,50 @@
+----------------------------------------------------------------------------
+--------------------  Zinc Interface Library Tutorials ---------------------
+------------------------------ Version 3.50 --------------------------------
+----------------------------------------------------------------------------
+
+The following tutorial programs correspond to the tutorial lessons
+found in the Programmer's Tutorial manual.  Each directory contains
+a makefile to compile and link the program.  MAKEALL.BAT can be used
+to make all of the tutorials at once.
+
+   HELLO:    This group of tutorials demonstrates how to create a simple
+             Zinc application.  Starting the application, using the
+             the help and error systems, and integrating a .DAT file
+             that was created using Zinc designer are addressed.
+
+   WORD:     This group of tutorials illustrates the difference between
+             code written in C and code written in C++.  The flow of 
+             events throughout a Zinc program and the UI_STORAGE and
+             UI_STORAGE_OBJECT classes are discussed.
+
+   ZINCAPP:  The purpose of the ZINCAPP section is to show how the 
+             different parts of a larger application may be controlled
+             through the use of a control window.  Emphasis is placed 
+             on program design.
+
+   MACRO:    The Macro Device tutorial discusses the use of accelerator
+             keys and how they may be used to perform user defined actions.
+
+   HELPBAR:  The Help Bar tutorial shows how to derive a class within
+             Zinc and how to make it interact with the Zinc system.
+             The programming differences between the code for DOS
+             and Windows are shown.
+
+   VLIST:    A virtual list is created to show how an ``on-screen'' list
+             of items within a data base may be created.  The list indexes
+             the entire data base but does not have all of the list entries 
+             loaded into memory.
+
+   DISPLAY:  This tutorial illustrates some critical areas involved with
+             writing a new display class.  The UI_BGI_DISPLAY class is
+             used as an example.
+
+   PERSIST:  This set of programs shows how graphic objects may be created.
+             The differences in C and C++ programming are presented.
+             Additionally, the storage and retrieval of persistent objects
+             is addressed.
+
+
+Additional examples and user contributions can be obtained from Zinc's
+Bulletin Board Service or by calling Zinc's technical support group.

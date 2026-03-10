@@ -1,0 +1,130 @@
+----------------------------------------------------------------------------
+---------------------  Zinc Interface Library Examples ---------------------
+------------------------------ Version 3.50 --------------------------------
+----------------------------------------------------------------------------
+
+
+The following example programs are provided to help programmers with
+various library topics.  Each directory contains a makefile to compile
+and link the program.  MAKEALL.BAT can be used to make all of the
+examples at once.
+
+    ANALOG:     This program displays two constantly updating, sizeable 
+                analog clocks to the graphics display.  This is 
+                accomplished by implementing a multiple inheritance 
+                class derived from UI_DEVICE and UIW_WINDOW.
+
+    BIO:        This program uses a class derived from UI_WINDOW_OBJECT 
+                to display sine wave representations of a person's
+                biorhythm in the lower portion of a window, while allowing 
+                the user to enter date information in the upper portion
+                of the window.  The window is sizeable, and the sine wave 
+                graphics are dynamically sized within the window by
+                use of the WOF_NON_FIELD_REGION flag.
+
+    CALC:       This program uses a CALCULATOR class derived from UIW_WINDOW 
+                to display a calculator, which consists of a UIW_BIGNUM 
+                class object and several UIW_BUTTON class objects inside 
+                of a window.  This program demonstrates how to attach user 
+                functions to UIW_BUTTON class objects and how to call 
+                a non-static class member function from a static user 
+                function.
+
+    CALENDAR:   This program creates a sizeable calendar for which the 
+                spacing of the days and weeks is dynamically changed
+                according to the size of the calendar.  This is accomplished 
+                by deriving classes from UIW_VT_LIST and UIW_WINDOW.
+
+    CHECKBOX:   This program derives a checkbox and radio button class from 
+                the UI_WINDOW_OBJECT base class and demonstrates the 
+                implementation of these classes.  The classes CHECKBOX and 
+                RADIO_BUTTON use the UI_DISPLAY::Bitmap( ) function to 
+                display themselves in graphics mode and the UI_WINDOW_-
+                OBJECT::Text( ) function to display themselves in text mode.  
+                The class RADIO_BUTTON allows for any number of groups of 
+                radio buttons to be created, with only one button in a 
+                group being selected at one time.
+
+    CLOCK:      This program displays a constantly updating digital clock 
+                to the graphics or text display.  This is accomplished by
+                implementing a multiple inheritance class derived from 
+                UI_DEVICE and UIW_WINDOW.
+
+    COMBOBOX:   This program derives a combo box class from the UIW_WINDOW 
+                class.  The COMBO_BOX class demonstrates how to pass 
+                information between two windows and how to implement the 
+                logical association of two classes (e.g., UIW_STRING with 
+                a UIW_BUTTON) as one class (e.g., UI_COMBO_BOX).
+
+    DRAW:       This program paints information to the screen using the 
+                UI_DISPLAY::Rectangle( ) function and the UI_EVENT_MANAGER 
+                class.
+
+    DISPLAY:    This program demonstrates the functionality of the 
+                UI_BGI_DISPLAY, UI_FG_DISPLAY, UI_MSC_DISPLAY, 
+                UI_TEXT_DISPLAY, and UI_MSWINDOWS_DISPLAY classes.  The 
+                program uses the RegionDefine( ), Rectangle( ), Text( ), 
+                and TextWidth( ) member functions to draw graphics 
+                information to the screen.
+
+    ERROR:      This program uses the UI_ERROR_SYSTEM.
+
+    FILEEDIT:   This program implements a file text editor complete with 
+                directory and file manipulation functionality.  This program
+                uses classes derived from the UIW_WINDOW class. It also uses 
+                the UI_HELP_SYSTEM class.
+
+    FREESTOR:   This program implements a free store exception handler.  When
+                the new( ) operator fails to allocate memory, the Freestor 
+                can be used to allow the user application to recover 
+                gracefully.
+
+    GRAPH:      This program displays line graphs, bar graphs, and pie graphs 
+                inside of several overlapping windows.
+
+    MESSAGES:   This program displays two buttons in a window.  If either 
+                button is pressed, a menu window appears, displaying several 
+                options.  If any of the options in the menu window are then 
+                selected, the menu window will disappear, and the selected 
+                option's text will appear on the button that was originally 
+                selected.  This is accomplished by using a class derived from 
+                UIW_BUTTON which understands a programmer-defined event type.
+                A UI_EVENT class object of this type then uses its `data' 
+                member to point to the new character array.
+
+    NOTEPAD:    This program creates two ``note pad'' windows, each with a 
+                UIW_STRING, a UIW_DATE, and a UIW_TEXT class object attached 
+                to it.  These windows are attached to the window manager, 
+                allowing the end-user to cut and paste text between the 
+                windows, etc.
+
+    PERIODIC:   This program creates a periodic table of elements.  Periodic 
+                implements user functions and uses the Zinc data file.
+
+    PHONEBK:    This program implements a phone number storage/retrieval 
+                system.  It uses the UI_STORAGE and UI_STORAGE_OBJECT 
+                classes to save the phone number entries in the Zinc data 
+                file.
+
+    PUZZLE:     This program creates a ``15's'' puzzle using a class derived 
+                from UIW_WINDOW and a group of UIW_BUTTON class objects.  
+                This program demonstrates how to size button objects and 
+                move them within a window.
+
+    SPY:        This program displays the textual representation of event 
+                types in a window as the events occur in a typical Zinc 
+                application.  This is accomplished by deriving a device 
+                class from the UI_DEVICE class.  This device class, which
+                is of type E_DEVICE, intercepts all events as they occur 
+                and outputs their textual representation to an object of 
+                the example class TTY_WINDOW.
+
+    VALIDATE:   This program attaches a validate function to several 
+                UIW_BIGNUM class objects in order to display the sum of 
+                these objects in an additional non-selectable UIW_BIGNUM 
+                class object.  This program demonstrates how to call a
+                non-static class member function using a static validate 
+                function.
+
+Additional examples and user contributions can be obtained from Zinc's
+Bulletin Board Service or by calling Zinc's technical support group.

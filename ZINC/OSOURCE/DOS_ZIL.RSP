@@ -1,0 +1,27 @@
+dos_zil.lib
++d_tdsp.obj+d_keybrd.obj+d_mouse.obj+d_cursor.obj &
++d_border.obj+d_button.obj+d_combo.obj+d_group.obj &
++d_hlist.obj+d_icon.obj+d_min.obj+d_max.obj+d_scroll.obj+d_string.obj &
++d_sys.obj+d_text.obj+d_title.obj+d_popup.obj+d_popup1.obj+d_plldn.obj &
++d_plldn1.obj+d_prompt.obj+d_tbar.obj+d_vlist.obj &
++d_win.obj+d_win1.obj+d_win2.obj &
++d_error.obj+d_intl.obj &
++z_list.obj+z_list1.obj &
++z_intl.obj+z_date.obj+z_time.obj+z_bnum.obj+z_bnum1.obj &
++z_region.obj+z_dsp.obj+z_path.obj+z_store.obj &
++z_device.obj+z_cursor.obj+z_event.obj+z_map1.obj+z_map2.obj &
++z_border.obj+z_button.obj+z_combo.obj+z_date1.obj+z_fmtstr.obj &
++z_group.obj+z_hlist.obj+z_icon.obj+z_int.obj+z_min.obj+z_max.obj &
++z_bnum2.obj+z_scroll.obj+z_string.obj+z_sys.obj+z_text.obj+z_time1.obj &
++z_title.obj+z_popup.obj+z_popup1.obj+z_plldn.obj+z_plldn1.obj &
++z_prompt.obj+z_tbar.obj+z_real.obj+z_vlist.obj &
++z_win.obj+z_win1.obj+z_win2.obj+z_utils.obj &
++z_error.obj+z_help.obj &
++g_bnum.obj+g_border.obj+g_date.obj+g_date1.obj &
++g_device.obj+g_dsp.obj+g_event.obj+g_hotkey.obj &
++g_jump.obj+g_perror.obj+g_phelp.obj+g_pnorm.obj+g_store.obj &
++g_time.obj+g_time1.obj+g_win1.obj+g_win2.obj &
++g_sys.obj+g_int.obj+g_real.obj &
++i_ztcat.obj+i_mapfon.obj
+
+

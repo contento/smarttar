@@ -1,0 +1,6 @@
+; memtrace.def
+LIBRARY 	MEMTRACE
+DESCRIPTION 'SAMPLE API TRACE PACKAGE'
+IMPORTS  	_r286printf=PHAPI._wilprintf
+
+

@@ -1,0 +1,38 @@
+
+; For Borland C++ 3.1
+
+NAME MAINB
+
+STUB 'GORUN286.EXE'
+
+EXPORTS
+
+    ; Every runtime library function your DLL will use in the
+    ; EXE has to have a 'wrapper' around it and must be exported
+    ; here.
+
+    _main_printf
+    _main_fopen
+    _main_fwrite
+    _main_fclose
+
+    ; If we will use floating point, we must export a special symbol
+    ; to tell the 286|DOS-Extender to apply WINDOWS-like rules to
+    ; the floating point instructions. Even if we won't be using
+    ; floating point, it's a good idea to leave this in for the future.
+
+    BCC286_EXE
+
+IMPORTS
+
+    ; Routines in DLLs that will be called from MAINB.EXE 
+    ; are listed here.
+
+    DLL_1.SQUAREROOT
+
+    DLL_1._OpenTest
+    DLL_2._CloseTest
+
+    DLL_1._AllocTest
+    DLL_2._FreeTest
+

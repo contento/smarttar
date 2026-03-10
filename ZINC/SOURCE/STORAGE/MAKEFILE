@@ -1,0 +1,27 @@
+# ----- Usage --------------------------------------------------------------
+usage:
+	@echo ..........
+	@echo ..........
+	@echo To generate the storage utilities for Borland C++ type:
+	@echo make -fborland.mak dos
+	@echo make -fborland.mak os2
+	@echo make -fborland.mak winnt
+	@echo ...........
+	@echo To generate the storage utilities for IBM C++ type:
+	@echo nmake -f ibm.mak os2
+	@echo ..........
+	@echo To generate the storage utilities for Microsoft C++ type:
+	@echo nmake -fmicrosft.mak dos
+	@echo (Microsoft does not support OS/2)
+	@echo nmake -f mscwnt.mak winnt
+	@echo ..........
+	@echo To generate the storage utilities for Watcom C++ type:
+	@echo wmake -f watcom.mak dos32
+	@echo wmake -f watcom.mak os2
+	@echo ..........
+	@echo To generate the storage utilities for Zortech C++ type:
+	@echo make -fzortech.mak dos
+	@echo make -fzortech.mak os2
+	@echo ..........
+	@echo ..........
+

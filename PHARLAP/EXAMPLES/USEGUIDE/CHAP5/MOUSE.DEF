@@ -1,0 +1,11 @@
+NAME MOUSE
+PROTMODE
+DESCRIPTION 'PROTECTED MODE MOUSE APPLICATION'
+IMPORTS
+    _ev_handler=handler._ev_handler
+    _full=handler._full
+    _x=handler._x
+    _y=handler._y
+    _fini=handler._fini
+    _left=handler._left
+

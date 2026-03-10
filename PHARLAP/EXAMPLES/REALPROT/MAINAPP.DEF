@@ -1,0 +1,9 @@
+NAME mainapp NOTWINDOWCOMPAT
+DESCRIPTION 'Test program for calling back to PROT mode from real mode'
+STACKSIZE 4096
+STUB 'gorun286.exe'
+
+EXPORTS
+   _RM_malloc
+   _RM_free
+

@@ -1,0 +1,61 @@
+--- GENERAL_HELP 
+General Help
+Calendar is a program that creates a monthly calendar that adjusts to
+the size of the parent window.  To change to the next or previous
+month, use either the PGUP or PGDN keys which are mapped as calendar
+events.  Use <F2> to enter a new Date.
+\
+The purpose of this example is to demonstrate:\
+\
+    -- A WOF_NON_FIELD_REGION object in the\
+       window\
+\
+    -- sizing objects within a window\
+       so that relative position is preserved\
+\
+    -- use of the UI_DATE and UIW_DATE classes\
+\
+    -- changing the palette entries for an item.\
+       Days of Week, Days of month, and Current day\
+       are assigned different colors\
+\
+    -- defining your own event map table for the\
+       calendar window\
+\
+    -- use of the UI_HELP_SYSTEM.\
+\
+\
+For more information contact:\
+\
+Zinc Software Incorporated\
+405 South 100 East, Second Floor\
+Pleasant Grove, Utah   84062\
+\
+Telephone:  (801) 785-8900\
+Zinc BBS:   (801) 785-8997\
+FAX:        (801) 785-8996\
+\
+Zinc Software (UK) Limited\
+58-60 Beresford Street\
+London, SE18 6BG UNITED KINGDOM\
+\
+Telephone:  +44 (0)81 855 9918\
+Zinc BBS:   +44 (0)81 317 2310\
+FAX:        +44 (0)81 316 7776\
+\
+\
+Press <Alt F4> to exit help.\
+
+
+--- CALENDAR_HELP 
+Calendar Help
+This program displays a monthly calendar.  You can select View 
+from the pull-down-menu or use the F2 key to enter a date to 
+display in the calendar.  You can also use the PgDown key 
+to display the Next month and the PgUp key to display the Previous
+month.  The date that is highlighted is the current date.
+\
+Press <F1> for more help.\
+\
+Press <Alt-F4> or use the system button's menu to close the window.
+

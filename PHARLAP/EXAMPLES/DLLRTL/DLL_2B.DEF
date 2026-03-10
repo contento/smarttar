@@ -1,0 +1,35 @@
+
+; For Borland C++ 3.1
+ 
+LIBRARY DLL_2B
+
+EXPORTS
+
+    ; If we will use floating point, we must export a special symbol
+    ; to tell the 286|DOS-Extender to apply WINDOWS-like rules to
+    ; the floating point instructions. Even if we won't be using
+    ; floating point, it's a good idea to leave this in for the future.
+    ; Note: the value of this symbol is irrelevant, so we will use
+    ; a random global (_Msg).
+
+    BCC286_EXE=_Msg
+
+IMPORTS
+
+    ; The 'wrapper' functions of the library routines of MAINB.EXE
+    ; that we will call have to be listed here.
+
+    _printf=MAIN._main_printf
+    _fwrite=MAIN._main_fwrite
+    _fclose=MAIN._main_fclose
+    _free=MAIN._main_free
+
+    ; If you will be using floating point, the symbol below must be
+    ; defined so that the emulator does not get dragged in (we will
+    ; be using the emulator in MAINB.EXE). Even if you aren't doing
+    ; floating point, leave this here as a safeguard. Note: the value
+    ; of this symbol is irrelevant - but since it must be set to 
+    ; *something*, we will use one of the values above (_main_fopen).
+
+    __turboCvt=MAIN._main_fopen
+

@@ -1,0 +1,35 @@
+
+; For Microsoft Visual C
+
+NAME MAIN
+
+EXPORTS
+
+    ; Every runtime library function your DLL will use in the
+    ; EXE has to have a 'wrapper' around it and must be exported
+    ; here.
+
+    _main_printf
+    _main_fopen
+    _main_fwrite
+    _main_fclose
+
+    ; If our DLL will do floating point, then we need to export
+    ; some symbols in the emulator for the DLL to use.
+
+    __fac
+    __aFfcompp
+
+IMPORTS
+
+    ; Routines in DLLs that will be called from MAIN.EXE 
+    ; are listed here.
+
+    DLL_1.SQUAREROOT
+
+    DLL_1._OpenTest
+    DLL_2._CloseTest
+
+    DLL_1._AllocTest
+    DLL_2._FreeTest
+

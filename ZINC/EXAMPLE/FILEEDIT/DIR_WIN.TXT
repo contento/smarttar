@@ -1,0 +1,191 @@
+--- HELP_FILE_EDITOR
+Help File Editor
+  This program is a simple file editor that uses Zinc Application
+Framework to present file information to the screen.  In addition to
+the Zinc class objects, a directory and file object are defined. 
+These objects provide file information and statistics to the user as
+well as providing browse capabilities for system directories.
+\
+This program shows how to construct two objects that can communicate with
+one another during the operation of the program.
+--- HELP_FILE_ABOUT
+Help, About File Editor...
+Program name.. Fileedit\
+Version....... 3.5
+
+COPYRIGHT (C) 1991-1993.  All Rights Reserved.\
+Zinc Software Incorporated\
+405 South 100 East, Second Floor\
+Pleasant Grove, Utah   84062\
+\
+Telephone: (801) 785-8900\
+Zinc BBS: (801) 785-8997\
+FAX: (801) 785-8996\
+\
+Zinc Software (UK) Limited\
+58-60 Beresford Street\
+London, SE18 6BG UNITED KINGDOM\
+\
+Telephone: +44 (0)81 855 9918\
+Zinc BBS: +44 (0)81 317 2310\
+FAX: +44 (0)81 316 7776\
+\
+--- HELP_FILE_COMMANDS
+Help, Commands...
+This help screen contains information about the command options
+available to the file editor.  They are presented in the same order
+as that presented in the File menu.
+\
+File, New \
+  This command causes the contents of the file editor's text field to
+be discarded and for the filename and text field to be cleared.
+\
+File, Open... \
+  This command allows the user to select a file to be opened from the
+file selection window.  A valid filename must be provided for the open
+to be successful.  In addition, only those files whose length is less
+than 30,000 bytes can be opened by this application.
+\
+File, Save \
+  This command causes the contents of the file editor's text field to
+be saved to the current file.
+\
+File, Save As... \
+  This command allows the user to select a filename and path where
+the file editor contents may be saved.  A valid filename must be provided
+for the save-as command to be successful.
+\
+File, Delete... \
+  This command allows the user to select a file do be deleted from
+the current operating system.  A valid filename must be provided
+for the delete command to be successful.
+\
+File, Statistics... \
+  This command allows the user to select a file and to view the
+statistical information associated with the file.  A valid filename
+must be provided or the statistics command to be successful.
+\
+File, Exit \
+  This command exits the user from the file edit application.
+--- HELP_FILE_STATISTICS
+Help File Statistics
+The file statistics window contains information about the user
+specified file.  The following information is presented:
+\
+Filename: \
+  This field contains the name of the file whose statistical information
+is being viewed.
+\
+Size: \
+  This field contains the size of the file.
+\
+Create Date: \
+  This field contains the creation date of the file.
+\
+Create Time: \
+  This field contains the creation time of the file.
+\
+Close: \
+  This button allows the user to close the
+--- HELP_DIRECTORY_SERVICE
+Help File Selection
+The file selection window allows users to browse drives and directories
+for a file that will be opened, saved or whose information will be
+viewed.  The following fields are available in the window:
+\
+Filename: \
+  This field contains the name of the file you wish to open, save or
+retrieve information about.  Enter the name of the desired file then
+press <Enter> or select the OK button.
+\
+Directories: \
+  This field contains the directories that may be browsed.  A
+directory can be selected from the list by moving to the field and
+pressing <Enter>.
+\
+List Files of Type: \
+  This field contains filters (or wild-card match information) for
+the type of files you want to see in the file list.  The patterns in
+this field can be selected by pressing on the list's down arrow,
+moving to the desired filter, then pressing <Enter>.
+\
+Drives: \
+  This field contains the active drives on the system.  The drives in
+this field can be selected by pressing on the list's down arrow,
+moving to the desired drive, then pressing <Enter>.  If the drive is
+available the directory and file fields are updated.  Otherwise an
+error message is presented.
+\
+OK: \
+  Selecting the OK button causes the information in the filename
+field to be processed by the file editor.  If the process is
+successful the file selection window is then removed from the screen.
+\
+Cancel: \
+  Selecting the Cancel button causes the file selection window to be
+removed without any further processing by the file editor.
+\
+--- HELP_DIRECTORY_SERVICE_MTF
+Help File Selection
+The file selection window allows users to browse drives and directories
+for a file that will be opened, saved or whose information will be
+viewed.  The following fields are available in the window:
+\
+Filter: \
+  This field contains filters (or wild-card match information) for
+the type of files you want to see in the file list.  The patterns in
+this field can be selected by pressing on the list's down arrow,
+moving to the desired filter, then pressing <Enter>.
+\
+Directories: \
+Files: \
+Selection: \
+  This field contains the name of the file you wish to open, save or
+retrieve information about.  Enter the name of the desired file then
+press <Enter> or select the OK button.
+\
+OK: \
+Cancel: \
+--- HELP_DIRECTORY_SERVICE_OS2
+Help File Selection
+The file selection window allows users to browse drives and directories
+for a file that will be opened, saved or whose information will be
+viewed.  The following fields are available in the window:
+\
+Filename: \
+  This field contains the name of the file you wish to open, save or
+retrieve information about.  Enter the name of the desired file then
+press <Enter> or select the OK button.
+\
+Type: \
+  This field contains filters (or wild-card match information) for
+the type of files you want to see in the file list.  The patterns in
+this field can be selected by pressing on the list's down arrow,
+moving to the desired filter, then pressing <Enter>.
+\
+Drive: \
+  This field contains the active drives on the system.  The drives in
+this field can be selected by pressing on the list's down arrow,
+moving to the desired drive, then pressing <Enter>.  If the drive is
+available the directory and file fields are updated.  Otherwise an
+error message is presented.
+\
+File: \
+  This field contains the files that may be selected from the current
+directory.  A file can be selected from the list by moving to the
+field and pressing <Enter>.
+\
+Directory: \
+  This field contains the directories that may be browsed.  A
+directory can be selected from the list by moving to the field and
+pressing <Enter>.
+\
+OK: \
+  Selecting the OK button causes the information in the filename
+field to be processed by the file editor.  If the process is
+successful the file selection window is then removed from the screen.
+\
+Cancel: \
+  Selecting the Cancel button causes the file selection window to be
+removed without any further processing by the file editor.
+

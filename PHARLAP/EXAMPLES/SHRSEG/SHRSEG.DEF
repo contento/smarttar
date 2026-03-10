@@ -1,0 +1,7 @@
+LIBRARY SHRSEG
+
+DESCRIPTION 'SAMPLE SHARED SEGMENT PACKAGE'
+
+IMPORTS
+	_wilprintf=phapi._wilprintf
+

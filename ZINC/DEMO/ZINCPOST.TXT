@@ -1,0 +1,1098 @@
+--- HELP_ORDER_INFORMATION
+Order Information Help...
+Zinc Application Framework 3.5 is composed of an engine and one or
+more platform specific modules (or Keys).  The currently available
+options are:\
+\
+     Zinc Engine (required)\
+     DOS Key (text and graphics)\
+     Microsoft Windows Key\
+     Windows NT Key\
+     IBM OS/2 Key\
+     IBM PenDOS Key\
+     OSF/Motif Key\
+     Video Training Series (NTSC or PAL)\
+\
+NOTE: Zinc Designer is provided for each platform key that you order. 
+In addition, the COMPLETE source code to Zinc Application Framework
+3.5 (i.e., the class library and designer) is also included.\
+\
+For more information or to order in the United States or outside
+of Europe, please call or write:\
+\
+     Zinc Software Incorporated\
+     405 South 100 East 2nd Floor\
+     Pleasant Grove, Utah 84062 USA\
+     Tel: (801) 785-8900\
+     Fax: (801) 785-8996\
+     BBS: (801) 785-8997\
+\
+For more information or to order in Europe, please call or
+write:\
+\
+     Zinc Software (UK) Limited\
+     58-60 Beresford Street\
+     London, SE18 6BG United Kingdom\
+     Tel: +44 (0)81 855 9918\
+     Fax: +44 (0)81 316 7778\
+     BBS: +44 (0)81 317 2310\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_GENERAL
+General Help...
+Welcome to this demonstration of Zinc Application Framework 3.5.  Zinc
+3.5 is a truly object-oriented, multiplatform development tool.  Zinc
+3.5 applications can run on a RISC-based Unix workstation, a palmtop 
+running DOS, and just about every platform in between.\
+\
+This demonstration program was created with Zinc Application Framework
+3.5.  The DOS, protected mode DOS, Microsoft Windows, Windows NT,
+IBM OS/2, IBM PenDOS and OSF/Motif versions were compiled from the same
+source code (ZINCDEMO.CPP).  All versions also share the same
+platform-independent resource file (ZINCPOST.DAT).  (NOTE: The latest
+version of these programs can be downloaded free of charge from Zinc's
+BBS (801-785-8997 or +44(0)81 317 2310 in Europe).  To run the DOS demo
+in Text mode type ZINC_DOS /T.)\
+\
+This demonstration program features all of the window objects that are
+provided with Zinc Application Framework.  If you select an object from the
+menu, the tool bar, or the vertical list, example(s) of the object will
+appear in the upper right corner of the display area.  Information on the
+object appears in the text field immediately below the object.  If you
+press F1, additional information including the constructor will appear in
+a help window.  The entire class hierarchy can be viewed by selecting
+the "Help, Class hierarchy" menu option.\
+\
+This program does not demonstrate the features of Zinc's interactive
+design tool, Zinc Designer.  Zinc Designer runs on each target platform and
+allows you to interactively design your application windows and window
+objects.  Zinc POST (Persistent-Object Storage Technology) allows
+you to save the resources you create with Zinc Designer in a
+platform-independent binary data file.  Zinc Designer is included with
+Zinc Application Framework along with the complete source code to the
+class library and the designer.\
+\
+In addition to powerful multiplatform technology and over 1,400 pages of
+detailed documentation, Zinc offers a four-hour, videotape training
+series.  The videotape series provides a conceptual overview of Zinc's
+event-driven architecture, multiplatform issues, and object-oriented
+programming techniques such as message processing, callback functions,
+and deriving objects from Zinc's base classes.\
+\
+Zinc offers a 60-day money-back period during which time you can evaluate
+the software, documentation and Zinc's technical support.  If you aren't
+satisfied for any reason, simply return the product for a full refund of
+the purchase price.  (NOTE: Your reseller may have a different return
+policy--please check with your reseller before you purchase.)\
+\
+You may freely copy and distribute this demonstration program as
+long as it is distributed with all original files and copyright
+information.\
+\
+Zinc is a registered trademark and Zinc Application Framework, Zinc
+Designer, and Zinc POST are trademarks of Zinc Software Incorporated. 
+All other trademarks or tradenames used herein are owned by their
+respective companies.\
+\
+COPYRIGHT (C) 1990-1993 Zinc Software Incorporated.  All Rights Reserved.\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_STRING
+String Help...
+STRING is used to enter, modify and display single-line
+alphanumeric string information.  Five string flags determine how
+the string is formatted and edited, including: no formatting,
+upper-case, lower-case, password and variable name (where spaces
+are converted to the underscore character).\
+\
+Zinc strings allow you to perform edit functions such as mark,
+cut, copy and paste both within the string itself and among any
+other edit object (e.g., number, text, date).\
+\
+You may associate a user function or validation routine by adding
+the name of the function to the argument list of the constructor
+(shown below).  User functions receive messages from Zinc and can
+be executed when STRING is selected, becomes current and/or
+becomes non-current.\
+\
+Constructor => UIW_STRING(left, top, width, text, maximum length,
+string flags, window flags, user function)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_FORMATTED_STRING
+Formatted String Help...
+FORMATTED STRING is used to enter, modify and display
+alphanumeric information in a pre-defined format that you specify
+(e.g., phone number, part number, serial number).\
+\
+FORMATTED STRING allows you to perform edit functions such as
+mark, cut, copy and paste both within the formatted string itself
+and among any other edit object (e.g., number, text, date).\
+\
+You may associate a user function or validation routine by adding
+the name of the function to the argument list of the constructor
+(shown below).  User functions receive messages from Zinc and can
+be executed when FORMATTED STRING is selected, becomes current
+and/or becomes non-current.\
+\
+Constructor => UIW_FORMATTED_STRING(left, top, width, text, edit
+mask, literal mask, window flags, user function)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_TEXT
+Text Help...
+TEXT is used to enter, modify and display multiple-line text
+information.  It features mark, cut, copy, paste, optional word
+wrap, home, end, page-up, page-down, word-left, word-right, etc.\
+\
+You may associate a user function or validation routine by adding
+the name of the function to the argument list of the constructor
+(shown below).  User functions receive messages from Zinc and can
+be executed when TEXT is selected, becomes current and/or becomes
+non-current.\
+\
+Constructor => UIW_TEXT(left, top, width, height, text, maximum
+length, text flags, window flags, user function)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_DATE
+Date Help...
+DATE is used to enter, display and modify country-independent
+date information.  15 date specific flags determine appropriate
+display formatting, including: U.S., European, Japanese,
+military, short (day, month, year), slash, zero fill, upper case
+and lower case.\
+\
+DATE examines the country information provided by the operating
+system to display the appropriate format.  For example, the date
+12/25/92 will display as 25/12/92 if a European country code is
+detected.\
+\
+You may associate a user function or validation routine by adding
+the name of the function to the argument list of the constructor
+(shown below).  User functions receive messages from Zinc and can
+be executed when DATE is selected, becomes current and/or becomes
+non-current.\
+\
+Constructor => UIW_DATE(left, top, width, date, range, date
+flags, window flags, user function)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_TIME
+Time Help...
+TIME is used to enter, modify and display country-independent
+time information.  13 time specific flags determine the
+appropriate display formatting, including: colon separator, zero
+fill, hours, minutes, seconds, 12 Hour, 24 Hour, upper case and
+lower case.\
+\
+TIME examines the country information provided by the operating
+system to display the appropriate format.  For example, the time
+3:25pm will display as 15:25 if a European country code is
+detected.\
+\
+You may associate a user function or validation routine by adding
+the name of the function to the argument list of the constructor
+(shown below).  User functions receive messages from Zinc and can
+be executed when TIME is selected, becomes current and/or becomes
+non-current.\
+\
+Constructor => UIW_TIME(left, top, width, time, range, time
+flags, window flags, user function)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_BIGNUM
+Number Help...
+BIGNUM is used to enter, modify and display country-independent
+numeric information.  BIGNUM has a default maximum value of 30
+digits to the left and 8 digits to the right of the decimal.  Six
+number flags determine how the number is displayed, including:
+currency, credit ( ), commas, decimal (0 to 8 places) and
+percent.\
+\
+BIGNUM examines the country information provided by the operating
+system to display the appropriate format.  For example, $100.00
+(US) will display as DM100.00 if the German country code is
+detected.\
+\
+NOTE: Zinc 3.5 also provides INTEGER and REAL objects for more
+specific numeric processing.\
+\
+You may associate a user function or validation routine by adding
+the name of the function to the argument list of the constructor
+(shown below).  User functions receive messages from Zinc and can
+be executed when BIGNUM, REAL or INTEGER is selected, becomes
+current and/or becomes non-current.\
+\
+Constructor => UIW_BIGNUM(left, top, width, number, list of valid
+ranges, number flags, window flags, user function)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_BUTTON
+Button Help...
+BUTTON is a selectable field used to perform run-time operations. 
+You may attach a bitmap to customize the button.\
+\
+You may associate a user function or validation routine by adding
+the name of the function to the argument list of the constructor
+(shown below).\
+\
+User functions receive messages from Zinc and can be executed
+when BUTTON is selected, becomes current and/or becomes
+non-current.\
+\
+BUTTON is also used to create Radio Buttons, Buttons with
+associated bitmaps, and Check Boxes by simply passing a status
+flag (button flag) in the constructor argument list.\
+\
+Constructor => UIW_BUTTON(left, top, width, button text, button
+flags, window flags,  user function, programmer assigned value,
+bitmap name associated with button)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_RADIO_BUTTON
+Radio Button Help...
+RADIO BUTTON is a button control that allows only one item in a
+group to be selected.  RADIO BUTTON is a button with the
+BTF_RADIO_BUTTON button flag used in the argument list.\
+\
+You may associate a user function or validation routine by adding
+the name of the function to the argument list of the constructor
+(shown below).  User functions receive messages from Zinc and can
+be executed when RADIO BUTTON is selected, becomes current and/or
+becomes non-current.\
+\
+Constructor => UIW_BUTTON(left, top, width, button text,
+BTF_RADIO_BUTTON, window flags, user function, programmer
+assigned value, bitmap name)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_CHECK_BOX
+Check Box Help...
+CHECK BOX is a button control that allows multiple items in a
+group to be selected.  CHECK BOX is a button with the BTF_CHECK_BOX
+button flag used in the argument list.\
+\
+You may associate a user function or validation routine by adding
+the name of the function to the argument list of the constructor
+(shown below).  User functions receive messages from Zinc and can
+be executed when CHECK BOX is selected, becomes current and/or
+becomes non-current.\
+\
+Constructor => UIW_BUTTON(left, top, width, button text,
+BTF_CHECK_BOX, window flags, user Function, programmer assigned
+value, bitmap name)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_HLIST
+Horizontal List Help...
+HORIZONTAL LIST is used to enter, modify and display related
+information in row and column format.  You can add a scroll bar
+to horizontally scroll the list.  A wide variety of window
+objects can be placed in HORIZONTAL LIST, including: input fields,
+icons and buttons.\
+\
+A compare function may be added in the argument list to sort list
+elements.\
+\
+Constructor => UIW_HZ_LIST(left, top, width, height, cell width,
+cell Height, compare function, list flags, window flags, advanced flags)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_VLIST
+Vertical List Help...
+VERTICAL LIST is used to enter, modify and display related
+information in a vertical list format.  You can add a scroll bar
+to vertically scroll the list.  A wide variety of window objects
+can be placed in VERTICAL LIST, including: input fields, icons and
+buttons.\
+\
+A compare function may be added in the argument list to sort list
+elements.\
+\
+Constructor => UIW_VT_LIST(left, top, width, height, compare function,
+list flags, window flags, advanced flags)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_COMBO_BOX
+Combo-Box Help...
+COMBO BOX is a combination input field and vertical list.  COMBO
+BOX can contain input fields, icons and buttons.\
+\
+A compare function may be added in the argument list to sort list
+elements.\
+\
+Constructor => UIW_COMBO_BOX(left, top, width, height, compare
+function, list flags, window flags, advanced flags)
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_SCROLL_BAR
+Scroll-Bar Help...
+SCROLL BAR is a selectable region used to scroll the displayed
+portion of a window, list box or text input field.\
+\
+Constructor => UIW_SCROLL_BAR(left, top, width, height,
+HORIZONTAL OR VERTICAL, window flags)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_WINDOW
+Window Help...
+WINDOW is a rectangular region of the display used as the
+controlling structure for window objects.  Zinc supports parent,
+child, MDI, modal and dialog windows.\
+\
+Constructor => UIW_WINDOW(left, top, width, height, window flags,
+advanced flags, help context)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_PULL_DOWN_MENU
+Pull-down Menu Help...
+PULL DOWN MENU is used to organize and control pull-down menu
+items (PULL DOWN ITEMS).\
+\
+Constructor => UIW_PULL_DOWN_MENU(indentation, item)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_PULL_DOWN_ITEM
+Pull-down Menu Item Help...
+PULL DOWN ITEM is used as the first-level selection within a menu
+system.\
+\
+You may associate a user function or validation routine by adding
+the name of the function to the argument list of the constructor
+(shown below).  User functions receive messages from Zinc and can
+be executed when PULL DOWN MENU ITEM is selected, becomes current
+and/or becomes non-current.\
+\
+Constructor => UIW_PULL_DOWN_ITEM(text, menu flags, user
+function, programmer assigned value)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_POP_UP_MENU
+Pop-up Menu Help...
+POP UP MENU is used to organize and control pop-up menu items. 
+POP UP MENUS are also used for cascading menus.\
+\
+Constructor => UIW_POP_UP_MENU(left, top, menu flags, item)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_POP_UP_MENU_ITEM
+Pop-up Menu Item Help...
+POP UP MENU ITEM is used to select a specific action from a
+pop-up menu.\
+\
+You may associate a user function or validation routine by adding
+the name of the function to the argument list of the constructor
+(shown below).  User functions receive messages from Zinc and can
+be executed when POP UP MENU ITEM is selected, becomes current
+and/or becomes non-current.\
+\
+Constructor => UIW_POP_UP_ITEM(text, menu flags, user function,
+programmer assigned value)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_TOOL_BAR
+Tool-Bar Help...
+TOOL BAR is a menu control used to group buttons, icons, and
+input fields.  A tool bar can be static or wrapped when re-sizing
+the window.  It can be independent of or used in conjunction with
+PULL DOWN MENU.\
+\
+Constructor => UIW_TOOL_BAR(left, top, width, height, tool bar
+flags, window flags, advanced flags)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_PROMPT
+Prompt Help...
+PROMPT is a static control that is used to provide the user with
+information regarding input fields and program activity.\
+\
+Constructor => UIW_PROMPT(left, top, text, window flags)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_GROUP
+Group Help...
+GROUP is a static control that is used to group radio buttons and
+check boxes.\
+\
+Constructor => UIW_GROUP(left, top, width, height, text, group
+flags, window flags)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_ICON
+Icon Help...
+ICON is a static control used to present graphical information.  Icons
+may be used to select a user-defined action.\
+\
+Constructor => UIW_ICON(left, top, icon name, title, icon flags,
+window flags, user function)\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_KEYBOARD
+Keyboard Help...
+KEYBOARD is used to collect information from the keyboard.  It is
+attached to a list that is maintained by the Event Manager (see
+Event Manager).  The KEYBOARD feeds information to the Event
+Queue when polled by the Event Manager.\
+\
+The KEYBOARD is attached to the Event Manager at run-time using 
+the Add member function or the overloaded '+' operator:\
+\
+// Initialize the event manager and attach the keyboard, mouse
+and cursor devices.\
+     UI_EVENT_MANAGER *eventManager =\
+     new UI_EVENT_MANAGER(display);\
+     *eventManager\
+          + new UID_KEYBOARD\
+          + new UID_MOUSE\
+          + new UID_CURSOR;\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_MOUSE
+Mouse Help...
+MOUSE is used to collect information from a mouse input device. 
+It is attached to a list which is maintained by Zinc's Event
+Manager (see Event Manager).  The MOUSE feeds input information
+directly to the Event Queue.\
+\
+The MOUSE is attached to the Event Manager at run-time using the
+Add member function or the overloaded '+' operator:\
+\
+// Initialize the event manager and attach the keyboard, mouse
+and cursor devices.\
+     UI_EVENT_MANAGER *eventManager =\
+     new UI_EVENT_MANAGER(display);\
+     *eventManager\
+          + new UID_KEYBOARD\
+          + new UID_MOUSE\
+          + new UID_CURSOR;\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_WINDOW_MANAGER
+Window Manager Help...
+Zinc's Window Manager maintains a list of window objects and
+controls their positioning and their state (e.g., current,
+non-current).\
+\
+Event information (whether received from a polled or interrupt
+driven device) is placed in an event queue and is dispatched to
+the Window Manager via the application's event loop.  The Window
+Manager forwards event information to the current window object. 
+The window object processes the event or passes it to its parent
+object (if one exists).  This continues until the event is either
+successfully processed or is discarded.\
+\
+The sample code below demonstrates how the WINDOW MANAGER is
+initialized and how window objects (in this case a window with
+its contents was created in Zinc Designer) are added to the new
+window:\
+\
+// Initialize the window manager.\
+     UI_WINDOW_MANAGER *windowManager =\
+     new UI_WINDOW_MANAGER(display, eventManager);\
+\
+// Read in persistent object resource created in Zinc Designer.\
+     *windowManager\
+          + new UIW_WINDOW("FILENAME~WINDOW1");\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_EVENT_MANAGER
+Event Manager Help...
+The backbone of Zinc Application Framework 3.5 is its event-driven
+architecture.  This architecture exploits the power of
+object-orientation to insulate you from the complexities of the
+operating environment without restricting your access to
+environment specific features, like the Microsoft Windows
+messages or the raw scan codes from the keyboard.\
+\
+Events are received and processed in a Zinc application with
+Zinc's Event Manager, Window Manager and Event Mapping.  The
+Event Manager maintains a list of run-time devices.  Devices
+included with the library are the keyboard, mouse, and cursor. 
+A pen input device is included with the optional PenDOS Key.  You can also
+create your own input devices such as serial communications, by deriving 
+a new device from the UI_DEVICE base class.\
+\
+All events are stored in the event queue in their raw state.  Raw
+event information when running under DOS is the keyboard scan
+code or mouse state.  Under Microsoft Windows or OS/2 it is the native
+environment message.\
+\
+Zinc lets you avoid dealing with raw event information (e.g., F1
+key, left mouse click, WM_PAINT message), by logically mapping
+events at the object level (e.g., L_HELP, L_BEGIN_MARK,
+S_DISPLAY_ACTIVE).  Raw input is mapped to the appropriate
+logical event for the current object.  For example, the left
+mouse click is mapped to L_BEGIN_SELECT if the current object is
+the window object, and L_BEGIN_MARK if the current object is the
+text object.  This unique feature of Zinc Application Framework
+permits you to work with event information in a device and object
+independent fashion and doesn't require you to know specific
+information about the device that generated the event or the
+object that receives the event.\
+\
+The following code demonstrates how the EVENT MANAGER is
+initialized and how input devices are attached using the
+overloaded '+' operator:\
+\
+// Initialize the event manager and attach input devices.\
+     UI_EVENT_MANAGER *eventManager =\
+     new UI_EVENT_MANAGER(display);\
+     *eventManager\
+          + new UID_KEYBOARD\
+          + new UID_MOUSE\
+          + new UID_CURSOR;\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_SCREEN_DISPLAY
+Screen Display Help...
+Zinc's display classes abstract hardware or operating-specific display
+standards, including: Monochrome, Hercules, CGA, EGA, VGA, SVGA,
+Microsoft Windows, Windows NT, IBM OS/2 and OSF/Motif.  Zinc Application
+Framework for DOS includes a high-performance graphics library as well as
+support for third party graphics libraries such as Borland, Microsoft,
+and Zortech.\
+\
+You can create a display class for your own graphics library by
+deriving from the UI_DISPLAY base class.  You can also create a
+single executable program that supports both DOS Graphics and DOS
+Text.\
+\
+     UI_BGI_DISPLAY: Borland Graphics Display\
+     UI_FG_DISPLAY: Zortech Flash Graphics Display\
+     UI_GRAPHICS_DISPLAY: Zinc Graphics Display\
+     UI_MOTIF_DISPLAY: OSF/Motif Display\
+     UI_MSC_DISPLAY: Microsoft Graphics Display\
+     UI_MSWINDOWS_DISPLAY: Microsoft Windows Display\
+     UI_OS2_DISPLAY: IBM OS/2 Display\
+     UI_TEXT_DISPLAY: DOS Text Mode Display\
+\
+The following code demonstrates how a Zinc DISPLAY CLASS is
+initialized:\
+\
+// Initialize MS Windows 3.X display class\
+      UI_DISPLAY *display =\
+      new UI_MSWINDOWS_DISPLAY(instance, hPrevInstance, nCmdShow);\
+\
+OR\
+\
+// Initialize DOS display, trying for graphics first.\
+     UI_DISPLAY *display = new UI_GRAPHICS_DISPLAY;\
+     if (!display->installed)\
+     {\
+          delete display;\
+          display = new UI_TEXT_DISPLAY;\
+     }\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_HELP_SYSTEM
+Help System Help...
+Zinc provides a help system to allow you to create context
+sensitive help screens for your users.  HELP SYSTEM is derived
+from the UI_HELP_SYSTEM class.  You may also derive your own help
+system from this class.\
+\
+The following code demonstrates how a Zinc HELP SYSTEM is
+initialized:\
+\
+UI_WINDOW_OBJECT::helpSystem =\
+  new UI_HELP_SYSTEM("SAMPLE.DAT", windowManager);\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_ERROR_SYSTEM
+Error System Help...
+Zinc provides an error system to allow you to generate error
+messages for your users.  The ERROR SYSTEM is derived from the
+UI_ERROR_SYSTEM class.  You may also derive your own error system
+from this class.\
+\
+The following code demonstrates how a Zinc ERROR SYSTEM is
+initialized:\
+\
+UI_WINDOW_OBJECT::errorSystem = new UI_ERROR_SYSTEM;\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_ZINC_DESIGNER
+Zinc Designer Help...
+Zinc 3.5 offers the tightest integration available between an
+interactive design tool and the supporting class library.  Most
+Windows developers use a resource tool to help create their
+program interface.  Resource tools are language and library
+independent by design and therefore cannot access all the
+features of a given class library.  This results in a fragmented
+approach to application development with isolated user functions
+and non-specific documentation.  You are saddled with the
+not-so-obvious details of integrating your code with both the
+class library and the resources you create with the resource
+tool.  The seamless integration of Zinc Designer and Zinc 3.5
+contrasts sharply with this a la carte approach.\
+\
+Zinc Designer lets you interactively create your application
+screens using Zinc objects AND objects that you have derived from Zinc
+classes.  You use a mouse to select windows
+and window objects from the menu or tool bar and place them on
+the screen.  You can easily customize objects with Zinc
+Designer's interactive editors.  For example, create input fields
+for formatted information such as a part number or phone number. 
+Just double click on the formatted-string object to open the
+editor.  Now you can enter formatting codes, modify the string
+identifier, attach context-sensitive help and attach a user
+function.  User functions are attached to input objects, controls
+and menus via their respective editors.  (User procedures can be
+executed when the field is made current, non-current and/or
+selected.)\
+\
+After creating your screens you save them to disk in a
+platform-independent resource file with a .DAT extension using Zinc POST
+(Persistent-Object Storage Technology) resources. 
+You add these resources to your application with one
+line of code.  You can also load resources you create with the
+Windows version of Zinc Designer into the DOS, OS/2, Motif versions
+and vice versa.\
+\
+Zinc Designer's complete access to the Zinc class library,
+straightforward integration of your code and
+platform-independent, persistent object storage can dramatically
+enhance your productivity.  With Zinc you can focus your efforts
+on building great applications instead of wasting time trying to
+integrate your interface tools.\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_PERSISTENT_OBJECTS
+Persistent Objects Help...
+POST (Persistent Object Storage Technology) resources in Zinc 3.5
+dramatically improve your productivity by allowing you to store windows
+and window objects in a platform-independent data file.  Objects that
+you create and store in one environment can be retrieved at run-time
+into any other environment that Zinc supports.\
+\
+Some class libraries provide a type of object persistence.  However these
+products use the concept of streamable objects, which is essentially a
+flat-file data structure.  If the resource is large then performance can
+be affected when accessing objects at the end of the stream.  Zinc POST
+resources use a high-performance, Unix-like directory structure which
+allows you to create very large resources without significantly affecting
+performance.\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_CLASS_HIERARCHY
+Class Hierarchy Help...
+Zinc Application Framework CLASS HIERARCHY\
+\
+class UI_APPLICATION\
+\
+class UI_DISPLAY\
+      - *class UI_BGI_DISPLAY\
+      - *class UI_FG_DISPLAY\
+      - *class UI_GRAPHICS_DISPLAY\
+      - *class UI_TEXT_DISPLAY\
+      -  class UI_MOTIF_DISPLAY\
+      - *class UI_MSC_DISPLAY\
+      -  class UI_MSWINDOWS_DISPLAY\
+      -  class UI_OS2_DISPLAY\
+\
+class UI_ELEMENT\
+      - class UI_DEVICE\
+            - class UID_CURSOR\
+            - class UID_KEYBOARD\
+            - class UID_MOUSE\
+            - class UID_PENDOS\
+      - class UI_PATH_ELEMENT\
+      - class UI_QUEUE_ELEMENT\
+      - class UI_REGION_ELEMENT\
+      - class UI_WINDOW_OBJECT\
+            - class UIW_BORDER\
+            - class UIW_BUTTON\
+                  - class UIW_MAXIMIZE_BUTTON\
+                  - class UIW_MINIMIZE_BUTTON\
+                  - class UIW_POP_UP_ITEM\
+                  - class UIW_PULL_DOWN_ITEM\
+                  - class UIW_SYSTEM_BUTTON\
+                  - class UIW_TITLE\
+            - class UIW_ICON\
+            - class UIW_PROMPT\
+            - class UIW_STRING\
+                  - class UIW_BIGNUM\
+                  - class UIW_DATE\
+                  - class UIW_FORMATTED_STRING\
+                  - class UIW_INTEGER\
+                  - class UIW_REAL\
+                  - class UIW_TIME\
+           - *class UIW_WINDOW\
+                  - class UI_WINDOW_MANAGER\
+                  - class UIW_COMBO_BOX\
+                  - class UIW_GROUP\
+                  - class UIW_HZ_LIST\
+                  - class UIW_POP_UP_MENU\
+                  - class UIW_PULL_DOWN_MENU\
+                  - class UIW_SCROLL_BAR\
+                  - class UIW_TEXT\
+                  - class UIW_TOOL_BAR\
+                  - class UIW_VT_LIST\
+\
+class UI_ERROR_SYSTEM\
+class UI_HELP_SYSTEM\
+class UI_INTERNATIONAL\
+      - class UI_BIGNUM\
+      - class UI_DATE\
+      - class UI_TIME\
+\
+class UI_LIST\
+      - class UI_EVENT_MANAGER\
+      - class UI_LIST_BLOCK\
+            - class UI_QUEUE_BLOCK\
+      - class UI_PATH\
+      - class UI_REGION_LIST\
+            - *class UI_BGI_DISPLAY\
+            - *class UI_FG_DISPLAY\
+            - *class UI_GRAPHICS_DISPLAY\
+            - *class UI_TEXT_DISPLAY\
+            - *class UI_MSC_DISPLAY\
+      - *class UIW_WINDOW\
+\
+class UI_STORAGE\
+class UI_STORAGE_OBJECT\
+\
+struct UI_EVENT\
+struct UI_EVENT_MAP\
+struct UI_ITEM\
+struct UI_KEY\
+struct UI_PALETTE\
+struct UI_PALETTE_MAP\
+struct UI_POSITION\
+struct UI_REGION\
+struct UI_SCROLL_INFORMATION\
+\
+* indicates multiple inheritance\
+(UI = user interface)\
+(UID = user interface device)\
+(UIW = user interface window object)\
+\
+Press <Alt+F4> to continue...\
+\
+--- INFO_GENERAL
+General Help...
+Zinc Application Framework 3.5\
+Demonstration Program\
+\
+Press <F1> for General Help information\
+\
+You may freely copy and distribute this demonstration program as
+long as it is distributed with all original files and copyright
+information.\
+\
+COPYRIGHT (C) 1990-1993 Zinc Software Incorporated.  
+All Rights Reserved.\
+\
+--- INFO_STRING
+String Help...
+STRING is used to enter, modify and display single-line
+alphanumeric string information.  String flags determine
+formatting of the string including: no formatting, upper-case,
+lower-case, password and variable name (where spaces are
+converted to the underscore character).\
+\
+NOTE: With the Password flag set, STRING accepts input characters
+but only displays a blank space to the screen.\
+\
+--- INFO_FORMATTED_STRING
+Formatted String Help...
+FORMATTED STRING is used to enter, modify and display
+alphanumeric information in a pre-defined format that you specify,
+such as phone number, part number or serial number.\
+\
+--- INFO_TEXT
+Text Help...
+TEXT is used to enter, modify and display multiple-line text
+information.  It features mark, cut, copy, paste, word wrap,
+home, end, page-up, page-down, word-left, word-right, etc.\
+\
+--- INFO_DATE
+Date Help...
+DATE is used to enter, display and modify country-independent
+date information.  15 date specific flags determine appropriate
+display formatting, including: U.S., European, Japanese,
+military, short (day, month, year), slash, zero fill, upper case
+and lower case.\
+\
+--- INFO_TIME
+Time Help...
+TIME is used to enter, modify and display country-independent time
+information.  13 time specific flags determine the appropriate display
+formatting, including: colon separator, zero fill, hours, minutes,
+seconds, 12 Hour, 24 Hour, upper case and lower case.\
+\
+--- INFO_BIGNUM
+Number Help...
+BIGNUM is used to enter, modify and display country-independent numeric
+information.  BIGNUM has a default maximum value of 30 digits to the left
+and 8 digits to the right of the decimal.  Six number flags determine
+how the number is displayed, including: currency, credit ( ),
+commas, decimal (0 to 8 places) and percent.\
+\
+--- INFO_BUTTON
+Button Help...
+BUTTON is a selectable field used to perform run-time operations. 
+You may attach a bitmap to customize the button.\
+\
+--- INFO_RADIO_BUTTON
+Radio Button Help...
+RADIO BUTTON is a button control that allows only one item in a
+group to be selected.  RADIO BUTTON is a button with the
+BTF_RADIO_BUTTON button flag set in the argument list.\
+\
+--- INFO_CHECK_BOX
+Check Box Help...
+CHECK BOX is a button control that allows multiple items in a
+group to be selected.  CHECK BOX is a button with the
+BTF_CHECK_BOX button flag set in the argument list.\
+\
+--- INFO_HLIST
+Horizontal List Help...
+HORIZONTAL LIST is used to enter, modify and display related
+information in row and column format.  You can add a scroll bar
+to horizontally scroll the list.  A wide variety of window
+objects can be placed in HORIZONTAL LIST, including: input fields,
+icons and controls.\
+\
+--- INFO_VLIST
+Vertical List Help...
+VERTICAL LIST is used to enter, modify and display related
+information in a vertical list format.  You can add a scroll bar
+to vertically scroll the list.  A wide variety of window objects
+can be placed in VERTICAL LIST, including: input fields, icons
+and controls.\
+\
+--- INFO_COMBO_BOX
+Combo-Box Help...
+COMBO BOX is a combination input field and vertical list.  COMBO
+BOX can contain input fields, icons and buttons.\
+\
+--- INFO_SCROLL_BAR
+Scroll-Bar Help...
+SCROLL BAR is a selectable region used to scroll the displayed
+portion of a window, list box or text input field.\
+\
+--- INFO_WINDOW
+Window Help...
+WINDOW is a rectangular region of the display used as the
+controlling structure for window objects.  Zinc supports parent,
+child, MDI, modal and dialog windows.\
+\
+--- INFO_PULL_DOWN_MENU
+Pull-down Menu Help...
+NOTE: MS Windows does not allow a pull-down menu in a child
+window.  However, this feature IS demonstrated in DOS,
+OS/2 and Motif .\
+\
+PULL DOWN MENU is used to organize and control pull-down menu
+items (PULL DOWN ITEMS).\
+\
+--- INFO_POP_UP_MENU
+Pop-up Menu Help...
+NOTE: MS Windows does not allow a pull-down menu in a child
+window.  However, PULL DOWN MENU with a cascading POP UP MENU is
+demonstrated in DOS, OS/2, and Motif.\
+\
+POP UP MENU is used to organize and control pop-up menu items. 
+POP UP MENUS are used for cascading menus.\
+\
+--- INFO_POP_UP_MENU_ITEM
+Pop-up Menu Item Help...
+POP UP MENU ITEM is used to select a specific action from a
+pop-up menu.\
+\
+--- INFO_TOOL_BAR
+Tool-Bar Help...
+TOOL BAR is a menu control used to group buttons, icons, and
+input fields.  A tool bar can be static or wrapped when re-sizing
+the window.  It can be independent of or used in conjunction with
+PULL DOWN MENU.\
+\
+--- INFO_PROMPT
+Prompt Help...
+PROMPT is a static control that is used to provide the user with
+information regarding input fields and program activity.\
+\
+--- INFO_GROUP
+Group Help...
+GROUP is a static control that is used to group radio buttons and
+check boxes.\
+\
+--- INFO_ICON
+Icon Help...
+ICON is a static control used to present graphical information.  Icons
+may be used to select a user-defined action.\
+\
+--- INFO_KEYBOARD
+Keyboard Help...
+KEYBOARD is used to collect raw scan code information from the
+keyboard.  It is attached to a list that is maintained by the
+Event Manager (see Event Manager).  The KEYBOARD feeds
+information to the Event Queue when polled by the Event Manager.\
+\
+--- INFO_MOUSE
+Mouse Help...
+MOUSE is used to collect raw scan code information from a mouse
+input device.  It is attached to a list which is maintained by
+Zinc's Event Manager (see Event Manager).  The MOUSE feeds input
+information directly to the Event Queue.\
+\
+--- INFO_WINDOW_MANAGER
+Window Manager Help...
+Zinc's WINDOW MANAGER maintains a list of window objects and
+controls their positioning and their state (e.g., current,
+non-current).  The WINDOW MANAGER forwards event information to
+the current window object.\
+\
+--- INFO_EVENT_MANAGER
+Event Manager Help...
+Events are received and processed in a Zinc application with
+Zinc's Event Manager, Window Manager and Event Mapping.  The
+Event Manager maintains a list of run-time devices such as the
+keyboard, mouse, and cursor.  Programmer defined devices may also
+be added to the Event Manager.\
+\
+--- INFO_SCREEN_DISPLAY
+Screen Display Help...
+Zinc's display classes abstract hardware or operating-specific display
+standards, including: Monochrome, Hercules, CGA, EGA, VGA, SVGA,
+Microsoft Windows, Windows NT, IBM OS/2 and OSF/Motif.  Zinc Application
+Framework for DOS includes a high-performance graphics library as well as
+support for third party graphics libraries such as Borland, Microsoft,
+and Zortech.\
+\
+You can create a display class for your own graphics library by
+deriving from the UI_DISPLAY base class.  You can also create a
+single executable program that supports both DOS Graphics and DOS
+Text.\
+
+--- INFO_HELP_SYSTEM
+Help System Help...
+Zinc provides a help system to allow you to create context
+sensitive help screens for your users.  HELP SYSTEM is derived
+from the UI_HELP_SYSTEM class.  You may also derive your own help
+system from this class.\
+\
+--- INFO_ERROR_SYSTEM
+Error System Help...
+Zinc provides an error system to allow you to generate error
+messages for your users.  ERROR SYSTEM is derived from the
+UI_ERROR_SYSTEM class.  You may also derive your own error system
+from this class.\
+\
+--- INFO_FONT_SUPPORT
+Font Support Help...
+Zinc allows multiple font support in DOS Graphics, Microsoft Windows,
+Windows NT, IBM OS/2, and OSF/Motif.  The three fonts above are provided
+with Zinc, but you may define more fonts if needed.\
+\
+--- HELP_FONT_SUPPORT
+Font Support Help...
+Zinc allows multiple font support in DOS Graphics, Microsoft Windows,
+Windows NT, IBM OS/2, and OSF/Motif.  The three fonts above are provided
+with Zinc, but you may define more fonts if needed.\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_APPLICATION
+UI_APPLICATION Help...
+The UI_APPLICATION class significantly reduces the number of steps required
+to create a Zinc application.  UI_APPLICATION allows you to write one line
+of code to initialize the main routine, create the appropriate display for
+DOS Text, DOS Graphics, Microsoft Windows and Windows NT, IBM OS/2 and
+OSF/Motif; initialize the Event Manager and attach the Keyboard, Mouse and
+Cursor input devices; and create the Window Manager.  The UI_APPLICATION
+class also has a member function to process events and perform system
+cleanup. 
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_VIDEO
+Video Training Help...
+Although generic C++ training videos are widely available, product-specific
+video-based training has been virtually non-existent.  In response, Zinc
+Software has developed an intensive four-hour videotape training series for
+Zinc Application Framework.  This training series addresses object-oriented
+programming techniques with Zinc 3.5 in a manner that is impossible to
+duplicate with hard copy documentation.  The videotapes include the
+following sections:\
+\
+     Overview of Zinc Application Framework\
+     Introduction to Windows and Window Objects\
+     Understanding Zinc Header and Code files\
+     Using Persistent Objects\
+     Understanding the Zinc Architecture\
+     Zinc Message Handling\
+     User Functions and Message Processing\
+     Deriving Input Devices\
+     Deriving Window Objects\
+     Deriving Windows\
+     Odds and Ends\
+\
+The videotapes are based on the Zinc Developer's Conference held October 1992
+at Snowbird, Utah.  The response to the conference was overwhelming.  Over
+98 percent of the attendees said the conference was very worthwhile (and
+they paid $1,500.00 to attend!).  Companies attending included EDS, Hewlett
+Packard, Lotus, Novell, Iomega, Schlumberger Technologies and
+WordPerfect.  Attendees came from the US, Germany, United Kingdom, France, Italy, Sweden,
+Canada, Mexico and Brazil.\
+\
+Press <Alt+F4> to continue...\
+\
+--- HELP_PEN
+Pen Help...
+Zinc Software supports the IBM PenDOS operating system with a pen input
+object.  The PEN is used to collect pen input information from a pen
+input device.  It is attached to a list which is maintained by
+Zinc's Event Manager (see Event Manager).  The PEN feeds input
+information directly to the Event Queue.\
+\
+The PEN is attached to the Event Manager at run-time using the
+Add member function or the overloaded '+' operator:\
+\
+// Initialize the event manager and attach the keyboard, pen
+and cursor devices.\
+     UI_EVENT_MANAGER *eventManager =\
+     new UI_EVENT_MANAGER(display);\
+     *eventManager\
+          + new UID_KEYBOARD\
+          + new UID_PENDOS\
+          + new UID_CURSOR;\
+\
+Press <Alt+F4> to continue...\
+\
+

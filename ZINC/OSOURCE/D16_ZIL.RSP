@@ -1,0 +1,27 @@
+d16_zil.lib
++d_tdsp.o16+d_keybrd.o16+d_mouse.o16+d_cursor.o16 &
++d_border.o16+d_button.o16+d_combo.o16+d_group.o16 &
++d_hlist.o16+d_icon.o16+d_min.o16+d_max.o16+d_scroll.o16+d_string.o16 &
++d_sys.o16+d_text.o16+d_title.o16+d_popup.o16+d_popup1.o16+d_plldn.o16 &
++d_plldn1.o16+d_prompt.o16+d_tbar.o16+d_vlist.o16 &
++d_win.o16+d_win1.o16+d_win2.o16 &
++d_error.o16+d_intl.o16 &
++z_list.o16+z_list1.o16 &
++z_intl.o16+z_date.o16+z_time.o16+z_bnum.o16+z_bnum1.o16 &
++z_region.o16+z_dsp.o16+z_path.o16+z_store.o16 &
++z_device.o16+z_cursor.o16+z_event.o16+z_map1.o16+z_map2.o16 &
++z_border.o16+z_button.o16+z_combo.o16+z_date1.o16+z_fmtstr.o16 &
++z_group.o16+z_hlist.o16+z_icon.o16+z_int.o16+z_min.o16+z_max.o16 &
++z_bnum2.o16+z_scroll.o16+z_string.o16+z_sys.o16+z_text.o16+z_time1.o16 &
++z_title.o16+z_popup.o16+z_popup1.o16+z_plldn.o16+z_plldn1.o16 &
++z_prompt.o16+z_tbar.o16+z_real.o16+z_vlist.o16 &
++z_win.o16+z_win1.o16+z_win2.o16+z_utils.o16 &
++z_error.o16+z_help.o16 &
++g_bnum.o16+g_border.o16+g_date.o16+g_date1.o16 &
++g_device.o16+g_dsp.o16+g_event.o16+g_hotkey.o16 &
++g_jump.o16+g_perror.o16+g_phelp.o16+g_pnorm.o16+g_store.o16 &
++g_time.o16+g_time1.o16+g_win1.o16+g_win2.o16 &
++g_sys.o16+g_int.o16+g_real.o16 &
++i_ztcat.o16+i_mapfon.o16
+
+

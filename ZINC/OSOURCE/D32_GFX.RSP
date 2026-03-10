@@ -1,0 +1,4 @@
+d32_gfx.lib
++d_gfxdsp.o32+gfx_smal.o32+gfx_dial.o32+gfx_syst.o32+z_appgfx.o32
+
+

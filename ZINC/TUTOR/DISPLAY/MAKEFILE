@@ -1,0 +1,32 @@
+# ----- Usage --------------------------------------------------------------
+usage:
+	@echo ...........
+	@echo ...........
+	@echo To generate this Zinc tutorial for Borland C++ type:
+	@echo make -fborland.mak dos
+	@echo make -fborland.mak dos16
+	@echo (This tutorial is not supported in OS/2)
+	@echo (This tutorial is not supported in Windows)
+	@echo (This tutorial is not supported in Windows NT)
+	@echo ...........
+	@echo To generate this Zinc tutorial for Microsoft C++ type:
+	@echo nmake -fmicrosft.mak dos
+	@echo nmake -fmicrosft.mak dos16
+	@echo (Microsoft does not support OS/2)
+	@echo (This tutorial is not supported in Windows)
+	@echo (This tutorial is not supported in Windows NT)
+	@echo ...........
+	@echo To generate this Zinc tutorial for Watcom C++ type:
+	@echo wmake -f watcom.mak dos
+	@echo wmake -f watcom.mak dos16
+	@echo (This tutorial is not supported in OS/2)
+	@echo (This tutorial is not supported in Windows)
+	@echo ...........
+	@echo To generate this Zinc tutorial for Zortech C++ type:
+	@echo make -fzortech.mak dos
+	@echo make -fzortech.mak dos16
+	@echo make -fzortech.mak dos32
+	@echo (This tutorial is not supported in OS/2)
+	@echo (This tutorial is not supported in Windows)
+	@echo ...........
+	@echo ...........

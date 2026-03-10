@@ -1,0 +1,2193 @@
+--- STRINGID_HELP
+StringID
+This field contains the string identification for the object.
+
+The default string identification for a resource window is "RESOURCE" plus
+a unique number corresponding to the order in which it was created. The
+default string identification for an object attached to another object is
+"FIELD" plus a unique number corresponding to the order in which attached
+to the parent resource.  The number given to the first object is actually
+0, so, for example, the screen identification for the second object created
+within a resource window would be "FIELD_1."
+
+Since the object appears in lists in other locations within the program, it
+is recommended that you override the default identification and enter a
+string that more specifically identifies the object.  The identification
+will appear in all locations exactly as you have entered it in this field.
+
+--- HELP_CONTEXT_HELP
+helpContext
+This field designates the help context to be associated with the current
+object.  Select the combo box button to view a list of the available help
+contexts. (These are created by interaction with the help editor.)  If you
+select one of the contexts listed, the help message of that context will be
+displayed whenever the user positions on the object and requests help.
+
+--- OBJECT_LIST_HELP
+Object List
+This field displays the objects, listed in the order in which they were
+created, that are attached to the current object.  To access the editor of
+one of these listed objects, double click on it with the mouse or scroll to
+it and press <Enter>.
+
+To change the order of the objects listed, press <Ctrl> and move an item
+with the arrow keys to the desired position.  Pressing <Ctrl Del> deletes
+the highlighted object.
+
+--- FLAGS_LIST_HELP
+Flag List
+The flags listed in this field control the general presentation and
+operation of the current object.  All of these items are listed with check
+boxes, which display as selected when they are currently in effect.  To
+toggle a flag or option from non-current to current or vice versa, select
+it by either clicking on it with the mouse or by scrolling to it and
+pressing <Enter>.  There is no limit to the number of flags that can be in
+effect at a given time; however, if two flags are selected that present
+conflicting information, such as "Center Justify" and "Right Justify,"
+only the flag listed first in the field will have effect.
+
+--- OK_BUTTON_HELP
+OK Button
+Selecting this button saves the edit information and closes the object
+editor window.  The current object will reflect the editing changes
+immediately.  If no information has been entered within the object editor,
+its window will close with no other action taking place.
+
+--- CANCEL_BUTTON_HELP
+Cancel Button
+Selecting this button causes the window to close without executing any
+changes.  It should be selected if you have not made any changes in the
+current window and you wish to close it.
+
+--- HELP_BUTTON_HELP
+Help Button
+Additional information about the current object appears in a help window
+when this button is selected.  To close the help window, select the "Close"
+option from the system button's menu, double click on the system button
+with the mouse, or press <Alt+F4>.
+
+--- MIN_ICON_HELP
+Minimize Icon
+This field designates the icon to be associated with the window when it is
+minimized.  Select the combo box button to view a list of the available
+icon images.  (These are created by interaction with the Image Editor.)  If
+you select one of the icons listed, the window will be represented by it
+when in a minimized state.  The end user will be able to double click on the
+icon in order to restore the window to its original size on the screen.
+
+--- NUMBER_FIELD_HELP
+Number (Integer and Real)
+Enter in this field the number that you want to appear in the number
+field.
+
+--- BIGNUM_FIELD_HELP
+Bignum
+Enter in this field the number that you want to appear in the bignum field.
+ The number will be displayed with the number of decimal places designated
+by the flags you have set. A bignum object can have up to thirty digits to
+the left of the decimal place and up to eight digits to the right of the
+decimal place.
+
+--- RANGE_FIELD_HELP
+Range
+If you want to specify a certain range of acceptable values, enter in this
+field the valid ranges.  For example, if you want to accept only numbers
+between 100 and 100,000 in a numeric field, enter the range of
+"100..100000."  If no range is entered, any value, as long as it meets the
+general requirements for the object, will be accepted.
+
+--- USER_FUNCTION_HELP
+userFunction
+If you want to have a user function associated with the object, you can
+enter the name of it in this field.  The function must be defined somewhere
+in your code under the same name that is entered so that Zinc Designer can
+find it and execute the designated action.  (For more information on
+creating user functions, refer to the description of the object's
+constructor in the Programmer's Reference.)
+
+--- TEXT_FIELD_HELP
+Text
+Enter text in this field exactly as you want it to appear in the text
+object.  If the object contains a "maxLength" limitation and the text
+entered contains more characters than that limitation allows, only the
+number of characters that fall within the limit will be displayed.
+
+--- VALUE_FIELD_HELP
+Value
+This field allows you to enter in a value that serves as a unique
+identification for a button.  For example, you could associate the value 0
+with an "ok" button and a value of 1 with a "cancel" button.  This allows
+you to define one user-function that looks at the button values, instead of
+several user-functions that are tied to each button object.  If the
+BTF_SEND_MESSAGE flag is set, the value must be an event type.
+
+--- BITMAP_FIELD_HELP
+Bitmap
+This field designates the bitmap image to be associated with the object. 
+Select the combo box button to view a list of the available bitmaps. (These
+are created by interaction with the Image Editor.) If you select one of the
+bitmaps listed, it will be displayed on the object.
+
+--- COMPARE_FUNCTION_HELP
+compareFunction
+If you want to have a compare function associated with the object, you can
+enter the name of it in this field.  The function must be defined somewhere
+in your code under the same name that is entered so that the design tool
+can find it and execute the designated action.  (For more information on
+creating compare functions, refer to the description of the object's
+constructor in the Programmer's Reference.)
+
+--- DATE_FIELD_HELP
+Date
+Enter in this field the date that you want to appear in the date object. 
+The default format to which this date will be automatically converted is
+"month-day-year" with spaces being automatically converted to hyphens (-).
+
+--- COMPRESSED_TEXT_HELP
+compressedText
+Enter text in this field as you want it to initially appear in the
+formatted string object.  It must conform to the specifications set by the
+"editMask" and "deleteText" fields.  For example, a string "8017858900"
+would be appropriate for a formatted telephone number.
+
+--- EDIT_MASK_HELP
+editMask
+This field determines the type of characters that the formatted string will
+accept.   The following characters can be used to define the edit mask:
+
+  a - Allows the end-user to enter a space (' ') or any letter (i.e., 'a'
+through 'z' or 'A' through 'Z').
+
+  A - Same as the 'a' character option except that a lower-case letter is
+automatically converted to an upper-case letter.
+
+  c - Allows the end-user to enter a space (' '), a number (i.e., '0'
+through '9'), or any alphabetic character (i.e., 'a' through 'z' or 'A'
+through 'Z').
+
+  C - Same as the 'c' character option except that a lower-case character
+is automatically converted to upper-case.
+
+  L - Uses this position as a literal place holder.  Using this character
+causes the formatted string to get the character to be read and displayed
+from the literal mask.  The end-user cannot position on nor edit this
+character.
+
+  N - Allows the end-user to enter any digit.
+
+  x - Allows the end-user to enter any printable character (i.e., ' '
+through '~').
+
+  X - Same as the 'x' character option except that a lower-case letter is
+automatically converted to an upper-case alphanumeric character.
+
+Enter in the "editMask" field a string of characters that will define the
+acceptable format for the string.  For example, an edit mask of
+"LNNNLLNNNLNNNN" would be appropriate for a formatted telephone number.
+
+--- DELETE_TEXT_HELP
+deleteText
+Enter into this field a string of literal characters that will be used
+whenever a character is deleted from a particular position in the formatted
+string. For example, a string of "(...) ...-...." would be appropriate for
+a formatted telephone number.
+
+--- CELL_WIDTH_HELP
+cellWidth
+Enter in this field a number to specify the maximum cell width of a single
+list item.  If the list is wider than the specified width, it will be
+displayed with multiple columns.  The default width is "10."
+
+--- CELL_HEIGHT_HELP
+cellHeight
+Enter in this field a number to specify the maximum cell height of a single
+list item.  If the list is taller than the specified height, it will be
+displayed with multiple rows.  The default height is "1."
+
+--- MAX_LENGTH_HELP
+maxLength
+The number in this field determines the number of characters that the
+string object will display.  The default length is 20.  The maximum length
+is 32,767.
+
+--- TIME_FIELD_HELP
+Time
+Enter in this field the time that you want to appear in the time object. 
+The default format to which this time will be automatically converted is
+hour:minutes a.m. or hour:minutes p.m.  A space between numbers will be
+interpreted as a colon, and necessary periods (for "a.m." and "p.m.") are
+automatically inserted.  Since any hour value under 12 is interpreted as
+morning, it is necessary to enter "pm" if the hour value is meant to be in
+post-meridian time and you are using a 12-hour clock.  If you enter the
+time value according to a 24-hour clock, there is no need to enter "a.m."
+or "p.m."--the object will interpret and convert the value into the default
+format.
+
+--- ICON_IMAGE_HELP
+Icon Image
+This field designates the image to be associated with the icon.  Select the
+combo box button to view a list of the available images.  (These are
+created by interaction with the Image Editor.)  If you select one of the
+images listed, it will be displayed on the icon.
+
+--- ICON_TITLE_HELP
+Icon Title
+Enter in this field text exactly as you want it to appear in the
+rectangular region below the icon.  If you do not want a title for the
+icon, delete the default string "Icon."
+
+--- FILE_OPTION_HELP
+File Options
+The File category options control the general operations of the design
+tool.  The following options are included:
+
+  New - Allows you to create a new file.
+
+  Open - Allows you to open a previously created file.
+
+  Save - Saves the current file in its present condition.
+
+  Save As - Allows you to save the current file under a new name.
+
+  Delete - Allows you to delete a file.
+
+  Preferences - Allows you to change the default settings of Zinc
+Designer.
+
+  Exit - Exits you from Zinc Designer.
+
+--- EDIT_OPTION_HELP
+Edit Options
+The Edit category options are used to edit the appearance and performance
+of objects within the current resource.  The following options are 
+included:
+
+  Object - Allows you to edit the current object through interaction with
+its editor.
+
+  Advanced - Allows you to edit advanced attributes for the object.  (Used
+for deriving objects.)
+\
+  Cut - Removes the current object from the screen and places it in a
+global paste buffer.
+
+  Copy -   Copies the current object and places the copy in a global paste
+buffer.
+
+  Paste -  Allows you to recall and position on the screen the contents of
+the global paste buffer.
+
+  Delete - Removes the current object from the screen.
+
+  Move - Allows you to move the current object either by dragging the mouse
+or by using the arrow keys.
+
+  Size - Allows you to size the selected region from the bottom right
+corner either by dragging the mouse or by using the arrow keys.\
+
+
+--- RESOURCE_OPTION_HELP
+Resource Options
+The Resource category options allow you to create, modify, and retrieve
+objects in the current file.  The following options are included:
+
+  Create - Automatically places a window on the screen, complete with a
+title bar, a system button, and minimize and maximize buttons.
+
+  Load - Allows you to recall a previously created resource from the
+current file.
+
+  Store - Causes the current resource to be saved in its present condition
+to the current file.
+
+  Store As - Allows you to store the current resource under a new name.
+
+  Inport - Allows you to import resources from another designer file.
+
+  Edit - Causes the editor of the current window to appear.
+
+  Clear - Causes the current resource to be removed from the screen.
+
+  Delete - Allows you to delete a resource from the current file.
+
+  Test - Allows you to test the objects of your current application
+resource.
+
+--- UTIL_OPTION_HELP
+Utilities Options
+The Utilities category provides options that allow you to create images and
+help contexts to be used throughout your application.  The following
+options are included:
+
+  Image Editor - Allows you to create icon and bitmap images that can be
+assigned to other objects in your application.
+
+  Help Editor - Allows you to create help contexts to be used throughout
+your application to provide context-sensitive help.
+
+--- OBJECT_OPTION_HELP
+Object Options
+The Object category provides options that allow you to actually create
+objects.  Each of the options on this menu is a category under which
+several window objects are classified.  The available options are:
+
+  Input - Includes objects that are used specifically for data input.
+
+  Control - Includes objects that are used to control the various
+operations of an application, its windows and window objects.
+
+  Menu - Includes objects used specifically for creating menus that display
+selectable options.
+
+  Static - Includes window objects that are generally not designed to be
+edited nor interacted with by an end user.
+
+  Derive Object - Allows you to place an user-defined object derived
+from UI_WINDOW_OBJECT.
+
+Selecting one of the options causes another associated menu to appear,
+which lists the actual window objects of that category.
+
+To create an object, select it from the associated menu. Position the mouse
+cursor where you want the object to appear on the resource window and press
+the left mouse button. 
+
+NOTE: All objects must be attached to a resource parent window; they cannot
+be attached directly to the screen.
+
+--- HELP_OPTION_HELP
+Help Options
+The Help category is available so that you can receive help at any time
+during Zinc Designer's execution.  The various options represent the
+different areas within Zinc Designer where help information is available. 
+These options are:
+
+  Index - Allows you to view all help contexts for the Zinc Designer.
+
+  File - Causes help to be displayed regarding how to use the File options
+in creating an application with Zinc Designer.
+
+  Edit - Causes help to be displayed regarding how to use the Edit options
+in creating an application with Zinc Designer.
+
+  Object - Causes help to be displayed regarding how to use the Object
+options in creating an application with Zinc Designer.
+
+  Resource - Causes help to be displayed regarding how to use the Resource
+options in creating an application with Zinc Designer.
+
+  Utilities - Causes help to be displayed regarding how to use the
+Utilities options in creating an application with Zinc Designer.
+
+  About Designer - Causes information to be displayed regarding the general
+contents and specifics of the design tool (e.g., the current version number
+and copyright information).
+
+--- OBJECT_BAR_HELP
+Object Bar
+The object bar presents some of the available window objects within Zinc
+Designer.  It is designed to allow you to easily select these items with a
+mouse and then attach them directly to your current resource.  When one of
+the objects is selected, its name appears in the "place object" field on
+the status bar, where it remains until it is attached to a window, or until
+another object is selected from the object bar. The object is attached to a
+resource by positioning the cursor on the desired location and clicking the
+left mouse button.
+
+By default the objects on the object bar are displayed by their bitmap
+representations, but they can also be displayed as text only or as text and
+bitmaps. (This is determined by the settings specified in the Preferences
+option of the File menu.)
+
+NOTE:  All of the window objects available in Zinc Designer are not
+represented on the object bar.  For the complete set of objects, the Object
+option must be used.\
+
+
+--- FILE_NAME_HELP
+File Name
+Enter the name of the file to be created, opened, saved, or deleted here. 
+If you do not include it yourself, a ".DAT" postfix will be automatically
+attached to the name.
+
+--- DRIVES_LIST_HELP
+Drives
+This field displays other drives that are available on your system. 
+Selecting a drive causes the files and directories on that drive to be
+displayed in their respective fields.
+
+--- DIRECTORY_LIST_HELP
+Directory
+This field displays other available directories of the current drive.  ".."
+represents the parent directory, and, if selected, will display the other
+sub-directories of the current path, all of which are also selectable.
+
+--- FILE_LIST_HELP
+File
+Other .DAT files created with Zinc Designer that belong to the current
+directory are listed in this field.  If one of these files is selected, its
+name will appear at the "File name" prompt.
+
+--- RSRC_STRINGID_HELP
+StringID
+This field contains the string identification for the current resource. 
+The default string identification for a resource window is "RESOURCE" plus
+a unique number corresponding to the order in which it was created.  For
+example, the screen identification for the first resource window created on
+the screen would be "RESOURCE_1."
+
+Since the resource appears in lists in other locations within the program,
+it is recommended that you override the default identification and enter a
+string that more specifically identifies the resource.  The identification
+will appear in all locations exactly as you have entered it in this field.
+
+--- RESOURCE_LIST_HELP
+Resources
+This field displays the resources that are available in the current file. 
+The resources are listed by their stringID's in alphabetical order.  If one
+of these is selected, its string identification will appear at the
+"StringID" prompt.
+
+--- IMAGE_TYPE_HELP
+Image Type
+This field designates the type of image--bitmap or icon--to be created. 
+Select the combo box button or press the <down arrow>; then select one of
+these two options.  If the image will be designed for use with an icon,
+select "Icon."  For use with all other objects, select "Bitmap."
+
+--- IMAGE_NAME_HELP
+Image Name
+Enter the name of the image to be created, opened, saved, or deleted here.
+
+--- IMAGE_LIST_HELP
+Images
+Other images of the current type (i.e., bitmap or icon) that have been
+created with the image editor in the current application file are listed in
+the field in the center of the window.  If one of these images is selected,
+its name will appear at the "Image name" prompt.
+
+--- CONTEXT_NAME_HELP
+Context Name
+Enter the name of the context to be created, opened, saved, or deleted
+here.
+
+--- CONTEXT_LIST_HELP
+Contexts
+Other help contexts that have been created with the help editor in the
+current application file are listed in the field in the center of the
+window.  If one of these contexts is selected, its name will appear at the
+"Context name" prompt.
+
+--- IMAGE_WIDTH_HELP
+Image Width
+Enter in the "Width" field the desired pixel width for the image. If the
+image type is icon, the width must be 32.
+
+--- IMAGE_HEIGHT_HELP
+Image Height
+Enter in the "Height" field the desired pixel height for the image.  If the
+image type is icon, the height must be 32.
+
+--- UIF_BUTTON_HELP
+Button Editor
+A button is used to provide a selectable option that relates to a window.
+
+text - Enter in this field text exactly as you want it to appear on the
+button.
+
+value - This field allows you to enter in a value that serves as an
+identification for a button, or a message if the BTF_SEND_MESSAGE
+flag is set for the button.
+
+userFunction - If you want to have a user function associated with the
+button, enter in this field the name of the function.
+
+bitmap - This field designates the bitmap image to be associated with the
+button.  Select the combo box button to view a list of the available
+bitmaps.  If you select one of the bitmaps listed, it will be displayed on
+the button.
+
+stringID - Enter in this field a string that will distinguish the button
+object from other objects.
+
+helpContext - This field designates the help context to be associated
+with the button.  Select the combo box button to view a list of the
+available help contexts.
+
+flags - The flags that control the presentation and operation of the button
+are listed in the field on the right half of the window.  The flags are:
+
+BTF_AUTO_SIZE-Automatically computes the run-time height of the button.
+
+BTF_CHECK_BOX-Creates a check box that can be toggled when selected.
+
+BTF_DOUBLE_CLICK-Completes the button action when the button has been
+selected twice within a certain period of time.
+
+BTF_DOWN_CLICK-Completes the button action on a button down-click, rather
+than on a down-click and release action.
+
+BTF_NO_TOGGLE-Does not toggle the button's WOS_SELECTED status flag.
+
+BTF_NO_3D-Causes the button to be displayed without shadowing.
+
+BTF_RADIO_BUTTON-Causes the button to appear and function as a radio
+button.
+
+BTF_REPEAT-Causes the button to be re-selected if it remains depressed for a
+certain period of time.
+
+BTF_SEND_MESSAGE-Causes the event associated with the button's value to be
+created and put on the event manager when the button is selected.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_JUSTIFY_CENTER-Center-justifies the text within the button.
+
+WOF_JUSTIFY_RIGHT-Right-justifies the text within the button.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_FIELD_REGION-Causes the button object to occupy all the remaining
+space of its parent window.
+
+WOF_NON_SELECTABLE-Prevents the button object from being selected.
+
+WOAF_NON_CURRENT-The button object cannot be made current.
+
+--- UIF_DATE_HELP
+Date Editor
+A date field displays and collects date information.
+
+date - Enter in this field the date that you want to appear in the date
+object.
+
+range - If you want to specify a certain range of acceptable dates, enter
+in this field the valid date ranges.
+
+userFunction - If you want to have a user function associated with the date
+object, enter in this field the name of the function.
+
+stringID - Enter in this field a string that will distinguish the date
+object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the date field.  Select the combo box button to view a list of the
+available help contexts.
+
+flags - The flags that control interpretation and presentation of the date
+object are listed in the field on the right side of the window.  These
+flags are:
+
+DTF_ALPHA_MONTH-Formats the month to be displayed as an alphabetic string.
+
+DTF_DASH-Separates each date variable with a dash, regardless of the
+default country date separator.
+
+DTF_DAY_OF_WEEK-Adds an alphabetic string day-of-week value to the date.
+
+DTF_EUROPEAN_FORMAT-Forces the date to be displayed and interpreted in the
+European format (i.e., day/month/year).
+
+DTF_JAPANESE_FORMAT-Forces the date to be displayed and interpreted in the
+Japanese format (i.e., year/month/day).
+
+DTF_MILITARY_FORMAT-Forces the date to be displayed and interpreted in the
+U.S. Military format (i.e., day/month/year where either month is a 3 letter
+abbreviated word and year is a two-digit year value (if DTF_SHORT_YEAR or
+DTF_SHORT_MONTH flags are set) or month is spelled out and year is a
+four-digit value).
+
+DTF_SHORT_DAY-Adds a shortened day-of-week to the date.
+
+DTF_SHORT_MONTH-Uses a shortened alphabetic month in the date.
+
+DTF_SHORT_YEAR-Forces the year to be displayed as a two-digit value.
+
+DTF_SLASH-Separates each date value with a slash.
+
+DTF_SYSTEM-Fills a blank date with the system date.
+
+DTF_UPPER_CASE-Converts the alphanumeric date to upper-case. 
+
+DTF_US_FORMAT-Forces the date to be displayed and interpreted in the U.S.
+format (i.e., month/day/year).
+
+DTF_ZERO_FILL-Forces the year, month, and day values to be zero filled when
+their values are less than 10.
+
+WOF_AUTO_CLEAR-Automatically clears the date buffer if the end-user tabs
+onto date field and then begins typing.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_INVALID-Sets the initial status of the date field to be "invalid."
+
+WOF_JUSTIFY_CENTER-Center-justifies the date information within the date
+field.
+
+WOF_JUSTIFY_RIGHT-Right-justifies the date information within the date
+field.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_SELECTABLE-Prevents the date object from being selected.
+
+WOF_UNANSWERED-Sets the initial status of the date field to be
+"unanswered."
+
+WOF_VIEW_ONLY-Prevents the date object from being edited.
+
+WOAF_NON_CURRENT-The date object cannot be made current.
+
+--- UIF_FMTSTR_HELP
+Formatted String Editor
+A formatted string is used to display and collect information that requires
+a specific format.  For example, telephone numbers and zip codes are best
+presented as formatted strings.
+
+compressedText - Enter text in this field as you want it to initially
+appear in the formatted string object.  It must conform to the
+specifications set by the "editMask" and "deleteText" fields.
+
+editMask - This field determines the type of characters that the formatted
+string will accept.   The following characters can be used to define the
+edit mask:
+
+a-Allows the end-user to enter a space (' ') or any letter (i.e., 'a'
+through 'z' or 'A' through 'Z').
+
+A-Same as the 'a' character option except that a lower-case letter is
+automatically converted to an upper-case letter.
+
+c-Allows the end-user to enter a space (' '), a number (i.e., '0' through
+'9'), or any alphabetic character (i.e., 'a' through 'z' or 'A' through
+'Z').
+
+C-Same as the 'c' character option except that a lower-case character is
+automatically converted to upper-case.
+
+L-Uses this position as a literal place holder.  Using this character
+causes the formatted string to get the character to be read and displayed
+from the literal mask. The end-user cannot position on nor edit this
+character.
+
+N-Allows the end-user to enter any digit.
+
+x-Allows the end-user to enter any printable character (i.e., ' ' through
+'~').
+
+X-Same as the 'x' character option except that a lower-case letter is
+automatically converted to an upper-case alphanumeric character.
+
+Enter in the "editMask" field a string of characters that will define the
+acceptable format for the string.
+
+deleteText - Enter into this field a string of literal characters that will
+be used whenever a character is deleted from a particular position in the
+formatted string.
+
+userFunction - If you want to have a user function associated with the
+formatted string object, enter in this field the name of the function.
+
+stringID - Enter in this field a string that will distinguish the formatted
+string object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the formatted string.  Select the combo box button to view a list of the
+available help contexts.
+
+flags - The flags that control the presentation of the formatted string
+object are listed in the field on the right half of the window.  The flags
+are:
+
+WOF_AUTO_CLEAR-Automatically clears the string buffer if the end-user tabs
+onto formatted string field and then begins typing.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_INVALID-Sets the initial status of the formatted string field to be
+"invalid."
+
+WOF_JUSTIFY_CENTER-Center-justifies the text information within the
+formatted string field.
+
+WOF_JUSTIFY_RIGHT-Right-justifies the text information within the formatted
+string field.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_SELECTABLE-Prevents the formatted string object from being
+selected.
+
+WOF_UNANSWERED-Sets the initial status of the formatted string field to be
+"unanswered."
+
+WOAF_NON_CURRENT-The formatted string object cannot be made current.
+
+--- UIF_ICON_HELP
+Icon Editor
+An icon is used to display a 32x32 pixel bitmap image to the screen.
+
+iconImage - This field designates the image to be associated with the icon.
+Select the combo box button to view a list of the available images.  If you
+select one of the images listed, it will be displayed on the icon.
+
+title - Enter in this field text exactly as you want it to appear in the
+rectangular region below the icon's bitmap.
+
+stringID - Enter in this field a string that will distinguish the icon
+object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the icon.  Select the combo box button to view a list of the available help
+contexts.
+
+flags - The flags that control the presentation and operation of the icon
+are listed in the field on the right half of the window.  The flags are:
+
+ICF_DOUBLE_CLICK-Completes the icon action on a mouse double-click, rather
+than on a single-click and release action.
+
+WOF_BORDER-Draws a single-pixel border around the icon's title in graphics
+mode.
+
+WOF_JUSTIFY_CENTER-Center-justifies the string information within the
+icon.
+
+WOF_JUSTIFY_RIGHT-Right-justifies the string information within the icon.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_SELECTABLE-Indicates that the icon object cannot be selected.
+
+WOAF_NON_CURRENT-The icon cannot become current.
+
+WOAF_TEMPORARY-Causes the icon to only occupy the xcreen temporarily.  Once
+another window gets focus the temporary icon will be removed.
+
+WOAF_NO_DESTROY-Prevents the Window Manager from calling the icon's
+destructor when it is closed by the user.
+
+WOAF_NO_MOVE-Prevents the end-user from changing the position of the icon.
+\
+WOAF_MODAL-Prevents any other window from receiving event information from
+the Window Manager.
+
+WOAF_LOCKED-Prevents the Window Manager from removing the icon from the
+screen display.
+
+--- UIF_INTEGER_HELP
+Integer Editor
+An integer number is used to present and collect numeric information for
+integers.  It cannot be formatted.
+
+integer - Enter in this field the integer that you want to appear in the
+integer field.
+
+range - If you want to specify a certain range of acceptable integer
+values, enter in this field the valid ranges.
+
+userFunction - If you want to have a user function associated with the
+integer object, enter in this field the name of the function.
+
+stringID - Enter in this field a string that will distinguish the integer
+object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the integer field.  Select the combo box button to view a list of the
+available help contexts.
+
+flags - The flags that control the presentation and operation of the
+integer information are listed in the field on the right.  These flags
+are:
+
+WOF_AUTO_CLEAR-Automatically clears the numeric buffer if the end-user tabs
+onto integer field and then begins typing.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_INVALID-Sets the initial status of the integer field to be "invalid."
+
+WOF_JUSTIFY_CENTER-Center-justifies the numeric information associated with
+the number object.
+
+WOF_JUSTIFY_RIGHT-Right-justifies the numeric information associated with
+the integer object.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_SELECTABLE-Prevents the integer object from being selected.
+
+WOF_UNANSWERED-Sets the initial status of the integer field to be
+"unanswered."
+
+WOF_VIEW_ONLY-Prevents the integer object from being edited.
+
+WOAF_NON_CURRENT-The integer field cannot be made current.
+
+--- UIF_PROMPT_HELP
+Prompt Editor
+A prompt object is used to provide lead information for another window
+object.
+
+text - Enter in this field a text string exactly as you want it to appear. 
+It will be automatically centered vertically.  If either the
+WOF_JUSTIFY_CENTER or the WOF_JUSTIFY_RIGHT flag is set and text string
+is longer than the length of the prompt field, the field must be sized in
+order to display the entire text.
+
+stringID - Enter in this field a string that will distinguish the prompt
+object from other objects.
+
+flags - The flags that control the presentation of the prompt are listed in
+the field on the right half of the window.  The flags are:
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_JUSTIFY_CENTER-Center-justifies the text within the prompt.
+
+WOF_JUSTIFY_RIGHT-Right-justifies the text within the prompt.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+
+--- UIF_REAL_HELP
+Real Editor
+A real number object is used to present and collect floating-point numeric
+information. Decimal numbers will be displayed using decimal notation. 
+When the decimal strings are too large, they are automatically converted
+to scientific notation.
+
+real - Enter in this field the number that you want to appear in the real
+number field. 
+
+range - If you want to specify a certain range of acceptable real number
+values, enter in this field the valid ranges.
+
+userFunction - If you want to have a user function associated with the real
+number object, enter in this field the name of the function.
+
+stringID - Enter in this field a string that will distinguish the real
+object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the real number field.  Select the combo box button to view a list of the
+available help contexts.
+
+flags - The flags that control the presentation and operation of the real
+number information are listed in the field on the right.  These flags are:
+
+WOF_AUTO_CLEAR-Automatically clears the numeric buffer if the end-user tabs
+onto real field and then begins typing.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_INVALID-Sets the initial status of the real number field to be
+"invalid." 
+
+WOF_JUSTIFY_CENTER-Center-justifies the numeric information associated with
+the real object.
+
+WOF_JUSTIFY_RIGHT-Right-justifies the numeric information associated with
+the real object.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_SELECTABLE-Prevents the real number object from being selected. 
+
+WOF_UNANSWERED-Sets the initial status of the real number field to be
+"unanswered."
+
+WOF_VIEW_ONLY-Prevents the real number object from being edited.
+
+WOAF_NON_CURRENT-The real number field cannot be made current.
+
+--- UIF_STRING_HELP
+String Editor
+A string object is used to present and collect alphanumeric string
+information.
+
+text - Enter text in this field exactly as you want it to appear in the
+string object.
+
+maxLength - The number in this field determines the maximum number of
+characters that the string object may contain.
+
+userFunction - If you want to have a user function associated with the
+string object, enter in this field the name of the function.
+
+stringID - Enter in this field a string that will distinguish the string
+object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the string.  Select the combo box button to view a list of the available
+help contexts.
+
+flags - The flags that control the presentation of the string object are
+listed in the field on the right half of the window.  The flags are:
+
+STF_LOWER_CASE-Converts all character input to lowercase values.
+
+STF_PASSWORD-Causes the characters entered into the string field to not be
+echoed to the screen; rather, the "." character is printed for each
+character typed.
+
+STF_UPPER_CASE-Converts all character input to uppercase values.
+
+STF_VARIABLE_NAME-Converts the space character to an underscore value.
+
+WOF_AUTO_CLEAR-Automatically clears the string buffer if the end-user tabs
+onto string field and then begins typing.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_INVALID-Sets the initial status of the string field to be "invalid."
+
+WOF_JUSTIFY_CENTER-Center-justifies the string information within the
+string field.
+
+WOF_JUSTIFY_RIGHT-Right-justifies the string information within the string
+field.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_SELECTABLE-Prevents the string object from being selectable.
+
+WOF_UNANSWERED-Sets the initial status of the string field to be
+"unanswered."
+
+WOF_VIEW_ONLY-Prevents the string from being edited.
+
+WOAF_NON_CURRENT-The string cannot be made current.
+
+--- UIF_TEXT_HELP
+Text Editor
+A text object is used to present and collect alphanumeric textual
+information in a multi-line format.
+
+text - Enter text in this field exactly as you want it to appear in the
+text object.
+
+maxLength - The number in this field determines the maximum number of
+characters that the text object may contain.
+
+userFunction - If you want to have a user function associated with the text
+object, enter in this field the name of the function.
+
+stringID - Enter in this field a string that will distinguish the text
+object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the text field.  Select the combo box button to view a list of the
+available help contexts.
+
+options and flags - The options that control the presentation of the text
+field are listed in the upper portion of the field on the right half of the
+window.  These options are:
+
+Vertical Scroll Bar-Places a vertical scroll bar inside the right border of
+the text field.
+
+Horizontal Scroll Bar-Places a horizontal scroll bar inside the bottom
+border of the text field.
+
+The flags that control the presentation of the text object are listed in
+the lower portion of the field on the right half of the window.  The flags
+are:
+
+WNF_NO_WRAP-Disables the default word wrap in the text field.
+
+WOF_AUTO_CLEAR-Automatically clears the text buffer if the end-user tabs
+onto text field and then begins typing.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_INVALID-Sets the initial status of the text field to be "invalid."
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_FIELD_REGION-Causes the text object to occupy any remaining space
+within the parent window.
+
+WOF_NON_SELECTABLE-Prevents the text object from being selected.
+
+WOF_UNANSWERED-Sets the initial status of the text field to be
+"unanswered." 
+
+WOF_VIEW_ONLY-Prevents the text object from being edited.
+
+WOAF_NON_CURRENT-The text object cannot be made current.
+
+--- UIF_TIME_HELP
+Time Editor
+A time field displays and collects time information.
+
+time - Enter in this field the time that you want to appear in the time
+object.
+
+range - If you want to specify a certain range of acceptable time values,
+enter in this field the valid time ranges.
+
+userFunction - If you want to have a user function associated with the time
+object, enter in this field the name of the function.
+
+stringID - Enter in this field a string that will distinguish the time
+object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the time field.  Select the combo box button to view a list of the
+available help contexts. If you select one of the help contexts listed, the
+help message of that context will be displayed whenever the user positions
+on the time and requests help.
+
+flags - The flags that control interpretation, presentation, and operation
+of the time information are listed in the field on the right.  These flags
+are:
+
+TMF_COLON_SEPARATOR-Separates each time variable with a colon.
+
+TMF_HUNDREDTHS-Includes the hundredths value in the time.
+
+TMF_LOWER_CASE-Converts the time to lower-case.
+
+TMF_NO_HOURS-Does not display nor interpret an hour value for the time
+object.
+
+TMF_NO_MINUTES-Does not display nor interpret a minute value for the time
+object.
+
+TMF_NO_SEPARATOR-Does not use any separator characters to delimit the time
+values.
+
+TMF_SECONDS-Includes the seconds value in the time.
+
+TMF_SYSTEM-Fills a blank time with the system time.
+
+TMF_TWELVE_HOUR-Forces the time to be displayed and interpreted using a 12
+hour clock.
+
+TMF_TWENTY_FOUR_HOUR-Forces the time to be displayed and interpreted using
+a 24 hour clock.
+
+TMF_UPPER_CASE-Converts the time to upper-case.
+
+TMF_ZERO_FILL-Forces the hour, minute, and second values to be zero filled
+when their values are less than 10.
+
+WOF_AUTO_CLEAR-Automatically clears the time buffer if the end-user tabs
+onto time field and then begins typing.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_INVALID-Sets the initial status of the time field to be "invalid."
+
+WOF_JUSTIFY_CENTER-Center-justifies the time information within the time
+field.
+
+WOF_JUSTIFY_RIGHT-Right-justifies the time information within the time
+field.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_SELECTABLE-Prevents the time object from being selectable.
+
+WOF_UNANSWERED-Sets the initial status of the time field to be "un-
+answered."
+
+WOF_VIEW_ONLY-Prevents the time string from being modified.
+
+WOAF_NON_CURRENT-The time object cannot be made current.
+
+--- UIF_POP_ITEM_HELP
+Pop-Up Item Editor
+A pop-up item is used to display and select options associated with a list
+of menu items. It can be attached to a pop-up menu, to a pull-down item (as
+the second level of selection within a pull-down menu), or to another
+pop-up item. The multi-level effect of a pop-up menu or a pull-down menu is
+further achieved by adding sub-pop-up items to the parent pop-up item.  The
+design tool will allow you to continue adding additional levels as long as
+there is available memory for them.
+
+text - Enter in this field text exactly as you want it to appear on the
+pop-up item.  It will be automatically centered vertically.
+
+value - This field allows you to enter in a value that serves as a unique
+identification for a pop-up item.  This allows you to define one
+user-function that looks at the pop-up item values, instead of several
+user-functions that are tied to each pop-up item object.  If the MNIF_-
+SEND_MESSAGE flag is set, the value must be an event type.
+
+userFunction - If you want to have a user function associated with the
+pop-up item, enter in this field the name of the function.  This user
+function must be defined somewhere in your code so that the object table,
+created by the design tool, can retrieve it.
+
+stringID - Enter in this field a string that will distinguish the pop-up
+item object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the pop-up item.  Select the combo box button to view a list of the
+available help contexts.
+
+Objects - This field displays the pop-up items, listed by their string
+identifications, that are attached to the current pop-up item.  Select one
+of these items, and its editor will appear. 
+
+flags - The flags that control the presentation and operation of the pop-up
+item are listed in the field on the right half of the window.  The flags
+are:
+
+WNF_AUTO_SORT-Assigns a compare function to alphabetize the items added to
+the pop-up item.
+
+WNF_NO_WRAP-Causes the pop-up menu associated with the pop-up item, not to
+wrap when scrolling.
+
+WNF_SELECT_MULTIPLE-Allows multiple items within the pop-up menu associated
+with the pop-up item, to be selected.
+
+MNIF_CHECK_MARK-Marks the first position of the menu item's string infor-
+mation with a check-mark if the item has been selected.
+
+MNIF_CLOSE-Causes the menu item to be selectable only when the parent
+window can be closed.
+
+MNIF_MAXIMIZE-Causes the menu item to be selectable only when the parent
+window can be maximized.
+
+MNIF_MINIMIZE-Causes the menu item to be selectable only when the parent
+window can be minimized.
+
+MNIF_MOVE-Causes the menu item to be selectable only when the parent window
+can be moved.
+
+MNIF_RESTORE-Causes the menu item to be selectable only when the parent
+window is in a maximized or minimized state.
+
+MNIF_SEND_MESSAGE-Causes the event associated with the menu item's value to
+be created and put on the event manager when the menu item is selected.
+
+MNIF_SEPARATOR-The menu item is a separator (i.e., a horizontal line used
+to separate menu items).
+
+MNIF_SIZE-Causes the menu item to be selectable only when the parent window
+can be sized.
+
+MNIF_SWITCH-Causes the menu item to be selectable only when switching
+to another application is allowed.
+
+BTF_DOUBLE_CLICK-Completes the item's action when the item has been
+selected twice within a certain period of time.
+
+BTF_DOWN_CLICK-Completes the item's action on an item down-click, rather
+than on a down-click and release action.
+
+BTF_NO_TOGGLE-Does not toggle the item's WOS_SELECTED status flag.
+
+BTF_REPEAT-Causes the pop-up item to be re-selected if it remains depressed
+for a certain period of time.
+
+BTF_SEND_MESSAGE-Causes the event associated with the menu item's value to
+be created and put on the event manager when the menu item is selected.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_JUSTIFY_CENTER-Center-justifies the text information associated with
+the pop-up item.
+
+WOF_JUSTIFY_RIGHT-Right-justifies the text information associated with the
+pop-up item.
+
+WOF_NON_SELECTABLE-Prevents the pop-up item from being selected.
+
+WOAF_NON_CURRENT-Prevents the item from being made current.
+
+Add Item - Selecting this button causes an additional pop-up item to be
+added to the current pop-up item.
+
+--- UIF_GROUP_HELP
+Group Editor
+The group object is used to allow physical grouping of window objects.  For
+example, a series of radio buttons can be grouped together by first
+creating a group object and then adding the radio buttons.
+
+text - Enter in this field text exactly as you want it to appear in the
+upper left corner of the group object's border.
+
+stringID - Enter in this field a string that will distinguish the group
+object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the group.  Select the combo box button to view a list of the
+available help contexts.
+
+Objects - This field displays the objects, listed by their string
+identifications, that are currently attached to the group object.
+
+flags - The flags that control the presentation and operation of the group
+are listed in the field on the right half of the window.  The flags are:
+
+WNF_AUTO_SORT-Assigns a compare function to alphabetize the objects added to
+the group.
+
+WNF_BITMAP_CHILDREN-Used to denote that some of the group's sub-objects
+contain bitmaps.
+
+WNF_NO_WRAP-Causes the group not to wrap when scrolling.
+
+WNF_SELECT_MULTIPLE-Allows multiple items within the group to be selected.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_FIELD_REGION-Causes the group box to occupy any remaining space
+within the parent window.
+
+WOF_NON_SELECTABLE-Prevents the group from being selected.
+
+--- UIF_BIGNUM_HELP
+Bignum Editor
+A bignum object is used to display and collect numeric information.  It can
+be formatted in various ways, such as for numbers presented as percentages,
+currency, and credit.
+
+bignum - Enter in this field the number that you want to appear in the
+bignum field.  The number will be displayed with the number of decimal
+places designated by the flags you have set. 
+
+range - If you want to specify a certain range of acceptable bignum values,
+enter in this field the valid ranges.
+
+userFunction - If you want to have a user function associated with the
+bignum object, enter in this field the name of the function.
+
+stringID - Enter in this field a string that will distinguish the bignum
+object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the bignum field.  Select the combo box button to view a list of the
+available help contexts.
+
+flags - The flags that control the presentation and operation of the bignum
+information are listed in the field on the right.  These flags are:
+
+NMF_COMMAS-Displays the number with commas.
+
+NMF_CREDIT-Displays the number with the '(' and ')' credit symbols whenever
+the number is negative.
+
+NMF_CURRENCY-Displays the number with the country-specific currency
+symbol.
+
+NMF_PERCENT-Displays the number with a percentage symbol.
+
+NMF_DECIMAL(decimal)-Displays the number with a decimal point at a fixed
+location.
+
+WOF_AUTO_CLEAR-Automatically clears the numeric buffer if the end-user tabs
+onto bignum field and then begins typing.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_INVALID-Sets the initial status of the bignum field to be "invalid." 
+
+WOF_JUSTIFY_CENTER-Center-justifies the numeric information associated with
+the number object.
+
+WOF_JUSTIFY_RIGHT-Right-justifies the numeric information associated with
+the number object.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_SELECTABLE-Prevents the bignum object from being selected.
+
+WOF_UNANSWERED-Sets the initial status of the bignum field to be
+"unanswered."
+
+WOF_VIEW_ONLY-Prevents the bignum object from being edited.
+
+WOAF_NON_CURRENT-Prevents the bignum from being made current.
+
+--- UIF_POP_MENU_HELP
+Pop-Up Menu Editor
+A pop-up menu acts as a structure for selectable menu items which are
+presented in rows and columns.  A selectable menu is created by adding
+pop-up items to the pop-up menu.
+
+stringID - Enter in this field a string that will distinguish the pop-up
+menu object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the pop-up menu.  Select the combo box button to view a list of the
+available help contexts.
+
+Objects - This field displays the pop-up items, listed by their string
+identifications, that are currently attached to the pop-up menu.  Select
+one of these items, and its editor will appear.
+
+flags - The flags that control the presentation of the pop-up menu object
+are listed in the field on the right half of the window.  The flags are:
+
+WNF_AUTO_SORT-Assigns a compare function to alphabetize the items within
+the pop-up menu.
+
+WNF_BITMAP_CHILDREN-Used to denote that some of the pop-up menu's pop-up
+items contain bitmaps.
+
+WNF_NO_WRAP-Causes the pop-up menu not to wrap when scrolling.
+
+WNF_SELECT_MULTIPLE-Allows multiple items within the pop-up menu to be
+selected.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_FIELD_REGION-Causes the pop-up menu to occupy any remaining space
+within the parent window.
+
+WOF_NON_SELECTABLE-Prevents the pop-up menu from being selected.
+
+Add Item - Selecting this button causes a pop-up item to be added to the
+pop-up menu.
+
+--- UIF_PULL_ITEM_HELP
+Pull-Down Item Editor
+A pull-down item serves as the first level of selection in a pull-down
+menu.  The multi-level effect of a pull-down menu is further achieved by
+adding pop-up items to the pull-down item.
+
+text - Enter in this field text exactly as you want it to appear on the
+pull-down item.
+
+value - This field allows you to enter in a value that serves as a unique
+identification for a pull-down item.
+
+userFunction - If you want to have a user function associated with the
+pull-down item, enter in this field the name of the function.
+
+stringID - Enter in this field a string that will distinguish the pull-down
+item object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the pull-down item.  Select the combo box button to view a list of the
+available help contexts.
+
+Objects - This field displays the pop-up items, listed by their string
+identifications, that are currently attached to the pull-down item.  Select
+one of these items, and its editor will appear. 
+
+flags - The flags that control the presentation and operation of the
+pull-down item are listed in the field on the right half of the window. 
+The flags are:
+
+WNF_AUTO_SORT-Assigns a compare function to alphabetize the items within
+the pull-down item's sub-menu.
+
+WNF_BITMAP_CHILDREN-Used to denote that some of the pull-down item's pop-up
+items contain bitmaps.
+
+WNF_NO_WRAP-Causes the pull-down item's menu not to wrap when scrolling.
+
+WNF_SELECT_MULTIPLE-Allows multiple items within the pull-down menu to be
+selected.
+
+BTF_REPEAT-Causes the pull-down item to be re-selected if it remains
+depressed for a certain period of time.
+
+BTF_SEND_MESSAGE-Causes the event associated with the pull-down item's
+value to be created and put on the event manager when the pull-down item is
+selected.
+
+WOF_NON_SELECTABLE-Prevents the pull-down item object from being selected.
+
+WOAF_NON_CURRENT-The item cannot be made current.
+
+Add Item - Selecting this button causes a pop-up item to be added to the
+pull-down item.
+
+--- UIF_PULL_MENU_HELP
+Pull-Down Menu Editor
+A pull-down menu acts as a structure for selectable menu items that appear
+in a single horizontal line.  A multi-level selectable menu is created by
+adding pop-up items to pull-down items and pull-down items to the pull-down
+menu.  The pull-down menu object is automatically created with one pull-down
+item attached to it.
+
+stringID - Enter in this field a string that will distinguish the pull-down
+menu object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the pull-down menu.  Select the combo box button to view a list of the
+available help contexts.
+
+Objects - This field displays the pull-down items, listed by their string
+identifications, that are currently attached to the pull-down menu.  Select
+one of these items, and its editor will appear.
+
+flags - The flags that control the presentation of the pull-down menu
+object are listed in the field on the right half of the window.  The flags
+are:
+
+WNF_AUTO_SORT-Assigns a compare function to alphabetize the items within
+the pull-down menu.
+
+WNF_NO_WRAP-Causes the pull-down menu not to wrap when scrolling.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_NON_SELECTABLE-Prevents the pull-down menu from being selected. 
+
+Add Item - Selecting this button causes a pull-down item to be added to the
+pull-down menu.
+
+--- UIF_SCROLL_BAR_HELP
+Scroll Bar Editor
+A scroll bar is most often used to move through information in an
+associated window, list box, or text field so that additional data which is
+hidden outside of the displayed portion can be viewed.  The scroll bar
+option, however, is not designed for such use.  Instead, creating a scroll
+bar directly from the menu (or object bar) causes it to be added to the
+current resource, independent of any other object.  For example, such a
+scroll bar could be used as a volume control for an application.
+
+NOTE: To associate a scroll bar with a window, a text field, or a vertical
+list, simply select the vertical and/or horizontal scroll bar option or
+flag available in the editor for each of these objects.
+
+stringID - Enter in this field a string that will distinguish the
+scroll-bar object from other objects.
+
+flags - The flags that control the presentation and operation of the
+scroll bar are listed in the field on the right half of the window.  The
+flags are:
+
+SBF_HORIZONTAL-Defines the scroll bar object to be a horizontal scroll
+bar.
+
+SBF_VERTICAL-Defines the scroll bar object to be a vertical scroll bar.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_SELECTABLE-Prevents the scroll bar from being selected. 
+
+--- UIF_WINDOW_HELP
+Window Editor
+A window is used as a controlling structure for displaying and interacting
+with other objects.
+
+By default, the window is created with a title, a system button, a maximize
+button, and a minimize button.  Other objects can be added by simply
+selecting them from the menu or object bar and placing them on the window.
+
+title - Enter in this field, the text for the title bar on the window,
+exactly as you wish it to appear.
+\
+minIcon - This field designates the icon to be associated with the window
+when it is minimized. Select the combo box button to view a list of the
+available icon images.
+
+stringID - Enter in this field a string that will distinguish the child
+window from other objects.
+
+helpContext - This field designates the help context to be associated with
+the child window.  Select the field's combo box button to view a list of
+the available help contexts.
+
+Objects - This field displays the objects, listed by their string
+identifications, that are currently attached to the child window.
+
+options and flags - The options that control the presentation of the child
+window are listed in the upper portion of the field on the right half of
+the window.  The options are:
+
+Border-Draws a three-dimensional border around the outer perimeter of the
+window.
+
+Maximize Button-Attaches a maximize button to the window that will enlarge
+the window to its maximum size on the screen when selected.
+
+Minimize Button-Attaches a minimize button to the window that will reduce
+the window to its minimum size on the screen when selected.
+
+System Button-Attaches a system button to the window.  When selected, a
+system button displays the following selectable options: Restore, Move,
+Size, Minimize, Maximize, and Close.
+
+The flags that control the presentation and operation of the window are
+listed in the lower portion of the field on the right half of the window.
+ The flags are:
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_FIELD_REGION-Causes the window to occupy all the remaining space of
+its parent window.
+
+WOF_NON_SELECTABLE-Prevents the window from being selected.
+
+WOAF_DIALOG_OBJECT-Creates the window as a dialog box.
+
+WOAF_LOCKED-Prevents the user from removing the window from the screen
+display.
+
+WOAF_MDI_OBJECT-Creates the window as an MDI window.
+
+WOAF_MODAL-Prevents any other window from receiving event information from
+the window manager.
+
+WOAF_NO_DESTROY-Prevents the window manager from calling the window's
+destructor.
+
+WOAF_NO_MOVE-Prevents the end-user from changing the screen location of the
+window during an application.
+
+WOAF_NO_SIZE-Prevents the end-user from changing the size of the window
+during an application.
+
+WOAF_NON_CURRENT-The window cannot be made current. 
+
+WOAF_TEMPORARY-Causes the window to only occupy the screen temporarily. 
+
+--- UIF_COMBO_BOX_HELP
+Combo Box Editor
+A combo box is a combination of a string field and a scrollable list box. 
+It is used to display a list of selectable items.  The scrollable list is
+displayed when the button to the right of the string field is selected.
+When one of the items of that list is selected, it is copied into the
+string field and the list box disappears.  If the string field is editable,
+the user can enter text and the item in the list that most closely matches
+the characters typed will be highlighted.  The user can then select the
+item to copy it back into the string field.
+
+Objects are added to the combo box's list by selecting them from the menu
+or object bar and placing them on the combo box object.  By default, they
+will be automatically aligned in a single column in the order in which they
+were added.
+
+compare - If you want to have a compare function associated with the combo
+box, enter in this field the name of the function.  A compare function
+determines the order of list items and must be defined somewhere in your
+code so that the object table, created by the design tool, can retrieve
+it.
+
+stringID - Enter in this field a string that will distinguish the combo box
+object from other objects.
+
+height (cells) - Enter in this field the height, in cells, of the
+drop-down list associated with the combo-box.
+
+helpContext - This field designates the help context to be associated with
+the combo box.  Select the help context field's combo box button to view a
+list of the available help contexts.
+
+Objects - This field displays the objects, listed by their string
+identifications, that are currently attached to the combo box.
+
+options and flags - The flags that control the presentation and operation
+of the combo box are listed in the field on the right half of the window. 
+The flags are:
+
+Vertical Scroll Bar-Places a vertical scroll bar inside the right border of
+the combo box list field.
+
+WNF_AUTO_SORT-Assigns a compare function to alphabetize the strings within
+the list.
+
+WNF_BITMAP_CHILDREN-Used to denote that some of the combo box's sub-objects
+contain bitmaps.
+
+WNF_NO_WRAP-Causes the combo-box's list not to wrap when scrolling.
+
+WOF_AUTO_CLEAR-Automatically clears the string buffer if the end-user tabs
+onto combo-box field and then begins typing.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_JUSTIFY_CENTER-Center-justifies the string associated with the combo
+box's string field.
+
+WOF_JUSTIFY_RIGHT-Right-justifies the string associated with the combo
+box's string field.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_FIELD_REGION-Causes the combo box to not be a form field.
+
+WOF_NON_SELECTABLE-Prevents the combo box object from being selected. 
+
+WOF_UNANSWERED-Sets the initial status of the combo box to be
+"unanswered," which is displayed as blank space on the screen.
+
+WOF_VIEW_ONLY-Prevents the combo box from being edited.
+
+WOAF_NON_CURRENT-The combo box cannot be made current.
+
+--- UIF_TOOL_BAR_HELP
+Tool Bar Editor
+A tool bar is used as a controlling structure for a set of selectable
+window objects.  It differs from the pull-down menu in that a variety of
+objects can be added to it--not just menu items.  The tool bar will
+automatically occupy the upper-most area available in a window, positioning
+itself directly below the pull-down menu, if one exists.  Multiple tool
+bars may be added to a window.
+
+An object can be added to the tool bar by selecting the desired object from
+the control window's menu or object bar and placing it on the resource
+window's tool bar.  The control window's object bar itself is an example of
+a group of bitmapped buttons that have been attached to a tool bar.
+
+stringID - Enter in this field a string that will distinguish the tool bar
+from other objects.
+
+helpContext - This field designates the help context to be associated with
+the tool bar.  Select the combo box button to view a list of the available
+help contexts.
+
+Objects - This field displays the objects, listed by their string
+identifications, that are currently attached to the tool bar.
+
+flags - The flags that control the presentation and operation of the tool
+bar are listed in the field on the right half of the window.  The flags
+are:
+
+WNF_NO_WRAP-Causes the tool bar not to position its children
+automatically.
+
+WNF_SELECT_MULTIPLE-Allows multiple items within the tool bar to be
+selected.
+
+WNF_AUTO_SORT-Assigns a compare function to alphabetize the items within
+the tool bar.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_NON_FIELD_REGION-Causes the tool bar to not be a form field.
+
+WOF_NON_SELECTABLE-Prevents the tool bar from being selected.
+
+--- UIF_VLIST_HELP
+Vertical List Editor
+A vertical list is used to display items in a single-column fashion.  The
+list is only scrollable vertically.  A vertical list is actually a
+framework to which other objects can be attached.  These objects will be
+aligned in a single-column fashion automatically.
+
+compare - If you want to have a compare function associated with the
+vertical list, enter in this field the name of the function.  A compare
+function determines the order of list items and must be defined somewhere
+in your code so that the object table, created by the design tool, can
+retrieve it.
+
+stringID - Enter in this field a string that will distinguish the vertical
+list object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the vertical list.  Select the combo box button to view a list of the
+available help contexts.
+
+Objects - This field displays the objects, listed by their string
+identifications, that are currently attached to the vertical list.
+
+options and flags - The options and flags that control the presentation and
+operation of the vertical list are listed in the field on the right half of
+the window.  The flags are:
+
+Vertical Scroll Bar-Places a vertical scroll bar inside the right border of
+the vertical list.
+
+WNF_AUTO_SELECT-Causes an object in the list to be selected automatically
+when it becomes current.
+
+WNF_AUTO_SORT-Assigns a compare function to alphabetize the strings within
+the list.
+
+WNF_BITMAP_CHILDREN-Used to denote that some of the list's sub objects
+contain bitmaps.
+
+WNF_CONTINUE_SELECT-Allows the mouse to drag down the list.
+
+WNF_NO_WRAP-Causes the list not to wrap when scrolling.
+
+WNF_SELECT_MULTIPLE-Allows multiple items within the vertical list to be
+selected.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_FIELD_REGION-The list box is not a form field.
+
+WOF_NON_SELECTABLE-Prevents the list from being selected.
+
+--- UIF_HLIST_HELP
+Horizontal List Editor
+A horizontal list is used to display related information in a
+multiple-column fashion within a window.  The list is only scrollable
+horizontally.  A horizontal list is actually a framework to which other
+objects can be attached.  The items will be aligned automatically in rows
+and columns.
+
+cellWidth - Enter in this field a number to specify the maximum cell width
+of a single list item.  If the list is wider than the specified width, it
+will be displayed with multiple columns.
+
+cellHeight - Enter in this field a number to specify the maximum cell
+height of a single list item.  If the list is taller than the specified
+height, it will be displayed with multiple rows.
+
+compare - If you want to have a compare function associated with the
+horizontal list, enter in this field the name of the function.  A compare
+function determines the order of list items and must be defined somewhere
+in your code so that the object table, created by the design tool, can
+retrieve it.
+
+stringID - Enter in this field a string that will distinguish the
+horizontal list object from other objects.
+
+helpContext - This field designates the help context to be associated with
+the horizontal list.  Select the combo box button to view a list of the
+available help contexts.
+
+Objects - This field displays the objects, listed by their string
+identifications, that are currently attached to the horizontal list.
+
+options and flags - The options and flags that control the presentation and
+operation of the horizontal list are listed in the field on the right half
+of the window.  The flags are:
+
+Horizontal Scroll Bar-Places a horizontal scroll bar inside the bottom
+border of the horizontal list.
+
+WNF_AUTO_SELECT - Causes an object in the list to be selected automatically
+when it becomes current.
+
+WNF_AUTO_SORT-Assigns a compare function to alphabetize the strings within
+the list.
+
+WNF_BITMAP_CHILDREN-Used to denote that some of the list's sub objects
+contain bitmaps.
+
+WNF_CONTINUE_SELECT-Allows the mouse to drag down the list.
+
+WNF_NO_WRAP-Causes the list not to wrap when scrolling.
+
+WNF_SELECT_MULTIPLE-Allows multiple items within the horizontal list to be
+selected.
+
+WOF_BORDER-Draws a single-pixel border around the object in graphics mode.
+
+WOF_MINICELL-Uses mini-cells to determine size and position. Mini-cells are
+a fraction the size of regular cell coordinates (1/10 by default).
+
+WOF_NON_FIELD_REGION-Causes the list to occupy any remaining space within
+the parent window.
+
+WOF_NON_SELECTABLE-Prevents the list from being selected.
+
+--- IMAGE_EDITOR_HELP
+Image Editor
+The image editor allows you to create icon and bitmap images that can be
+assigned to other objects in your application.  This option only has effect
+in graphics mode.
+
+tool bar - The buttons on the tool bar effect the way the mouse
+paints in the drawing field.  The first button (pencil) is used to
+draw a single pixel path: click the mouse button and drag the mouse.  
+The second button (roller) is used to draw a wide path: click the mouse 
+button and drag.  The third button (line) is used to draw straight, point
+to point lines:  click the mouse button down on the start point, drag to 
+the end point and release.  The fourth button (empty rectangle) is used 
+to draw unfilled rectangles: click the mouse button down on one
+corner, drag to the opposite corner and release.  The fifth button
+(filled rectangle) is used for drawing filled rectangles: click the mouse 
+button down on one corner, drag to the opposite corner and release. 
+The sixth button (empty ellipse) is used for drawing unfilled
+ellipses: click the mouse button down on one corner of a bounding
+rectangle, drag to the opposite corner and release.  The seventh
+button (filled  ellipse) is used for drawing filled ellipses: click 
+the mouse button down on one corner of a bounding rectangle, drag to 
+the opposite corner and release.  The eight button (paint jar) is for
+flood filling: click on any pixel of a solid region and it will flood
+fill the region with the specified color.
+
+colors field - The available colors are displayed in this field.  To select
+a color, click on it with the mouse.
+
+drawing field - This field is the drawing area where you create your icon. 
+You can paint one pixel at a time by positioning on it and pressing a mouse
+button, or you can paint in continuous motion by holding down a mouse
+button and dragging the cursor.
+
+image field - This area displays the image in its actual size as you create
+it.
+
+Screen - This field is used when you want to have part of your image be
+transparent (i.e., to show through to the screen behind it).  Whichever
+mouse button is used to click on this field will have the ability to draw
+the transparent region.  For example, if you want to create a window icon
+that displays the area underneath it, you could draw the frame for the
+window with a color from the color field and then click on the "Screen"
+field and fill the frame in.  To change the color that is displayed
+as the "Screen" color, choose a color from the colors field with the
+mouse, and click on the image field.
+
+left/right - The box below "left" displays the color selected by the left
+mouse button.  When you position the cursor anywhere in the "bitmap" area
+and press the left mouse button, the color shown in the "left" box will be
+painted onto the pixel underneath the cursor.
+
+The box below "right" displays the color selected by the right mouse
+button.  When you position the cursor anywhere in the "bitmap" area and
+press the right mouse button, the color shown in the "right" box will be
+painted onto the pixel underneath the cursor.
+
+If either the right or the left mouse buttons have selected the "Screen"
+field instead of a color from the colors field, the appropriate box of the
+"left/right" field will be grey.
+
+--- HELP_EDITOR_HELP
+Help Editor
+The help editor allows you to create help contexts to be used throughout
+your application.
+
+title - Enter in this field a title to be displayed on the help window's
+title bar.
+
+message - Enter in this field the text to be displayed as help information
+within the help window.
+
+Context options - The context options of the window's pull-down menu
+control the general operations of the help editor.
+
+--- ADD_ITEM_HELP
+Add Item Button
+Selecting this button causes a child item to be added to the current menu
+object.
+
+--- TITLE_HELP
+Title
+Enter in this field a title which will be displayed on the title bar of the
+window.  It will be automatically centered vertically and horizontally.
+
+--- FILE_OK_HELP
+OK Button
+Selecting this button causes the designated action (i.e., new, open, save
+as, or delete) to take effect on the file indicated at the "File Name"
+prompt.
+
+--- FILE_HELP_BUTTON_HELP
+Help Button
+Additional information about file operations appears in a help window when
+this button is selected.  To close the help window, select the "Close"
+option from the system button's menu, double click on the system button
+with the mouse, or press Alt <F4>.
+
+--- RESOURCE_OK_HELP
+OK Button
+Selecting this button causes the designated action (i.e., load, store as,
+or delete) to take effect on the resource indicated at the "StringID"
+prompt.
+
+--- IMAGE_OK_HELP
+OK Button
+Selecting this button causes the designated action (i.e., new, load, save
+as, or delete) to take effect on the image indicated at the "Image Name"
+prompt.
+
+--- CONTEXT_OK_HELP
+OK Button
+Selecting this button causes the designated action (i.e., new, load, save
+as, or delete) to take effect on the help context indicated at the "Context
+Name" prompt.
+
+--- FILE_WINDOW_HELP
+File Operations
+Interaction with the fields of the New, Open, Save As, and Delete windows
+is accomplished as follows:
+
+File Name - Enter the name of the file to be created, opened, saved, or
+deleted here.  If you do not include it yourself, a ".DAT" postfix will be
+automatically attached to the name.
+
+Drives - This field displays other drives that are available on your
+system.  Selecting a drive causes the files and directories on that drive
+to be displayed in their respective fields.
+
+Directory - This field displays other available directories of the current
+drive.  ".." represents the parent directory, and, if selected, will
+display the other sub-directories of the current path, all of which are
+also selectable.
+
+Files - Other .DAT files created with Zinc Designer that belong to the
+current directory are listed in this field.  If one of these files is
+selected, its name will appear at the "File name" prompt.
+
+--- RESOURCE_WINDOW_HELP
+Resource Operations
+Interaction with the fields of the Load, Store As, and Delete windows is
+accomplished as follows:
+
+StringID - This field contains the string identification for the current
+resource.  The default string identification for a resource window is
+"RESOURCE" plus a unique number corresponding to the order in which it was
+created.  For example, the screen identification for the first resource
+window created on the screen would be "RESOURCE_1."  You can assign your
+own identification to the resource by entering a different string at the
+prompt.
+
+Resources - This field displays the resources that are available in the
+current file.  The resources are listed by their stringID's in alphabetical
+order.  If one of these is selected, its string identification will appear
+at the "StringID" prompt.
+
+--- CONTEXT_WINDOW_HELP
+Context Operations
+Interaction with the fields of the New, Load, Save As, and Delete windows
+is accomplished as follows:
+
+Context Name - Enter the name of the context to be created, opened, saved,
+or deleted here.
+
+Contexts - Other help contexts that have been created with the help editor
+in the current application file are listed in the field in the center of
+the window.  If one of these contexts is selected, its name will appear at
+the "Context name" prompt.
+
+--- IMAGE_WINDOW_HELP
+Image Operations
+Interaction with the fields of the New, Load, Save As, and Delete windows
+is accomplished as follows:
+
+Image Type - This field designates the type of image--bitmap or icon--to be
+created.  Select the combo box button; then select one of these two options.
+If the image will be designed for use with an icon, select "Icon."  For use 
+with all other objects, select "Bitmap."
+
+Image Name - Enter the name of the image to be created, opened, saved, or
+deleted here.
+
+Image Width - Enter in the "Width" field the desired pixel width for the
+image.  If the image type is icon, the width must be 32.
+
+Image Height - Enter in the "Height" field the desired pixel height for the
+image.  If the image type is icon, the height must be 32.
+
+Images - Other images of the current type (i.e., bitmap or icon) that have
+been created with the image editor in the current application file are
+listed in the field in the center of the window.  If one of these images is
+selected, its name will appear at the "Image name" prompt.
+
+--- RESOURCE_HELP_BUTTON_HELP
+Help Button
+Additional information about resource operations appears in a help window
+when this button is selected.  To close the help window, select the "Close"
+option from the system button's menu, double click on the system button
+with the mouse, or press <Alt+F4>.
+
+--- CONTEXT_HELP_BUTTON_HELP
+Help Button
+Additional information about help context operations appears in a help
+window when this button is selected.  To close the help window, select the
+"Close" option from the system button's menu, double click on the system
+button with the mouse, or press <Alt+F4>.
+
+--- IMAGE_HELP_BUTTON_HELP
+Help Button
+Additional information about image operations appears in a help window when
+this button is selected.  To close the help window, select the "Close"
+option from the system button's menu, double click on the system button
+with the mouse, or press <Alt+F4>.
+
+--- PREF_WIN_HELP
+Preferences
+The "Preferences..." option allows you to change the default settings of
+Zinc Designer. 
+
+Backups - Enter in this field the number of backups that you would like the
+designer to make each time a save operation is performed.
+
+Options - This field presents the options for what can be displayed in the
+design tool's windows. Each is presented as a check box that toggles, and
+any number can be selected at one time.  The options available are: 
+
+Object Bar-Causes an object bar to be displayed in the upper-most available
+region of the window.  (NOTE: An object bar will always appear above a
+status bar if both are present within a window.)
+
+Status Bar-Causes a status bar to be displayed in the upper-most available
+region of the window.
+
+Help Bar-Causes a help bar to be displayed in the lower-most available
+region of the window.
+
+Bitmaps in Menus-Allows bitmap images to be displayed in menus.
+
+Mini-Cell - This field allows you to set the default coordinate mini-cell
+ratios.  The default width and height are 1/10 of a normal cell.
+
+Object Bar Buttons - This field contains the objects that can be included
+in an object bar.  Selecting one causes it to be represented on the tool
+bar in the format specified by "Object Buttons" (i.e., bitmap and/or text).
+ Each is presented as a check box that toggles, and any number can be
+selected at one time.
+
+Object Buttons - This field contains the options for the presentation of
+object buttons.
+
+Bitmap-Allows only bitmap images to be displayed on an object button.
+
+Text-Allows only text to be displayed on an object button.
+
+Bitmap and Text-Allows both bitmaps and text to be displayed on an object
+button.
+
+OK - Selecting this button closes the "Preferences" window and causes the
+information selected to take effect.  If no information has been entered
+within the window, it will close and no other action will take place.
+
+Cancel - Selecting this button causes the window to close without executing
+any changes.
+
+Help - Additional information about default settings appears when this
+button is selected.
+
+The help bar at the bottom of the window displays instructions for
+interaction with the fields of the "Preferences" window.
+
+--- BACKUPS_HELP
+Backups
+Enter in this field the number of backups that you would like the designer
+to make each time a save operation is performed.  Each backup file will be
+saved under the same name as the main file but with a postfix that
+indicates the backup number of the copy.  For example, a file with the name
+of TEST.DAT will have a backup copy called TEST.BK1 if only "1" is entered
+at the prompt.  If any number greater than "1" is entered at the prompt,
+each time a save operation occurs another backup file will be created, up
+to the maximum specified.  For example, a "3" at the prompt will cause the
+creation of a TEST.BK1 file at the first save operation. During the second
+save, TEST.BK1 will become TEST.BK2 and a new TEST.BK1 file will be created.
+During the third save, TEST.BK2 will become TEST.BK3, TEST.BK1 will
+become TEST.BK2 and an new TEST.BK1 file will be created.  Thereafter, these
+three backup files would be updated on subsequent saves, with the most 
+recent information being saved in TEST.BK1 and the oldest information in 
+TEST.BK3.
+
+--- OPTIONS_HELP
+Options
+This field presents the options for what can be displayed in the design
+tool's windows. Each is presented as a check box that toggles, and any
+number can be selected at one time.  The options available are: 
+
+Object Bar-Causes an object bar to be displayed in the upper-most available
+region of the window.  (NOTE: An object bar will always appear above a
+status bar if both are present within a window.)
+
+Status Bar-Causes a status bar to be displayed in the upper-most available
+region of the window.
+
+Help Bar-Causes a help bar to be displayed in the lower-most available
+region of the window.
+
+Bitmaps in Menus-Allows bitmap images to be displayed in menus.
+
+--- MINICELL_HELP
+Mini-Cell
+This field allows you to set the default coordinate mini-cell ratios.  The
+default width and height of a mini-cell are 1/10 of a normal cell.
+
+--- OBJ_BAR_BUTTN_HELP
+Object Bar Buttons
+This field contains the objects that can be included in an object bar. 
+Selecting one causes it to be represented on the tool bar in the format
+specified by "Object Buttons" (i.e., bitmap and/or text).  Each is
+presented as a check box that toggles, and any number can be selected at
+one time.
+
+--- OBJ_BUTTONS_HELP
+Object Buttons
+This field contains the options for the presentation of object buttons.
+
+Bitmap-Allows only bitmap images to be displayed on an object button.
+
+Text-Allows only text to be displayed on an object button.
+
+Bitmap and Text-Allows both bitmaps and text to be displayed on an object
+button.
+
+--- PREF_OK_HELP
+OK Button
+Selecting OK closes the "Preferences" window and causes the information
+selected to take effect.
+
+--- PREF_HELP_BTTN_HELP
+Help Button
+Additional information about default settings appears in a help window when
+this button is selected.  To close the help window, select the "Close"
+option from the system button's menu, double click on the system button
+with the mouse, or press <Alt+F4>.
+
+--- HELP_MSG_HELP
+Message
+Enter in this field the text to be displayed as help information within the
+help window.
+
+--- COMBO_HEIGHT_HELP
+Height
+The height parameter determines the height (in cells) of the list which
+drops down when the combo-box is selected.
+
+--- ABOUT_DESIGN_HELP
+About Zinc Designer
+  Zinc Designer 3.5 allows you to interactively create your application
+screens using Zinc objects.  Simply create a resource and then select 
+window objects from the menu or tool bar and place them on the resource. 
+You can then easily customize the objects with Zinc Designer's interactive
+editors--just double click on an object to call its editor.
+
+  After creating your screens, you save them to disk in a
+platform-independent persistent object file. You add these resources to 
+your application with one line of code. Resources you create with the 
+Windows version of Zinc Designer can be opened and edited with the DOS
+version and vice versa.
+
+  Copyright (C) 1991-1993 Zinc Software Incorporated.  All Rights Reserved.
+
+--- ADVANCED_EDIT
+Advanced Edit
+The advanced editor allows user defined flags to be set for an object,
+and/or allows the object to be made a derived object by giving it a new
+class name.
+
+The value given in the 'userFlags' field will be available in the
+'userFlags' member variable of UI_WINDOW_OBJECT at run time.
+
+If a new class name is specified, a new objectID will be generated for the
+object in the .HPP file generated by the designer.  An entry will also be
+made for the object in the jump table ('objectTable') which is defined in
+the designer generated .CPP file.  This entry in the jump table specifies a
+'New' function which must be provided by the programmer.  This 'New'
+function should call the constructor for the derived object created by the
+programmer, and should return a pointer to the constructed object.
