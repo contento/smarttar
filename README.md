@@ -248,7 +248,6 @@ SmartTar is a single-process protected-mode application. The main subsystems are
 
 | Version | Screenshot |
 | --- | --- |
-| 2.40 | ![SmartTar 2.40](st/docs/SmartTar%202.40.jpg) |
 | 2.33 | ![SmartTar 2.33](st/docs/SmartTar%202.33.gif) |
 | 2.32.1 | ![SmartTar 2.32.1](st/docs/SmartTar%202.32.1.gif) |
 
