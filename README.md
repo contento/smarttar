@@ -2,4 +2,4 @@
 
 Micronotes SmartTar
 
-![SmartTar](docs/SmartTar.jpg)
+![SmartTar](st/docs/smarttar.jpg)
