@@ -103,9 +103,10 @@ pr_sr80  pr_dr80  pr_lin80  pr_drpre  pr_dr40  pr_sr40  pr_dr18  pr_sr28  pr_dre
 | `st.ini` | Runtime settings |
 | `res.dat` | Resources (Zinc UI data) |
 | `help.dat` | Help database |
-| `ph_info.dat` | Pharlap/hardware info |
-| `ddi.inf` / `ddn.inf` | Device definition files |
-| `local.inf` | Locale settings |
+| `ph_info.dat` | Compiled telephony database (from `ddi.inf` + `ddn.inf` + `local.inf`) |
+| `ddi.inf` | International telephony information (source) |
+| `ddn.inf` | National long-distance telephony information (source) |
+| `local.inf` | Local hometown telephony information (source) |
 | `RX.DAT` / `RX.IDX` | Transaction database |
 
 ## Important Constraints
