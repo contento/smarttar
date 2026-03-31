@@ -25,3 +25,6 @@ st/**/*.sym
 
 # Borland IDE desktop state
 st/**/*.dsk
+
+# MacOS Finder metadata
+.DS_Store
