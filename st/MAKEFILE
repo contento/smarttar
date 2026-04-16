@@ -20,10 +20,10 @@ OBJ_DIR=obj
 BIN_DIR=bin
 LIB_DIR=lib
 INCLUDE_DIR=include
-DOC_DIR=doc
+DOC_DIR=docs
 
-.PATH.c  =$(SOURCE_DIR)
-.PATH.cpp=$(SOURCE_DIR)
+.PATH.c  =$(SOURCE_DIR)\pr
+.PATH.cpp=$(SOURCE_DIR);$(SOURCE_DIR)\ph;$(SOURCE_DIR)\rt;$(SOURCE_DIR)\db;$(SOURCE_DIR)\pr;$(SOURCE_DIR)\ui;$(SOURCE_DIR)\mb;$(SOURCE_DIR)\tb;$(SOURCE_DIR)\ct;$(SOURCE_DIR)\ctrl
 .PATH.asm=$(SOURCE_DIR)
 .PATH.obj=$(OBJ_DIR)
 .PATH.dll=$(BIN_DIR)
