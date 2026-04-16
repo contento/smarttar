@@ -29,6 +29,9 @@ st/**/*.dsk
 # MacOS Finder metadata
 .DS_Store
 
+# Claude Code working state (worktrees, session data)
+.claude/
+
 # ==============================================================================
 # st/bin/ — runtime artifacts and generated files
 # ==============================================================================
