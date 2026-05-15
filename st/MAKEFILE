@@ -15,8 +15,8 @@ OBJ_EXT=obj
 LIB_EXT=lib
 DLL_EXT=dll
 
-SOURCE_DIR=source
-OBJ_DIR=obj
+SOURCE_DIR=src
+OBJ_DIR=build
 BIN_DIR=bin
 LIB_DIR=lib
 INCLUDE_DIR=include
@@ -36,7 +36,6 @@ ASM=tasm
 LINK=tlink
 BIND=bind286
 RTK_DIR=..\pharlap\bin
-MV=@call mv.bat
 
 DONGLE=
 !if $d(DEMO)
@@ -157,9 +156,9 @@ DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 
 .c.$(DLL_EXT):
 	$(CC) $(DLL_CC_OPTIONS) {$< }
-	$(MV) $&.$(OBJ_EXT)  $(OBJ_DIR)
-	$(MV) $&.$(DLL_EXT)  $(BIN_DIR)
-	$(MV) $&.$(LIB_EXT)   $(LIB_DIR)
+	@move $&.$(OBJ_EXT)  $(OBJ_DIR)
+	@move $&.$(DLL_EXT)  $(BIN_DIR)
+	@move $&.$(LIB_EXT)   $(LIB_DIR)
 
 .cpp.$(OBJ_EXT):
 	$(CC) $(OBJ_CC_OPTIONS) -o$(OBJ_DIR)\$&.$(OBJ_EXT) {$< }

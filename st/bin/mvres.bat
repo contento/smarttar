@@ -1,11 +1,4 @@
 @echo off
-REM
-REM Move res.dat source files.
-REM See ..\source\res_fix.cpp to fix a problem with res.cpp and W_PHONE class
-REM You have to do it by hand.
-REM                           
+REM Move res.dat source files back to src/ and include/.
 @move res.hpp ..\include
-@move res.cpp ..\source
-echo See ..\source\res_fix.cpp to fix a problem with res.cpp and W_PHONE class
-
-
+@move res.cpp ..\src
