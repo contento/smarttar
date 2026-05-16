@@ -5,6 +5,11 @@
 .autodepend
 .swap
 
+# Borland MAKE 3.6 default suffix list is .exe .obj .asm .c — .cpp is
+# not included. Declare it (and the other extensions used in suffix
+# rules below) so '.cpp.obj' / '.c.dll' / '.asm.obj' rules match.
+.SUFFIXES: .cpp .c .asm .obj .dll
+
 APP=st
 
 EXE_FILE=$(APP).exe
@@ -22,6 +27,13 @@ LIB_DIR=lib
 INCLUDE_DIR=include
 DOC_DIR=docs
 
+# NOTE: Borland MAKE 3.6 (bundled with BC 3.1) does NOT support the
+# .PATH.x directive — it was added in MAKE 4.0+. The lines below are
+# silently ignored by MAKE 3.6, kept here as documentation of the
+# source-tree layout for human readers (and any future MAKE 4.0+ build).
+# The actual source paths are resolved via explicit per-file dependency
+# declarations further down (the '$(OBJ_DIR)\foo.obj: $(SOURCE_DIR)\…'
+# block under the suffix rules).
 .PATH.c  =$(SOURCE_DIR)\pr
 .PATH.cpp=$(SOURCE_DIR);$(SOURCE_DIR)\ph;$(SOURCE_DIR)\rt;$(SOURCE_DIR)\db;$(SOURCE_DIR)\pr;$(SOURCE_DIR)\ui;$(SOURCE_DIR)\mb;$(SOURCE_DIR)\tb;$(SOURCE_DIR)\ct;$(SOURCE_DIR)\ctrl
 .PATH.asm=$(SOURCE_DIR)
@@ -154,17 +166,17 @@ DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 	$(BIN_DIR)\pr_dreme.$(DLL_EXT) \
 	$(BIN_DIR)\pr_drhal.$(DLL_EXT)
 
-.c.$(DLL_EXT):
+.c.dll:
 	$(CC) $(DLL_CC_OPTIONS) {$< }
 	@move $&.$(OBJ_EXT)  $(OBJ_DIR)
 	@move $&.$(DLL_EXT)  $(BIN_DIR)
 	@move $&.$(LIB_EXT)   $(LIB_DIR)
 
-.cpp.$(OBJ_EXT):
-	$(CC) $(OBJ_CC_OPTIONS) -o$(OBJ_DIR)\$&.$(OBJ_EXT) {$< }
+.cpp.obj:
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 
-.asm.$(OBJ_EXT):
-	$(ASM) $(ASM_OPTS) {$< }, $(OBJ_DIR)\$&.$(OBJ_EXT)
+.asm.obj:
+	$(ASM) $(ASM_OPTS) $<, $@
 
 $(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(OBJS) $(DLLS)
 	$(LINK) $(LINK_OPTS) @&&!
@@ -182,4 +194,168 @@ $(BIN_DIR)\$(HELP_FILE): $(DOC_DIR)\help.txt
 	@move $(HELP_FILE)	$(BIN_DIR) > NUL
 	@move help.hpp $(INCLUDE_DIR) > NUL
 !endif
+
+# ============================================================================
+# Explicit per-file source-path mapping
+# ----------------------------------------------------------------------------
+# Borland MAKE 3.6 doesn't support .PATH.x (see note near the top), so we
+# tell MAKE where each source file lives via explicit dependency
+# declarations. The .cpp.obj / .c.dll suffix rules above supply the build
+# commands; these declarations only point MAKE at the source for each
+# target. Order mirrors the OBJS / DLLS lists for 1-to-1 cross-checking.
+#
+# This block MUST live after the EXE rule so MAKE's default target stays
+# $(BIN_DIR)\$(EXE_FILE) — Borland MAKE picks the first target it sees as
+# default, and bodyless dependency declarations as default = silent no-op.
+# ============================================================================
+
+# --- OBJs (cpp -> obj) ---
+# Each rule carries its own body because Borland MAKE 3.6's .cpp.obj
+# suffix rule does not fire for path-prefixed targets (e.g. build\foo.obj).
+# DLL targets DO work with the .c.dll suffix rule alone, but .cpp/.obj
+# requires the explicit body to actually compile.
+$(OBJ_DIR)\st.obj:       $(SOURCE_DIR)\st.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\bdisplay.obj: $(SOURCE_DIR)\ui\bdisplay.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\calc.obj:     $(SOURCE_DIR)\calc.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\calendar.obj: $(SOURCE_DIR)\calendar.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\cfg.obj:      $(SOURCE_DIR)\cfg.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\control.obj:  $(SOURCE_DIR)\ctrl\control.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\cstr.obj:     $(SOURCE_DIR)\cstr.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\ctrl_ev.obj:  $(SOURCE_DIR)\ctrl\ctrl_ev.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\ctrl_pr.obj:  $(SOURCE_DIR)\ctrl\ctrl_pr.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\ct_pr_nr.obj: $(SOURCE_DIR)\ct\ct_pr_nr.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\ct_pr_sr.obj: $(SOURCE_DIR)\ct\ct_pr_sr.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\ct_pr_st.obj: $(SOURCE_DIR)\ct\ct_pr_st.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\ct_util.obj:  $(SOURCE_DIR)\ct\ct_util.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\ctrl_rf.obj:  $(SOURCE_DIR)\ctrl\ctrl_rf.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\db_eng.obj:   $(SOURCE_DIR)\db\db_eng.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\db_view.obj:  $(SOURCE_DIR)\db\db_view.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\dongle.obj:   $(SOURCE_DIR)\dongle.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\dstatist.obj: $(SOURCE_DIR)\db\dstatist.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\dstorage.obj: $(SOURCE_DIR)\db\dstorage.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\d_ext_st.obj: $(SOURCE_DIR)\db\d_ext_st.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\eeprom.obj:   $(SOURCE_DIR)\eeprom.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\filehdr.obj:  $(SOURCE_DIR)\db\filehdr.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\mb_ext.obj:   $(SOURCE_DIR)\mb\mb_ext.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\info.obj:     $(SOURCE_DIR)\info.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\log.obj:      $(SOURCE_DIR)\log.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\mb_conf.obj:  $(SOURCE_DIR)\mb\mb_conf.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\mb_simul.obj: $(SOURCE_DIR)\mb\mb_simul.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\mb_file.obj:  $(SOURCE_DIR)\mb\mb_file.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\mb_help.obj:  $(SOURCE_DIR)\mb\mb_help.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\mb_inf.obj:   $(SOURCE_DIR)\mb\mb_inf.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\mb_print.obj: $(SOURCE_DIR)\mb\mb_print.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\mutex.obj:    $(SOURCE_DIR)\mutex.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\parser.obj:   $(SOURCE_DIR)\ph\parser.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\ph_eng.obj:   $(SOURCE_DIR)\ph\ph_eng.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\ph_place.obj: $(SOURCE_DIR)\ph\ph_place.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\ph_query.obj: $(SOURCE_DIR)\ph\ph_query.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\ph_util.obj:  $(SOURCE_DIR)\ph\ph_util.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\ph_tar.obj:   $(SOURCE_DIR)\ph\ph_tar.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\plain_pr.obj: $(SOURCE_DIR)\pr\plain_pr.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\prn_fmt.obj:  $(SOURCE_DIR)\pr\prn_fmt.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\res.obj:      $(SOURCE_DIR)\res.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\rt_eng.obj:   $(SOURCE_DIR)\rt\rt_eng.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\rt_do.obj:    $(SOURCE_DIR)\rt\rt_do.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\rt_util.obj:  $(SOURCE_DIR)\rt\rt_util.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\rt_isr.obj:   $(SOURCE_DIR)\rt\rt_isr.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\rt_store.obj: $(SOURCE_DIR)\rt\rt_store.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\serial.obj:   $(SOURCE_DIR)\rt\serial.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\sid.obj:      $(SOURCE_DIR)\sid.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\spooler.obj:  $(SOURCE_DIR)\spooler.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\ssaver.obj:   $(SOURCE_DIR)\ssaver.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\stm2.obj:     $(SOURCE_DIR)\stm2.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\st_util.obj:  $(SOURCE_DIR)\st_util.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\tb_conf.obj:  $(SOURCE_DIR)\tb\tb_conf.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\tb_man.obj:   $(SOURCE_DIR)\tb\tb_man.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\tb_print.obj: $(SOURCE_DIR)\tb\tb_print.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\tb_sp.obj:    $(SOURCE_DIR)\tb\tb_sp.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\tb_tools.obj: $(SOURCE_DIR)\tb\tb_tools.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\tb_util.obj:  $(SOURCE_DIR)\tb\tb_util.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\traceinf.obj: $(SOURCE_DIR)\traceinf.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\view.obj:     $(SOURCE_DIR)\ui\view.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\view_ev.obj:  $(SOURCE_DIR)\ui\view_ev.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\view_hb.obj:  $(SOURCE_DIR)\ui\view_hb.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\w_phone.obj:  $(SOURCE_DIR)\ui\w_phone.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\w_sgroup.obj: $(SOURCE_DIR)\ui\w_sgroup.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\w_statbr.obj: $(SOURCE_DIR)\ui\w_statbr.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\w_table.obj:  $(SOURCE_DIR)\ui\w_table.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+
+# --- DLLs (c -> dll) ---
+$(BIN_DIR)\pr_sr80.dll:  $(SOURCE_DIR)\pr\pr_sr80.c
+$(BIN_DIR)\pr_dr80.dll:  $(SOURCE_DIR)\pr\pr_dr80.c
+$(BIN_DIR)\pr_lin80.dll: $(SOURCE_DIR)\pr\pr_lin80.c
+$(BIN_DIR)\pr_drpre.dll: $(SOURCE_DIR)\pr\pr_drpre.c
+$(BIN_DIR)\pr_dr40.dll:  $(SOURCE_DIR)\pr\pr_dr40.c
+$(BIN_DIR)\pr_sr40.dll:  $(SOURCE_DIR)\pr\pr_sr40.c
+$(BIN_DIR)\pr_dr18.dll:  $(SOURCE_DIR)\pr\pr_dr18.c
+$(BIN_DIR)\pr_sr28.dll:  $(SOURCE_DIR)\pr\pr_sr28.c
+$(BIN_DIR)\pr_dreme.dll: $(SOURCE_DIR)\pr\pr_dreme.c
+$(BIN_DIR)\pr_drhal.dll: $(SOURCE_DIR)\pr\pr_drhal.c
 
