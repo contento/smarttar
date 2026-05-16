@@ -26,6 +26,7 @@ BIN_DIR=bin
 LIB_DIR=lib
 INCLUDE_DIR=include
 DOC_DIR=docs
+RES_DIR=res
 
 # NOTE: Borland MAKE 3.6 (bundled with BC 3.1) does NOT support the
 # .PATH.x directive — it was added in MAKE 4.0+. The lines below are
@@ -186,7 +187,7 @@ DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 .asm.obj:
 	$(ASM) $(ASM_OPTS) $<, $@
 
-$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(OBJS) $(DLLS)
+$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(OBJS) $(DLLS)
 	$(LINK) $(LINK_OPTS) @&&!
 $(STARTUP_OBJS) $(OBJS)
 $*, ,$(LIBS), $(DEF_FILE)
@@ -202,6 +203,12 @@ $(BIN_DIR)\$(HELP_FILE): $(DOC_DIR)\help.txt
 	@move $(HELP_FILE)	$(BIN_DIR) > NUL
 	@move help.hpp $(INCLUDE_DIR) > NUL
 !endif
+
+# Zinc binary resource — the canonical RES.DAT is a tracked binary source
+# in $(RES_DIR)\, edited interactively via DESIGN.EXE (Zinc Designer).
+# This rule republishes it into $(BIN_DIR) so the runtime app finds it.
+$(BIN_DIR)\$(RES_FILE): $(RES_DIR)\$(RES_FILE)
+	@copy $(RES_DIR)\$(RES_FILE) $(BIN_DIR)\$(RES_FILE) > NUL
 
 # ============================================================================
 # Explicit per-file source-path mapping
