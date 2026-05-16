@@ -1,5 +1,7 @@
 # SmartTar
 
+*Leer en [Español](README.es.md).*
+
 Real-time telephone tariff management system for public telephone booths
 
 Developed by [MicroDiseño Ltda.](https://microdiseno.com) · Copyright © 1993–2003 · Version 2.34
@@ -11,6 +13,8 @@ Developed by [MicroDiseño Ltda.](https://microdiseno.com) · Copyright © 1993�
 ## Overview
 
 SmartTar is a DOS-based point-of-sale system designed for Colombian telecommunications operators running public telephone booth centers (*cabinas telefónicas*). It monitors active calls in real time, classifies them by destination, applies the correct tariff schedule, prints itemized receipts with tax, and maintains a full transaction database — all from a single protected-mode DOS executable.
+
+> **About the name** — *SmartTar* = **Smart + Tar(ifa)**. *Tarifa* is the Spanish word for tariff / rate, the standard term in Colombia for telephone call billing. Nothing to do with Unix `tar`.
 
 ### Key capabilities
 
