@@ -78,7 +78,9 @@ st/              Aplicación
   web/           Recursos web e historial de versiones
   MAKEFILE       Script de construcción Borland MAKE
   run.bat        Ejecuta st.exe desde bin/
-  makedemo.bat   Atajo: build demo + bind (DEMO + RUN + NODONGLE)
+  make*.bat      Atajos por variante:
+                 makedemo (DEMO + NODONGLE + RUN), makedebug (DEBUG + RUN),
+                 makeeda (EDA + RUN), makeauto (AUTO + RUN), makeprod (RUN)
 ```
 
 ---
@@ -243,13 +245,13 @@ SmartTar es una aplicación de un solo proceso en modo protegido. Los subsistema
 
 ## Variantes de compilación
 
-| Variante | Banderas | Uso |
-| --- | --- | --- |
-| Producción | `RUN=1` | Build completo con verificación de dongle |
-| Demo | `DEMO=1 NODONGLE=1 RUN=1` | Ferias, evaluación |
-| EDA | `EDA=1 RUN=1` | Operador EDA — clasificación de llamadas distinta |
-| Depuración | `DEBUG=1 RUN=1` | Desarrollo; usar con el depurador Pharlap `TDP.EXE` |
-| Simulación | `AUTO=1 RUN=1` | Pruebas automatizadas / reproducción de demo |
+| Variante | Banderas | Atajo | Uso |
+| --- | --- | --- | --- |
+| Producción | `RUN=1` | `makeprod` | Build completo con verificación de dongle |
+| Demo | `DEMO=1 NODONGLE=1 RUN=1` | `makedemo` | Ferias, evaluación |
+| EDA | `EDA=1 RUN=1` | `makeeda` | Operador EDA — clasificación de llamadas distinta |
+| Depuración | `DEBUG=1 RUN=1` | `makedebug` | Desarrollo; usar con el depurador Pharlap `TDP.EXE` |
+| Simulación | `AUTO=1 RUN=1` | `makeauto` | Pruebas automatizadas / reproducción de demo |
 
 ---
 
