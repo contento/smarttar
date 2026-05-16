@@ -8,9 +8,15 @@
 #   ./bump-version.sh set <X.Y.Z>             # explicit
 #   ./bump-version.sh --dry-run <action> ...  # preview, no writes
 #
-# Updates:
-#   - CLAUDE.md      "Current version: **X.Y.Z**"
-#   - st/versions.txt prepends a [ X.Y.Z ] block with a TODO description stub
+# Updates (lockstep — these must stay in sync):
+#   - st/include/version.h ST_VERSION_MAJOR/MINOR/PATCH + ST_VERSION string
+#   - CLAUDE.md            "Current version: **X.Y.Z**"
+#   - st/versions.txt      prepends a [ X.Y.Z ] block with a TODO stub
+#
+# version.h is the canonical source of truth at runtime; Borland MAKE's
+# .autodepend rebuilds any .cpp that includes it. CLAUDE.md is docs;
+# versions.txt is the human changelog. Keeping all three in step is
+# what this script exists for.
 #
 # Does NOT commit, tag, or push — see RELEASING.md for the full workflow.
 
@@ -32,10 +38,10 @@ fi
 
 action="$1"
 
-# Current version from CLAUDE.md
-current=$(grep -oE 'Current version: \*\*[0-9]+\.[0-9]+\.[0-9]+\*\*' CLAUDE.md \
+# Current version from st/include/version.h (canonical source)
+current=$(grep -oE '^#define[[:space:]]+ST_VERSION[[:space:]]+"[0-9]+\.[0-9]+\.[0-9]+"' st/include/version.h \
           | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
-[[ -n "$current" ]] || { echo "Cannot find 'Current version: **X.Y.Z**' in CLAUDE.md" >&2; exit 1; }
+[[ -n "$current" ]] || { echo "Cannot find ST_VERSION in st/include/version.h" >&2; exit 1; }
 
 IFS=. read -r major minor patch <<< "$current"
 
@@ -66,6 +72,15 @@ if (( dry_run )); then
   exit 0
 fi
 
+# Update st/include/version.h (numeric defines + string macro)
+sed -i.bak \
+  -e "s/^#define ST_VERSION_MAJOR .*/#define ST_VERSION_MAJOR ${major}/" \
+  -e "s/^#define ST_VERSION_MINOR .*/#define ST_VERSION_MINOR ${minor}/" \
+  -e "s/^#define ST_VERSION_PATCH .*/#define ST_VERSION_PATCH ${patch}/" \
+  -e "s/^#define ST_VERSION       \"[0-9.]*\"/#define ST_VERSION       \"${new}\"/" \
+  st/include/version.h
+rm -f st/include/version.h.bak
+
 # Update CLAUDE.md (portable in-place sed: -i.bak then remove backup)
 sed -i.bak \
   "s/Current version: \*\*${current//./\\.}\*\*/Current version: **${new}**/" \
@@ -83,12 +98,13 @@ mv "$tmp" st/versions.txt
 
 cat <<EOF
 Updated:
-  CLAUDE.md       (Current version → $new)
-  st/versions.txt (new [ $new ] block at top — please edit the description)
+  st/include/version.h (ST_VERSION → $new)
+  CLAUDE.md            (Current version → $new)
+  st/versions.txt      (new [ $new ] block at top — please edit the description)
 
 Next steps (per RELEASING.md):
   1. Edit st/versions.txt — replace 'TODO add description.' with the real changelog
-  2. git add CLAUDE.md st/versions.txt
+  2. git add st/include/version.h CLAUDE.md st/versions.txt
   3. git commit -m "Release v$new: <summary>"
   4. git tag -a v$new -m "..."
   5. git push origin main v$new

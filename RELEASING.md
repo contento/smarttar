@@ -12,11 +12,12 @@ The historical `Build N` counters under each version in [`st/versions.txt`](st/v
 
 ## Where version lives
 
-- [`st/versions.txt`](st/versions.txt) — changelog, source of truth for *content*
-- [`CLAUDE.md`](CLAUDE.md) line 17 — single-line `Current version:` reference
-- Git tags `vX.Y.Z` — release markers
+- [`st/include/version.h`](st/include/version.h) — **canonical source of truth.** Defines `ST_VERSION_MAJOR`, `ST_VERSION_MINOR`, `ST_VERSION_PATCH`, and the string `ST_VERSION`. Borland MAKE's `.autodepend` rebuilds any `.cpp` that `#include`s this header, so bumping the version and rebuilding produces an EXE that carries the new number.
+- [`st/versions.txt`](st/versions.txt) — changelog (humans). Bump scripts prepend a new `[ X.Y.Z ]` block.
+- [`CLAUDE.md`](CLAUDE.md) line 17 — `Current version:` reference for project docs.
+- Git tags `vX.Y.Z` — release markers.
 
-A `ST_VERSION` runtime constant doesn't exist yet — see the maintenance milestone in [TODO.md](TODO.md). Until it does, `versions.txt` and `CLAUDE.md` are the only places carrying the number.
+The bump scripts keep `version.h`, `CLAUDE.md`, and `versions.txt` in lockstep. Don't hand-edit any of them — run the script.
 
 ## Release procedure
 
@@ -51,10 +52,11 @@ git log --oneline $(git describe --tags --abbrev=0 --match 'v[0-9]*')..HEAD
 .\bump-version.ps1 patch -DryRun
 ```
 
-Both scripts do exactly two things:
+Both scripts update three files in lockstep:
 
-- Update `CLAUDE.md` line 17 (`Current version: **X.Y.Z**`)
-- Prepend a new `[ X.Y.Z ]` block to `st/versions.txt` with a `TODO add description.` stub
+- `st/include/version.h` — numeric defines + `ST_VERSION` string
+- `CLAUDE.md` line 17 (`Current version: **X.Y.Z**`)
+- `st/versions.txt` — prepend a new `[ X.Y.Z ]` block with a `TODO add description.` stub
 
 They do **not** commit, tag, or push — that's step 3.
 
@@ -65,7 +67,7 @@ Open `st/versions.txt`, find the new `[ X.Y.Z ]` block at the top, and replace `
 ### 4. Commit, tag, push
 
 ```sh
-git add CLAUDE.md st/versions.txt
+git add st/include/version.h CLAUDE.md st/versions.txt
 git commit -m "Release v2.34.2: <one-line summary>"
 git tag -a v2.34.2 -m "$(git log -1 --format=%s)"
 git push origin main v2.34.2
@@ -92,4 +94,4 @@ Tag them the same way; they sort below the final `v2.35.0` per semver precedence
 ## Open items
 
 - `st/web/versions.txt` is a duplicate of `st/versions.txt`. The bump scripts touch only the canonical one — decide whether to delete the duplicate, keep it as a separate web-only changelog, or extend the scripts to sync both.
-- No runtime `ST_VERSION` constant exists yet (see TODO.md). Adding `st/include/version.h` and an `About` dialog hook would let the app self-identify.
+- `ST_VERSION` is declared but not yet **consumed** anywhere in the running app. The About dialog / startup log doesn't read it. When a `.cpp` (e.g. `info.cpp`) starts `#include "version.h"`, MAKE's `.autodepend` will automatically rebuild that translation unit on every version bump — closing the sync loop.
