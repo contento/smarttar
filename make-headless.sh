@@ -2,12 +2,18 @@
 # Run a SmartTar build inside DOSBox-X non-interactively.
 #
 # Usage:   ./make-headless.sh [--keep-log-in-st] [demo|debug|eda|auto|prod]
-# Default: prod, log at repo root (build.log)
+# Default: demo, log at repo root (build.log)
+#
+# Only one instance can run at a time (DOSBox-X locks its config / display).
 #
 # Flags:
 #   --keep-log-in-st   Write the log inside st/ (st/build.log) instead of the
 #                      repo root. Useful when you want the log next to the
 #                      object files / binaries it describes.
+#
+# Always passes HELP=1 so the MAKEFILE's gated help.dat rule fires when
+# bin/help.dat is missing or stale. Make's dependency tracking means
+# this is a no-op when help.dat is up to date.
 #
 # Exit: 0 if the build batch printed "Build succeeded.", 1 otherwise.
 #
@@ -32,7 +38,7 @@ for arg in "$@"; do
       variant="$arg"
       ;;
     -h|--help)
-      sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//'
+      sed -n '2,22p' "$0" | sed 's/^# \{0,1\}//'
       exit 0
       ;;
     *)
@@ -41,7 +47,7 @@ for arg in "$@"; do
       ;;
   esac
 done
-variant="${variant:-prod}"
+variant="${variant:-demo}"
 
 : "${DOSBOX_X:=dosbox-x}"
 if ! command -v "$DOSBOX_X" >/dev/null 2>&1; then
@@ -59,7 +65,7 @@ fi
 rm -f "$log"
 
 "$DOSBOX_X" -conf dosbox-x.conf -fastlaunch \
-  -c "command /c make${variant}.bat > ${dos_log}" \
+  -c "command /c make${variant}.bat HELP=1 > ${dos_log}" \
   -c "exit" >/dev/null 2>&1 || true
 
 if [[ ! -f "$log" ]]; then
