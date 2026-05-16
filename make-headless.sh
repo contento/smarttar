@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 # Run a SmartTar build inside DOSBox-X non-interactively.
 #
-# Usage:   ./make-headless.sh [--keep-log-in-st] [demo|debug|eda|auto|prod]
+# Usage:   ./make-headless.sh [--force] [--keep-log-in-st]
+#                              [demo|debug|eda|auto|prod]
 # Default: demo, log at repo root (build.log)
 #
 # Only one instance can run at a time (DOSBox-X locks its config / display).
 #
 # Flags:
+#   --force            Pass -B to Borland MAKE (force rebuild of all targets,
+#                      ignoring timestamps). Alias: --rebuild.
 #   --keep-log-in-st   Write the log inside st/ (st/build.log) instead of the
 #                      repo root. Useful when you want the log next to the
 #                      object files / binaries it describes.
@@ -25,24 +28,27 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 keep_in_st=0
+force=0
 variant=""
+usage="usage: $(basename "$0") [--force] [--keep-log-in-st] [demo|debug|eda|auto|prod]"
 
 for arg in "$@"; do
   case "$arg" in
     --keep-log-in-st) keep_in_st=1 ;;
+    --force|--rebuild) force=1 ;;
     demo|debug|eda|auto|prod)
       if [[ -n "$variant" ]]; then
-        echo "usage: $(basename "$0") [--keep-log-in-st] [demo|debug|eda|auto|prod]" >&2
+        echo "$usage" >&2
         exit 2
       fi
       variant="$arg"
       ;;
     -h|--help)
-      sed -n '2,22p' "$0" | sed 's/^# \{0,1\}//'
+      sed -n '2,24p' "$0" | sed 's/^# \{0,1\}//'
       exit 0
       ;;
     *)
-      echo "usage: $(basename "$0") [--keep-log-in-st] [demo|debug|eda|auto|prod]" >&2
+      echo "$usage" >&2
       exit 2
       ;;
   esac
@@ -64,9 +70,39 @@ else
 fi
 rm -f "$log"
 
+make_args="HELP=1"
+banner_suffix=""
+if (( force )); then
+  make_args="$make_args -B"
+  banner_suffix=" (force rebuild)"
+fi
+
+echo "make-headless: building variant '$variant'$banner_suffix (log: $log) ..."
+echo "make-headless: streaming compile output below; window stays silent."
+echo "----------------------------------------------------------------------"
+
+# Touch the log so tail has something to follow even before DOSBox-X starts
+# writing to it. tail -F (capital F) survives the file being truncated by
+# the DOS-side redirect.
+touch "$log"
+tail -F "$log" 2>/dev/null &
+TAIL_PID=$!
+trap 'kill $TAIL_PID 2>/dev/null; wait $TAIL_PID 2>/dev/null' EXIT
+
 "$DOSBOX_X" -conf dosbox-x.conf -fastlaunch \
-  -c "command /c make${variant}.bat HELP=1 > ${dos_log}" \
+  -c "echo === SmartTar build starting (variant ${variant}) ===" \
+  -c "echo === log: ${dos_log} (silent until exit) ===" \
+  -c "echo ." \
+  -c "command /c make${variant}.bat $make_args > ${dos_log}" \
+  -c "echo ." \
+  -c "echo === Build finished ===" \
   -c "exit" >/dev/null 2>&1 || true
+
+# Stop streaming and give tail a beat to flush the last lines
+kill $TAIL_PID 2>/dev/null
+wait $TAIL_PID 2>/dev/null
+trap - EXIT
+echo "----------------------------------------------------------------------"
 
 if [[ ! -f "$log" ]]; then
   echo "build $variant: NO LOG — DOSBox-X did not write to the mount" >&2

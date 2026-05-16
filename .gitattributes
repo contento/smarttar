@@ -1,0 +1,62 @@
+# SmartTar — line-ending policy
+#
+# All files consumed by the DOS toolchain (TLINK, BCC286, COMMAND.COM,
+# Borland MAKE, Pharlap binaries, etc.) MUST be checked out with CRLF.
+# Bare-LF files have already caused at least one failure: TLINK reading
+# st.def reported "st.def (1) : Syntax error" because the linker treats
+# the whole file as one giant line.
+#
+# Files consumed by the macOS / Linux host (bash scripts, .md, dosbox-x
+# config which DOSBox-X parses host-side) stay LF.
+#
+# Apply existing files to this policy:
+#   git add --renormalize . && git commit -m "Normalize line endings"
+
+# --- DOS toolchain / build / config / data ---
+*.def       text eol=crlf
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+*.cfg       text eol=crlf
+*.ini       text eol=crlf
+*.mak       text eol=crlf
+*.prj       text eol=crlf
+MAKEFILE    text eol=crlf
+
+# --- DOS source code (Borland C++ / TASM) ---
+*.c         text eol=crlf
+*.cpp       text eol=crlf
+*.h         text eol=crlf
+*.hpp       text eol=crlf
+*.asm       text eol=crlf
+*.inc       text eol=crlf
+
+# --- DOS-side data / docs read by the running app ---
+*.inf       text eol=crlf
+*.txt       text eol=crlf
+
+# --- Host-side files (read by macOS/Linux tools, not DOS) ---
+*.sh             text eol=lf
+*.md             text eol=lf
+*.conf           text eol=lf
+*.yml            text eol=lf
+*.yaml           text eol=lf
+*.json           text eol=lf
+.gitignore       text eol=lf
+.gitattributes   text eol=lf
+
+# --- Binaries — never convert ---
+*.exe       binary
+*.dll       binary
+*.obj       binary
+*.lib       binary
+*.com       binary
+*.sym       binary
+*.dat       binary
+*.dsk       binary
+*.png       binary
+*.jpg       binary
+*.gif       binary
+*.ico       binary
+*.pdf       binary
+*.zip       binary
+*.doc       binary
