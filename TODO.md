@@ -49,6 +49,15 @@ full context and severity rationale.
 
 ## Milestone: Maintenance hygiene
 
+- [x] Centralize version into `st/include/version.h`; bump scripts keep
+      `version.h` / `CLAUDE.md` / `st/versions.txt` in lockstep
+      (see [RELEASING.md](RELEASING.md))
+- [ ] Wire `ST_VERSION` into a runtime consumer (e.g. About dialog or
+      startup log via `info.cpp`) so the EXE reports its own version
+      and MAKE's `.autodepend` closes the sync loop
+- [ ] Decide whether `st/web/versions.txt` should stay (web-only
+      duplicate of `st/versions.txt`) or be deleted / wired into the
+      bump scripts
 - [ ] Decide whether `st/include/help.hpp` should track regenerated
       output or stay frozen between `HELP=1` builds
 - [ ] Renormalize legacy LF-only DOS files to CRLF (one-time

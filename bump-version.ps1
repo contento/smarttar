@@ -6,9 +6,13 @@
 .DESCRIPTION
   Equivalent to bump-version.sh.
 
-  Updates:
-    - CLAUDE.md      "Current version: **X.Y.Z**"
-    - st\versions.txt prepends a [ X.Y.Z ] block with a TODO description stub
+  Updates (lockstep — these must stay in sync):
+    - st\include\version.h ST_VERSION_MAJOR/MINOR/PATCH + ST_VERSION string
+    - CLAUDE.md            "Current version: **X.Y.Z**"
+    - st\versions.txt      prepends a [ X.Y.Z ] block with a TODO stub
+
+  version.h is the canonical source of truth at runtime; Borland MAKE's
+  .autodepend rebuilds any .cpp that includes it.
 
   Does NOT commit, tag, or push — see RELEASING.md for the full workflow.
 
@@ -46,10 +50,10 @@ param(
 $ErrorActionPreference = 'Stop'
 Set-Location -LiteralPath $PSScriptRoot
 
-# --- Read current version from CLAUDE.md -------------------------------------
-$claudeMd = Get-Content -LiteralPath 'CLAUDE.md' -Raw
-if ($claudeMd -notmatch 'Current version: \*\*(\d+)\.(\d+)\.(\d+)\*\*') {
-    Write-Error "Cannot find 'Current version: **X.Y.Z**' in CLAUDE.md"
+# --- Read current version from st\include\version.h (canonical source) ------
+$versionH = Get-Content -LiteralPath 'st\include\version.h' -Raw
+if ($versionH -notmatch '#define\s+ST_VERSION\s+"(\d+)\.(\d+)\.(\d+)"') {
+    Write-Error 'Cannot find ST_VERSION in st\include\version.h'
     exit 1
 }
 [int]$major = $Matches[1]
@@ -86,12 +90,18 @@ if ($DryRun) {
     exit 0
 }
 
+# --- Update st\include\version.h (numeric + string defines) ------------------
+$versionH = [regex]::Replace($versionH, '(?m)^#define ST_VERSION_MAJOR .*$', "#define ST_VERSION_MAJOR $major")
+$versionH = [regex]::Replace($versionH, '(?m)^#define ST_VERSION_MINOR .*$', "#define ST_VERSION_MINOR $minor")
+$versionH = [regex]::Replace($versionH, '(?m)^#define ST_VERSION_PATCH .*$', "#define ST_VERSION_PATCH $patch")
+$versionH = [regex]::Replace($versionH, '(?m)^#define ST_VERSION       "[\d.]+"', "#define ST_VERSION       `"$new`"")
+Set-Content -LiteralPath 'st\include\version.h' -Value $versionH -NoNewline
+
 # --- Update CLAUDE.md --------------------------------------------------------
-$pattern    = "Current version: \*\*$([regex]::Escape($current))\*\*"
+$claudeMd    = Get-Content -LiteralPath 'CLAUDE.md' -Raw
+$pattern     = "Current version: \*\*$([regex]::Escape($current))\*\*"
 $replacement = "Current version: **$new**"
-$claudeMd   = [regex]::Replace($claudeMd, $pattern, $replacement)
-# Preserve original line endings: Set-Content with -NoNewline + the raw string
-# we just rewrote keeps whatever EOL CLAUDE.md had.
+$claudeMd    = [regex]::Replace($claudeMd, $pattern, $replacement)
 Set-Content -LiteralPath 'CLAUDE.md' -Value $claudeMd -NoNewline
 
 # --- Prepend st\versions.txt -------------------------------------------------
@@ -106,12 +116,13 @@ Set-Content -LiteralPath 'st\versions.txt' -Value ($header + $existing) -NoNewli
 # --- Report ------------------------------------------------------------------
 Write-Host ''
 Write-Host 'Updated:'
-Write-Host "  CLAUDE.md        (Current version -> $new)"
-Write-Host "  st\versions.txt  (new [ $new ] block at top -- please edit the description)"
+Write-Host "  st\include\version.h (ST_VERSION -> $new)"
+Write-Host "  CLAUDE.md            (Current version -> $new)"
+Write-Host "  st\versions.txt      (new [ $new ] block at top -- please edit the description)"
 Write-Host ''
 Write-Host 'Next steps (per RELEASING.md):'
 Write-Host "  1. Edit st\versions.txt -- replace 'TODO add description.' with the real changelog"
-Write-Host '  2. git add CLAUDE.md st\versions.txt'
+Write-Host '  2. git add st\include\version.h CLAUDE.md st\versions.txt'
 Write-Host "  3. git commit -m `"Release v$new`: <summary>`""
 Write-Host "  4. git tag -a v$new -m `"...`""
 Write-Host "  5. git push origin main v$new"
