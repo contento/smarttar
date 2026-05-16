@@ -4,6 +4,10 @@
 
 SmartTar is a DOS 5.0 protected-mode point-of-sale / tariff management system. Current version: **2.34.1** (2003).
 
+**Name:** SmartTar = **Smart + Tar(ifa)**. "Tarifa" is Spanish for tariff / rate (standard in Colombia for telephone call billing). Not an acronym, not related to Unix `tar`.
+
+**Vendor:** **MicroDiseño Ltda.** — Colombian company. Web: **microdiseno.com** (ASCII form, no tilde; the company name itself is written with the `ñ`). The original author is Gonzalo Contento ("GCC" in source comments).
+
 ### Runtime environment
 
 - **Physical machine**: 386 (or compatible)
