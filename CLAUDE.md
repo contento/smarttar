@@ -100,6 +100,9 @@ st/          Application source
   build/       Compiled object files (intermediate, not committed)
   lib/       Static libraries
   bin/       Output binaries and runtime data files
+  res/       Zinc UI binary resource (RES.DAT) — tracked source, edited
+             via Zinc Designer (zinc/BIN/DESIGN.EXE). MAKEFILE copies it
+             into bin/ during build.
   docs/      Screenshots and user/reference documentation (Word, images)
   test/      Development test utilities (chkrx, defpwd, gen, inf2dat, etc.)
   util/      Build and maintenance utilities
@@ -238,7 +241,7 @@ pr_sr80  pr_dr80  pr_lin80  pr_drpre  pr_dr40  pr_sr40  pr_dr18  pr_sr28  pr_dre
 | ---- | ------- |
 | `st.cfg` | Application configuration |
 | `st.ini` | Runtime settings |
-| `res.dat` | Resources (Zinc UI data) |
+| `res.dat` | Resources (Zinc UI data) — copied at build time from `st/res/RES.DAT` |
 | `help.dat` | Help database |
 | `ph_info.dat` | Compiled telephony database (from `ddi.inf` + `ddn.inf` + `local.inf`) |
 | `ddi.inf` | International telephony information (source) |
