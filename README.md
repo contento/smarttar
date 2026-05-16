@@ -85,9 +85,33 @@ st/              Application
 
 ---
 
+## Development Environment (DOSBox-X)
+
+The repo ships a project-local [`dosbox-x.conf`](dosbox-x.conf) tuned for the SmartTar target: 386 hardware, DOS 5.0, Pharlap 286 protected mode, 32 MB extended memory, raised DOS file handles for compilation, and a pre-populated `PATH` covering `bc\BIN`, `pharlap\BIN`, and the `util/` subdirectories.
+
+### Install DOSBox-X
+
+| Host | Command |
+| --- | --- |
+| macOS | `brew install dosbox-x` |
+| Windows | `winget install joncampbell123.DOSBox-X` *(or download from [dosbox-x.com](https://dosbox-x.com/))* |
+
+### Launch
+
+Edit the `mount c "..."` lines in [`dosbox-x.conf`](dosbox-x.conf) so the active one points at the project on your host (the Mac and Windows paths are pre-filled — swap which one is commented when moving between hosts). Then:
+
+```sh
+cd /path/to/smarttar
+dosbox-x
+```
+
+DOSBox-X auto-loads `dosbox-x.conf` from the current directory. You will land in `C:\ST` with the toolchain on `PATH`, ready to invoke any of the `make*.bat` shortcuts below or `run` to launch a built executable.
+
+---
+
 ## Building
 
-All build commands are run from the `st/` directory inside a DOS 5.0 environment (physical machine, DOSBox, or compatible emulator).
+All build commands are run from the `st/` directory inside a DOS 5.0 environment (physical machine, DOSBox-X, or compatible emulator).
 
 ### Standard release build
 
