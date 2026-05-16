@@ -85,9 +85,33 @@ st/              Aplicación
 
 ---
 
+## Entorno de desarrollo (DOSBox-X)
+
+El repositorio incluye un [`dosbox-x.conf`](dosbox-x.conf) local al proyecto, afinado para el target de SmartTar: hardware 386, DOS 5.0, modo protegido Pharlap 286, 32 MB de memoria extendida, manejadores de archivo de DOS ampliados para compilación, y un `PATH` ya poblado con `bc\BIN`, `pharlap\BIN` y los subdirectorios de `util/`.
+
+### Instalar DOSBox-X
+
+| Host | Comando |
+| --- | --- |
+| macOS | `brew install dosbox-x` |
+| Windows | `winget install joncampbell123.DOSBox-X` *(o descargar desde [dosbox-x.com](https://dosbox-x.com/))* |
+
+### Lanzar
+
+Edita las líneas `mount c "..."` en [`dosbox-x.conf`](dosbox-x.conf) para que la activa apunte al proyecto en tu host (las rutas de Mac y Windows ya vienen pre-rellenadas — invierte cuál queda comentada al moverte entre hosts). Después:
+
+```sh
+cd /ruta/al/smarttar
+dosbox-x
+```
+
+DOSBox-X carga automáticamente `dosbox-x.conf` desde el directorio actual. Aterrizarás en `C:\ST` con la cadena de herramientas en `PATH`, listo para invocar cualquiera de los atajos `make*.bat` siguientes o `run` para lanzar un ejecutable ya construido.
+
+---
+
 ## Compilación
 
-Todos los comandos de compilación se ejecutan desde el directorio `st/` dentro de un entorno DOS 5.0 (máquina física, DOSBox o emulador compatible).
+Todos los comandos de compilación se ejecutan desde el directorio `st/` dentro de un entorno DOS 5.0 (máquina física, DOSBox-X o emulador compatible).
 
 ### Build de producción estándar
 
