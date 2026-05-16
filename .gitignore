@@ -57,3 +57,13 @@ st/bin/RX.DAT
 st/bin/RX.IDX
 st/bin/RX.STA
 st/bin/LOG.DAT
+
+# ==============================================================================
+# Headless build logs (make-headless.sh)
+# ==============================================================================
+# DOSBox-X writes uppercase, the host script targets lowercase. List both
+# so case-sensitive filesystems don't leak either.
+build.log
+BUILD.LOG
+st/build.log
+st/BUILD.LOG
