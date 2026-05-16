@@ -106,7 +106,12 @@ st/          Application source
   web/       Web assets (default.html, SmartTar.gif, versions.txt)
   MAKEFILE   Main build file (Borland MAKE syntax); uses .PATH.cpp to list all subdirs
   run.bat    Launch st.exe from bin/ (cd bin → st.exe → cd ..)
-  makedemo.bat  Build demo version: make [args] -DDEMO -DRUN -DNODONGLE
+  make*.bat  Build-variant shortcuts (each forwards %1-%9 then appends flags):
+             makedemo  -> -DDEMO -DRUN -DNODONGLE
+             makedebug -> -DDEBUG -DRUN
+             makeeda   -> -DEDA -DRUN
+             makeauto  -> -DAUTO -DRUN
+             makeprod  -> -DRUN
   st.cfg     BCC286 compiler configuration (distinct from bin/st.cfg)
   st.def     Pharlap linker definition file
   st.prj     Borland IDE project file
