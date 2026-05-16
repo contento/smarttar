@@ -32,6 +32,8 @@ Maintain the codebase, fix Zinc 3.5 UI bugs, and make the application maximally 
 
 Work in small, focused steps with explicit checkpoints. Gonzalo (the original author, "GCC") knows this codebase deeply — confirm approach before making broad changes.
 
+**Commit cadence:** For small, reversible edits (single-file fixes, doc updates, dictionary additions, batch renames), don't ask for confirmation before committing — just do the work and commit. Only stop to ask before **pushing**, because push is the user-visible / shared-state step. "Confirm approach before broad changes" still applies: broad changes (refactors, architectural moves, bulk renames across many files) still warrant an upfront check.
+
 ### 1. Think Before Coding
 
 **Don't assume. Don't hide confusion. Surface tradeoffs.**
