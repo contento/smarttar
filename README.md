@@ -261,6 +261,21 @@ SmartTar is a single-process protected-mode application. The main subsystems are
 
 ---
 
+## History
+
+MicroDiseño Ltda. — the company that built SmartTar — is no longer in business.
+
+MicroDiseño was a Colombian technology and engineering firm specializing in hardware development, installation, and technical support for telephone billing and metering systems (*sistemas de tarificación telefónica*). Its operations were particularly prominent in southwestern Colombia, including the departments of Nariño, Cauca, and Putumayo.
+
+SmartTar was the company's proprietary information system and hardware platform for managing, metering, and controlling telephone call billing. Its primary deployment footprint included:
+
+- **Commercial call cabins (*cabinas telefónicas*)** — central point-of-sale software and hardware gateway used to track and charge for minutes consumed by customers in commercial call centers.
+- **Institutional and retail points of sale** — regional administrative units and commercial networks (such as *Servicios & Transcripciones* networks and academic service hubs like those at Universidad del Norte) used it to manage communication logistics and point-of-sale telephone billing.
+
+The era of dedicated commercial call cabins and localized hardware-based *tarificación* software largely peaked in the late 1990s and 2000s, before cellular and VoIP dominance. As a result, deep technical documentation, source code, and active corporate registries for the platform are absent from modern public web indices. Surviving mentions live within legacy institutional administrative audits, regional career retrospectives of engineers who worked there, and academic infrastructure reports.
+
+---
+
 ## License
 
 Copyright © 1993–2003 MicroDiseño Ltda. All rights reserved.

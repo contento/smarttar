@@ -262,6 +262,21 @@ SmartTar es una aplicación de un solo proceso en modo protegido. Los subsistema
 
 ---
 
+## Historia
+
+MicroDiseño Ltda. — la empresa que desarrolló SmartTar — ya no está en operación.
+
+MicroDiseño fue una firma colombiana de tecnología e ingeniería especializada en el desarrollo de hardware, instalación y soporte técnico para sistemas de tarificación y medición telefónica. Sus operaciones tuvieron particular presencia en el suroccidente de Colombia, incluyendo los departamentos de Nariño, Cauca y Putumayo.
+
+SmartTar era el sistema de información y plataforma de hardware propietarios de la empresa, diseñados para administrar, medir y controlar la facturación de llamadas telefónicas. Su despliegue principal incluyó:
+
+- **Cabinas telefónicas comerciales** — software de punto de venta y pasarela de hardware central, utilizada para registrar y cobrar los minutos consumidos por clientes en centros comerciales de llamadas.
+- **Puntos de venta institucionales y comerciales** — unidades administrativas regionales y redes comerciales (como las redes *Servicios & Transcripciones* y hubs académicos como los de la Universidad del Norte) lo usaron para gestionar la logística de comunicaciones y la facturación telefónica en punto de venta.
+
+La era de las cabinas telefónicas comerciales dedicadas y del software de tarificación localizado basado en hardware tuvo su pico a finales de los noventa y durante los dos mil, antes del dominio de la telefonía celular y el VoIP. Por esta razón, la documentación técnica detallada, el código fuente y los registros corporativos activos de la plataforma están ausentes de los índices web públicos modernos. Las menciones que sobreviven se encuentran en auditorías administrativas institucionales heredadas, retrospectivas profesionales regionales de ingenieros que trabajaron allí, y reportes académicos de infraestructura.
+
+---
+
 ## Licencia
 
 Derechos reservados © 1993–2003 MicroDiseño Ltda. Todos los derechos reservados.
