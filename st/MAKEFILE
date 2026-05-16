@@ -71,19 +71,27 @@ EDA=__EDA__ 			# it's for EDA !
 EDA=
 !endif
 
+# TLINK library search path. The -L in st.cfg is BCC286's (forwarded to
+# TLINK only when BCC286 invokes the linker). We call TLINK directly, so
+# we must pass the lib path here too.
+LINK_LIBPATH=/L..\bc\lib;..\pharlap\lib;..\zinc\lib;lib
+
 !if $d(DEBUG)
 OBJ_CC_OPTIONS= -c +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);$(AUTO) -v
 DLL_CC_OPTIONS= -dll +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);NDEBUG -v
-LINK_OPTS=/c /C /x /v
+LINK_OPTS=/c /C /x /v $(LINK_LIBPATH)
 ASM_OPTS=/mx /zi
 !else
 OBJ_CC_OPTIONS= -c +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);$(AUTO);NDEBUG
 DLL_CC_OPTIONS= -dll +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);NDEBUG
-LINK_OPTS=/c /C /s
+LINK_OPTS=/c /C /s $(LINK_LIBPATH)
 ASM_OPTS=/mx
 !endif
 
-STARTUP_OBJS=c0pl.obj
+# Borland C++ 3.1 startup module for Pharlap 286 protected mode.
+# Lives in pharlap/LIB/ — full path needed because TLINK's /L only
+# applies to .lib files, not .obj files.
+STARTUP_OBJS=..\pharlap\lib\c0pl.obj
 LIBS=phapi d16_zil d16_gfx bc_16gfx emu286 emu mathl bcl286 ptclassl pbidsl
 DEF_FILE=$(APP).def
 
