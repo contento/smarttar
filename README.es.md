@@ -64,7 +64,10 @@ Todas las herramientas están incluidas en el repositorio bajo [`BC/`](BC/), [`P
 ```text
 BC/              Borland C++ 3.1 — compilador, depurador (TD), TASM, TLIB, TLINK
 PHARLAP/         Pharlap 286 DOS Extender — BCC286, BIND286, CFIG286, RUN286, DLLs en runtime
-ZINC/            Zinc Interface Library 3.5 — headers, librerías pre-compiladas, herramientas de diseño
+ZINC/            Zinc Interface Library 3.5 — headers, librerías, GENHELP, DESIGN
+dosbox-x.conf    Configuración local del proyecto para DOSBox-X (carga automática desde la raíz)
+make-headless.sh Lanzador del host; ejecuta la compilación dentro de DOSBox-X en modo no interactivo
+.gitattributes   Impone CRLF para archivos DOS, LF para archivos del host
 st/              Aplicación
   src/           Archivos fuente C++ y C, organizados por subsistema
                  (ph/, rt/, db/, ui/, mb/, tb/, ct/, ctrl/, pr/)
@@ -72,6 +75,8 @@ st/              Aplicación
   build/         Archivos objeto — salida intermedia (no se incluye en git)
   lib/           Librerías estáticas
   bin/           Binarios de salida y datos en tiempo de ejecución
+  res/           Fuente binaria del recurso Zinc (RES.DAT) — editada en
+                 Zinc Designer, copiada a bin/ durante la compilación
   docs/          Guías de usuario, manual de referencia, ayuda, capturas
   test/          Utilidades de prueba para desarrollo
   util/          Utilidades de construcción y mantenimiento
@@ -151,6 +156,19 @@ makedemo
 ```bat
 make DEBUG=1 RUN=1
 ```
+
+### Compilación sin interacción desde el host
+
+[`make-headless.sh`](make-headless.sh) ejecuta una compilación completa dentro de DOSBox-X desde tu shell de macOS / Linux sin tener que escribir nada dentro de DOS:
+
+```sh
+./make-headless.sh                # por defecto, demo
+./make-headless.sh debug
+./make-headless.sh --force prod   # -B (recompilar todo) + variante de producción
+./make-headless.sh --keep-log-in-st   # el log queda en st/build.log en lugar de ./build.log
+```
+
+El script lanza DOSBox-X con `-c "command /c make<variante>.bat HELP=1 …"`, captura toda la salida a `build.log` (transmitida en vivo mediante `tail -F`), espera a que DOSBox-X termine y reporta éxito/fallo según si el batch imprimió `Build succeeded.`. Solo se puede ejecutar una instancia a la vez (DOSBox-X bloquea su pantalla).
 
 ### Salida
 

@@ -64,7 +64,10 @@ All toolchain binaries are vendored under [`BC/`](BC/), [`PHARLAP/`](PHARLAP/), 
 ```text
 BC/              Borland C++ 3.1 — compiler, debugger (TD), TASM, TLIB, TLINK
 PHARLAP/         Pharlap 286 DOS Extender — BCC286, BIND286, CFIG286, RUN286, runtime DLLs
-ZINC/            Zinc Interface Library 3.5 — headers, pre-built libs, designer tools
+ZINC/            Zinc Interface Library 3.5 — headers, pre-built libs, GENHELP, DESIGN
+dosbox-x.conf    Project-local DOSBox-X config (auto-loaded when launched from repo root)
+make-headless.sh Host-side runner; drives a full DOSBox-X build non-interactively
+.gitattributes   Enforces CRLF for DOS files, LF for host files
 st/              Application
   src/           C++ and C source files, organized by subsystem
                  (ph/, rt/, db/, ui/, mb/, tb/, ct/, ctrl/, pr/)
@@ -72,6 +75,8 @@ st/              Application
   build/         Object files — intermediate build output (not committed)
   lib/           Static libraries
   bin/           Output binaries and runtime data
+  res/           Zinc binary resource source (RES.DAT) — edited via
+                 Zinc Designer, copied to bin/ during build
   docs/          User guides, reference manuals, help text, screenshots
   test/          Development test utilities
   util/          Build and maintenance utilities
@@ -151,6 +156,19 @@ makedemo
 ```bat
 make DEBUG=1 RUN=1
 ```
+
+### Headless from the host
+
+[`make-headless.sh`](make-headless.sh) drives a complete DOSBox-X build from your macOS / Linux shell without you having to type anything inside DOS:
+
+```sh
+./make-headless.sh                # defaults to demo
+./make-headless.sh debug
+./make-headless.sh --force prod   # -B (force rebuild) + production variant
+./make-headless.sh --keep-log-in-st   # log lands in st/build.log instead of ./build.log
+```
+
+The script launches DOSBox-X with `-c "command /c make<variant>.bat HELP=1 …"`, captures all output to `build.log` (streamed live via `tail -F`), waits for DOSBox-X to exit, and reports success/failure based on whether the build batch printed `Build succeeded.`. Only one instance can run at a time (DOSBox-X locks its display).
 
 ### Output
 

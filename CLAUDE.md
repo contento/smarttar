@@ -80,8 +80,15 @@ The test: Every changed line should trace directly to the user's request.
 ```text
 bc/          Borland C++ 3.1 toolchain (compiler, debugger, TASM, TLIB, etc.)
 pharlap/     Pharlap 286 DOS extender (BCC286, BIND286, CFIG286, RUN286, DLLs)
-zinc/        Zinc 3.5 UI framework (headers, libs, tools)
+zinc/        Zinc 3.5 UI framework (headers, libs, tools — incl. GENHELP.EXE
+             which the HELP=1 makefile rule invokes)
 util/        DOS utilities for development (NC, MOUSE, PKLITE, PKZIP, SWEEP, etc.)
+dosbox-x.conf  Project-local DOSBox-X config (CPU/mem tuning, PATH wiring,
+               [sdl] mouse_emulation=integration for Zinc UI, etc.)
+make-headless.sh  Host-side runner that drives DOSBox-X non-interactively
+                  (variant=demo|debug|eda|auto|prod, --force passes -B,
+                  --keep-log-in-st puts build.log inside st/). Streams log
+                  via tail -F as the build runs.
 st/          Application source
   src/    .cpp / .c source files, organized into subsystem subdirectories:
     ph/      Telephony engine, tariff, place lookup, query, utilities, parser
@@ -107,7 +114,11 @@ st/          Application source
   test/      Development test utilities (chkrx, defpwd, gen, inf2dat, etc.)
   util/      Build and maintenance utilities
   web/       Web assets (default.html, SmartTar.gif, versions.txt)
-  MAKEFILE   Main build file (Borland MAKE syntax); uses .PATH.cpp to list all subdirs
+  MAKEFILE   Main build file (Borland MAKE syntax). Each .obj has an
+             explicit dependency rule pointing at its src\<subsys>\<file>.cpp
+             source — Borland MAKE 3.6 doesn't support .PATH.x (added in
+             MAKE 4.0+), so suffix-rule + source-search-path patterns
+             silently fail to compile. See "Build System" below.
   run.bat    Launch st.exe from bin/ (cd bin → st.exe → cd ..)
   make*.bat  Build-variant shortcuts (each forwards %1-%9 then appends flags):
              makedemo  -> -DDEMO -DRUN -DNODONGLE
@@ -156,7 +167,7 @@ After linking, `BIND286` embeds the Pharlap run-time stub; `CFIG286` tunes it:
 | `AUTO=1` | Defines `__AUTO__` (simulation mode) |
 | `EDA=1` | Defines `__EDA__` |
 | `RUN=1` | Runs `BIND286` + `CFIG286` after link (produces runnable protected-mode EXE) |
-| `HELP=1` | Regenerates `bin/help.dat` from `src/help.txt` via `genhelp` |
+| `HELP=1` | Regenerates `bin/help.dat` from `docs/help.txt` via `genhelp` (requires `zinc\BIN` on PATH — already wired in `dosbox-x.conf`) |
 
 Example debug build:
 
@@ -261,7 +272,7 @@ pr_sr80  pr_dr80  pr_lin80  pr_drpre  pr_dr40  pr_sr40  pr_dr18  pr_sr28  pr_dre
 - File names must stay within **8.3 DOS naming** conventions.
 - Object files go to `build/`, binaries to `bin/` — never mix with sources.
 - **Build environment**: DOSBox-X (Mac and Windows). All `make` commands run inside DOSBox-X, not on the host.
-- Source files live under `src/` subsystem subdirectories (`ph/`, `rt/`, `db/`, `ui/`, etc.) — the MAKEFILE uses `.PATH.cpp` to find them; do not move files without updating `.PATH.cpp`.
+- Source files live under `src/` subsystem subdirectories (`ph/`, `rt/`, `db/`, `ui/`, etc.). The MAKEFILE has **one explicit dependency rule per `.obj`** mapping target → source path (`$(OBJ_DIR)\foo.obj: $(SOURCE_DIR)\subsys\foo.cpp` + `$(CC) -o$@ $**`). When you add or move a `.cpp` file, you MUST add/update the matching rule. `.PATH.cpp` lines exist in the MAKEFILE for documentation only — Borland MAKE 3.6 ignores them.
 - **Source encoding is intentionally dual** — do NOT bulk-convert:
   - Main app strings rendered by Zinc → **Latin-1** (Zinc draws via its own bitmap font, bypasses DOS code page; e.g. `ñ` = `0xF1`, `ó` = `0xF3`)
   - Console / printer / file output and `test/` & `util/` programs → **CP850** (DOS code page; e.g. `ñ` = `0xA4`, `ó` = `0xA2`)
