@@ -248,3 +248,8 @@ pr_sr80  pr_dr80  pr_lin80  pr_drpre  pr_dr40  pr_sr40  pr_dr18  pr_sr28  pr_dre
 - Object files go to `build/`, binaries to `bin/` — never mix with sources.
 - **Build environment**: DOSBox-X (Mac and Windows). All `make` commands run inside DOSBox-X, not on the host.
 - Source files live under `src/` subsystem subdirectories (`ph/`, `rt/`, `db/`, `ui/`, etc.) — the MAKEFILE uses `.PATH.cpp` to find them; do not move files without updating `.PATH.cpp`.
+- **Source encoding is intentionally dual** — do NOT bulk-convert:
+  - Main app strings rendered by Zinc → **Latin-1** (Zinc draws via its own bitmap font, bypasses DOS code page; e.g. `ñ` = `0xF1`, `ó` = `0xF3`)
+  - Console / printer / file output and `test/` & `util/` programs → **CP850** (DOS code page; e.g. `ñ` = `0xA4`, `ó` = `0xA2`)
+  - Bridge: `_ISO2ASCII()` in `src/st_util.cpp` translates Latin-1 → CP850 when main-app code emits text through DOS channels.
+  - VSCode is configured `files.encoding: iso88591` in `.vscode/settings.json`. For `test/`/`util/` files, use "Change File Encoding" → "DOS (CP 850)" before editing.
