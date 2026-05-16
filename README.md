@@ -66,7 +66,8 @@ BC/              Borland C++ 3.1 — compiler, debugger (TD), TASM, TLIB, TLINK
 PHARLAP/         Pharlap 286 DOS Extender — BCC286, BIND286, CFIG286, RUN286, runtime DLLs
 ZINC/            Zinc Interface Library 3.5 — headers, pre-built libs, GENHELP, DESIGN
 dosbox-x.conf    Project-local DOSBox-X config (auto-loaded when launched from repo root)
-make-headless.sh Host-side runner; drives a full DOSBox-X build non-interactively
+make-headless.sh Host-side runner (bash); drives a full DOSBox-X build non-interactively
+make-headless.ps1 PowerShell Core equivalent for Windows 11
 .gitattributes   Enforces CRLF for DOS files, LF for host files
 st/              Application
   src/           C++ and C source files, organized by subsystem
@@ -159,16 +160,25 @@ make DEBUG=1 RUN=1
 
 ### Headless from the host
 
-[`make-headless.sh`](make-headless.sh) drives a complete DOSBox-X build from your macOS / Linux shell without you having to type anything inside DOS:
+[`make-headless.sh`](make-headless.sh) (macOS / Linux / bash) and [`make-headless.ps1`](make-headless.ps1) (Windows 11 / PowerShell Core 7+) drive a complete DOSBox-X build from your host shell without you having to type anything inside DOS:
 
 ```sh
+# bash (macOS / Linux)
 ./make-headless.sh                # defaults to demo
 ./make-headless.sh debug
 ./make-headless.sh --force prod   # -B (force rebuild) + production variant
 ./make-headless.sh --keep-log-in-st   # log lands in st/build.log instead of ./build.log
 ```
 
-The script launches DOSBox-X with `-c "command /c make<variant>.bat HELP=1 …"`, captures all output to `build.log` (streamed live via `tail -F`), waits for DOSBox-X to exit, and reports success/failure based on whether the build batch printed `Build succeeded.`. Only one instance can run at a time (DOSBox-X locks its display).
+```powershell
+# PowerShell (Windows 11)
+.\make-headless.ps1                # defaults to demo
+.\make-headless.ps1 debug
+.\make-headless.ps1 prod -Force    # -B (force rebuild) + production variant
+.\make-headless.ps1 -KeepLogInSt   # log lands in st\build.log instead of .\build.log
+```
+
+Both scripts launch DOSBox-X with `-c "command /c make<variant>.bat HELP=1 …"`, capture all output to `build.log` (streamed live via `tail -F` / `Get-Content -Wait`), wait for DOSBox-X to exit, and report success/failure based on whether the build batch printed `Build succeeded.`. Only one instance can run at a time (DOSBox-X locks its display). Override the DOSBox-X binary location with `DOSBOX_X` (bash env var) or `$env:DOSBOX_X` (PowerShell).
 
 ### Output
 

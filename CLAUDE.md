@@ -85,10 +85,13 @@ zinc/        Zinc 3.5 UI framework (headers, libs, tools — incl. GENHELP.EXE
 util/        DOS utilities for development (NC, MOUSE, PKLITE, PKZIP, SWEEP, etc.)
 dosbox-x.conf  Project-local DOSBox-X config (CPU/mem tuning, PATH wiring,
                [sdl] mouse_emulation=integration for Zinc UI, etc.)
-make-headless.sh  Host-side runner that drives DOSBox-X non-interactively
-                  (variant=demo|debug|eda|auto|prod, --force passes -B,
-                  --keep-log-in-st puts build.log inside st/). Streams log
-                  via tail -F as the build runs.
+make-headless.sh  Host-side runner (bash, macOS/Linux). Drives DOSBox-X
+                  non-interactively. variant=demo|debug|eda|auto|prod;
+                  --force passes -B; --keep-log-in-st puts build.log
+                  inside st/. Streams log via tail -F as the build runs.
+make-headless.ps1 PowerShell Core 7+ equivalent for Windows 11. Same
+                  flags in PS form: -Variant, -Force, -KeepLogInSt.
+                  Uses Get-Content -Wait for the live stream.
 st/          Application source
   src/    .cpp / .c source files, organized into subsystem subdirectories:
     ph/      Telephony engine, tariff, place lookup, query, utilities, parser
