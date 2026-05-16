@@ -66,15 +66,19 @@ BC/              Borland C++ 3.1 — compilador, depurador (TD), TASM, TLIB, TLI
 PHARLAP/         Pharlap 286 DOS Extender — BCC286, BIND286, CFIG286, RUN286, DLLs en runtime
 ZINC/            Zinc Interface Library 3.5 — headers, librerías pre-compiladas, herramientas de diseño
 st/              Aplicación
-  source/        Archivos fuente C++ y C (.cpp / .c / .asm)
+  src/           Archivos fuente C++ y C, organizados por subsistema
+                 (ph/, rt/, db/, ui/, mb/, tb/, ct/, ctrl/, pr/)
   include/       Archivos de cabecera
-  obj/           Archivos objeto — salida intermedia (no se incluye en git)
+  build/         Archivos objeto — salida intermedia (no se incluye en git)
   lib/           Librerías estáticas
   bin/           Binarios de salida y datos en tiempo de ejecución
+  docs/          Guías de usuario, manual de referencia, ayuda, capturas
+  test/          Utilidades de prueba para desarrollo
+  util/          Utilidades de construcción y mantenimiento
+  web/           Recursos web e historial de versiones
   MAKEFILE       Script de construcción Borland MAKE
-  MV.BAT         Reemplazo DOS del mv (copy + erase)
-  MKD.BAT        Atajo: build demo + bind (DEMO + RUN + NODONGLE)
-  S.BAT          Ejecuta st.exe desde el directorio st/
+  run.bat        Ejecuta st.exe desde bin/
+  makedemo.bat   Atajo: build demo + bind (DEMO + RUN + NODONGLE)
 ```
 
 ---
@@ -102,7 +106,7 @@ make RUN=1
 | `NODONGLE=1` | Define `__NO_DONGLE__` — omite verificación del dongle (requiere `DEMO=1`) |
 | `AUTO=1` | Define `__AUTO__` — modo simulación / piloto automático |
 | `EDA=1` | Define `__EDA__` — variante para operador EDA |
-| `HELP=1` | Regenera `bin/help.dat` desde `doc/help.txt` vía `genhelp` |
+| `HELP=1` | Regenera `bin/help.dat` desde `docs/help.txt` vía `genhelp` |
 
 **Build demo (no requiere dongle):**
 
@@ -113,7 +117,7 @@ make RUN=1 DEMO=1 NODONGLE=1
 O use el atajo:
 
 ```bat
-mkd
+makedemo
 ```
 
 **Build con depuración:**
@@ -131,7 +135,7 @@ La compilación produce:
 
 ### DLLs de controlador de impresora
 
-Los controladores se compilan como DLLs de Pharlap a partir de `source/pr_*.c`:
+Los controladores se compilan como DLLs de Pharlap a partir de `src/pr/pr_*.c`:
 
 | DLL | Descripción |
 | --- | --- |

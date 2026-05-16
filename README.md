@@ -66,15 +66,19 @@ BC/              Borland C++ 3.1 — compiler, debugger (TD), TASM, TLIB, TLINK
 PHARLAP/         Pharlap 286 DOS Extender — BCC286, BIND286, CFIG286, RUN286, runtime DLLs
 ZINC/            Zinc Interface Library 3.5 — headers, pre-built libs, designer tools
 st/              Application
-  source/        C++ and C source files (.cpp / .c / .asm)
+  src/           C++ and C source files, organized by subsystem
+                 (ph/, rt/, db/, ui/, mb/, tb/, ct/, ctrl/, pr/)
   include/       Header files
-  obj/           Object files — intermediate build output (not committed)
+  build/         Object files — intermediate build output (not committed)
   lib/           Static libraries
   bin/           Output binaries and runtime data
+  docs/          User guides, reference manuals, help text, screenshots
+  test/          Development test utilities
+  util/          Build and maintenance utilities
+  web/           Web assets and version history
   MAKEFILE       Borland MAKE build script
-  MV.BAT         DOS mv replacement (copy + erase)
-  MKD.BAT        Shortcut: make demo + bind (DEMO + RUN + NODONGLE)
-  S.BAT          Run st.exe from the st/ directory
+  run.bat        Launch st.exe from bin/
+  makedemo.bat   Shortcut: make demo + bind (DEMO + RUN + NODONGLE)
 ```
 
 ---
@@ -102,7 +106,7 @@ make RUN=1
 | `NODONGLE=1` | Define `__NO_DONGLE__` — skip dongle check (requires `DEMO=1`) |
 | `AUTO=1` | Define `__AUTO__` — simulation / auto-pilot mode |
 | `EDA=1` | Define `__EDA__` — build variant for EDA operator |
-| `HELP=1` | Regenerate `bin/help.dat` from `doc/help.txt` via `genhelp` |
+| `HELP=1` | Regenerate `bin/help.dat` from `docs/help.txt` via `genhelp` |
 
 **Demo build (no dongle required):**
 
@@ -113,7 +117,7 @@ make RUN=1 DEMO=1 NODONGLE=1
 Or use the shortcut:
 
 ```bat
-mkd
+makedemo
 ```
 
 **Debug build:**
@@ -131,7 +135,7 @@ The build produces:
 
 ### Printer driver DLLs
 
-Printer drivers are compiled as Pharlap DLLs from `source/pr_*.c`:
+Printer drivers are compiled as Pharlap DLLs from `src/pr/pr_*.c`:
 
 | DLL | Description |
 | --- | --- |
