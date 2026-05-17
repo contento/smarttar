@@ -1,0 +1,142 @@
+name: Build & Release
+
+# Triggered by release tags (plain vX.Y.Z — no suffix). Checkpoint tags
+# like v2.34.1-runnable-by-claude are intentionally skipped.
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  # Manual run from the Actions tab — uploads a build artifact instead
+  # of creating a Release. Useful for shaking down the pipeline.
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed to create the GitHub Release
+
+jobs:
+  release:
+    runs-on: windows-latest
+    # Windows runner — DOSBox-X publishes official Windows builds but
+    # no Linux AppImage, so this is the path of least resistance.
+
+    env:
+      # Bump when DOSBox-X cuts a new release worth tracking.
+      # https://github.com/joncampbell123/dosbox-x/releases
+      DOSBOX_X_VERSION: '2026.05.02'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install DOSBox-X (portable zip)
+        shell: pwsh
+        run: |
+          $version = $env:DOSBOX_X_VERSION
+          $url = "https://github.com/joncampbell123/dosbox-x/releases/download/dosbox-x-v$version/dosbox-x-mingw64-$version-portable.zip"
+          Write-Host "Downloading $url"
+          Invoke-WebRequest -Uri $url -OutFile dosbox-x.zip
+          Expand-Archive dosbox-x.zip -DestinationPath dosbox-x-install -Force
+          $exe = Get-ChildItem dosbox-x-install -Recurse -Filter dosbox-x.exe | Select-Object -First 1
+          if (-not $exe) { Write-Error "dosbox-x.exe not found after extraction"; exit 1 }
+          "DOSBOX_X=$($exe.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append
+          Write-Host "DOSBox-X installed at: $($exe.FullName)"
+
+      - name: Point dosbox-x.conf mount at the CI workspace
+        shell: pwsh
+        run: |
+          # Use forward slashes — matches the existing conf style and
+          # DOSBox-X accepts both on Windows.
+          $workspace = $env:GITHUB_WORKSPACE -replace '\\', '/'
+          $conf = Get-Content dosbox-x.conf
+          $conf = $conf | ForEach-Object {
+            if ($_ -match '^mount c ') { "mount c `"$workspace`"" } else { $_ }
+          }
+          $conf | Set-Content dosbox-x.conf
+          Write-Host "Active mount line:"
+          Select-String '^mount c ' dosbox-x.conf
+
+      - name: Build (production variant)
+        shell: pwsh
+        run: |
+          .\make-headless.ps1 prod
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Verify essential build artifacts
+        shell: pwsh
+        run: |
+          $required = @(
+            'st\bin\st.exe',
+            'st\bin\help.dat',
+            'st\bin\RES.DAT'
+          )
+          foreach ($p in $required) {
+            if (-not (Test-Path $p)) { Write-Error "Missing: $p"; exit 1 }
+            Write-Host "OK  $p"
+          }
+          $dlls = Get-ChildItem st\bin -Filter 'pr_*.dll'
+          if ($dlls.Count -eq 0) { Write-Error "No pr_*.dll built"; exit 1 }
+          Write-Host "OK  $($dlls.Count) printer DLL(s)"
+
+      - name: Read version from st\include\version.h
+        id: ver
+        shell: pwsh
+        run: |
+          $h = Get-Content st\include\version.h -Raw
+          if ($h -notmatch '#define\s+ST_VERSION\s+"(\d+)\.(\d+)\.(\d+)"') {
+            Write-Error 'Could not read ST_VERSION from st\include\version.h'
+            exit 1
+          }
+          $v = "$($Matches[1]).$($Matches[2]).$($Matches[3])"
+          Write-Host "Version: $v"
+          "version=$v" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Sanity-check tag matches version.h
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        run: |
+          $tag = $env:GITHUB_REF_NAME.TrimStart('v')
+          $headerVer = '${{ steps.ver.outputs.version }}'
+          if ($tag -ne $headerVer) {
+            Write-Error "Tag '$env:GITHUB_REF_NAME' does not match version.h ('$headerVer'). Did you forget bump-version.sh / .ps1?"
+            exit 1
+          }
+          Write-Host "Tag and version.h agree: $tag"
+
+      - name: Package release ZIP
+        shell: pwsh
+        run: |
+          $name = "smarttar-${{ steps.ver.outputs.version }}"
+          $stage = "out\$name"
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+          Copy-Item st\bin\st.exe        $stage\
+          Copy-Item st\bin\pr_*.dll      $stage\
+          Copy-Item st\bin\help.dat      $stage\
+          Copy-Item st\bin\RES.DAT       $stage\
+          Copy-Item st\bin\*.inf         $stage\
+          # Pharlap runtime DLLs the BIND step binds against at runtime.
+          Copy-Item pharlap\BIN\*.DLL    $stage\
+          Compress-Archive -Path $stage -DestinationPath "out\$name.zip"
+          Get-ChildItem out\
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: out/smarttar-${{ steps.ver.outputs.version }}.zip
+          generate_release_notes: true
+          body: |
+            **SmartTar ${{ github.ref_name }}**
+
+            Built by [GitHub Actions](../actions) from tag `${{ github.ref_name }}`
+            against `st/include/version.h` ⇒ `${{ steps.ver.outputs.version }}`.
+
+            Changelog: see [`st/versions.txt`](st/versions.txt).
+            Release procedure: see [`RELEASING.md`](RELEASING.md).
+
+      - name: Upload artifact (workflow_dispatch path)
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: smarttar-${{ steps.ver.outputs.version }}-${{ github.sha }}
+          path: out/smarttar-${{ steps.ver.outputs.version }}.zip
+          retention-days: 14

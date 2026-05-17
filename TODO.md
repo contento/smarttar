@@ -52,6 +52,10 @@ full context and severity rationale.
 - [x] Centralize version into `st/include/version.h`; bump scripts keep
       `version.h` / `CLAUDE.md` / `st/versions.txt` in lockstep
       (see [RELEASING.md](RELEASING.md))
+- [x] Automate release builds via GitHub Actions
+      ([.github/workflows/release.yml](.github/workflows/release.yml));
+      tag push → build under DOSBox-X on `ubuntu-latest` (xvfb) → zip +
+      attach to a GitHub Release
 - [ ] Wire `ST_VERSION` into a runtime consumer (e.g. About dialog or
       startup log via `info.cpp`) so the EXE reports its own version
       and MAKE's `.autodepend` closes the sync loop
