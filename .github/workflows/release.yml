@@ -36,10 +36,17 @@ jobs:
           Write-Host "Downloading $url"
           Invoke-WebRequest -Uri $url -OutFile dosbox-x.zip
           Expand-Archive dosbox-x.zip -DestinationPath dosbox-x-install -Force
+          Write-Host "--- extracted layout ---"
+          Get-ChildItem dosbox-x-install -Recurse -Filter dosbox-x.exe | ForEach-Object { Write-Host $_.FullName }
           $exe = Get-ChildItem dosbox-x-install -Recurse -Filter dosbox-x.exe | Select-Object -First 1
           if (-not $exe) { Write-Error "dosbox-x.exe not found after extraction"; exit 1 }
           "DOSBOX_X=$($exe.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append
-          Write-Host "DOSBox-X installed at: $($exe.FullName)"
+          Write-Host "Using: $($exe.FullName)"
+          # Smoke-test: confirm dosbox-x.exe can launch in headless CI session.
+          # It needs an SDL display backend; if windows-latest has no desktop
+          # this will fail loudly here instead of silently during the build.
+          & $exe.FullName -version 2>&1 | Tee-Object -FilePath dosbox-x-version.txt
+          Write-Host "(exit code from -version: $LASTEXITCODE)"
 
       - name: Point dosbox-x.conf mount at the CI workspace
         shell: pwsh
@@ -58,8 +65,51 @@ jobs:
       - name: Build (production variant)
         shell: pwsh
         run: |
+          # Capture DOSBox-X's stdout + stderr to a sidecar file so a
+          # silent immediate-exit (the symptom we saw on the first run)
+          # leaves a trail. The make-headless.ps1 script normally swallows
+          # this via *> $null; here we invoke dosbox-x directly so we can
+          # tee. Mirrors what make-headless.ps1 sends but with logging.
+          $env:MAKE_HEADLESS_DEBUG = '1'
           .\make-headless.ps1 prod
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $rc = $LASTEXITCODE
+          Write-Host "make-headless.ps1 exit code: $rc"
+          exit $rc
+
+      - name: Diagnostics on build failure
+        if: failure()
+        shell: pwsh
+        run: |
+          Write-Host '=== dosbox-x --version output ==='
+          if (Test-Path dosbox-x-version.txt) { Get-Content dosbox-x-version.txt } else { Write-Host '(missing)' }
+          Write-Host ''
+          Write-Host '=== build.log (full, if present) ==='
+          if (Test-Path build.log) {
+            Write-Host "size: $((Get-Item build.log).Length) bytes"
+            Get-Content build.log
+          } else { Write-Host '(missing)' }
+          Write-Host ''
+          Write-Host '=== dosbox-x stderr/stdout from the build (if captured) ==='
+          if (Test-Path dosbox-x-build.log) { Get-Content dosbox-x-build.log } else { Write-Host '(missing — make-headless still null-redirects)' }
+          Write-Host ''
+          Write-Host '=== dosbox-x.conf (post-mount-rewrite) ==='
+          Get-Content dosbox-x.conf
+          Write-Host ''
+          Write-Host '=== workspace contents ==='
+          Get-ChildItem -Force | Select-Object Mode,LastWriteTime,Length,Name
+
+      - name: Upload failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-failure-${{ github.run_id }}
+          path: |
+            build.log
+            dosbox-x-version.txt
+            dosbox-x-build.log
+            dosbox-x.conf
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Verify essential build artifacts
         shell: pwsh
