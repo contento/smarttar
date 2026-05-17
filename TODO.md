@@ -108,8 +108,10 @@ full context and severity rationale.
       eol=crlf` but Borland Turbo C Project files are binary, so the
       filter was inflating them with spurious CRs on checkout. Fixed
       by reclassifying `*.prj` as binary.
-- [ ] Document the Zinc Designer workflow for `RES.DAT` edits in
-      `docs/` so future work doesn't re-discover it
+- [~] Document the Zinc Designer workflow for `RES.DAT` edits in
+      `docs/` so future work doesn't re-discover it. Draft at
+      [st/docs/zinc-designer-workflow.md](st/docs/zinc-designer-workflow.md);
+      `FIXME` markers tag the parts Gonzalo still needs to verify.
 
 ---
 
