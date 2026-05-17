@@ -46,17 +46,18 @@ jobs:
           Write-Host "Downloading $url"
           Invoke-WebRequest -Uri $url -OutFile dosbox-x.zip
           Expand-Archive dosbox-x.zip -DestinationPath dosbox-x-install -Force
-          Write-Host "--- extracted layout ---"
-          Get-ChildItem dosbox-x-install -Recurse -Filter dosbox-x.exe | ForEach-Object { Write-Host $_.FullName }
-          $exe = Get-ChildItem dosbox-x-install -Recurse -Filter dosbox-x.exe | Select-Object -First 1
+          Write-Host "--- extracted dosbox-x.exe candidates ---"
+          $candidates = Get-ChildItem dosbox-x-install -Recurse -Filter dosbox-x.exe
+          $candidates | ForEach-Object { Write-Host $_.FullName }
+          # Prefer the SDL2 build — it handles minimal/headless display
+          # environments better than SDL1 (the plain 'mingw' subdir is SDL1).
+          $exe = $candidates | Where-Object { $_.FullName -match 'sdl2' } | Select-Object -First 1
+          if (-not $exe) { $exe = $candidates | Select-Object -First 1 }
           if (-not $exe) { Write-Error "dosbox-x.exe not found after extraction"; exit 1 }
           "DOSBOX_X=$($exe.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append
           Write-Host "Using: $($exe.FullName)"
-          # Smoke-test: confirm dosbox-x.exe can launch in headless CI session.
-          # It needs an SDL display backend; if windows-latest has no desktop
-          # this will fail loudly here instead of silently during the build.
-          & $exe.FullName -version 2>&1 | Tee-Object -FilePath dosbox-x-version.txt
-          Write-Host "(exit code from -version: $LASTEXITCODE)"
+          # No --version smoke test: DOSBox-X opens a window even for that,
+          # which hangs forever on a runner with no display attached.
 
       - name: Point dosbox-x.conf mount at the CI workspace
         shell: pwsh
@@ -73,6 +74,7 @@ jobs:
           Select-String '^mount c ' dosbox-x.conf
 
       - name: Build (${{ env.BUILD_VARIANT }} variant)
+        timeout-minutes: 15
         shell: pwsh
         run: |
           # Capture DOSBox-X's stdout + stderr to a sidecar file so a
@@ -89,9 +91,6 @@ jobs:
         if: failure()
         shell: pwsh
         run: |
-          Write-Host '=== dosbox-x --version output ==='
-          if (Test-Path dosbox-x-version.txt) { Get-Content dosbox-x-version.txt } else { Write-Host '(missing)' }
-          Write-Host ''
           Write-Host '=== build.log (full, if present) ==='
           if (Test-Path build.log) {
             Write-Host "size: $((Get-Item build.log).Length) bytes"
@@ -114,7 +113,6 @@ jobs:
           name: build-failure-${{ github.run_id }}
           path: |
             build.log
-            dosbox-x-version.txt
             dosbox-x-build.log
             dosbox-x.conf
           if-no-files-found: warn
