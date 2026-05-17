@@ -125,7 +125,13 @@ $dosboxArgs = @(
 )
 
 try {
-    & $dosboxX @dosboxArgs *> $null
+    if ($env:MAKE_HEADLESS_DEBUG) {
+        # Capture DOSBox-X's stdout+stderr to dosbox-x-build.log for CI
+        # diagnostics. Default silent path is unchanged for normal use.
+        & $dosboxX @dosboxArgs *>&1 | Tee-Object -FilePath 'dosbox-x-build.log'
+    } else {
+        & $dosboxX @dosboxArgs *> $null
+    }
 } catch {
     # DOSBox-X exit code is unreliable; we judge success from the log.
 }
