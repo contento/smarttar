@@ -99,8 +99,9 @@ full context and severity rationale.
 - [ ] Decide whether `st/web/versions.txt` should stay (web-only
       duplicate of `st/versions.txt`) or be deleted / wired into the
       bump scripts
-- [ ] Decide whether `st/include/help.hpp` should track regenerated
-      output or stay frozen between `HELP=1` builds
+- [x] `st/include/help.hpp` is a byproduct of `genhelp` — gitignored.
+      Fresh clones rely on `HELP=1` (passed by `make-headless.sh / .ps1`
+      unconditionally) to regenerate it before first link.
 - [ ] Renormalize legacy LF-only DOS files to CRLF (one-time
       `git add --renormalize .` after the build is otherwise green)
 - [ ] Document the Zinc Designer workflow for `RES.DAT` edits in
