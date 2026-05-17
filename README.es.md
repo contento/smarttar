@@ -68,6 +68,8 @@ ZINC/            Zinc Interface Library 3.5 — headers, librerías, GENHELP, DE
 dosbox-x.conf    Configuración local del proyecto para DOSBox-X (carga automática desde la raíz)
 make-headless.sh Lanzador del host (bash); ejecuta la compilación dentro de DOSBox-X en modo no interactivo
 make-headless.ps1 Equivalente para Windows 11 en PowerShell Core
+run-headless.sh  Lanzador del host (bash) para st.exe dentro de DOSBox-X; cierra DOSBox-X al salir
+run-headless.ps1 Equivalente para Windows 11 en PowerShell Core
 .gitattributes   Impone CRLF para archivos DOS, LF para archivos del host
 st/              Aplicación
   src/           Archivos fuente C++ y C, organizados por subsistema
@@ -178,6 +180,26 @@ make DEBUG=1 RUN=1
 ```
 
 Ambos scripts lanzan DOSBox-X con `-c "command /c make<variante>.bat HELP=1 …"`, capturan toda la salida a `build.log` (transmitida en vivo con `tail -F` / `Get-Content -Wait`), esperan a que DOSBox-X termine y reportan éxito/fallo según si el batch imprimió `Build succeeded.`. Solo se puede ejecutar una instancia a la vez (DOSBox-X bloquea su pantalla). Para sobrescribir la ubicación del binario, usa `DOSBOX_X` (variable de entorno bash) o `$env:DOSBOX_X` (PowerShell).
+
+### Ejecutar SmartTar desde el host
+
+[`run-headless.sh`](run-headless.sh) y [`run-headless.ps1`](run-headless.ps1) lanzan el `st/bin/st.exe` ya compilado dentro de DOSBox-X y cierran DOSBox-X automáticamente cuando la aplicación termina:
+
+```sh
+# bash
+./run-headless.sh                 # cierra DOSBox-X al salir de SmartTar
+./run-headless.sh --keep-open     # deja el prompt de DOS abierto después de salir
+./run-headless.sh -- arg1 arg2    # lo que está después de `--` se pasa a st.exe
+```
+
+```powershell
+# PowerShell
+.\run-headless.ps1
+.\run-headless.ps1 -KeepOpen
+.\run-headless.ps1 -- arg1 arg2
+```
+
+El cierre automático funciona porque cada script encola `-c "exit"` justo después de invocar `st`, así que DOSBox-X termina en cuanto `st.exe` devuelve el control a `COMMAND.COM`. Compila primero (`./make-headless.sh ...`) — estos scripts solo lanzan, no compilan.
 
 ### Salida
 

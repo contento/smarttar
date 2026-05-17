@@ -92,6 +92,13 @@ make-headless.sh  Host-side runner (bash, macOS/Linux). Drives DOSBox-X
 make-headless.ps1 PowerShell Core 7+ equivalent for Windows 11. Same
                   flags in PS form: -Variant, -Force, -KeepLogInSt.
                   Uses Get-Content -Wait for the live stream.
+run-headless.sh   Host-side launcher (bash) for st.exe inside DOSBox-X.
+                  Closes DOSBox-X when SmartTar exits (trailing -c exit
+                  fires the moment st.exe returns). --keep-open leaves
+                  the DOS prompt up after exit; args after `--` are
+                  forwarded to st.exe like st\run.bat does.
+run-headless.ps1  PowerShell equivalent. Same -KeepOpen switch; args
+                  after `--` forward to st.exe.
 st/          Application source
   src/    .cpp / .c source files, organized into subsystem subdirectories:
     ph/      Telephony engine, tariff, place lookup, query, utilities, parser
