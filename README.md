@@ -68,6 +68,8 @@ ZINC/            Zinc Interface Library 3.5 — headers, pre-built libs, GENHELP
 dosbox-x.conf    Project-local DOSBox-X config (auto-loaded when launched from repo root)
 make-headless.sh Host-side runner (bash); drives a full DOSBox-X build non-interactively
 make-headless.ps1 PowerShell Core equivalent for Windows 11
+run-headless.sh  Host-side launcher (bash) for st.exe inside DOSBox-X; closes DOSBox-X on exit
+run-headless.ps1 PowerShell equivalent for Windows 11
 .gitattributes   Enforces CRLF for DOS files, LF for host files
 st/              Application
   src/           C++ and C source files, organized by subsystem
@@ -178,6 +180,26 @@ make DEBUG=1 RUN=1
 ```
 
 Both scripts launch DOSBox-X with `-c "command /c make<variant>.bat HELP=1 …"`, capture all output to `build.log` (streamed live via `tail -F` / `Get-Content -Wait`), wait for DOSBox-X to exit, and report success/failure based on whether the build batch printed `Build succeeded.`. Only one instance can run at a time (DOSBox-X locks its display). Override the DOSBox-X binary location with `DOSBOX_X` (bash env var) or `$env:DOSBOX_X` (PowerShell).
+
+### Launch SmartTar from the host
+
+[`run-headless.sh`](run-headless.sh) and [`run-headless.ps1`](run-headless.ps1) launch the already-built `st/bin/st.exe` inside DOSBox-X and close DOSBox-X automatically when the app exits:
+
+```sh
+# bash
+./run-headless.sh                 # close DOSBox-X when SmartTar exits
+./run-headless.sh --keep-open     # leave the DOS prompt up after exit
+./run-headless.sh -- arg1 arg2    # anything after `--` is forwarded to st.exe
+```
+
+```powershell
+# PowerShell
+.\run-headless.ps1
+.\run-headless.ps1 -KeepOpen
+.\run-headless.ps1 -- arg1 arg2
+```
+
+The close-on-exit behavior works because each script queues `-c "exit"` immediately after the `st` invocation, so DOSBox-X exits the instant `st.exe` returns control to `COMMAND.COM`. Build first (`./make-headless.sh ...`) — these scripts only launch, they don't build.
 
 ### Output
 
