@@ -19,7 +19,6 @@
 *.cfg       text eol=crlf
 *.ini       text eol=crlf
 *.mak       text eol=crlf
-*.prj       text eol=crlf
 MAKEFILE    text eol=crlf
 
 # --- DOS source code (Borland C++ / TASM) ---
@@ -54,6 +53,7 @@ MAKEFILE    text eol=crlf
 *.sym       binary
 *.dat       binary
 *.dsk       binary
+*.prj       binary
 *.png       binary
 *.jpg       binary
 *.gif       binary

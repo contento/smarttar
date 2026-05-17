@@ -102,8 +102,12 @@ full context and severity rationale.
 - [x] `st/include/help.hpp` is a byproduct of `genhelp` — gitignored.
       Fresh clones rely on `HELP=1` (passed by `make-headless.sh / .ps1`
       unconditionally) to regenerate it before first link.
-- [ ] Renormalize legacy LF-only DOS files to CRLF (one-time
-      `git add --renormalize .` after the build is otherwise green)
+- [x] Renormalize legacy LF-only DOS files to CRLF. Audit found one
+      legit case (`zinc/EXAMPLE/BIO/MAKEFILE`, stale CRs in repo blob)
+      and surfaced a `.gitattributes` bug: `*.prj` was classed `text
+      eol=crlf` but Borland Turbo C Project files are binary, so the
+      filter was inflating them with spurious CRs on checkout. Fixed
+      by reclassifying `*.prj` as binary.
 - [ ] Document the Zinc Designer workflow for `RES.DAT` edits in
       `docs/` so future work doesn't re-discover it
 
