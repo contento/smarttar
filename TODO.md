@@ -56,9 +56,13 @@ full context and severity rationale.
       ([.github/workflows/release.yml](.github/workflows/release.yml));
       tag push → build under DOSBox-X on `ubuntu-latest` (xvfb) → zip +
       attach to a GitHub Release
-- [ ] Wire `ST_VERSION` into a runtime consumer (e.g. About dialog or
-      startup log via `info.cpp`) so the EXE reports its own version
-      and MAKE's `.autodepend` closes the sync loop
+- [x] Wire `ST_VERSION` into a runtime consumer. `st/include/st_defs.h`
+      now `#include`s `version.h` and derives the legacy `APP_MAJOR_VER`,
+      `APP_MINOR_VER`, `APP_UPGRADE_VER`, `APP_VER_ID`, `APP_VER`, and
+      `APP_BUILD` macros from `ST_VERSION_*`. The About dialog
+      (`mb_help.cpp`) and file-header stamping (`filehdr.cpp`) auto-track.
+      `.autodepend` triggers a PCH rebuild on every `bump-version.*`,
+      so the displayed version always matches the tag.
 - [ ] Decide whether `st/web/versions.txt` should stay (web-only
       duplicate of `st/versions.txt`) or be deleted / wired into the
       bump scripts

@@ -20,4 +20,13 @@
 #define ST_VERSION_PATCH 2
 #define ST_VERSION       "2.34.2"
 
+/* Stringify helpers — used by callers that need "X.Y" form built from
+ * the numeric MAJOR/MINOR defines (e.g. APP_VER in st_defs.h).
+ * The double-indirection is the standard preprocessor trick: the inner
+ * macro stringifies the literal argument, the outer one expands first.
+ */
+#define ST_STRINGIFY_(s) #s
+#define ST_STRINGIFY(s)  ST_STRINGIFY_(s)
+#define ST_VERSION_SHORT ST_STRINGIFY(ST_VERSION_MAJOR) "." ST_STRINGIFY(ST_VERSION_MINOR)
+
 #endif /* __VERSION_H */
