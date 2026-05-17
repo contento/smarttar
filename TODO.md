@@ -96,9 +96,9 @@ full context and severity rationale.
       (`mb_help.cpp`) and file-header stamping (`filehdr.cpp`) auto-track.
       `.autodepend` triggers a PCH rebuild on every `bump-version.*`,
       so the displayed version always matches the tag.
-- [ ] Decide whether `st/web/versions.txt` should stay (web-only
-      duplicate of `st/versions.txt`) or be deleted / wired into the
-      bump scripts
+- [x] Deleted stale `st/web/` (2003 deployment page with broken links;
+      `versions.txt` there was a frozen duplicate of `st/versions.txt`).
+      Current releases live on GitHub Releases per [RELEASING.md](RELEASING.md).
 - [x] `st/include/help.hpp` is a byproduct of `genhelp` — gitignored.
       Fresh clones rely on `HELP=1` (passed by `make-headless.sh / .ps1`
       unconditionally) to regenerate it before first link.

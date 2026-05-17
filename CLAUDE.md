@@ -116,7 +116,6 @@ st/          Application source
   docs/      Screenshots and user/reference documentation (Word, images)
   test/      Development test utilities (chkrx, defpwd, gen, inf2dat, etc.)
   util/      Build and maintenance utilities
-  web/       Web assets (default.html, SmartTar.gif, versions.txt)
   MAKEFILE   Main build file (Borland MAKE syntax). Each .obj has an
              explicit dependency rule pointing at its src\<subsys>\<file>.cpp
              source — Borland MAKE 3.6 doesn't support .PATH.x (added in
