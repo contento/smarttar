@@ -1,3 +1,25 @@
+[ 2.50.0 ]
+ - May 17 2026: Era-boundary jump from 2.34.2. No user-facing application change;
+                same Pharlap-extender st.exe with the same UI and behavior. This
+                release marks "post-resurrection" hygiene and dev-UX polish:
+                  * run-headless.sh / run-headless.ps1 launch st.exe inside
+                    DOSBox-X and close the emulator when the app exits.
+                  * Zinc Designer / RES.DAT workflow drafted at
+                    st/docs/zinc-designer-workflow.md (with FIXME markers for
+                    the steps that still need first-hand verification).
+                  * Reclassified *.prj as binary in .gitattributes; the prior
+                    text eol=crlf rule was silently inflating Borland project
+                    files with spurious CRs on every checkout.
+                  * Removed stale st/web/ (2003 deployment page with broken
+                    links; current releases live on GitHub Releases).
+                  * Untracked st/include/help.hpp (genhelp byproduct).
+                  * Renamed makedebug.bat -> makedbg.bat for strict DOS 8.3.
+                  * Derived APP_VER_* macros in st_defs.h from version.h so
+                    the in-app About dialog tracks ST_VERSION automatically.
+                The 2.35-2.49 minor range is intentionally skipped to leave
+                room should anything from the historical pre-resurrection
+                stream resurface.
+
 [ 2.34.2 ]
  - May 17 2026: Build resurrection under Borland MAKE 3.6 (explicit per-.obj rules
                 replace .PATH.x, which MAKE 3.6 doesn't support). Headless host-side
