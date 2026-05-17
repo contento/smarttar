@@ -110,5 +110,4 @@ Tag them the same way; they sort below the final `v2.35.0` per semver precedence
 
 ## Open items
 
-- `st/web/versions.txt` is a duplicate of `st/versions.txt`. The bump scripts touch only the canonical one — decide whether to delete the duplicate, keep it as a separate web-only changelog, or extend the scripts to sync both.
 - `ST_VERSION` is declared but not yet **consumed** anywhere in the running app. The About dialog / startup log doesn't read it. When a `.cpp` (e.g. `info.cpp`) starts `#include "version.h"`, MAKE's `.autodepend` will automatically rebuild that translation unit on every version bump — closing the sync loop.

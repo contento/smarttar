@@ -81,7 +81,6 @@ st/              Application
   docs/          User guides, reference manuals, help text, screenshots
   test/          Development test utilities
   util/          Build and maintenance utilities
-  web/           Web assets and version history
   MAKEFILE       Borland MAKE build script
   run.bat        Launch st.exe from bin/
   make*.bat      Build-variant shortcuts:

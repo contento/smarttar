@@ -81,7 +81,6 @@ st/              Aplicación
   docs/          Guías de usuario, manual de referencia, ayuda, capturas
   test/          Utilidades de prueba para desarrollo
   util/          Utilidades de construcción y mantenimiento
-  web/           Recursos web e historial de versiones
   MAKEFILE       Script de construcción Borland MAKE
   run.bat        Ejecuta st.exe desde bin/
   make*.bat      Atajos por variante:
