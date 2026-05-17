@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-SmartTar is a DOS 5.0 protected-mode point-of-sale / tariff management system. Current version: **2.34.1** (2003).
+SmartTar is a DOS 5.0 protected-mode point-of-sale / tariff management system. Current version: **2.34.2** (2003).
 
 **Name:** SmartTar = **Smart + Tar(ifa)**. "Tarifa" is Spanish for tariff / rate (standard in Colombia for telephone call billing). Not an acronym, not related to Unix `tar`.
 
