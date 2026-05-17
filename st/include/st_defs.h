@@ -11,22 +11,28 @@
 #define APP_COPYRIGHT      APP_COPYRIGHT_DATE " " APP_COMPANY
 #define APP_ISO_COPYRIGHT  APP_COPYRIGHT_DATE " " APP_ISO_COMPANY
 // Version Information
-#define APP_MAJOR_VER		2
+// Derived from st/include/version.h -- the single source of truth.
+// Run bump-version.sh / bump-version.ps1 to change. Do not hand-edit.
+#include "version.h"
+#define APP_MAJOR_VER     ST_VERSION_MAJOR
 #if APP_MAJOR_VER>9
 #error Major version number great than 9. GCC/gcc.
 #endif
-#define APP_MINOR_VER      33
+#define APP_MINOR_VER     ST_VERSION_MINOR
 #if APP_MINOR_VER>99
 #error Minor version number great than 99. GCC/gcc.
 #endif
-#define APP_UPGRADE_VER    1 // Alway 1. change build instead.
+#define APP_UPGRADE_VER   ST_VERSION_PATCH
 #if APP_UPGRADE_VER>9
 #error Upgrade Version Number great than 9. GCC/gcc.
 #endif
-#define APP_BUILD          "Build 1" // v.ss[.uu] // 2.21.1 Build 5
+// "Build N" historically tracked patch-equivalent counts within a
+// single MAJOR.MINOR.UPGRADE. Folded into ST_VERSION_PATCH now, so the
+// displayed Build number mirrors the patch.
+#define APP_BUILD         "Build " ST_STRINGIFY(ST_VERSION_PATCH)
 
-#define APP_VER_ID         "2.34.1"  // v.ss[.uu]
-#define APP_VER            "2.34"    // v.ss
+#define APP_VER_ID        ST_VERSION         // "v.ss.uu" e.g. "2.34.2"
+#define APP_VER           ST_VERSION_SHORT   // "v.ss"    e.g. "2.34"
 
 #if !defined(__EDA__)
 #define APP_VER_NAME       APP_NAME " " APP_VER
