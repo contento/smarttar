@@ -9,6 +9,12 @@ on:
   # Manual run from the Actions tab — uploads a build artifact instead
   # of creating a Release. Useful for shaking down the pipeline.
   workflow_dispatch:
+    inputs:
+      variant:
+        description: 'Build variant'
+        type: choice
+        default: demo
+        options: [demo, debug, eda, auto, prod]
 
 permissions:
   contents: write   # needed to create the GitHub Release
@@ -23,6 +29,10 @@ jobs:
       # Bump when DOSBox-X cuts a new release worth tracking.
       # https://github.com/joncampbell123/dosbox-x/releases
       DOSBOX_X_VERSION: '2026.05.02'
+      # Build variant. Defaults to 'demo' for both tag pushes (no dongle
+      # required at runtime) and workflow_dispatch (overridable via the
+      # 'variant' input).
+      BUILD_VARIANT: ${{ inputs.variant || 'demo' }}
 
     steps:
       - name: Checkout
@@ -62,16 +72,15 @@ jobs:
           Write-Host "Active mount line:"
           Select-String '^mount c ' dosbox-x.conf
 
-      - name: Build (production variant)
+      - name: Build (${{ env.BUILD_VARIANT }} variant)
         shell: pwsh
         run: |
           # Capture DOSBox-X's stdout + stderr to a sidecar file so a
           # silent immediate-exit (the symptom we saw on the first run)
-          # leaves a trail. The make-headless.ps1 script normally swallows
-          # this via *> $null; here we invoke dosbox-x directly so we can
-          # tee. Mirrors what make-headless.ps1 sends but with logging.
+          # leaves a trail. make-headless.ps1 tees DOSBox-X output to
+          # dosbox-x-build.log when MAKE_HEADLESS_DEBUG is set.
           $env:MAKE_HEADLESS_DEBUG = '1'
-          .\make-headless.ps1 prod
+          .\make-headless.ps1 $env:BUILD_VARIANT
           $rc = $LASTEXITCODE
           Write-Host "make-headless.ps1 exit code: $rc"
           exit $rc
