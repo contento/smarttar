@@ -37,6 +37,39 @@ Working list of milestones and tasks. Detailed findings live in
       cause)*
 - [ ] *(add other UI bugs as they surface)*
 
+## Milestone: UI improvements (new edition)
+
+- [ ] **Higher-resolution display via Zinc** — Zinc 3.5 supports SVGA
+      modes through its BGI backend; the project currently runs at the
+      default VGA 640×480. Investigate switching `machine = svga_s3` +
+      a higher Zinc display mode, the cost in font rework, and how
+      `st.cfg`'s `-D__BTN__` defines interact with resolution.
+- [ ] **Theme switching** — Zinc 3.5 has a built-in palette / "scheme"
+      mechanism. Expose it as a runtime toggle (config option +
+      menu-bar entry) so the operator can switch between palettes
+      without recompiling.
+- [ ] **Improve SIMULA mode** — the existing simulation mode
+      (`-DAUTO` / `makeauto`) is rough. Better simulation algorithm
+      (realistic call distribution, configurable rates), clearer
+      presentation, and a parameters block so an operator can drive
+      it (number of booths, call frequency, tariff mix, etc.) without
+      code changes.
+
+## Milestone: Toolchain portability
+
+- [ ] **Build with open-source toolchains** — investigate whether
+      SmartTar can build with Open Watcom (closest historical
+      replacement for Borland C++ + Pharlap), DJGPP / GCC, or a more
+      modern C++ targeting 32-bit DOS. Two flavors:
+  - *Drop-in*: keep Zinc 3.5 + Pharlap, change only the compiler.
+    Risk: Zinc has BCC-specific calling conventions and PCH usage.
+  - *Full replacement*: swap Zinc for an open UI lib (Turbo Vision?
+    custom BGI? FOX?) and/or replace Pharlap with HX-DOS / CWSDPMI /
+    DOS/4GW. Bigger surgery; loses some Zinc behavior we may want to
+    preserve.
+  Document risk/reward per layer (compiler, DOS extender, UI lib)
+  before committing to a path.
+
 ## Milestone: Stability under Extended DOS
 
 Findings from [STABILITY_AUDIT.md](STABILITY_AUDIT.md) — see that file for
