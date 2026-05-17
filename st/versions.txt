@@ -1,3 +1,12 @@
+[ 2.34.2 ]
+ - May 17 2026: Build resurrection under Borland MAKE 3.6 (explicit per-.obj rules
+                replace .PATH.x, which MAKE 3.6 doesn't support). Headless host-side
+                runners (make-headless.sh / make-headless.ps1) drive DOSBox-X.
+                GitHub Actions CI builds Windows-portable release ZIPs on tag push.
+                Version centralized in st/include/version.h with bump scripts that
+                keep version.h, CLAUDE.md, and this file in lockstep. No user-facing
+                behavior change — same 2.34.1 sources, working build pipeline.
+ 
 [ 2.34.1]
  - Jun 22 2003: Build 1. Added new values for CEIL_XXX. Telecom & Orbitel.
  

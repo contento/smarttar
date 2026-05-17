@@ -17,7 +17,7 @@
 
 #define ST_VERSION_MAJOR 2
 #define ST_VERSION_MINOR 34
-#define ST_VERSION_PATCH 1
-#define ST_VERSION       "2.34.1"
+#define ST_VERSION_PATCH 2
+#define ST_VERSION       "2.34.2"
 
 #endif /* __VERSION_H */
