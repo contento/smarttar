@@ -47,8 +47,12 @@ st/bin/RES.DAT
 st/bin/res.cpp
 st/bin/res.hpp
 
-# Generated help database (built from source/help.txt via genhelp)
+# Generated help database (built from docs/help.txt via genhelp).
+# help.hpp is the C++ binding the genhelp tool emits alongside help.dat;
+# regenerated every time HELP=1 fires the rule. make-headless.sh / .ps1
+# pass HELP=1 unconditionally so a fresh clone always rebuilds both.
 st/bin/help.dat
+st/include/help.hpp
 
 # Compiled telephony database (built from ddi.inf + ddn.inf + local.inf)
 st/bin/PH_INFO.DAT
