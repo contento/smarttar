@@ -14,7 +14,7 @@ on:
         description: 'Build variant'
         type: choice
         default: demo
-        options: [demo, debug, eda, auto, prod]
+        options: [demo, dbg, eda, auto, prod]
 
 permissions:
   contents: write   # needed to create the GitHub Release

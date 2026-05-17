@@ -85,7 +85,7 @@ st/              Application
   MAKEFILE       Borland MAKE build script
   run.bat        Launch st.exe from bin/
   make*.bat      Build-variant shortcuts:
-                 makedemo (DEMO + NODONGLE + RUN), makedebug (DEBUG + RUN),
+                 makedemo (DEMO + NODONGLE + RUN), makedbg (DEBUG + RUN),
                  makeeda (EDA + RUN), makeauto (AUTO + RUN), makeprod (RUN)
 ```
 
@@ -301,7 +301,7 @@ SmartTar is a single-process protected-mode application. The main subsystems are
 | Production | `RUN=1` | `makeprod` | Full build with dongle check |
 | Demo | `DEMO=1 NODONGLE=1 RUN=1` | `makedemo` | Trade shows, evaluation |
 | EDA | `EDA=1 RUN=1` | `makeeda` | EDA operator — different call type classification |
-| Debug | `DEBUG=1 RUN=1` | `makedebug` | Development; use with Pharlap `TDP.EXE` debugger |
+| Debug | `DEBUG=1 RUN=1` | `makedbg` | Development; use with Pharlap `TDP.EXE` debugger |
 | Simulation | `AUTO=1 RUN=1` | `makeauto` | Automated test / demo playback |
 
 ---

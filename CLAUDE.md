@@ -125,7 +125,7 @@ st/          Application source
   run.bat    Launch st.exe from bin/ (cd bin → st.exe → cd ..)
   make*.bat  Build-variant shortcuts (each forwards %1-%9 then appends flags):
              makedemo  -> -DDEMO -DRUN -DNODONGLE
-             makedebug -> -DDEBUG -DRUN
+             makedbg   -> -DDEBUG -DRUN
              makeeda   -> -DEDA -DRUN
              makeauto  -> -DAUTO -DRUN
              makeprod  -> -DRUN
