@@ -95,12 +95,7 @@ $stArgString = if ($StArgs) { ($StArgs -join ' ') } else { '' }
 # run st -> exit. With -KeepOpen, drop the exit so the DOS prompt stays.
 $dosboxArgs = @(
     '-conf',       'dosbox-x.conf',
-    '-fastlaunch'
-)
-if ($Log) {
-    $dosboxArgs += @('-log', $Log)
-}
-$dosboxArgs += @(
+    '-fastlaunch',
     '-c',          'cd bin',
     '-c',          ("st $stArgString").TrimEnd()
 )
