@@ -57,8 +57,9 @@ st/include/help.hpp
 # Compiled telephony database (built from ddi.inf + ddn.inf + local.inf)
 st/bin/PH_INFO.DAT
 
-# Versioned bin snapshots (e.g. st/_bin.2.50.0/)
+# Versioned bin snapshots (e.g. st/_bin.2.50.0/, st/_bin/)
 st/_bin.*
+st/_bin/
 
 # Runtime transaction database and log (created/written at runtime)
 st/bin/RX.DAT
