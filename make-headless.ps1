@@ -88,10 +88,8 @@ if ($KeepLogInSt) {
     $dosLog = 'C:\build.log'
 }
 
-if (Test-Path -LiteralPath $log) { Remove-Item -LiteralPath $log -Force }
-
 # --- Build args for MAKE -----------------------------------------------------
-$makeArgs     = 'HELP=1'
+$makeArgs     = ''
 $bannerSuffix = ''
 if ($Force) {
     $makeArgs    += ' -B'
@@ -102,8 +100,9 @@ Write-Host "make-headless: building variant '$Variant'$bannerSuffix (log: $log) 
 Write-Host 'make-headless: streaming compile output below.'
 Write-Host ('-' * 70)
 
-# Create the log before launching DOSBox-X.
-New-Item -Path $log -ItemType File -Force | Out-Null
+# Truncate or create the log. Remove-Item fails when a previous run's
+# FileStream (FileShare::ReadWrite, no FileShare::Delete) is still open.
+[IO.File]::WriteAllText((Join-Path (Get-Location) $log), '')
 
 $dosboxArgs = @(
     '-conf',       'dosbox-x.conf',
