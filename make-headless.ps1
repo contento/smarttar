@@ -136,8 +136,14 @@ try {
     # DOSBox-X exit code is unreliable; we judge success from the log.
 }
 
-# Give the tail job a beat to flush trailing lines, then drain and stop it.
-Start-Sleep -Milliseconds 500
+# DOSBox-X flushes its virtual filesystem to the host only when the file is
+# closed (at process exit). Poll until the log has content so we don't read
+# an empty file during the brief window between process-exit and OS flush.
+$deadline = (Get-Date).AddSeconds(10)
+do {
+    Start-Sleep -Milliseconds 200
+} until ((Test-Path -LiteralPath $log) -and (Get-Item -LiteralPath $log).Length -gt 0 -or (Get-Date) -ge $deadline)
+
 Receive-Job -Job $tailJob -ErrorAction SilentlyContinue
 Stop-Job   -Job $tailJob -ErrorAction SilentlyContinue | Out-Null
 Remove-Job -Job $tailJob -Force -ErrorAction SilentlyContinue
