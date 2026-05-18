@@ -33,39 +33,18 @@ st/**/*.dsk
 .claude/
 
 # ==============================================================================
-# st/bin/ — runtime artifacts and generated files
+# st/bin/ — entirely a build-output / runtime directory; nothing tracked here.
+# Canonical sources for runtime data files live in st/data/ and are copied
+# to bin/ by the MAKEFILE on each build.
 # ==============================================================================
-
-# Resource editor backup copies
-st/bin/RES.BK*
-
-# Zinc binary resource in bin/ — build-time copy of the canonical
-# tracked source at st/res/RES.DAT. MAKEFILE copies it on each build.
-st/bin/RES.DAT
-
-# Generated source copies (canonical versions live in source/ and include/)
-st/bin/res.cpp
-st/bin/res.hpp
-
-# Generated help database (built from docs/help.txt via genhelp).
-# help.hpp is the C++ binding the genhelp tool emits alongside help.dat;
-# regenerated every time HELP=1 fires the rule. make-headless.sh / .ps1
-# pass HELP=1 unconditionally so a fresh clone always rebuilds both.
-st/bin/help.dat
-st/include/help.hpp
-
-# Compiled telephony database (built from ddi.inf + ddn.inf + local.inf)
-st/bin/PH_INFO.DAT
+st/bin/
 
 # Versioned bin snapshots (e.g. st/_bin/, st/_bin-2.50.0/)
 st/_bin/
 st/_bin-*/
 
-# Runtime transaction database and log (created/written at runtime)
-st/bin/RX.DAT
-st/bin/RX.IDX
-st/bin/RX.STA
-st/bin/LOG.DAT
+# help.hpp is emitted by genhelp alongside help.dat (into st/include/).
+st/include/help.hpp
 
 # ==============================================================================
 # Headless build logs (make-headless.sh / run-headless.sh)

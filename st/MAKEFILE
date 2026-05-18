@@ -27,6 +27,7 @@ LIB_DIR=lib
 INCLUDE_DIR=include
 DOC_DIR=docs
 RES_DIR=res
+DATA_DIR=data
 
 # NOTE: Borland MAKE 3.6 (bundled with BC 3.1) does NOT support the
 # .PATH.x directive — it was added in MAKE 4.0+. The lines below are
@@ -175,6 +176,15 @@ DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 	$(BIN_DIR)\pr_dreme.$(DLL_EXT) \
 	$(BIN_DIR)\pr_drhal.$(DLL_EXT)
 
+DATA_FILES=\
+	$(BIN_DIR)\st.cfg    \
+	$(BIN_DIR)\st.ini    \
+	$(BIN_DIR)\ddi.inf   \
+	$(BIN_DIR)\ddn.inf   \
+	$(BIN_DIR)\local.inf \
+	$(BIN_DIR)\mvres.bat \
+	$(BIN_DIR)\nodb.bat
+
 .c.dll:
 	$(CC) $(DLL_CC_OPTIONS) {$< }
 	@move $&.$(OBJ_EXT)  $(OBJ_DIR)
@@ -187,7 +197,7 @@ DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 .asm.obj:
 	$(ASM) $(ASM_OPTS) $<, $@
 
-$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(OBJS) $(DLLS)
+$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(DATA_FILES) $(OBJS) $(DLLS)
 	$(LINK) $(LINK_OPTS) @&&!
 $(STARTUP_OBJS) $(OBJS)
 $*, ,$(LIBS), $(DEF_FILE)
@@ -209,6 +219,24 @@ $(BIN_DIR)\$(HELP_FILE): $(DOC_DIR)\help.txt
 # This rule republishes it into $(BIN_DIR) so the runtime app finds it.
 $(BIN_DIR)\$(RES_FILE): $(RES_DIR)\$(RES_FILE)
 	@copy $(RES_DIR)\$(RES_FILE) $(BIN_DIR)\$(RES_FILE) > NUL
+
+# Runtime data files — canonical sources live in $(DATA_DIR)\, copied to
+# $(BIN_DIR)\ so the app finds them at runtime. MAKE only copies when the
+# source is newer than the destination (standard timestamp rule).
+$(BIN_DIR)\st.cfg: $(DATA_DIR)\st.cfg
+	@copy $(DATA_DIR)\st.cfg $(BIN_DIR)\st.cfg > NUL
+$(BIN_DIR)\st.ini: $(DATA_DIR)\st.ini
+	@copy $(DATA_DIR)\st.ini $(BIN_DIR)\st.ini > NUL
+$(BIN_DIR)\ddi.inf: $(DATA_DIR)\ddi.inf
+	@copy $(DATA_DIR)\ddi.inf $(BIN_DIR)\ddi.inf > NUL
+$(BIN_DIR)\ddn.inf: $(DATA_DIR)\ddn.inf
+	@copy $(DATA_DIR)\ddn.inf $(BIN_DIR)\ddn.inf > NUL
+$(BIN_DIR)\local.inf: $(DATA_DIR)\local.inf
+	@copy $(DATA_DIR)\local.inf $(BIN_DIR)\local.inf > NUL
+$(BIN_DIR)\mvres.bat: $(DATA_DIR)\mvres.bat
+	@copy $(DATA_DIR)\mvres.bat $(BIN_DIR)\mvres.bat > NUL
+$(BIN_DIR)\nodb.bat: $(DATA_DIR)\nodb.bat
+	@copy $(DATA_DIR)\nodb.bat $(BIN_DIR)\nodb.bat > NUL
 
 # ============================================================================
 # Explicit per-file source-path mapping
