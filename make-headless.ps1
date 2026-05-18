@@ -99,57 +99,55 @@ if ($Force) {
 }
 
 Write-Host "make-headless: building variant '$Variant'$bannerSuffix (log: $log) ..."
-Write-Host 'make-headless: streaming compile output below; window stays silent.'
+Write-Host 'make-headless: streaming compile output below.'
 Write-Host ('-' * 70)
 
-# Create the log so the tailing job has a file to follow even before
-# DOSBox-X starts writing to it.
+# Create the log before launching DOSBox-X.
 New-Item -Path $log -ItemType File -Force | Out-Null
-
-# Stream the log live (PowerShell equivalent of `tail -F`).
-$tailJob = Start-Job -ArgumentList (Resolve-Path -LiteralPath $log).Path -ScriptBlock {
-    param($logPath)
-    Get-Content -LiteralPath $logPath -Wait -Tail 0
-}
 
 $dosboxArgs = @(
     '-conf',       'dosbox-x.conf',
     '-fastlaunch',
-    '-c',          "echo === SmartTar build starting (variant $Variant) ===",
-    '-c',          "echo === log: $dosLog (silent until exit) ===",
-    '-c',          'echo .',
     '-c',          "command /c make$Variant.bat $makeArgs > $dosLog",
-    '-c',          'echo .',
-    '-c',          'echo === Build finished ===',
     '-c',          'exit'
 )
 
+# Launch DOSBox-X asynchronously so we can stream the log in this thread.
+$dosboxProc = Start-Process -FilePath $dosboxX -ArgumentList $dosboxArgs -PassThru
+
+# Tail build.log in real time (equivalent to bash's `tail -F $log`).
+# DOSBox-X writes lines incrementally; after it exits, keep draining for
+# up to 10 seconds to catch any late-flushed lines.
+$stream = [System.IO.FileStream]::new(
+    (Resolve-Path -LiteralPath $log).Path,
+    [System.IO.FileMode]::Open,
+    [System.IO.FileAccess]::Read,
+    [System.IO.FileShare]::ReadWrite
+)
+$reader = [System.IO.StreamReader]::new($stream)
+$exitedAt = $null
 try {
-    if ($env:MAKE_HEADLESS_DEBUG) {
-        # Capture DOSBox-X's stdout+stderr to dosbox-x-build.log for CI
-        # diagnostics. Default silent path is unchanged for normal use.
-        & $dosboxX @dosboxArgs *>&1 | Tee-Object -FilePath 'dosbox-x-build.log'
-    } else {
-        & $dosboxX @dosboxArgs *> $null
+    for (;;) {
+        $line = $reader.ReadLine()
+        if ($null -ne $line) {
+            Write-Host $line
+            if ($line -match 'Build succeeded\.' -or $line -match '\*\*\* Error') { break }
+        } elseif ($dosboxProc.HasExited) {
+            if ($null -eq $exitedAt) { $exitedAt = Get-Date }
+            if (((Get-Date) - $exitedAt).TotalSeconds -ge 10) { break }
+            Start-Sleep -Milliseconds 100
+        } else {
+            Start-Sleep -Milliseconds 100
+        }
     }
-} catch {
-    # DOSBox-X exit code is unreliable; we judge success from the log.
+} finally {
+    $reader.Dispose()
+    $stream.Dispose()
 }
 
-# DOSBox-X may buffer writes and flush to the host filesystem only after
-# process exit. Poll until the log contains the final marker ("Build
-# succeeded." or "*** Error") so we don't read a partially-written file.
-# A full force-rebuild takes well under 60 seconds; 90s is a safe ceiling.
-$logText = ''
-$deadline = (Get-Date).AddSeconds(90)
-do {
-    Start-Sleep -Milliseconds 500
-    $logText = Get-Content -LiteralPath $log -Raw -ErrorAction SilentlyContinue
-} until (($logText -match 'Build succeeded\.' -or $logText -match '\*\*\* Error') -or (Get-Date) -ge $deadline)
-
-Receive-Job -Job $tailJob -ErrorAction SilentlyContinue
-Stop-Job   -Job $tailJob -ErrorAction SilentlyContinue | Out-Null
-Remove-Job -Job $tailJob -Force -ErrorAction SilentlyContinue
+if (-not $dosboxProc.HasExited) {
+    $dosboxProc.WaitForExit(30000) | Out-Null
+}
 
 Write-Host ('-' * 70)
 
@@ -159,9 +157,7 @@ if (-not (Test-Path -LiteralPath $log)) {
     exit 1
 }
 
-if (-not $logText) {
-    $logText = Get-Content -LiteralPath $log -Raw -ErrorAction SilentlyContinue
-}
+$logText = Get-Content -LiteralPath $log -Raw -ErrorAction SilentlyContinue
 if ($logText -match 'Build succeeded\.') {
     Write-Host "build ${Variant}: OK (see $log)"
     exit 0
