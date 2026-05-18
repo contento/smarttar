@@ -136,13 +136,16 @@ try {
     # DOSBox-X exit code is unreliable; we judge success from the log.
 }
 
-# DOSBox-X flushes its virtual filesystem to the host only when the file is
-# closed (at process exit). Poll until the log has content so we don't read
-# an empty file during the brief window between process-exit and OS flush.
-$deadline = (Get-Date).AddSeconds(10)
+# DOSBox-X may buffer writes and flush to the host filesystem only after
+# process exit. Poll until the log contains the final marker ("Build
+# succeeded." or "*** Error") so we don't read a partially-written file.
+# A full force-rebuild takes well under 60 seconds; 90s is a safe ceiling.
+$logText = ''
+$deadline = (Get-Date).AddSeconds(90)
 do {
-    Start-Sleep -Milliseconds 200
-} until ((Test-Path -LiteralPath $log) -and (Get-Item -LiteralPath $log).Length -gt 0 -or (Get-Date) -ge $deadline)
+    Start-Sleep -Milliseconds 500
+    $logText = Get-Content -LiteralPath $log -Raw -ErrorAction SilentlyContinue
+} until (($logText -match 'Build succeeded\.' -or $logText -match '\*\*\* Error') -or (Get-Date) -ge $deadline)
 
 Receive-Job -Job $tailJob -ErrorAction SilentlyContinue
 Stop-Job   -Job $tailJob -ErrorAction SilentlyContinue | Out-Null
@@ -152,11 +155,13 @@ Write-Host ('-' * 70)
 
 # --- Verdict ----------------------------------------------------------------
 if (-not (Test-Path -LiteralPath $log)) {
-    Write-Error "build ${Variant}: NO LOG — DOSBox-X did not write to the mount."
+    Write-Error "build ${Variant}: NO LOG -- DOSBox-X did not write to the mount."
     exit 1
 }
 
-$logText = Get-Content -LiteralPath $log -Raw -ErrorAction SilentlyContinue
+if (-not $logText) {
+    $logText = Get-Content -LiteralPath $log -Raw -ErrorAction SilentlyContinue
+}
 if ($logText -match 'Build succeeded\.') {
     Write-Host "build ${Variant}: OK (see $log)"
     exit 0
