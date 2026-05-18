@@ -31,6 +31,23 @@ st/util/**/obj/
 st/util/inf2dat/PH_INFO.DAT
 st/util/ini2cfg/st.cfg
 
+# util runtime data -- canonical sources in util/inf2dat/ and util/ini2cfg/
+# only; no local copies tracked in other util/ or test/ subdirs
+st/util/setup/ddi.inf
+st/util/setup/ddn.inf
+st/util/setup/local.inf
+st/util/setup/st.cfg
+st/util/setup/st.ini
+st/util/defpwd/st.cfg
+st/util/defpwd/st.ini
+st/util/chkrx/st.cfg
+st/test/ph_eng/ddi.inf
+st/test/ph_eng/ddn.inf
+st/test/ph_eng/local.inf
+st/test/ph_eng/tv/ddi.inf
+st/test/ph_eng/tv/ddn.inf
+st/test/ph_eng/tv/local.inf
+
 # MacOS Finder metadata
 .DS_Store
 
