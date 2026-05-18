@@ -29,6 +29,7 @@ st/**/*.dsk
 # util build artifacts
 st/util/**/obj/
 st/util/inf2dat/PH_INFO.DAT
+st/util/ini2cfg/st.cfg
 
 # MacOS Finder metadata
 .DS_Store

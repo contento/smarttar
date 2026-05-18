@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 	}
 
 	WORD status = g_cfg->Load(); // load CFG
-	if (status != CFG::OK)
+	if (status != CFG::OK && !(TraceInfo::s_bTest && status == CFG::NO_CFG_FILE))
 	{
 		char *msg = " tiene una falla general.";
 		switch (status)
@@ -55,10 +55,10 @@ int main(int argc, char *argv[])
 			msg = "no existe."    ;
 			break;
 		case CFG::BAD_CFG_FILE:
-			msg = "est  corrupto.";
+			msg = "estï¿½ corrupto.";
 			break;
 		}
-		cerr << "El archivo de configuraci¢n " << msg << endl;
+		cerr << "El archivo de configuraciï¿½n " << msg << endl;
 
 		return 1;
 	}
@@ -66,8 +66,8 @@ int main(int argc, char *argv[])
 	if (!TraceInfo::s_bTest)
 	{
 		STR32 password;
-		cout << "Presione Esc para abortar operaci¢n." << endl;
-		cout << "C¢digo de acceso: ";
+		cout << "Presione Esc para abortar operaciï¿½n." << endl;
+		cout << "Cï¿½digo de acceso: ";
 		_ReadPassword(password, sizeof(CFG::PASSWORD)-1);
 		if (!strlen(password))
 			return 0;
