@@ -3,19 +3,22 @@
 # the user exits the app (the trailing -c "exit" runs as soon as st.exe
 # returns control to COMMAND.COM).
 #
-# Usage:   ./run-headless.sh [--keep-open] [-- <args forwarded to st.exe>]
+# Usage:   ./run-headless.sh [--keep-open] [--log [file]] [-- <args>]
 #
 # Flags:
 #   --keep-open   After st.exe exits, drop into the DOS prompt instead
 #                 of closing DOSBox-X. Useful when poking at log files
 #                 or RX.* state without relaunching the extender.
+#   --log [file]  Capture DOSBox-X debug output (LOG: messages, E_Exit, etc.)
+#                 to a file. Defaults to run.log in the project root when
+#                 --log is given without a path. Pass --log "" to disable.
 #
 # Anything after `--` is forwarded as command-line args to st.exe (same
 # positional pass-through as st/run.bat).
 #
 # Notes:
-#   - The DOSBox-X window is the SmartTar UI; this script does not stream
-#     the program's output to the host terminal.
+#   - The DOSBox-X window is the SmartTar UI; DOSBox-X debug LOG: lines
+#     are captured to run.log by default and also streamed to stderr.
 #   - Only one DOSBox-X instance at a time (it locks its config / display).
 #   - Override the dosbox-x binary path with the DOSBOX_X env var.
 
@@ -23,14 +26,21 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 keep_open=0
+log_file="run.log"
 st_args=""
-usage="usage: $(basename "$0") [--keep-open] [-- <st.exe args>]"
+usage="usage: $(basename "$0") [--keep-open] [--log [file]] [-- <st.exe args>]"
 
 while (($#)); do
   case "$1" in
     --keep-open) keep_open=1; shift ;;
+    --log)
+      log_file="run.log"
+      if [[ $# -gt 1 && "${2:-}" != "--" && "${2:-}" != -* ]]; then
+        log_file="$2"; shift
+      fi
+      shift ;;
     -h|--help)
-      sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//'
+      sed -n '2,25p' "$0" | sed 's/^# \{0,1\}//'
       exit 0
       ;;
     --) shift; st_args="$*"; break ;;
@@ -63,4 +73,9 @@ if (( ! keep_open )); then
   dos_cmds+=( -c "exit" )
 fi
 
-exec "$DOSBOX_X" -conf dosbox-x.conf -fastlaunch "${dos_cmds[@]}"
+if [[ -n "$log_file" ]]; then
+  echo "Logging to: $log_file" >&2
+  "$DOSBOX_X" -conf dosbox-x.conf -fastlaunch "${dos_cmds[@]}" 2>&1 | tee "$log_file"
+else
+  exec "$DOSBOX_X" -conf dosbox-x.conf -fastlaunch "${dos_cmds[@]}"
+fi

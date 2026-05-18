@@ -9,7 +9,7 @@
   the SmartTar app also closes the DOSBox-X window. Pass -KeepOpen to
   drop into the DOS prompt instead.
 
-  Usage:   .\run-headless.ps1 [-KeepOpen] [-- <args forwarded to st.exe>]
+  Usage:   .\run-headless.ps1 [-KeepOpen] [-Log [file]] [-- <args>]
 
   Anything after `--` is forwarded as positional args to st.exe (same
   pass-through as st\run.bat).
@@ -22,6 +22,11 @@
   DOSBox-X. Useful when poking at log files or RX.* state without
   relaunching the extender.
 
+.PARAMETER Log
+  Capture DOSBox-X output (LOG: messages, E_Exit, etc.) to a file and
+  also stream it to the terminal. Defaults to run.log when -Log is given
+  without a path. Example: -Log run.log
+
 .PARAMETER StArgs
   Arguments forwarded verbatim to st.exe. PowerShell convention: any
   args after `--` land here.
@@ -32,16 +37,21 @@
 
 .EXAMPLE
   .\run-headless.ps1
-  Launch SmartTar; DOSBox-X closes when the app exits.
+  Launch SmartTar; DOSBox-X closes when the app exits (logs to run.log).
 
 .EXAMPLE
   .\run-headless.ps1 -KeepOpen
   Launch SmartTar; leave the DOS prompt up after exit.
+
+.EXAMPLE
+  .\run-headless.ps1 -Log custom.log
+  Launch SmartTar and capture debug output to custom.log.
 #>
 
 [CmdletBinding()]
 param(
     [switch]$KeepOpen,
+    [string]$Log = 'run.log',
 
     [Parameter(ValueFromRemainingArguments=$true)]
     [string[]]$StArgs
@@ -93,5 +103,11 @@ if (-not $KeepOpen) {
     $dosboxArgs += @('-c', 'exit')
 }
 
-& $dosboxX @dosboxArgs
-exit $LASTEXITCODE
+if ($Log) {
+    Write-Host "Logging to: $Log" -ForegroundColor Cyan
+    & $dosboxX @dosboxArgs 2>&1 | Tee-Object -FilePath $Log
+    exit $LASTEXITCODE
+} else {
+    & $dosboxX @dosboxArgs
+    exit $LASTEXITCODE
+}
