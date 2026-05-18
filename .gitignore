@@ -26,7 +26,8 @@ st/**/*.sym
 # Borland IDE desktop state
 st/**/*.dsk
 
-# inf2dat output (generated alongside the EXE when the MAKEFILE rule runs)
+# inf2dat build artifacts
+st/util/inf2dat/obj/
 st/util/inf2dat/PH_INFO.DAT
 
 # MacOS Finder metadata
