@@ -28,6 +28,7 @@ INCLUDE_DIR=include
 DOC_DIR=docs
 RES_DIR=res
 DATA_DIR=data
+INF2DAT_DIR=util\inf2dat
 
 # NOTE: Borland MAKE 3.6 (bundled with BC 3.1) does NOT support the
 # .PATH.x directive — it was added in MAKE 4.0+. The lines below are
@@ -177,11 +178,8 @@ DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 	$(BIN_DIR)\pr_drhal.$(DLL_EXT)
 
 DATA_FILES=\
-	$(BIN_DIR)\st.cfg    \
-	$(BIN_DIR)\st.ini    \
-	$(BIN_DIR)\ddi.inf   \
-	$(BIN_DIR)\ddn.inf   \
-	$(BIN_DIR)\local.inf
+	$(BIN_DIR)\st.cfg \
+	$(BIN_DIR)\st.ini
 
 .c.dll:
 	$(CC) $(DLL_CC_OPTIONS) {$< }
@@ -195,7 +193,7 @@ DATA_FILES=\
 .asm.obj:
 	$(ASM) $(ASM_OPTS) $<, $@
 
-$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(DATA_FILES) $(OBJS) $(DLLS)
+$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\PH_INFO.DAT $(DATA_FILES) $(OBJS) $(DLLS)
 	$(LINK) $(LINK_OPTS) @&&!
 $(STARTUP_OBJS) $(OBJS)
 $*, ,$(LIBS), $(DEF_FILE)
@@ -225,12 +223,13 @@ $(BIN_DIR)\st.cfg: $(DATA_DIR)\st.cfg
 	@copy $(DATA_DIR)\st.cfg $(BIN_DIR)\st.cfg > NUL
 $(BIN_DIR)\st.ini: $(DATA_DIR)\st.ini
 	@copy $(DATA_DIR)\st.ini $(BIN_DIR)\st.ini > NUL
-$(BIN_DIR)\ddi.inf: $(DATA_DIR)\ddi.inf
-	@copy $(DATA_DIR)\ddi.inf $(BIN_DIR)\ddi.inf > NUL
-$(BIN_DIR)\ddn.inf: $(DATA_DIR)\ddn.inf
-	@copy $(DATA_DIR)\ddn.inf $(BIN_DIR)\ddn.inf > NUL
-$(BIN_DIR)\local.inf: $(DATA_DIR)\local.inf
-	@copy $(DATA_DIR)\local.inf $(BIN_DIR)\local.inf > NUL
+# Telephony binary database — compiled from source .inf files by INF2DAT.
+# mk_ph.bat sets ST_TEST=1 (bypasses interactive password), cd's into the
+# EXE directory (so _GetAppPath returns that dir), runs inf2dat, then the
+# result is copied to bin\.
+$(BIN_DIR)\PH_INFO.DAT: $(INF2DAT_DIR)\ddi.inf $(INF2DAT_DIR)\ddn.inf $(INF2DAT_DIR)\local.inf
+	@$(INF2DAT_DIR)\mk_ph.bat
+	@copy $(INF2DAT_DIR)\PH_INFO.DAT $(BIN_DIR)\PH_INFO.DAT > NUL
 
 # ============================================================================
 # Explicit per-file source-path mapping

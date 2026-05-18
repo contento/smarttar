@@ -26,6 +26,9 @@ st/**/*.sym
 # Borland IDE desktop state
 st/**/*.dsk
 
+# inf2dat output (generated alongside the EXE when the MAKEFILE rule runs)
+st/util/inf2dat/PH_INFO.DAT
+
 # MacOS Finder metadata
 .DS_Store
 
