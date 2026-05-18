@@ -1,5 +1,5 @@
 ; *******************************************
-;   Arbol de Numeraci¢n
+;   Arbol de NumeraciÛn
 ; 
 ;        Fecha: 26/05/2003
 ;         Hora: 18:48
@@ -11,13 +11,13 @@
 ;[ 0 ]
 ;[ 1 ]
 ;[ 2 ]
-Medelln(Ant)        :  4 = 200-299
+MedellÌn(Ant)        :  4 = 200-299
 Local                :  1 = 20-29
 ;[ 3 ]
-Medelln(Ant)        :  4 = 300-399
+MedellÌn(Ant)        :  4 = 300-399
 Local                :  1 = 30-39
 ;[ 4 ]
-Medelln(Ant)        :  4 = 400-499
+MedellÌn(Ant)        :  4 = 400-499
 Local                :  1 = 40-49
 ;[ 5 ]
 El Retiro(Ant)       :  4 = 541
@@ -29,7 +29,7 @@ Guarne(Ant)          :  4 = 551
 La Ceja(Ant)         :  4 = 553
 La Union(Ant)        :  4 = 556
 Vsat                 :  2 = 52040-52045
-Medelln(Ant)        :  4 = 50000-52039,52046-52099,521-540,561-579
+MedellÌn(Ant)        :  4 = 50000-52039,52046-52099,521-540,561-579
 Local                :  1 = 50-59
 ;[ 6 ]
 ;[ 7 ]
@@ -68,7 +68,7 @@ Taparto(Andes)       :  4 = 8485
 Palermo(Ant)         :  4 = 8486
 Abriaqui(Ant)        :  4 = 8520
 Anza(Ant)            :  4 = 8522
-Buriticò(Ant)        :  4 = 8527
+Buritic·(Ant)        :  4 = 8527
 Heliconia(Ant)       :  4 = 8549
 Sucre(Olaya)         :  4 = 8550
 Llanadas(Ant)        :  4 = 8551
@@ -79,14 +79,14 @@ San Jos' del Nus(Ant :  3 = 8556
 Armenia(Ant)         :  4 = 8559
 Liborina(Ant)        :  4 = 8561
 Concepcion(Ant)      :  4 = 8567
-Cestillal(Caùasgor)  :  4 = 8569
-Briceùo(Ant)         :  4 = 8570
+Cestillal(CaÒasgor)  :  4 = 8569
+BriceÒo(Ant)         :  4 = 8570
 Giraldo(Ant)         :  4 = 8571
 Caicedo(Ant)         :  4 = 8572
 Uramita(Ant)         :  5 = 8574
 Murindo(Ant)         :  5 = 8575
 Sevilla(Ant)         :  4 = 8577
-Mutatò(Ant)          :  5 = 8578
+Mutat·(Ant)          :  5 = 8578
 Urama Grande(Dabeiba :  5 = 8594
 Nutibara(Frontino)   :  5 = 8599
 Hoyo Rico(Santa Rosa :  4 = 8600
@@ -109,7 +109,7 @@ Alejandria(Ant)      :  3 = 8660
 Belmira(Ant)         :  4 = 8674
 Yali(Ant)            :  4 = 8675
 Vigia del F.(Ant)    :  5 = 8678
-Nariÿo(Ant)          :  3 = 8680
+NariÒo(Ant)          :  3 = 8680
 COROZAL(TAMESIS)     :  4 = 8501000
 LA PICA(P. RICO)     :  4 = 8501001
 BARRO BLANCO(CARAM)  :  4 = 8501002
@@ -119,12 +119,12 @@ AURES ARRI(S MIGUEL) :  1 = 8501006
 LA SOLEDAD(S MIGUEL) :  1 = 8501007
 PUERTO LOP(EL BAGRE) :  4 = 8501008
 LA ANTIGUA(ABRIAQUI) :  4 = 8501009
-JUN URAMIT(CA¢ASGDS) :  4 = 8501010
+JUN URAMIT(CAÛASGDS) :  4 = 8501010
 LLANOS MUSING(FRONT) :  4 = 8501011
 EL CHUSACAL(FRONTIN) :  4 = 8501012
 EL MADERO(FRONTINO)  :  4 = 8501013
 NOBOGA(FRONTINO)     :  4 = 8501014
-JUN URAMIT(CA¢ASGDS) :  4 = 8501015
+JUN URAMIT(CAÛASGDS) :  4 = 8501015
 JUNTAS(ABRIAQUI)     :  4 = 8501016
 POTREROS(ABRIAQUI)   :  4 = 8501017
 VELEZ ORLANDO(TAMES) :  4 = 8501021
@@ -135,7 +135,7 @@ ALEGRIAS(CARAMANTA)  :  4 = 8501026
 CALIFORNIA(P. RICO)  :  4 = 8501027
 LA FLORESTA(YOLOMBO) :  4 = 8501028
 GOMEZ FRASC(YOLOMBO) :  4 = 8501029
-CASTA¢EDA MERCE(VEG) :  4 = 8501033
+CASTAÛEDA MERCE(VEG) :  4 = 8501033
 MARTINEZ H.(VEGACHI) :  4 = 8501034
 EL RUBY(YOLOMBO)     :  4 = 8501035
 MONTOYA OSCAR(YOLOM) :  4 = 8501036
@@ -248,7 +248,7 @@ FINCA LA ESPER.(MED) :  4 = 8501173
 HDA LA VOLCANA(ARME) :  4 = 8501174
 JARAMILLO JUAN(MED)  :  4 = 8501175
 HDA LA CASCAJ(MED)   :  4 = 8501176
-HDA CA¢A BRAVA(MED)  :  4 = 8501177
+HDA CAÛA BRAVA(MED)  :  4 = 8501177
 HDA NIBERENGO(MED)   :  4 = 8501178
 FRANCO MARTA(TITIR)  :  4 = 8501179
 HDA EL PORVENIR(MED) :  4 = 8501180
@@ -299,10 +299,10 @@ BUITRAGO FEISAL(MED) :  4 = 8501235
 TERPEL ANT.(MED)     :  4 = 8501236
 HDA VALENCIA(MED)    :  4 = 8501239
 SANTA INES(ANDES)    :  4 = 8501260
-ALTO CA¢AV.(ANDES)   :  4 = 8501261
+ALTO CAÛAV.(ANDES)   :  4 = 8501261
 LA MIRAND.(S CARLOS) :  2 = 8501263
-CEDE¢O(CAMP.)        :  4 = 8501265
-MORAVIA(BRICE¢O)     :  4 = 8501266
+CEDEÛO(CAMP.)        :  4 = 8501265
+MORAVIA(BRICEÛO)     :  4 = 8501266
 EL BARCINO(CAMP.)    :  4 = 8501267
 EL BAGRE(CARAC.)     :  3 = 8501269
 LA FLORESTA(MACEO)   :  3 = 8501270
@@ -410,14 +410,14 @@ Frontino(Ant)        :  4 = 8595-8597
 Dabeiba(Ant)         :  5 = 8590-8591
 San Rafael(Ant)      :  3 = 8586-8587
 San Jeronimo(Ant)    :  4 = 8580-8583
-CaÿasGordas(Ant)     :  4 = 8564-8565
+CaÒasGordas(Ant)     :  4 = 8564-8565
 Ebejico(Ant)         :  4 = 8562-8563
 San Vicente(Ant)     :  4 = 8544-8545
 Sopetran(Ant)        :  4 = 8541-8543
 Yarumal(Ant)         :  4 = 8537-8539
 Antioquia(Ant        :  4 = 8530-8534
 Jerico(Ant)          :  4 = 8523-8525
-El Peÿol(Ant)        :  3 = 8515-8518
+El PeÒol(Ant)        :  3 = 8515-8518
 Urrao(Ant)           :  4 = 8502-8504
 Pueblo Rico(Ant)     :  4 = 8498-8499
 Tamesis(Ant)         :  4 = 8494-8496
