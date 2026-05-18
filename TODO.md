@@ -119,8 +119,8 @@ full context and severity rationale.
       `versions.txt` there was a frozen duplicate of `st/versions.txt`).
       Current releases live on GitHub Releases per [RELEASING.md](RELEASING.md).
 - [x] `st/include/help.hpp` is a byproduct of `genhelp` — gitignored.
-      Fresh clones rely on `HELP=1` (passed by `make-headless.sh / .ps1`
-      unconditionally) to regenerate it before first link.
+      `help.dat` / `help.hpp` are now built unconditionally by MAKEFILE
+      (removed `!if $d(HELP)` guard); `HELP=1` is no longer needed.
 - [x] Renormalize legacy LF-only DOS files to CRLF. Audit found one
       legit case (`zinc/EXAMPLE/BIO/MAKEFILE`, stale CRs in repo blob)
       and surfaced a `.gitattributes` bug: `*.prj` was classed `text

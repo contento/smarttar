@@ -209,12 +209,10 @@ $*, ,$(LIBS), $(DEF_FILE)
 	cfig286 $(BIN_DIR)\$(EXE_FILE) -NISTACK 10 -LDTSIZE 4096
 !endif
 
-!if $d(HELP)
 $(BIN_DIR)\$(HELP_FILE): $(DOC_DIR)\help.txt
 	@genhelp $(DOC_DIR)\help.txt $(HELP_FILE) > NUL
 	@move $(HELP_FILE)	$(BIN_DIR) > NUL
 	@move help.hpp $(INCLUDE_DIR) > NUL
-!endif
 
 # Zinc binary resource — the canonical RES.DAT is a tracked binary source
 # in $(RES_DIR)\, edited interactively via DESIGN.EXE (Zinc Designer).
