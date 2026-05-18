@@ -117,8 +117,19 @@ $dosboxArgs = @(
 # the subprocess inherit our stdout, so its output appears inline.
 $pwshExe  = [System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
 $logAbs   = (Resolve-Path -LiteralPath $log).Path
-$tailCmd  = "-NoProfile -NonInteractive -Command `"Get-Content -LiteralPath '$logAbs' -Wait -Tail 0`""
-$tailProc = Start-Process -FilePath $pwshExe -ArgumentList $tailCmd -PassThru -NoNewWindow
+
+# Build a StreamReader loop as a base64-encoded command to sidestep quoting.
+# Get-Content -Wait can exit early on Windows; a StreamReader loop never does.
+$tailSrc = @"
+`$s = New-Object IO.FileStream('$logAbs', [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::ReadWrite)
+`$r = New-Object IO.StreamReader(`$s)
+while (`$true) {
+    `$l = `$r.ReadLine()
+    if (`$null -ne `$l) { Write-Host `$l } else { [Threading.Thread]::Sleep(100) }
+}
+"@
+$tailEnc  = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($tailSrc))
+$tailProc = Start-Process -FilePath $pwshExe -ArgumentList "-NoProfile -NonInteractive -EncodedCommand $tailEnc" -PassThru -NoNewWindow
 
 # Run DOSBox-X in this thread -- & uses PS's native arg-passing (correct quoting).
 try { & $dosboxX @dosboxArgs *> $null } catch {}
