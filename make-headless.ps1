@@ -155,7 +155,6 @@ try {
     $stream.Dispose()
 }
 
-$dosboxJob | Wait-Job -Timeout 30 | Out-Null
 Remove-Job $dosboxJob -Force -ErrorAction SilentlyContinue
 
 Write-Host ('-' * 70)
