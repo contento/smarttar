@@ -112,12 +112,22 @@ $dosboxArgs = @(
     '-c',          'exit'
 )
 
-# Launch DOSBox-X asynchronously so we can stream the log in this thread.
-$dosboxProc = Start-Process -FilePath $dosboxX -ArgumentList $dosboxArgs -PassThru
+# Launch DOSBox-X in a background job so we can stream the log in this thread.
+# Start-Process -ArgumentList just joins with spaces (no per-element quoting),
+# so the -c "command /c ..." arg breaks. Use a job instead: PS splatting inside
+# the job uses the native argument-passing path which quotes correctly.
+# Serialize the args array as JSON to carry it across the job boundary.
+$argsJson = $dosboxArgs | ConvertTo-Json -Compress
+$dosboxJob = Start-Job -ScriptBlock {
+    param($exe, $json, $dir)
+    Set-Location -LiteralPath $dir
+    $a = $json | ConvertFrom-Json
+    & $exe @a *> $null
+} -ArgumentList $dosboxX, $argsJson, $PSScriptRoot
 
 # Tail build.log in real time (equivalent to bash's `tail -F $log`).
-# DOSBox-X writes lines incrementally; after it exits, keep draining for
-# up to 10 seconds to catch any late-flushed lines.
+# DOSBox-X writes lines incrementally; after the job exits keep draining
+# for up to 10 seconds to catch any late-flushed lines.
 $stream = [System.IO.FileStream]::new(
     (Resolve-Path -LiteralPath $log).Path,
     [System.IO.FileMode]::Open,
@@ -132,7 +142,7 @@ try {
         if ($null -ne $line) {
             Write-Host $line
             if ($line -match 'Build succeeded\.' -or $line -match '\*\*\* Error') { break }
-        } elseif ($dosboxProc.HasExited) {
+        } elseif ($dosboxJob.State -ne 'Running') {
             if ($null -eq $exitedAt) { $exitedAt = Get-Date }
             if (((Get-Date) - $exitedAt).TotalSeconds -ge 10) { break }
             Start-Sleep -Milliseconds 100
@@ -145,9 +155,8 @@ try {
     $stream.Dispose()
 }
 
-if (-not $dosboxProc.HasExited) {
-    $dosboxProc.WaitForExit(30000) | Out-Null
-}
+$dosboxJob | Wait-Job -Timeout 30 | Out-Null
+Remove-Job $dosboxJob -Force -ErrorAction SilentlyContinue
 
 Write-Host ('-' * 70)
 
