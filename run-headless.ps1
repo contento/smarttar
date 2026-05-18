@@ -110,6 +110,9 @@ if (-not $KeepOpen) {
 
 if ($Log) {
     Write-Host "Logging to: $Log" -ForegroundColor Cyan
+    & $dosboxX @dosboxArgs 2>&1 | Tee-Object -FilePath $Log -Append
+    exit $LASTEXITCODE
+} else {
+    & $dosboxX @dosboxArgs
+    exit $LASTEXITCODE
 }
-& $dosboxX @dosboxArgs
-exit $LASTEXITCODE
