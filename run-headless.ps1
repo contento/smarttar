@@ -95,7 +95,12 @@ $stArgString = if ($StArgs) { ($StArgs -join ' ') } else { '' }
 # run st -> exit. With -KeepOpen, drop the exit so the DOS prompt stays.
 $dosboxArgs = @(
     '-conf',       'dosbox-x.conf',
-    '-fastlaunch',
+    '-fastlaunch'
+)
+if ($Log) {
+    $dosboxArgs += @('-log', $Log)
+}
+$dosboxArgs += @(
     '-c',          'cd bin',
     '-c',          ("st $stArgString").TrimEnd()
 )
@@ -105,9 +110,6 @@ if (-not $KeepOpen) {
 
 if ($Log) {
     Write-Host "Logging to: $Log" -ForegroundColor Cyan
-    & $dosboxX @dosboxArgs 2>&1 | Tee-Object -FilePath $Log
-    exit $LASTEXITCODE
-} else {
-    & $dosboxX @dosboxArgs
-    exit $LASTEXITCODE
 }
+& $dosboxX @dosboxArgs
+exit $LASTEXITCODE
