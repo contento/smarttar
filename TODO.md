@@ -31,6 +31,25 @@ Working list of milestones and tasks. Detailed findings live in
 - [x] Skip-worktree on per-user runtime state files
       (`st/bin/st.cfg`, `st/bin/st.ini`, `util/NC/NC.INI`)
 
+## Milestone: Data file hygiene and build consolidation (done)
+
+- [x] Untrack `st/bin/` entirely -- all contents are build outputs; gitignore
+      replaces the old skip-worktree approach on `st.cfg` / `st.ini`
+- [x] Wire `util/inf2dat` into MAKEFILE: canonical `.inf` sources compile
+      `PH_INFO.DAT` via `mk_ph.bat` (ST_TEST=1 bypasses password prompt);
+      result copied to `bin/`
+- [x] Wire `util/ini2cfg` into MAKEFILE: `st.ini` is the single source of
+      truth; `ini2cfg` generates `st.cfg`, MAKEFILE distributes it to `bin/`
+      and every `util/` subdir via `CFG_DESTS`; `st.cfg` is gitignored
+- [x] Remove `st/data/` (files moved to `util/ini2cfg/`)
+- [x] `ini2cfg.cpp`: skip st.cfg seed load when ST_TEST=1 and file is
+      missing -- no chicken-and-egg on fresh clone
+- [x] Convert all `.inf` files CP850 -> ISO-8859-1; fix pre-existing
+      data-entry byte errors in `util/inf2dat/local.inf` (Buritica,
+      Canasgor, Briceno, Narino, Medellin)
+- [x] Consolidate `.inf` to `util/inf2dat/` only (removed duplicates from
+      `test/ph_eng/`, `util/setup/`); gitignored in those locations
+
 ## Milestone: Fix Zinc 3.5 UI bugs
 
 - [ ] **Zinc Grid issue** — *(describe symptoms, reproduction, suspected
