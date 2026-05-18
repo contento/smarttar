@@ -112,50 +112,29 @@ $dosboxArgs = @(
     '-c',          'exit'
 )
 
-# Launch DOSBox-X in a background job so we can stream the log in this thread.
-# Start-Process -ArgumentList just joins with spaces (no per-element quoting),
-# so the -c "command /c ..." arg breaks. Use a job instead: PS splatting inside
-# the job uses the native argument-passing path which quotes correctly.
-# Serialize the args array as JSON to carry it across the job boundary.
-$argsJson = $dosboxArgs | ConvertTo-Json -Compress
-$dosboxJob = Start-Job -ScriptBlock {
-    param($exe, $json, $dir)
-    Set-Location -LiteralPath $dir
-    $a = $json | ConvertFrom-Json
-    & $exe @a *> $null
-} -ArgumentList $dosboxX, $argsJson, $PSScriptRoot
+# Stream build.log to the terminal via a background process that shares our
+# console -- the PS equivalent of bash's `tail -F $log &`. -NoNewWindow makes
+# the subprocess inherit our stdout, so its output appears inline.
+$pwshExe  = [System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
+$logAbs   = (Resolve-Path -LiteralPath $log).Path
+$tailCmd  = "-NoProfile -NonInteractive -Command `"Get-Content -LiteralPath '$logAbs' -Wait -Tail 0`""
+$tailProc = Start-Process -FilePath $pwshExe -ArgumentList $tailCmd -PassThru -NoNewWindow
 
-# Tail build.log in real time (equivalent to bash's `tail -F $log`).
-# DOSBox-X writes lines incrementally; after the job exits keep draining
-# for up to 10 seconds to catch any late-flushed lines.
-$stream = [System.IO.FileStream]::new(
-    (Resolve-Path -LiteralPath $log).Path,
-    [System.IO.FileMode]::Open,
-    [System.IO.FileAccess]::Read,
-    [System.IO.FileShare]::ReadWrite
-)
-$reader = [System.IO.StreamReader]::new($stream)
-$exitedAt = $null
-try {
-    for (;;) {
-        $line = $reader.ReadLine()
-        if ($null -ne $line) {
-            Write-Host $line
-            if ($line -match 'Build succeeded\.' -or $line -match '\*\*\* Error') { break }
-        } elseif ($dosboxJob.State -in 'Completed','Failed','Stopped') {
-            if ($null -eq $exitedAt) { $exitedAt = Get-Date }
-            if (((Get-Date) - $exitedAt).TotalSeconds -ge 10) { break }
-            Start-Sleep -Milliseconds 100
-        } else {
-            Start-Sleep -Milliseconds 100
-        }
-    }
-} finally {
-    $reader.Dispose()
-    $stream.Dispose()
-}
+# Run DOSBox-X in this thread -- & uses PS's native arg-passing (correct quoting).
+try { & $dosboxX @dosboxArgs *> $null } catch {}
 
-Remove-Job $dosboxJob -Force -ErrorAction SilentlyContinue
+# Poll the log for the final marker (DOSBox-X may flush the last lines slightly
+# after process exit). Up to 10 s; 200 ms intervals.
+$logText = ''
+$deadline = (Get-Date).AddSeconds(10)
+do {
+    Start-Sleep -Milliseconds 200
+    $logText = Get-Content -LiteralPath $log -Raw -ErrorAction SilentlyContinue
+} until (($logText -match 'Build succeeded\.' -or $logText -match '\*\*\* Error') -or (Get-Date) -ge $deadline)
+
+# Give the tail process one more poll cycle to print any late-flushed lines.
+Start-Sleep -Milliseconds 1200
+$tailProc | Stop-Process -Force -ErrorAction SilentlyContinue
 
 Write-Host ('-' * 70)
 
