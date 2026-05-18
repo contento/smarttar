@@ -27,8 +27,8 @@ LIB_DIR=lib
 INCLUDE_DIR=include
 DOC_DIR=docs
 RES_DIR=res
-DATA_DIR=data
 INF2DAT_DIR=util\inf2dat
+INI2CFG_DIR=util\ini2cfg
 
 # NOTE: Borland MAKE 3.6 (bundled with BC 3.1) does NOT support the
 # .PATH.x directive — it was added in MAKE 4.0+. The lines below are
@@ -177,10 +177,6 @@ DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 	$(BIN_DIR)\pr_dreme.$(DLL_EXT) \
 	$(BIN_DIR)\pr_drhal.$(DLL_EXT)
 
-DATA_FILES=\
-	$(BIN_DIR)\st.cfg \
-	$(BIN_DIR)\st.ini
-
 .c.dll:
 	$(CC) $(DLL_CC_OPTIONS) {$< }
 	@move $&.$(OBJ_EXT)  $(OBJ_DIR)
@@ -193,7 +189,7 @@ DATA_FILES=\
 .asm.obj:
 	$(ASM) $(ASM_OPTS) $<, $@
 
-$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\PH_INFO.DAT $(DATA_FILES) $(OBJS) $(DLLS)
+$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\PH_INFO.DAT $(BIN_DIR)\st.cfg $(BIN_DIR)\st.ini $(OBJS) $(DLLS)
 	$(LINK) $(LINK_OPTS) @&&!
 $(STARTUP_OBJS) $(OBJS)
 $*, ,$(LIBS), $(DEF_FILE)
@@ -216,13 +212,15 @@ $(BIN_DIR)\$(HELP_FILE): $(DOC_DIR)\help.txt
 $(BIN_DIR)\$(RES_FILE): $(RES_DIR)\$(RES_FILE)
 	@copy $(RES_DIR)\$(RES_FILE) $(BIN_DIR)\$(RES_FILE) > NUL
 
-# Runtime data files — canonical sources live in $(DATA_DIR)\, copied to
-# $(BIN_DIR)\ so the app finds them at runtime. MAKE only copies when the
-# source is newer than the destination (standard timestamp rule).
-$(BIN_DIR)\st.cfg: $(DATA_DIR)\st.cfg
-	@copy $(DATA_DIR)\st.cfg $(BIN_DIR)\st.cfg > NUL
-$(BIN_DIR)\st.ini: $(DATA_DIR)\st.ini
-	@copy $(DATA_DIR)\st.ini $(BIN_DIR)\st.ini > NUL
+# Application config -- generated from ST.INI by INI2CFG.
+# mk_cfg.bat sets ST_TEST=1 (bypasses interactive password), cd's into the
+# EXE directory, runs ini2cfg, then the result is copied to bin\.
+# ST.INI is also copied to bin\ so the app can reload settings at runtime.
+$(BIN_DIR)\st.cfg: $(INI2CFG_DIR)\st.ini
+	@$(INI2CFG_DIR)\mk_cfg.bat
+	@copy $(INI2CFG_DIR)\st.cfg $(BIN_DIR)\st.cfg > NUL
+$(BIN_DIR)\st.ini: $(INI2CFG_DIR)\st.ini
+	@copy $(INI2CFG_DIR)\st.ini $(BIN_DIR)\st.ini > NUL
 # Telephony binary database — compiled from source .inf files by INF2DAT.
 # mk_ph.bat sets ST_TEST=1 (bypasses interactive password), cd's into the
 # EXE directory (so _GetAppPath returns that dir), runs inf2dat, then the
