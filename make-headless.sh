@@ -14,9 +14,7 @@
 #                      repo root. Useful when you want the log next to the
 #                      object files / binaries it describes.
 #
-# Always passes HELP=1 so the MAKEFILE's gated help.dat rule fires when
-# bin/help.dat is missing or stale. Make's dependency tracking means
-# this is a no-op when help.dat is up to date.
+# help.dat is built unconditionally by the MAKEFILE (no HELP=1 needed).
 #
 # Exit: 0 if the build batch printed "Build succeeded.", 1 otherwise.
 #
@@ -70,10 +68,10 @@ else
 fi
 rm -f "$log"
 
-make_args="HELP=1"
+make_args=""
 banner_suffix=""
 if (( force )); then
-  make_args="$make_args -B"
+  make_args="-B"
   banner_suffix=" (force rebuild)"
 fi
 
