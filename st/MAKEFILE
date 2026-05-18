@@ -181,9 +181,7 @@ DATA_FILES=\
 	$(BIN_DIR)\st.ini    \
 	$(BIN_DIR)\ddi.inf   \
 	$(BIN_DIR)\ddn.inf   \
-	$(BIN_DIR)\local.inf \
-	$(BIN_DIR)\mvres.bat \
-	$(BIN_DIR)\nodb.bat
+	$(BIN_DIR)\local.inf
 
 .c.dll:
 	$(CC) $(DLL_CC_OPTIONS) {$< }
@@ -233,10 +231,6 @@ $(BIN_DIR)\ddn.inf: $(DATA_DIR)\ddn.inf
 	@copy $(DATA_DIR)\ddn.inf $(BIN_DIR)\ddn.inf > NUL
 $(BIN_DIR)\local.inf: $(DATA_DIR)\local.inf
 	@copy $(DATA_DIR)\local.inf $(BIN_DIR)\local.inf > NUL
-$(BIN_DIR)\mvres.bat: $(DATA_DIR)\mvres.bat
-	@copy $(DATA_DIR)\mvres.bat $(BIN_DIR)\mvres.bat > NUL
-$(BIN_DIR)\nodb.bat: $(DATA_DIR)\nodb.bat
-	@copy $(DATA_DIR)\nodb.bat $(BIN_DIR)\nodb.bat > NUL
 
 # ============================================================================
 # Explicit per-file source-path mapping
