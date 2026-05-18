@@ -75,7 +75,7 @@ fi
 
 if [[ -n "$log_file" ]]; then
   echo "Logging to: $log_file" >&2
-  "$DOSBOX_X" -conf dosbox-x.conf -fastlaunch "${dos_cmds[@]}" 2>&1 | tee "$log_file"
+  "$DOSBOX_X" -conf dosbox-x.conf -fastlaunch -log "$log_file" "${dos_cmds[@]}"
 else
   exec "$DOSBOX_X" -conf dosbox-x.conf -fastlaunch "${dos_cmds[@]}"
 fi
