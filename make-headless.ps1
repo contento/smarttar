@@ -112,24 +112,25 @@ $dosboxArgs = @(
     '-c',          'exit'
 )
 
-# Stream build.log to the terminal via a background process that shares our
-# console -- the PS equivalent of bash's `tail -F $log &`. -NoNewWindow makes
-# the subprocess inherit our stdout, so its output appears inline.
-$pwshExe  = [System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
+# Tail build.log in a background runspace (in-process thread).
+# A -NoNewWindow subprocess shares the console with DOSBox-X and gets killed by
+# any console control event (Ctrl+C/Break) DOSBox-X generates. A runspace lives
+# inside this PS process and cannot be killed by those events.
 $logAbs   = (Resolve-Path -LiteralPath $log).Path
-
-# Build a StreamReader loop as a base64-encoded command to sidestep quoting.
-# Get-Content -Wait can exit early on Windows; a StreamReader loop never does.
-$tailSrc = @"
-`$s = New-Object IO.FileStream('$logAbs', [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::ReadWrite)
-`$r = New-Object IO.StreamReader(`$s)
-while (`$true) {
-    `$l = `$r.ReadLine()
-    if (`$null -ne `$l) { Write-Host `$l } else { [Threading.Thread]::Sleep(100) }
-}
-"@
-$tailEnc  = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($tailSrc))
-$tailProc = Start-Process -FilePath $pwshExe -ArgumentList "-NoProfile -NonInteractive -EncodedCommand $tailEnc" -PassThru -NoNewWindow
+$runspace = [System.Management.Automation.Runspaces.RunspaceFactory]::CreateRunspace()
+$runspace.Open()
+$tailPS   = [System.Management.Automation.PowerShell]::Create()
+$tailPS.Runspace = $runspace
+[void]$tailPS.AddScript({
+    param($p)
+    $s = New-Object IO.FileStream($p, [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::ReadWrite)
+    $r = New-Object IO.StreamReader($s)
+    while ($true) {
+        $l = $r.ReadLine()
+        if ($null -ne $l) { [Console]::WriteLine($l) } else { [Threading.Thread]::Sleep(100) }
+    }
+}).AddArgument($logAbs)
+$tailHandle = $tailPS.BeginInvoke()
 
 # Run DOSBox-X in this thread -- & uses PS's native arg-passing (correct quoting).
 try { & $dosboxX @dosboxArgs *> $null } catch {}
@@ -143,9 +144,10 @@ do {
     $logText = Get-Content -LiteralPath $log -Raw -ErrorAction SilentlyContinue
 } until (($logText -match 'Build succeeded\.' -or $logText -match '\*\*\* Error') -or (Get-Date) -ge $deadline)
 
-# Give the tail process one more poll cycle to print any late-flushed lines.
+# Give the runspace one final drain cycle, then shut it down.
 Start-Sleep -Milliseconds 1200
-$tailProc | Stop-Process -Force -ErrorAction SilentlyContinue
+try { $tailPS.Stop() } catch {}
+$runspace.Close()
 
 Write-Host ('-' * 70)
 
