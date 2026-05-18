@@ -142,7 +142,7 @@ try {
         if ($null -ne $line) {
             Write-Host $line
             if ($line -match 'Build succeeded\.' -or $line -match '\*\*\* Error') { break }
-        } elseif ($dosboxJob.State -ne 'Running') {
+        } elseif ($dosboxJob.State -in 'Completed','Failed','Stopped') {
             if ($null -eq $exitedAt) { $exitedAt = Get-Date }
             if (((Get-Date) - $exitedAt).TotalSeconds -ge 10) { break }
             Start-Sleep -Milliseconds 100
