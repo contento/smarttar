@@ -1,5 +1,14 @@
 # SmartTar
 
+```text
+  o  o
+\______/
+  |
+     |    https://conten.to
+--------
+```
+
+
 *Leer en [Español](README.es.md).*
 
 Real-time telephone tariff management system for public telephone booths
