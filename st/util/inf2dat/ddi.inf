@@ -1,8 +1,8 @@
 ; *******************************************
-;   Arbol de Numeración
+;   Arbol de Numeraci¢n
 ; 
-;        Fecha: 26/05/2003
-;         Hora: 18:48
+;        Fecha: 22/05/2026
+;         Hora: 13:36
 ;     Entradas: 248
 ; 
 ;   Utilice SETUP para producir PH_INFO.DAT
@@ -34,8 +34,8 @@ Dominica             :  9 = 1767
 Estados Unidos       :  3 = 1770,1773,1801-1806
 Puerto Rico          :  3 = 1787
 Hawai                :  8 = 1808
-Trinidad y Tobago    :  8 = 1809
 Granada              :  9 = 1809,1809407-1809408,1809440-1809444
+Trinidad y Tobago    :  8 = 1809
 Estados Unidos       :  3 = 1810,1812-1818,1847,1850,1860,1864,1870,1880,1900,1901,1903
 San Crist/Nevis      :  8 = 1869
 Jamaica              :  8 = 1876,1876510,1876601-1876603,1876607,1876609,1876610-1876703
@@ -176,8 +176,8 @@ Nicaragua            :  5 = 505
 Costa Rica           :  6 = 506
 Panam                :  4 = 507
 Sn Pedro Miguel      :  7 = 508
-Sakhalin,Isla        : 10 = 509
 Haití                :  8 = 509
+Sakhalin,Isla        : 10 = 509
 Guadalupe            :  6 = 590
 Bolivia              :  2 = 591
 Guyana               :  5 = 592
