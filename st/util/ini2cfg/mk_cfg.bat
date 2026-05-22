@@ -1,4 +1,3 @@
 @echo off
-cd util\ini2cfg
 set STTEST=1
-ini2cfg
+util\ini2cfg\ini2cfg
