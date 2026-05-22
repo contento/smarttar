@@ -111,14 +111,10 @@ ostream& PH_ENGINE::PLACE_INFO::FormatNumbers(ostream& os, PLACE_ENTRY const &en
 
 ostream& PH_ENGINE::PLACE_INFO::SetInfHeader(ostream& os)
 {
-	char strDate[0x10];
-	char strTime[0x10];
 	return os
 		   << "; *******************************************" << endl
 		   << ";   Arbol de Numeraci¢n"                       << endl
 		   << "; "                                            << endl
-		   << ";        Fecha: " << _GetSysDate(strDate)      << endl
-		   << ";         Hora: " << _GetSysTime(strTime)      << endl
 		   << ";     Entradas: " << Count                     << endl
 		   << "; "                                            << endl
 /* $$$230
