@@ -1,4 +1,4 @@
 @echo off
 cd util\inf2dat
-set ST_TEST=1
+set STTEST=1
 inf2dat
