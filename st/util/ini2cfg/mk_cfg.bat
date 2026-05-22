@@ -1,4 +1,4 @@
 @echo off
 cd util\ini2cfg
-set ST_TEST=1
+set STTEST=1
 ini2cfg
