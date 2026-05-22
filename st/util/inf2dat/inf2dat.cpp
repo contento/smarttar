@@ -19,8 +19,6 @@ void NewHandler(void);
 
 int main(int argc, char *argv[])
 {
-	int nRet = 1;
-
 	errorMemory = new char[0x200];
 	extern void (*_new_handler)(void);
 	_new_handler = NewHandler;
@@ -32,84 +30,78 @@ int main(int argc, char *argv[])
 		<< "    /r para activar DAT2INF" << endl
 		<< endl
 	;
-	//
-    BOOL fromInf = TRUE;
-    if (argc > 1)
+
+	BOOL fromInf = TRUE;
+	if (argc > 1)
 	{
-		// INF2DAT
-        if (!strcmp(argv[1], "/r") || !strcmp(argv[1], "/R"))
-            fromInf = FALSE;
-	}
-
-	do // Non SHE
-	{
-		g_cfg = new CFG;
-		if (!g_cfg)
+		if (!strcmp(argv[1], "/r") || !strcmp(argv[1], "/R"))
 		{
-			break;
-		}
-
-		WORD status = g_cfg->Load(); // load CFG
-
-		if (status != CFG::OK)
-		{
-			char *msg = " tiene una falla general.";
-			switch (status)
-			{
-			case CFG::NO_CFG_FILE :
-				msg = "no existe."    ;
-				break;
-			case CFG::BAD_CFG_FILE:
-				msg = "est  corrupto.";
-				break;
-			}
-			cerr << "El archivo de configuraci¢n " << msg << endl;
-			break;
-		}
-
-		if (!TraceInfo::s_bTest)
-		{
-			STR32 password;
-			cout << "Presione Esc para abortar operaci¢n." << endl;
-			cout << "C¢digo de acceso: ";
-			_ReadPassword(password, sizeof(CFG::PASSWORD)-1);
-			if (!strlen(password))
-			{
-				nRet = 0;
-				break;
-			}
-
-			if (!g_cfg->isUtilPassword(password))
-			{
-				cerr << "Lo siento, acceso negado." << endl;
-				break;
-			}
-		}
-
-		PH_ENGINE* phEngine = new PH_ENGINE;
-
-		cout << "Procesando ..." << endl;
-
-		if (fromInf)
-		{
-			phEngine->Inf2Dat();
-		}
-		else
-		{
+			fromInf = FALSE;
 			cout << "DAT2INF activado !" << endl;
-			phEngine->Dat2Inf();
 		}
-		cout << "Listo..." << endl;
-
-		delete phEngine;
-
-		nRet = 0;
 	}
-	while (0);
 
+	g_cfg = new CFG;
+	if (!g_cfg)
+		return 1;
+
+	WORD status = g_cfg->Load();
+	if (status != CFG::OK && !(TraceInfo::s_bTest && status == CFG::NO_CFG_FILE))
+	{
+		char *msg = " tiene una falla general.";
+		switch (status)
+		{
+		case CFG::NO_CFG_FILE:
+			msg = "no existe.";
+			break;
+		case CFG::BAD_CFG_FILE:
+			msg = "está corrupto.";
+			break;
+		}
+		cerr << "El archivo de configuración " << msg << endl;
+		delete g_cfg;
+		return 1;
+	}
+
+	if (!TraceInfo::s_bTest)
+	{
+		STR32 password;
+		cout << "Presione Esc para abortar operación." << endl;
+		cout << "Código de acceso: ";
+		_ReadPassword(password, sizeof(CFG::PASSWORD)-1);
+		if (!strlen(password))
+		{
+			delete g_cfg;
+			return 0;
+		}
+		if (!g_cfg->isUtilPassword(password))
+		{
+			cerr << "Lo siento, acceso negado." << endl;
+			delete g_cfg;
+			return 1;
+		}
+	}
+
+	PH_ENGINE *phEngine = new PH_ENGINE;
+	if (!phEngine)
+	{
+		delete g_cfg;
+		return 1;
+	}
+
+	cout << "Procesando ..." << endl;
+
+	if (fromInf)
+		phEngine->Inf2Dat();
+	else
+		phEngine->Dat2Inf();
+
+	cout << "Listo." << endl;
+
+	delete phEngine;
 	delete g_cfg;
 
-	return nRet;
+	return 0;
 }
 
 void NewHandler(void)
@@ -120,7 +112,6 @@ void NewHandler(void)
 		<< "No hay memoria disponible" << endl
 		<< "por favor reporte este problema ..."
 		<< endl
-		;
-
+	;
 	exit(1);
 }
