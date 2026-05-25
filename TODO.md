@@ -63,10 +63,14 @@ Working list of milestones and tasks. Detailed findings live in
       default VGA 640×480. Investigate switching `machine = svga_s3` +
       a higher Zinc display mode, the cost in font rework, and how
       `st.cfg`'s `-D__BTN__` defines interact with resolution.
-- [ ] **Theme switching** — Zinc 3.5 has a built-in palette / "scheme"
-      mechanism. Expose it as a runtime toggle (config option +
-      menu-bar entry) so the operator can switch between palettes
-      without recompiling.
+- ~~**Theme switching** — Zinc 3.5 has a built-in palette / "scheme"
+  mechanism. Expose it as a runtime toggle (config option +
+  menu-bar entry) so the operator can switch between palettes
+  without recompiling.~~ **Abandoned 2026-05-25 — dead end.**
+  Investigated on the `zinc-theme-switching` branch (multi-style
+  binaries via `-DSTYLE=...` build flag + `make-headless` `-Style`
+  wiring); dropped as a product decision. Do not revive without
+  reopening the topic explicitly.
 
 ## Milestone: Toolchain portability
 
@@ -133,43 +137,51 @@ full context and severity rationale.
 Loose notes that aren't ready to be scheduled. Promote into a milestone
 when scoped.
 
-- **Engine adapter split: REAL vs SIMULA** — today the engine that
-  drives booth state (`RT_ENGINE` in `rt/rt_eng.cpp` — the state
-  machine over ONHOOK/RINGUP/OFFHOOK/DTMF/BREAK/MAKE; `PH_ENGINE`
-  is the tariff/place lookup, separate concern) hardcodes real port
-  I/O, with `__DEMO__` gates stubbing the hardware paths in
-  `rt_eng.cpp`/`rt_isr.cpp`/`ctrl_ev.cpp`. Refactor so the engine
-  takes a pluggable source:
-  - `RealEngine` — current behavior: reads the booth-cluster data
-    ports via the ISR / serial layer.
-  - `SimulaEngine` — synthetic source that feeds the same event
-    stream from a script or generator (recorded sequences for
-    regression testing; Poisson arrivals for demos / training /
-    tariff verification without touching `#ifdef __DEMO__`).
+- **`DEMO_ENGINE`: a fake `RT_ENGINE` for demo mode** — `RT_ENGINE`
+  (`rt/rt_eng.cpp`) is the real-time engine that talks to the
+  booth-cluster hardware: ISR-driven port reads, state machine over
+  ONHOOK/RINGUP/OFFHOOK/DTMF/BREAK/MAKE, serial driver, EEPROM, etc.
+  In dev (no booths, no PBX, no dongle) the `__DEMO__` build gate
+  currently stubs the hardware paths inline across `rt_eng.cpp`,
+  `rt_isr.cpp`, and `ctrl_ev.cpp`. Replace those scattered gates
+  with a clean engine swap:
+  - `RT_ENGINE` — unchanged: real hardware, real ports, real ISR.
+    Used in production.
+  - `DEMO_ENGINE` — a parallel implementation with the same public
+    surface but no hardware dependencies. Generates a realistic
+    event stream (scripted sequences for repeatable demos; could
+    grow a Poisson arrival generator later). No ISR, no serial, no
+    EEPROM. Used in demo builds and dev.
+  Goal: every `#ifdef __DEMO__` in the RT layer goes away; the
+  controller holds a pointer to an `ENGINE` base class and never
+  cares which concrete is behind it.
   Suggested GoF patterns:
-  - **Strategy** (primary fit) — extract the "where do phone events
-    come from" interface (`IPhoneSource` or similar: poll / read
-    next event / write back to port). `RT_ENGINE` becomes the
-    Context; `RealSource` and `SimulaSource` are interchangeable
-    concrete strategies. Note: the user's "adapter" framing maps to
-    Strategy here, not to GoF Adapter — GoF Adapter wraps an
-    existing incompatible interface, but SimulaSource isn't
-    wrapping anything, it's a parallel implementation.
-  - **Factory Method / Abstract Factory** — instantiate the right
-    source from config (e.g. `[ENGINE] kind = real | simula` in
-    `st.ini`) at startup. Keeps the rest of the system
-    source-agnostic and replaces the build-time `__DEMO__` split
-    with a runtime switch.
-  - **Template Method** (optional) — if init / poll / dispatch
-    scaffolding is substantial, lift it into an `EngineBase` with
-    `virtual ReadNextEvent() = 0`. Pick this *or* Strategy, not
-    both: Template Method puts variation in subclasses, Strategy
-    puts it in a composed object — picking both invents needless
-    layers.
-  - Likely **not** State (engine doesn't switch sources at runtime),
-    **not** Observer at this layer (the existing event bus already
-    handles fan-out downstream of the engine).
-  Open questions: does `__DEMO__` go away entirely once SimulaSource
-  exists, or stay as a thinner gate for dongle/EEPROM? And does
-  SimulaSource subsume the existing F2 `UIW_SIMULA` window, or
-  remain a separate operator-driven feature?
+  - **Strategy** (primary fit) — define an `ENGINE` interface
+    (pure-virtual base class) capturing what the controller / view
+    layer actually needs from the engine. `RT_ENGINE` and
+    `DEMO_ENGINE` are interchangeable concrete strategies. Your
+    "adapter" framing maps to Strategy here, not to GoF Adapter
+    (which wraps an existing incompatible interface — `DEMO_ENGINE`
+    isn't wrapping anything, it's a parallel implementation).
+  - **Factory Method / Abstract Factory** — pick the concrete from
+    config (e.g. `[ENGINE] kind = real | demo` in `st.ini`) at
+    startup. Replaces the build-time `__DEMO__` split with a
+    runtime switch, so a single binary can do either.
+  - **Template Method** (alternative to Strategy) — if `RT_ENGINE`
+    and `DEMO_ENGINE` end up sharing significant init / dispatch
+    scaffolding, lift it into an `ENGINE_BASE` with the diverging
+    bits as `virtual ReadNextEvent() = 0` etc. Pick this *or*
+    Strategy, not both: Template Method puts variation in
+    subclasses, Strategy puts it in a composed object — using both
+    invents needless layers.
+  - Likely **not** State (engine doesn't switch concretes at
+    runtime), **not** Observer at this layer (the existing event
+    bus already handles fan-out downstream).
+  **Out of scope — explicitly NOT touching `UIW_SIMULA`.** The old
+  `UIW_SIMULA` window (F2 from the main view, in `mb_simul.cpp`,
+  plus `RT_ENGINE::SIMULA` state and `Simula[]`/`SimulaPhones[]`
+  in the booth cluster) is a separate, abandoned initiative for
+  *hardware* testing — let an operator manually drive booth state
+  transitions to verify a real install. That code stays as-is;
+  this initiative builds a new engine for *demo* purposes and does
+  not refactor, extend, or remove the old SIMULA feature.
