@@ -72,6 +72,115 @@ Working list of milestones and tasks. Detailed findings live in
   wiring); dropped as a product decision. Do not revive without
   reopening the topic explicitly.
 
+## Milestone: `DEMO_ENGINE` — pluggable engine for demo mode
+
+New capability. **Not related to the abandoned SIMULA work** (`UIW_SIMULA`
+F2 window in `mb_simul.cpp`, `RT_ENGINE::SIMULA` state, `Simula[]` /
+`SimulaPhones[]` in the booth cluster — those exist to manually verify
+a real hardware install, an orthogonal feature that stays as-is, with
+no further work planned).
+
+Goal: a single binary that can run either against real telephony
+hardware (production, default) or against a fake event generator (dev,
+demos, training). Replaces the scattered `#ifdef __DEMO__` gates in
+`rt_eng.cpp` / `rt_isr.cpp` / `ctrl_ev.cpp` with a clean engine swap
+at construction time.
+
+**Architecture — pattern choice.** Strategy is the primary fit:
+`ENGINE` is a pure-virtual interface capturing what the controller /
+view layer need from the engine; `RT_ENGINE` and `DEMO_ENGINE` are
+interchangeable concrete implementations; a small factory picks the
+concrete from config at startup.
+
+- **Strategy** over **GoF Adapter** — Adapter wraps an existing
+  incompatible interface; `DEMO_ENGINE` isn't wrapping anything, it's
+  a parallel implementation. The "adapter" framing in conversation
+  maps to Strategy in GoF terms.
+- **Strategy** over **Template Method** — pick one, not both.
+  Template Method puts variation in subclasses; Strategy puts it in a
+  composed object. If `RT_ENGINE` and `DEMO_ENGINE` end up sharing
+  substantial init / dispatch scaffolding, fall back to Template
+  Method with an `ENGINE_BASE` and `virtual ReadNextEvent() = 0` —
+  but only if the duplication is real, not anticipated.
+- **Not State** (engine doesn't switch concretes at runtime).
+- **Not Observer at this layer** — the existing event bus already
+  handles fan-out downstream of the engine.
+- **Factory Method** for construction from `[ENGINE] kind = real |
+  demo` in `st.ini`, replacing the build-time `__DEMO__` split with a
+  runtime switch.
+
+**Phase 1 — Skeleton (no behavior change).**
+
+- [ ] Extract an `ENGINE` interface (pure-virtual base) from
+      `RT_ENGINE`'s public surface — only what the controller and
+      view actually call.
+- [ ] `RT_ENGINE` becomes a concrete implementing the interface; no
+      behavior change in production builds.
+- [ ] Empty `DEMO_ENGINE` concrete that compiles and links (e.g.
+      returns an idle event stream).
+- [ ] Factory wired to `[ENGINE] kind = real | demo` in `st.ini`
+      (default `real`). Add the key via `ini2cfg`.
+- [ ] Strip `#ifdef __DEMO__` from the RT layer; the gate becomes
+      "factory instantiates `DEMO_ENGINE`" instead. `__DEMO__` may
+      remain elsewhere (dongle, EEPROM) where it gates non-engine
+      concerns — review case by case.
+
+**Phase 2 — Poisson generator + rules.**
+
+`DEMO_ENGINE` generates call arrivals using a Poisson process per call
+type. Rules live in **INI format** — chosen over JSON/YAML because the
+project already has a full INI toolchain (`util/ini2cfg/`, `cfg.cpp`
+parser, `st.ini` distribution via `CFG_DESTS`), and Borland C++ 3.1 has
+no JSON/YAML parser to reach for. New file
+`util/ini2cfg/demo_engine.ini` (canonical source, compiled / copied to
+`bin/` by MAKEFILE), pointed at via `[ENGINE] rules_file =
+demo_engine.ini` in `st.ini` so multiple scenario files can ship.
+
+Suggested schema (refine in Phase 2 design):
+
+```ini
+[GLOBAL]
+booths            = 8        ; simulated booth count
+seed              = 0        ; RNG seed (0 = time-based)
+calls_per_minute  = 10       ; aggregate arrival rate across all booths/types
+
+[LOCAL]
+weight            = 70       ; relative share of arrivals (Poisson lambda
+                             ; derives from weight * total_rate)
+min_duration_secs = 30
+max_duration_secs = 600
+
+[NAL]                        ; national
+weight            = 25
+min_duration_secs = 60
+max_duration_secs = 1200
+
+[INTER]                      ; international
+weight            = 5
+min_duration_secs = 120
+max_duration_secs = 1800
+```
+
+- [ ] Implement Poisson arrival generator (one stream, classified into
+      `LOCAL` / `NAL` / `INTER` by the per-type weights).
+- [ ] Duration sampling: uniform in `[min, max]` for v1 (exponential /
+      normal can come later if needed).
+- [ ] Destination numbers: draw from the existing `.inf` place tables
+      (`util/inf2dat/local.inf`, `ddn.inf`, `ddi.inf`) so tariff
+      calculation exercises real data.
+- [ ] Parse `demo_engine.ini` in `DEMO_ENGINE` ctor using the same
+      patterns as `cfg.cpp`; fail loud if missing or malformed when
+      `kind = demo`.
+
+**Phase 3 — Polish (optional, not blocking Phase 1/2).**
+
+- Time-of-day variation (peak vs off-peak arrival rates).
+- Scripted scenario replay (a recorded `.scn` sequence for repeatable
+  regression tests).
+- Lightweight operator controls — start/stop generator, reload rules.
+  Must be a new widget / menu entry; the old `UIW_SIMULA` window is
+  off-limits per the milestone framing.
+
 ## Milestone: Toolchain portability
 
 - [ ] **Build with open-source toolchains** — investigate whether
@@ -137,51 +246,4 @@ full context and severity rationale.
 Loose notes that aren't ready to be scheduled. Promote into a milestone
 when scoped.
 
-- **`DEMO_ENGINE`: a fake `RT_ENGINE` for demo mode** — `RT_ENGINE`
-  (`rt/rt_eng.cpp`) is the real-time engine that talks to the
-  booth-cluster hardware: ISR-driven port reads, state machine over
-  ONHOOK/RINGUP/OFFHOOK/DTMF/BREAK/MAKE, serial driver, EEPROM, etc.
-  In dev (no booths, no PBX, no dongle) the `__DEMO__` build gate
-  currently stubs the hardware paths inline across `rt_eng.cpp`,
-  `rt_isr.cpp`, and `ctrl_ev.cpp`. Replace those scattered gates
-  with a clean engine swap:
-  - `RT_ENGINE` — unchanged: real hardware, real ports, real ISR.
-    Used in production.
-  - `DEMO_ENGINE` — a parallel implementation with the same public
-    surface but no hardware dependencies. Generates a realistic
-    event stream (scripted sequences for repeatable demos; could
-    grow a Poisson arrival generator later). No ISR, no serial, no
-    EEPROM. Used in demo builds and dev.
-  Goal: every `#ifdef __DEMO__` in the RT layer goes away; the
-  controller holds a pointer to an `ENGINE` base class and never
-  cares which concrete is behind it.
-  Suggested GoF patterns:
-  - **Strategy** (primary fit) — define an `ENGINE` interface
-    (pure-virtual base class) capturing what the controller / view
-    layer actually needs from the engine. `RT_ENGINE` and
-    `DEMO_ENGINE` are interchangeable concrete strategies. Your
-    "adapter" framing maps to Strategy here, not to GoF Adapter
-    (which wraps an existing incompatible interface — `DEMO_ENGINE`
-    isn't wrapping anything, it's a parallel implementation).
-  - **Factory Method / Abstract Factory** — pick the concrete from
-    config (e.g. `[ENGINE] kind = real | demo` in `st.ini`) at
-    startup. Replaces the build-time `__DEMO__` split with a
-    runtime switch, so a single binary can do either.
-  - **Template Method** (alternative to Strategy) — if `RT_ENGINE`
-    and `DEMO_ENGINE` end up sharing significant init / dispatch
-    scaffolding, lift it into an `ENGINE_BASE` with the diverging
-    bits as `virtual ReadNextEvent() = 0` etc. Pick this *or*
-    Strategy, not both: Template Method puts variation in
-    subclasses, Strategy puts it in a composed object — using both
-    invents needless layers.
-  - Likely **not** State (engine doesn't switch concretes at
-    runtime), **not** Observer at this layer (the existing event
-    bus already handles fan-out downstream).
-  **Out of scope — explicitly NOT touching `UIW_SIMULA`.** The old
-  `UIW_SIMULA` window (F2 from the main view, in `mb_simul.cpp`,
-  plus `RT_ENGINE::SIMULA` state and `Simula[]`/`SimulaPhones[]`
-  in the booth cluster) is a separate, abandoned initiative for
-  *hardware* testing — let an operator manually drive booth state
-  transitions to verify a real install. That code stays as-is;
-  this initiative builds a new engine for *demo* purposes and does
-  not refactor, extend, or remove the old SIMULA feature.
+- *(empty — add as ideas arise)*
