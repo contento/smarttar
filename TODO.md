@@ -67,12 +67,6 @@ Working list of milestones and tasks. Detailed findings live in
       mechanism. Expose it as a runtime toggle (config option +
       menu-bar entry) so the operator can switch between palettes
       without recompiling.
-- [ ] **Improve SIMULA mode** — the existing simulation mode
-      (`-DAUTO` / `makeauto`) is rough. Better simulation algorithm
-      (realistic call distribution, configurable rates), clearer
-      presentation, and a parameters block so an operator can drive
-      it (number of booths, call frequency, tariff mix, etc.) without
-      code changes.
 
 ## Milestone: Toolchain portability
 
