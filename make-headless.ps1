@@ -8,7 +8,7 @@
   Tested on PowerShell Core 7+ on Windows 11; should also work on
   Windows PowerShell 5.1 and on pwsh on macOS/Linux.
 
-  Usage:   .\make-headless.ps1 [-Force] [-KeepLogInSt] [demo|dbg|eda|auto|prod]
+  Usage:   .\make-headless.ps1 [-Force] [-KeepLogInSt] [demo|dbg|eda|prod]
   Default: demo, log at repo root (build.log)
 
   Only one instance can run at a time (DOSBox-X locks its config / display).
@@ -22,7 +22,7 @@
   terminates DOSBox-X).
 
 .PARAMETER Variant
-  Build variant: demo (default) | dbg | eda | auto | prod.
+  Build variant: demo (default) | dbg | eda | prod.
 
 .PARAMETER Force
   Pass -B to Borland MAKE (force rebuild of all targets, ignoring
@@ -46,7 +46,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Position=0)]
-    [ValidateSet('demo','dbg','eda','auto','prod')]
+    [ValidateSet('demo','dbg','eda','prod')]
     [string]$Variant = 'demo',
 
     [Alias('Rebuild')]

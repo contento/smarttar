@@ -86,7 +86,7 @@ util/        DOS utilities for development (NC, MOUSE, PKLITE, PKZIP, SWEEP, etc
 dosbox-x.conf  Project-local DOSBox-X config (CPU/mem tuning, PATH wiring,
                [sdl] mouse_emulation=integration for Zinc UI, etc.)
 make-headless.sh  Host-side runner (bash, macOS/Linux). Drives DOSBox-X
-                  non-interactively. variant=demo|debug|eda|auto|prod;
+                  non-interactively. variant=demo|debug|eda|prod;
                   --force passes -B; --keep-log-in-st puts build.log
                   inside st/. Streams log via tail -F as the build runs.
 make-headless.ps1 PowerShell Core 7+ equivalent for Windows 11. Same
@@ -145,7 +145,6 @@ st/          Application source
              makedemo  -> -DDEMO -DRUN -DNODONGLE
              makedbg   -> -DDEBUG -DRUN
              makeeda   -> -DEDA -DRUN
-             makeauto  -> -DAUTO -DRUN
              makeprod  -> -DRUN
   st.cfg     BCC286 compiler configuration (distinct from bin/st.cfg)
   st.def     Pharlap linker definition file
@@ -185,7 +184,6 @@ After linking, `BIND286` embeds the Pharlap run-time stub; `CFIG286` tunes it:
 | `DEBUG=1` | Includes debug symbols (`-v`), sets linker `/v` |
 | `DEMO=1` | Defines `__DEMO__` |
 | `NODONGLE=1` | Defines `__NO_DONGLE__` (requires `DEMO=1`) |
-| `AUTO=1` | Defines `__AUTO__` (simulation mode) |
 | `EDA=1` | Defines `__EDA__` |
 | `RUN=1` | Runs `BIND286` + `CFIG286` after link (produces runnable protected-mode EXE) |
 | `HELP=1` | Regenerates `bin/help.dat` from `docs/help.txt` via `genhelp` (requires `zinc\BIN` on PATH — already wired in `dosbox-x.conf`) |

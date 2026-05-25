@@ -63,12 +63,6 @@ DONGLE=__NO_DONGLE__
 DEMO=
 !endif
 
-!if $d(AUTO)
-AUTO=__AUTO__			  # kind of simula
-!else
-AUTO=
-!endif
-
 !if $d(EDA)
 EDA=__EDA__ 			# it's for EDA !
 !else
@@ -81,12 +75,12 @@ EDA=
 LINK_LIBPATH=/L..\bc\lib;..\pharlap\lib;..\zinc\lib;lib
 
 !if $d(DEBUG)
-OBJ_CC_OPTIONS= -c +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);$(AUTO) -v
+OBJ_CC_OPTIONS= -c +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA) -v
 DLL_CC_OPTIONS= -dll +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);NDEBUG -v
 LINK_OPTS=/c /C /x /v $(LINK_LIBPATH)
 ASM_OPTS=/mx /zi
 !else
-OBJ_CC_OPTIONS= -c +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);$(AUTO);NDEBUG
+OBJ_CC_OPTIONS= -c +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);NDEBUG
 DLL_CC_OPTIONS= -dll +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);NDEBUG
 LINK_OPTS=/c /C /s $(LINK_LIBPATH)
 ASM_OPTS=/mx

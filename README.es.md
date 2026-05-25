@@ -87,7 +87,7 @@ st/              Aplicación
   run.bat        Ejecuta st.exe desde bin/
   make*.bat      Atajos por variante:
                  makedemo (DEMO + NODONGLE + RUN), makedbg (DEBUG + RUN),
-                 makeeda (EDA + RUN), makeauto (AUTO + RUN), makeprod (RUN)
+                 makeeda (EDA + RUN), makeprod (RUN)
 ```
 
 ---
@@ -137,7 +137,6 @@ make RUN=1
 | `DEBUG=1` | Habilita símbolos de depuración (`-v`) e información para el enlazador |
 | `DEMO=1` | Define `__DEMO__` — activa modo demo |
 | `NODONGLE=1` | Define `__NO_DONGLE__` — omite verificación del dongle (requiere `DEMO=1`) |
-| `AUTO=1` | Define `__AUTO__` — modo simulación / piloto automático |
 | `EDA=1` | Define `__EDA__` — variante para operador EDA |
 | `HELP=1` | Regenera `bin/help.dat` desde `docs/help.txt` vía `genhelp` |
 
@@ -324,7 +323,6 @@ SmartTar es una aplicación de un solo proceso en modo protegido. Los subsistema
 | Demo | `DEMO=1 NODONGLE=1 RUN=1` | `makedemo` | Ferias, evaluación |
 | EDA | `EDA=1 RUN=1` | `makeeda` | Operador EDA — clasificación de llamadas distinta |
 | Depuración | `DEBUG=1 RUN=1` | `makedbg` | Desarrollo; usar con el depurador Pharlap `TDP.EXE` |
-| Simulación | `AUTO=1 RUN=1` | `makeauto` | Pruebas automatizadas / reproducción de demo |
 
 ---
 

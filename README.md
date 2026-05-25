@@ -96,7 +96,7 @@ st/              Application
   run.bat        Launch st.exe from bin/
   make*.bat      Build-variant shortcuts:
                  makedemo (DEMO + NODONGLE + RUN), makedbg (DEBUG + RUN),
-                 makeeda (EDA + RUN), makeauto (AUTO + RUN), makeprod (RUN)
+                 makeeda (EDA + RUN), makeprod (RUN)
 ```
 
 ---
@@ -146,7 +146,6 @@ make RUN=1
 | `DEBUG=1` | Enable debug symbols (`-v`) and linker debug info |
 | `DEMO=1` | Define `__DEMO__` — activates demo mode |
 | `NODONGLE=1` | Define `__NO_DONGLE__` — skip dongle check (requires `DEMO=1`) |
-| `AUTO=1` | Define `__AUTO__` — simulation / auto-pilot mode |
 | `EDA=1` | Define `__EDA__` — build variant for EDA operator |
 | `HELP=1` | Regenerate `bin/help.dat` from `docs/help.txt` via `genhelp` |
 
@@ -332,7 +331,6 @@ SmartTar is a single-process protected-mode application. The main subsystems are
 | Demo | `DEMO=1 NODONGLE=1 RUN=1` | `makedemo` | Trade shows, evaluation |
 | EDA | `EDA=1 RUN=1` | `makeeda` | EDA operator — different call type classification |
 | Debug | `DEBUG=1 RUN=1` | `makedbg` | Development; use with Pharlap `TDP.EXE` debugger |
-| Simulation | `AUTO=1 RUN=1` | `makeauto` | Automated test / demo playback |
 
 ---
 

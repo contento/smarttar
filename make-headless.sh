@@ -2,7 +2,7 @@
 # Run a SmartTar build inside DOSBox-X non-interactively.
 #
 # Usage:   ./make-headless.sh [--force] [--keep-log-in-st]
-#                              [demo|dbg|eda|auto|prod]
+#                              [demo|dbg|eda|prod]
 # Default: demo, log at repo root (build.log)
 #
 # Only one instance can run at a time (DOSBox-X locks its config / display).
@@ -28,13 +28,13 @@ cd "$(dirname "$0")"
 keep_in_st=0
 force=0
 variant=""
-usage="usage: $(basename "$0") [--force] [--keep-log-in-st] [demo|dbg|eda|auto|prod]"
+usage="usage: $(basename "$0") [--force] [--keep-log-in-st] [demo|dbg|eda|prod]"
 
 for arg in "$@"; do
   case "$arg" in
     --keep-log-in-st) keep_in_st=1 ;;
     --force|--rebuild) force=1 ;;
-    demo|dbg|eda|auto|prod)
+    demo|dbg|eda|prod)
       if [[ -n "$variant" ]]; then
         echo "$usage" >&2
         exit 2
