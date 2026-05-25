@@ -188,6 +188,8 @@ After linking, `BIND286` embeds the Pharlap run-time stub; `CFIG286` tunes it:
 | `RUN=1` | Runs `BIND286` + `CFIG286` after link (produces runnable protected-mode EXE) |
 | `HELP=1` | Regenerates `bin/help.dat` from `docs/help.txt` via `genhelp` (requires `zinc\BIN` on PATH — already wired in `dosbox-x.conf`) |
 
+**Day-to-day dev variant: `demo`.** The current dev environment has no real telephony hardware (booths / PBX / EEPROM) or copy-protection dongle, so the working default is `./make-headless.sh demo` (which sets `-DDEMO -DRUN -DNODONGLE`). The `__DEMO__` gates in `rt_eng.cpp`, `rt_isr.cpp`, `ctrl_ev.cpp`, etc. stub out the hardware paths. Only switch to `prod` / `eda` when explicitly working on something that must exercise the non-demo code (or when comparing against the CI release build, which runs `prod`).
+
 Example debug build:
 
 ```sh
