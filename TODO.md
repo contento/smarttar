@@ -109,15 +109,57 @@ concrete from config at startup.
   demo` in `st.ini`, replacing the build-time `__DEMO__` split with a
   runtime switch.
 
+**Concurrency contract — the hard part.** `RT_ENGINE` doesn't expose a
+`ReadNextEvent()` that callers pull from. It hooks **IRQ0 / INT 08h**
+(`NewISR08h` in `rt_isr.cpp`, with PIT channel 0 reprogrammed at lines
+~203-207 for a higher tick rate) and on every tick does port I/O
+(`inportb`/`outportb` against `APP_PORT_BASE + PO_*`) to update
+`BoothCluster::DataPort` in shared memory. The rest of the system
+reads those structs and is oblivious to where the values came from.
+That's the seam `DEMO_ENGINE` has to honor — it must *push* state
+changes into the same `DataPort` fields, from inside an ISR, on the
+same clock, so no downstream consumer can tell it's synthetic.
+
+Implications:
+
+- `ENGINE` interface owns the ISR lifecycle: `Install()` hooks IRQ0
+  (and INT 09h / 23h / 1Bh / 24h as RT does today) via PHAPI's
+  protected-mode vector calls; `Uninstall()` restores. The ISR
+  function itself is private to the concrete.
+- `DEMO_ENGINE::DemoISR08h` runs the Poisson generator and writes
+  `DataPort.OOD`, `.Answer`, `.ThreadC`, `.DTMFFlags`,
+  `.U_DTMFDigits[]` directly — same fields, same semantics. No port
+  I/O.
+- **ISR constraints apply to demo too**: no `malloc` / `new` in the
+  ISR, no C runtime calls that aren't documented reentrant, no
+  floating-point unless we explicitly save FPU state. Poisson state
+  (RNG seed, next-arrival deadlines per booth, current call state)
+  must be pre-allocated at `Install()` time. Borland C++ 3.1's `rand()`
+  is *not* safe from an ISR — ship our own LCG.
+- The DEMO ISR must finish well inside one tick. The Poisson decision
+  per booth is O(booths); fine for any realistic count.
+- The user's "INT 21h to read the signals" framing was loose — the
+  actual real-world mechanism is the IRQ0 timer hook described above
+  (INT 21h is the DOS API dispatcher and isn't involved here). The
+  conceptual point stands: real engine reads pushed asynchronously by
+  hardware; demo engine has to produce the same async push so the
+  rest of the system can't distinguish them.
+
 **Phase 1 — Skeleton (no behavior change).**
 
 - [ ] Extract an `ENGINE` interface (pure-virtual base) from
-      `RT_ENGINE`'s public surface — only what the controller and
-      view actually call.
-- [ ] `RT_ENGINE` becomes a concrete implementing the interface; no
-      behavior change in production builds.
-- [ ] Empty `DEMO_ENGINE` concrete that compiles and links (e.g.
-      returns an idle event stream).
+      `RT_ENGINE`'s public surface. Must include the ISR lifecycle
+      (`Install()` / `Uninstall()` for IRQ0 + the keyboard / break /
+      crit-error vectors) so concretes own their own vector
+      management — not just data accessors.
+- [ ] `RT_ENGINE` becomes a concrete implementing the interface; the
+      existing `NewISR08h` / `NewISR09h` / `NewISR23h` / `NewISR1Bh` /
+      `NewISR24h` move behind `Install()`. No behavior change in
+      production builds.
+- [ ] Empty `DEMO_ENGINE` concrete that compiles and links. Its
+      `Install()` hooks IRQ0 with a stub `DemoISR08h` that does
+      nothing (booths stay idle). Proves the swap end-to-end before
+      Phase 2 adds real generation.
 - [ ] Factory wired to `[ENGINE] kind = real | demo` in `st.ini`
       (default `real`). Add the key via `ini2cfg`.
 - [ ] Strip `#ifdef __DEMO__` from the RT layer; the gate becomes
@@ -162,7 +204,11 @@ max_duration_secs = 1800
 ```
 
 - [ ] Implement Poisson arrival generator (one stream, classified into
-      `LOCAL` / `NAL` / `INTER` by the per-type weights).
+      `LOCAL` / `NAL` / `INTER` by the per-type weights). All
+      generator state pre-allocated at `Install()` time so the ISR
+      never touches the heap.
+- [ ] Ship a private ISR-safe RNG (LCG, fixed seed from config) —
+      `rand()` is not reentrant under Borland C++ 3.1.
 - [ ] Duration sampling: uniform in `[min, max]` for v1 (exponential /
       normal can come later if needed).
 - [ ] Destination numbers: draw from the existing `.inf` place tables
@@ -171,6 +217,10 @@ max_duration_secs = 1800
 - [ ] Parse `demo_engine.ini` in `DEMO_ENGINE` ctor using the same
       patterns as `cfg.cpp`; fail loud if missing or malformed when
       `kind = demo`.
+- [ ] `DemoISR08h` writes `DataPort.OOD` / `.Answer` / `.ThreadC` /
+      `.DTMFFlags` / `.U_DTMFDigits[]` (same fields RT's ISR writes)
+      to advance each booth through ONHOOK → RINGUP → OFFHOOK →
+      ANSWER → TALK → ONHOOK on its scheduled timeline.
 
 **Phase 3 — Polish (optional, not blocking Phase 1/2).**
 
