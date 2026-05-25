@@ -64,6 +64,9 @@ st/bin/
 st/_bin/
 st/_bin-*/
 
+# Release builds directory
+_releases/
+
 # help.hpp is emitted by genhelp alongside help.dat (into st/include/).
 st/include/help.hpp
 
