@@ -133,4 +133,43 @@ full context and severity rationale.
 Loose notes that aren't ready to be scheduled. Promote into a milestone
 when scoped.
 
-- *(empty — add as ideas arise)*
+- **Engine adapter split: REAL vs SIMULA** — today the engine that
+  drives booth state (`RT_ENGINE` in `rt/rt_eng.cpp` — the state
+  machine over ONHOOK/RINGUP/OFFHOOK/DTMF/BREAK/MAKE; `PH_ENGINE`
+  is the tariff/place lookup, separate concern) hardcodes real port
+  I/O, with `__DEMO__` gates stubbing the hardware paths in
+  `rt_eng.cpp`/`rt_isr.cpp`/`ctrl_ev.cpp`. Refactor so the engine
+  takes a pluggable source:
+  - `RealEngine` — current behavior: reads the booth-cluster data
+    ports via the ISR / serial layer.
+  - `SimulaEngine` — synthetic source that feeds the same event
+    stream from a script or generator (recorded sequences for
+    regression testing; Poisson arrivals for demos / training /
+    tariff verification without touching `#ifdef __DEMO__`).
+  Suggested GoF patterns:
+  - **Strategy** (primary fit) — extract the "where do phone events
+    come from" interface (`IPhoneSource` or similar: poll / read
+    next event / write back to port). `RT_ENGINE` becomes the
+    Context; `RealSource` and `SimulaSource` are interchangeable
+    concrete strategies. Note: the user's "adapter" framing maps to
+    Strategy here, not to GoF Adapter — GoF Adapter wraps an
+    existing incompatible interface, but SimulaSource isn't
+    wrapping anything, it's a parallel implementation.
+  - **Factory Method / Abstract Factory** — instantiate the right
+    source from config (e.g. `[ENGINE] kind = real | simula` in
+    `st.ini`) at startup. Keeps the rest of the system
+    source-agnostic and replaces the build-time `__DEMO__` split
+    with a runtime switch.
+  - **Template Method** (optional) — if init / poll / dispatch
+    scaffolding is substantial, lift it into an `EngineBase` with
+    `virtual ReadNextEvent() = 0`. Pick this *or* Strategy, not
+    both: Template Method puts variation in subclasses, Strategy
+    puts it in a composed object — picking both invents needless
+    layers.
+  - Likely **not** State (engine doesn't switch sources at runtime),
+    **not** Observer at this layer (the existing event bus already
+    handles fan-out downstream of the engine).
+  Open questions: does `__DEMO__` go away entirely once SimulaSource
+  exists, or stay as a thinner gate for dongle/EEPROM? And does
+  SimulaSource subsume the existing F2 `UIW_SIMULA` window, or
+  remain a separate operator-driven feature?
