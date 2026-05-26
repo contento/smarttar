@@ -6,6 +6,7 @@
 
 #include <control.h>
 #include <db_eng.h>
+#include <eng_fact.h>
 
 #if !defined(__TEST__) && !defined(__DEMO__)
 #include <stm2.h>
@@ -37,7 +38,7 @@ BOOL   g_extAreChangeable = FALSE;
 //     CONTROLLER
 // ---------------------------------------------------------------------------
 
-RT_ENGINE                   	*CONTROLLER::RTEngine    = NULL;
+ENGINE                      	*CONTROLLER::RTEngine    = NULL;
 CIRCULAR_QUEUE<DynamicReceipt> 	*CONTROLLER::Receipts    = NULL;
 CIRCULAR_QUEUE<DynamicReceipt> 	*CONTROLLER::PRNReceipts = NULL;
 
@@ -86,7 +87,7 @@ CONTROLLER::CONTROLLER(UI_EVENT_MANAGER *eventManager, UI_WINDOW_MANAGER *window
 	g_phEngine->Load();
 
 	// RTEngine
-	RTEngine   = new RT_ENGINE(g_cfg->CLUSTERS);
+	RTEngine   = MakeEngine(g_cfg->CLUSTERS);
 
 	UI_DATE date;
 	int intDate;

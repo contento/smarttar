@@ -315,6 +315,10 @@ public:
 	// 2.33
 	double CELLULAR_TAX;	// impuesto de llamadas celulares
 
+	// 2.50 -- engine concrete: "real" (RT_ENGINE, hardware) or "demo"
+	// (DEMO_ENGINE, fake).  See eng_fact.cpp.
+	char ENGINE_KIND[8];
+
 	//
 	// To adjust some members
 	//

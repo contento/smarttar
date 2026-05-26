@@ -450,6 +450,7 @@ void CFG::FillCfgTable(ENTRY *table)
 
 	// 2.33
 	Entry(CELLULAR_TAX, ENTRY::DOUBLE);
+	Entry(ENGINE_KIND, ENTRY::STRING|ENTRY::LOWER|ENTRY::NO_SPACES);
 	//
 	Entry(USA            , ENTRY::STRING);
     // [ Aplicacion ]
@@ -915,6 +916,11 @@ void CFG::SetDefault(BOOL setAll)
 	INTERNET_ROUND	= 15.0; // minutos
 	INTERNET_TARIFF = 800.0; // pesos
 	CELLULAR_TAX	= 20.0; // 2.33
+#if defined(__DEMO__)
+	strcpy(ENGINE_KIND, "demo"); // 2.50 -- dev / demo / training
+#else
+	strcpy(ENGINE_KIND, "real"); // 2.50 -- production hardware
+#endif
 	N_RECEIPT    = 0L;
 	N_DIAL_ERR   = 0;
 	N_COM_ERR    = 0;

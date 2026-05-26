@@ -135,11 +135,14 @@ OBJS=$(OBJ_DIR)\$(APP).$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\plain_pr.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\prn_fmt.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\res.$(OBJ_EXT)		   \
+	 $(OBJ_DIR)\engine.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\rt_eng.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\rt_do.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\rt_util.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\rt_isr.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\rt_store.$(OBJ_EXT)    \
+	 $(OBJ_DIR)\demo_eng.$(OBJ_EXT)    \
+	 $(OBJ_DIR)\eng_fact.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\serial.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\sid.$(OBJ_EXT)		   \
 	 $(OBJ_DIR)\spooler.$(OBJ_EXT)	   \
@@ -338,7 +341,13 @@ $(OBJ_DIR)\prn_fmt.obj:  $(SOURCE_DIR)\pr\prn_fmt.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\res.obj:      $(SOURCE_DIR)\res.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\engine.obj:   $(SOURCE_DIR)\rt\engine.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\rt_eng.obj:   $(SOURCE_DIR)\rt\rt_eng.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\demo_eng.obj: $(SOURCE_DIR)\rt\demo_eng.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\eng_fact.obj: $(SOURCE_DIR)\rt\eng_fact.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\rt_do.obj:    $(SOURCE_DIR)\rt\rt_do.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
