@@ -12,7 +12,7 @@ extern UINT g_pass;
 //
 // --- DO's ------------------------------------------------------------------
 //
-void RT_ENGINE::DoLock(WORD cNum, WORD bNum)
+void ENGINE::DoLock(WORD cNum, WORD bNum)
 {
     // ST must always lock the phone before ONHOOK.
     // the above avoid false hangs
@@ -30,7 +30,7 @@ void RT_ENGINE::DoLock(WORD cNum, WORD bNum)
 	}
 }
 
-void RT_ENGINE::DoOnHook(WORD cNum, WORD bNum)
+void ENGINE::DoOnHook(WORD cNum, WORD bNum)
 {
 #if defined(__DEMO__)
     ResetData(cNum, bNum);
@@ -58,7 +58,7 @@ void RT_ENGINE::DoOnHook(WORD cNum, WORD bNum)
 #endif
 }
 
-void RT_ENGINE::DoRingUp(WORD cNum, WORD bNum)
+void ENGINE::DoRingUp(WORD cNum, WORD bNum)
 {
     if (!BIT(Clusters[cNum].DataPort.OOD, bNum))
     {
@@ -81,7 +81,7 @@ void RT_ENGINE::DoRingUp(WORD cNum, WORD bNum)
     }
 }
 
-void RT_ENGINE::DoRingDown(WORD cNum, WORD bNum)
+void ENGINE::DoRingDown(WORD cNum, WORD bNum)
 {
     if (BIT(Clusters[cNum].DataPort.OOD, bNum))
     {
@@ -100,7 +100,7 @@ void RT_ENGINE::DoRingDown(WORD cNum, WORD bNum)
     }
 }
 
-void RT_ENGINE::DoIncomeTalk(WORD cNum, WORD bNum)
+void ENGINE::DoIncomeTalk(WORD cNum, WORD bNum)
 {
     if (!BIT(Clusters[cNum].DataPort.OOD, bNum))
     {
@@ -113,7 +113,7 @@ void RT_ENGINE::DoIncomeTalk(WORD cNum, WORD bNum)
     }
 }
 
-void RT_ENGINE::ResetData(WORD cNum, WORD bNum)
+void ENGINE::ResetData(WORD cNum, WORD bNum)
 {
     ResetCurrentDigit(cNum, bNum);
 	ResetPhone(cNum, bNum);
@@ -129,7 +129,7 @@ void RT_ENGINE::ResetData(WORD cNum, WORD bNum)
 		Clusters[cNum].NumOfCalls[bNum]  = 0;
 }
 
-void RT_ENGINE::DoOffHook(WORD cNum, WORD bNum, WORD phoneType)
+void ENGINE::DoOffHook(WORD cNum, WORD bNum, WORD phoneType)
 {
 	ResetData(cNum, bNum);
 
@@ -199,7 +199,7 @@ void RT_ENGINE::DoOffHook(WORD cNum, WORD bNum, WORD phoneType)
 
 }
 
-void RT_ENGINE::DoDTMFFlag(WORD cNum, WORD bNum)
+void ENGINE::DoDTMFFlag(WORD cNum, WORD bNum)
 {
     // check if the phone is hanged
     if (!BIT(Clusters[cNum].DataPort.OOD, bNum))
@@ -253,7 +253,7 @@ void RT_ENGINE::DoDTMFFlag(WORD cNum, WORD bNum)
     }
 }
 
-void RT_ENGINE::DoBreak(WORD cNum, WORD bNum)
+void ENGINE::DoBreak(WORD cNum, WORD bNum)
 {
     if (BIT(Clusters[cNum].DataPort.OOD, bNum))
     {
@@ -305,7 +305,7 @@ void RT_ENGINE::DoBreak(WORD cNum, WORD bNum)
 	}
 }
 
-void RT_ENGINE::DoMake(WORD cNum, WORD bNum)
+void ENGINE::DoMake(WORD cNum, WORD bNum)
 {
     if (!BIT(Clusters[cNum].DataPort.OOD, bNum))
     {
@@ -356,7 +356,7 @@ void RT_ENGINE::DoMake(WORD cNum, WORD bNum)
 	}
 }
 
-void RT_ENGINE::DoInterdig(WORD cNum, WORD bNum, WORD phoneType)
+void ENGINE::DoInterdig(WORD cNum, WORD bNum, WORD phoneType)
 {
 	// v.2.20.8
 	// lock not included based on number of digits
@@ -466,7 +466,7 @@ void RT_ENGINE::DoInterdig(WORD cNum, WORD bNum, WORD phoneType)
 	}
 }
 
-void RT_ENGINE::DoAnswer(WORD cNum, WORD bNum, WORD phoneType)
+void ENGINE::DoAnswer(WORD cNum, WORD bNum, WORD phoneType)
 {
 	if (BIT(Clusters[cNum].DataPort.OOD, bNum))
 	{
@@ -509,7 +509,7 @@ void RT_ENGINE::DoAnswer(WORD cNum, WORD bNum, WORD phoneType)
 	}
 }
 
-void RT_ENGINE::DoTalk(WORD cNum, WORD bNum, WORD phoneType)
+void ENGINE::DoTalk(WORD cNum, WORD bNum, WORD phoneType)
 {
 	// Attention:
 	// Use 2.20.5 to patch 2.32 build 1.
@@ -605,7 +605,7 @@ void RT_ENGINE::DoTalk(WORD cNum, WORD bNum, WORD phoneType)
 	}
 }
 
-void RT_ENGINE::DoStore(WORD cNum, WORD bNum)
+void ENGINE::DoStore(WORD cNum, WORD bNum)
 {
 	// check if the elapsed time is enough to generate a receipt
 	if (GetElapsedCount(cNum, bNum) >= g_cfg->T_TALK)
@@ -630,7 +630,7 @@ void RT_ENGINE::DoStore(WORD cNum, WORD bNum)
 	}
 }
 
-void RT_ENGINE::DoDialErr(WORD cNum, WORD bNum)
+void ENGINE::DoDialErr(WORD cNum, WORD bNum)
 {
 	// accumulate dialing errors
 	if (!Clusters[cNum].NoStatistics[bNum])
@@ -660,7 +660,7 @@ void RT_ENGINE::DoDialErr(WORD cNum, WORD bNum)
     }
 }
 
-void RT_ENGINE::DoComErr(WORD cNum, WORD bNum)
+void ENGINE::DoComErr(WORD cNum, WORD bNum)
 {
     // accumulate comunication errors
     if (!Clusters[cNum].NoStatistics[bNum])

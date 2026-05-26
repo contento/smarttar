@@ -1,25 +1,31 @@
 //
 // [ RT_ISR.CPP ]
 //
+// Static ISR handlers for the ENGINE base.  NewISR08h is the main
+// per-tick orchestrator: it dispatches the per-cluster I/O and the
+// end-of-tick work to the virtual hooks (OnTimerTick / OnTimerEnd),
+// so RT_ENGINE and DEMO_ENGINE see the same call site but produce
+// different behavior.
+//
 
 #include "stdst.h"
 
-#include "rt_eng.h"
+#include "engine.h"
 
 extern UINT _pass;
 extern CFG 	*g_cfg;
 
 #ifdef DOSX286
-REALPTR   RT_ENGINE::OldRealIV08h = (REALPTR)0;
-PIHANDLER RT_ENGINE::OldProtIV08h = (PIHANDLER)0;
+REALPTR   ENGINE::OldRealIV08h = (REALPTR)0;
+PIHANDLER ENGINE::OldProtIV08h = (PIHANDLER)0;
 #else
-void interrupt (far *RT_ENGINE::OldIV08h)(...) = 0;
+void interrupt (far *ENGINE::OldIV08h)(...) = 0;
 #endif
 
 #ifdef DOSX286
-void interrupt far RT_ENGINE::NewISR08h(REGS_BINT)
+void interrupt far ENGINE::NewISR08h(REGS_BINT)
 #else
-void interrupt far RT_ENGINE::NewISR08h(...)
+void interrupt far ENGINE::NewISR08h(...)
 #endif
 {
     static BOOL isInside = FALSE;
@@ -39,25 +45,12 @@ void interrupt far RT_ENGINE::NewISR08h(...)
 		static WORD cNum, bNum;
 		for (cNum=0; cNum<g_cfg->ACTIVE_CLUSTERS; cNum++) // 2.30
 		{
-			static WORD portOfs;
-			portOfs = cNum*PORTS_BY_CLUSTER;  // calc port offset for each cluster
-
-			// OUT (set states)
-
+			// Per-cluster I/O: RT reads hardware ports into dp; DEMO
+			// synthesizes the same fields.  Either way, downstream
+			// EvalTone/EvalPulseState read from dp identically.
 			BoothCluster::_DataPort & dataPort = pThis->GetDataPort(cNum);
+			pThis->OnTimerTick(cNum, dataPort);
 
-			outportb(APP_PORT_BASE+portOfs+PO_LOCK, dataPort.Lock);
-			outportb(APP_PORT_BASE+portOfs+PO_SPY , dataPort.Spy);
-
-			// IN (poll applications ports)
-#if !defined(__DEMO__)
-			dataPort.OOD             	= inportb(APP_PORT_BASE+portOfs+PO_OOD);
-			dataPort.Answer          	= inportb(APP_PORT_BASE+portOfs+PO_ANSWER);
-			dataPort.ThreadC         	= inportb(APP_PORT_BASE+portOfs+PO_C_THREAD);
-			dataPort.DTMFFlags       	= inportb(APP_PORT_BASE+portOfs+PO_DTMF_FLAGS);
-			dataPort.U_DTMFDigits[0] 	= inport (APP_PORT_BASE+portOfs+PO_DTMF_DIGITS);
-			dataPort.U_DTMFDigits[1] 	= inport (APP_PORT_BASE+portOfs+PO_DTMF_DIGITS+2);
-#endif
 			// for each booth increment the counters and evaluate
 			for (bNum=0; bNum<CLUSTER_SIZE; bNum++)
 			{
@@ -78,8 +71,8 @@ void interrupt far RT_ENGINE::NewISR08h(...)
 			}
 		}
 
-		// just one for all set of booths
-		outportb(APP_PORT_BASE+PO_GENERAL, pThis->GetGeneralPort());
+		// End-of-tick: RT writes the general port (relays etc.); DEMO no-ops.
+		pThis->OnTimerEnd();
 
 		isInside = FALSE;
 		// --- end own code
@@ -110,16 +103,16 @@ void interrupt far RT_ENGINE::NewISR08h(...)
 // --- Other ISR's ----------------------------------------------------------
 //
 #ifdef DOSX286
-REALPTR   RT_ENGINE::OldRealIV09h = (REALPTR)0;
-PIHANDLER RT_ENGINE::OldProtIV09h = (PIHANDLER)0;
+REALPTR   ENGINE::OldRealIV09h = (REALPTR)0;
+PIHANDLER ENGINE::OldProtIV09h = (PIHANDLER)0;
 #else
-void interrupt (far *RT_ENGINE::OldIV09h)(...) = 0;
+void interrupt (far *ENGINE::OldIV09h)(...) = 0;
 #endif
 
 #ifdef DOSX286
-void interrupt far RT_ENGINE::NewISR09h(REGS_BINT)
+void interrupt far ENGINE::NewISR09h(REGS_BINT)
 #else
-void interrupt far RT_ENGINE::NewISR09h(...)
+void interrupt far ENGINE::NewISR09h(...)
 #endif
 {
 	static const UINT KBD_DATA_PORT = 0x60;
@@ -145,54 +138,54 @@ void interrupt far RT_ENGINE::NewISR09h(...)
 }
 
 #ifdef DOSX286
-REALPTR   RT_ENGINE::OldRealIV23h = (REALPTR)0;
-PIHANDLER RT_ENGINE::OldProtIV23h = (PIHANDLER)0;
+REALPTR   ENGINE::OldRealIV23h = (REALPTR)0;
+PIHANDLER ENGINE::OldProtIV23h = (PIHANDLER)0;
 #else
-void interrupt (far *RT_ENGINE::OldIV23h)(...) = 0;
+void interrupt (far *ENGINE::OldIV23h)(...) = 0;
 #endif
 
 #ifdef DOSX286
-REALPTR   RT_ENGINE::OldRealIV1Bh = (REALPTR)0;
-PIHANDLER RT_ENGINE::OldProtIV1Bh = (PIHANDLER)0;
+REALPTR   ENGINE::OldRealIV1Bh = (REALPTR)0;
+PIHANDLER ENGINE::OldProtIV1Bh = (PIHANDLER)0;
 #else
-void interrupt (far *RT_ENGINE::OldIV1Bh)(...) = 0;
+void interrupt (far *ENGINE::OldIV1Bh)(...) = 0;
 #endif
 
 #ifdef DOSX286
-REALPTR   RT_ENGINE::OldRealIV24h = (REALPTR)0;
-PIHANDLER RT_ENGINE::OldProtIV24h = (PIHANDLER)0;
+REALPTR   ENGINE::OldRealIV24h = (REALPTR)0;
+PIHANDLER ENGINE::OldProtIV24h = (PIHANDLER)0;
 #else
-void interrupt (far *RT_ENGINE::OldIV24h)(...) = 0;
+void interrupt (far *ENGINE::OldIV24h)(...) = 0;
 #endif
 
 #ifdef DOSX286
-void interrupt far RT_ENGINE::NewISR23h(REGS_BINT)
+void interrupt far ENGINE::NewISR23h(REGS_BINT)
 #else
-void interrupt far RT_ENGINE::NewISR23h(...)
-#endif
-{
-}
-
-#ifdef DOSX286
-void interrupt far RT_ENGINE::NewISR1Bh(REGS_BINT)
-#else
-void interrupt far RT_ENGINE::NewISR1Bh(...)
+void interrupt far ENGINE::NewISR23h(...)
 #endif
 {
 }
 
 #ifdef DOSX286
-void interrupt far RT_ENGINE::NewISR24h(REGS_BINT regs)
+void interrupt far ENGINE::NewISR1Bh(REGS_BINT)
+#else
+void interrupt far ENGINE::NewISR1Bh(...)
+#endif
+{
+}
+
+#ifdef DOSX286
+void interrupt far ENGINE::NewISR24h(REGS_BINT regs)
 {
     regs.ax &= 0xFF00;
 #else
-void interrupt far RT_ENGINE::NewISR24h(...)
+void interrupt far ENGINE::NewISR24h(...)
 {
     _AX &= 0xFF00;
 #endif
 }
 
-void RT_ENGINE::SetPITRate(WORD divisor)
+void ENGINE::SetPITRate(WORD divisor)
 {
     // the programming word at port 043h has the following mean:
     //		  SC1, SC0 =  00: select counter 0.

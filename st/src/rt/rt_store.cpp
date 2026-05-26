@@ -10,7 +10,7 @@
 
 extern CFG 	*g_cfg;
 
-void RT_ENGINE::StoreReceipt(WORD cNum, WORD bNum)
+void ENGINE::StoreReceipt(WORD cNum, WORD bNum)
 {
 #if defined (__TEST__)
     SetFSs(cNum, bNum, LOCK, LOCK);
