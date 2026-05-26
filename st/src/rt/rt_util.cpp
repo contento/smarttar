@@ -11,7 +11,7 @@
 extern CFG 	*g_cfg;
 extern UINT m_pass;
 
-void RT_ENGINE::CheckAnswerSignal(WORD cNum, WORD bNum, WORD phoneType)
+void ENGINE::CheckAnswerSignal(WORD cNum, WORD bNum, WORD phoneType)
 {
 	const WORD T_BIAS_MARGIN = 30; // margen para inversion de polaridad -> T_BIAS
 	switch (g_cfg->ASIGNAL)
@@ -102,12 +102,12 @@ void RT_ENGINE::CheckAnswerSignal(WORD cNum, WORD bNum, WORD phoneType)
     }
 }
 
-BOOL RT_ENGINE::MaxNumOfDigits(WORD cNum, WORD bNum)
+BOOL ENGINE::MaxNumOfDigits(WORD cNum, WORD bNum)
 {
     return PH_ENGINE::IsMaxDigits(Clusters[cNum].Phones[bNum], Clusters[cNum].NumOfDigits[bNum]);
 }
 
-BOOL RT_ENGINE::IsLockable(WORD cNum, WORD bNum)
+BOOL ENGINE::IsLockable(WORD cNum, WORD bNum)
 {
 	static BOOL locked;
 	locked = FALSE;
@@ -137,7 +137,7 @@ BOOL RT_ENGINE::IsLockable(WORD cNum, WORD bNum)
 	return locked;
 }
 
-BOOL RT_ENGINE::IsAnswerable(WORD cNum, WORD bNum)
+BOOL ENGINE::IsAnswerable(WORD cNum, WORD bNum)
 {
 	return PH_ENGINE::IsAnswerable
 	(
@@ -147,7 +147,7 @@ BOOL RT_ENGINE::IsAnswerable(WORD cNum, WORD bNum)
 	);
 }
 
-BOOL RT_ENGINE::IsBusy(void)
+BOOL ENGINE::IsBusy(void)
 {
 	WORD cNum, bNum;
 	for (cNum=0; cNum<g_cfg->ACTIVE_CLUSTERS; cNum++) // 2.30
@@ -168,7 +168,7 @@ BOOL RT_ENGINE::IsBusy(void)
     return FALSE; // still here !!!
 }
 
-BOOL RT_ENGINE::IsBoothBusy(WORD cNum, WORD bNum)
+BOOL ENGINE::IsBoothBusy(WORD cNum, WORD bNum)
 {
 	return
 	(
@@ -177,224 +177,224 @@ BOOL RT_ENGINE::IsBoothBusy(WORD cNum, WORD bNum)
 	);
 }
 
-BYTE RT_ENGINE::GetCurrentDigit(WORD cNum, WORD bNum)
+BYTE ENGINE::GetCurrentDigit(WORD cNum, WORD bNum)
 {
 	return Clusters[cNum].CurrentDigits[bNum];
 }
 
-void RT_ENGINE::SetCurrentDigit(WORD cNum, WORD bNum, BYTE digit)
+void ENGINE::SetCurrentDigit(WORD cNum, WORD bNum, BYTE digit)
 {
 	Clusters[cNum].CurrentDigits[bNum] = digit;
 }
 
-void RT_ENGINE::ResetCurrentDigit(WORD cNum, WORD bNum)
+void ENGINE::ResetCurrentDigit(WORD cNum, WORD bNum)
 {
 	Clusters[cNum].CurrentDigits[bNum] = 0;
 }
 
-void RT_ENGINE::IncCurrentDigit(WORD cNum, WORD bNum)
+void ENGINE::IncCurrentDigit(WORD cNum, WORD bNum)
 {
 	Clusters[cNum].CurrentDigits[bNum]++;
 }
 
-WORD RT_ENGINE::GetStateCount(WORD cNum, WORD bNum)
+WORD ENGINE::GetStateCount(WORD cNum, WORD bNum)
 {
 	return Clusters[cNum].StateCounts[bNum];
 }
 
-void RT_ENGINE::SetStateCount(WORD cNum, WORD bNum, WORD value)
+void ENGINE::SetStateCount(WORD cNum, WORD bNum, WORD value)
 {
 	Clusters[cNum].StateCounts[bNum] = value;
 }
 
-void RT_ENGINE::ResetStateCount(WORD cNum, WORD bNum)
+void ENGINE::ResetStateCount(WORD cNum, WORD bNum)
 {
 	Clusters[cNum].StateCounts[bNum] = 0;
 }
 
-void RT_ENGINE::IncStateCount(WORD cNum, WORD bNum)
+void ENGINE::IncStateCount(WORD cNum, WORD bNum)
 {
 	Clusters[cNum].StateCounts[bNum] += T_EVAL;
 }
 
-void RT_ENGINE::DecStateCount(WORD cNum, WORD bNum)
+void ENGINE::DecStateCount(WORD cNum, WORD bNum)
 {
 	Clusters[cNum].StateCounts[bNum] -= T_EVAL;
 }
 
-WORD RT_ENGINE::GetOnHookCount(WORD cNum, WORD bNum)
+WORD ENGINE::GetOnHookCount(WORD cNum, WORD bNum)
 {
 	return Clusters[cNum].OnHookCounts[bNum];
 }
 
-void RT_ENGINE::ResetOnHookCount(WORD cNum, WORD bNum)
+void ENGINE::ResetOnHookCount(WORD cNum, WORD bNum)
 {
 	Clusters[cNum].OnHookCounts[bNum] = 0;
 }
 
-void RT_ENGINE::IncOnHookCount(WORD cNum, WORD bNum)
+void ENGINE::IncOnHookCount(WORD cNum, WORD bNum)
 {
 	Clusters[cNum].OnHookCounts[bNum] += T_EVAL;
 }
 
-BOOL RT_ENGINE::IsIncomeCall(WORD cNum, WORD bNum)
+BOOL ENGINE::IsIncomeCall(WORD cNum, WORD bNum)
 {
 	return Clusters[cNum].IncomeCalls[bNum];
 }
 
-void RT_ENGINE::SetIncomeCall(WORD cNum, WORD bNum)
+void ENGINE::SetIncomeCall(WORD cNum, WORD bNum)
 {
 	Clusters[cNum].IncomeCalls[bNum] = TRUE;
 }
 
-void RT_ENGINE::ResetIncomeCall(WORD cNum, WORD bNum)
+void ENGINE::ResetIncomeCall(WORD cNum, WORD bNum)
 {
 	Clusters[cNum].IncomeCalls[bNum] = FALSE;
 }
 
-WORD RT_ENGINE::GetDialCount(WORD cNum, WORD bNum)
+WORD ENGINE::GetDialCount(WORD cNum, WORD bNum)
 {
 	return Clusters[cNum].DialCounts[bNum];
 }
 
-void RT_ENGINE::ResetDialCount(WORD cNum, WORD bNum)
+void ENGINE::ResetDialCount(WORD cNum, WORD bNum)
 {
     Clusters[cNum].DialCounts[bNum] = 0;
 }
 
-void RT_ENGINE::IncDialCount(WORD cNum, WORD bNum)
+void ENGINE::IncDialCount(WORD cNum, WORD bNum)
 {
 	Clusters[cNum].DialCounts[bNum] += T_EVAL;
 }
 
-WORD RT_ENGINE::GetBiasCount(WORD cNum, WORD bNum)
+WORD ENGINE::GetBiasCount(WORD cNum, WORD bNum)
 {
     return Clusters[cNum].BiasCounts[bNum];
 }
 
-void RT_ENGINE::ResetBiasCount(WORD cNum, WORD bNum)
+void ENGINE::ResetBiasCount(WORD cNum, WORD bNum)
 {
     Clusters[cNum].BiasCounts[bNum] = 0;
 }
 
-void RT_ENGINE::IncBiasCount(WORD cNum, WORD bNum)
+void ENGINE::IncBiasCount(WORD cNum, WORD bNum)
 {
     Clusters[cNum].BiasCounts[bNum] += T_EVAL;
 }
 
-DWORD RT_ENGINE::GetElapsedCount(WORD cNum, WORD bNum)
+DWORD ENGINE::GetElapsedCount(WORD cNum, WORD bNum)
 {
 	return Clusters[cNum].ElapsedCounts[bNum];
 }
 
-void RT_ENGINE::SetElapsedCount(WORD cNum, WORD bNum, DWORD value)
+void ENGINE::SetElapsedCount(WORD cNum, WORD bNum, DWORD value)
 {
     Clusters[cNum].ElapsedCounts[bNum] = value;
 }
 
-void RT_ENGINE::ResetElapsedCount(WORD cNum, WORD bNum)
+void ENGINE::ResetElapsedCount(WORD cNum, WORD bNum)
 {
     Clusters[cNum].ElapsedCounts[bNum] = 0;
 }
 
-void RT_ENGINE::IncElapsedCount(WORD cNum, WORD bNum)
+void ENGINE::IncElapsedCount(WORD cNum, WORD bNum)
 {
     Clusters[cNum].ElapsedCounts[bNum] += T_EVAL;
 }
 
 // 2.21.1
-DWORD RT_ENGINE::GetFinalElapsedCount(WORD cNum, WORD bNum)
+DWORD ENGINE::GetFinalElapsedCount(WORD cNum, WORD bNum)
 {
 	return Clusters[cNum].FinalElapsedCounts[bNum];
 }
 
-void RT_ENGINE::SetFinalElapsedCount(WORD cNum, WORD bNum, DWORD value)
+void ENGINE::SetFinalElapsedCount(WORD cNum, WORD bNum, DWORD value)
 {
 	Clusters[cNum].FinalElapsedCounts[bNum] = value;
 }
 
-void RT_ENGINE::ResetFinalElapsedCount(WORD cNum, WORD bNum)
+void ENGINE::ResetFinalElapsedCount(WORD cNum, WORD bNum)
 {
 	Clusters[cNum].FinalElapsedCounts[bNum] = 0;
 }
 
-void RT_ENGINE::SetFSs(WORD cNum, WORD bNum, WORD pulseState, WORD toneState)
+void ENGINE::SetFSs(WORD cNum, WORD bNum, WORD pulseState, WORD toneState)
 {
 	Clusters[cNum].PulseFSs[bNum] = pulseState;
 	Clusters[cNum].ToneFSs[bNum]  = toneState;
 }
 
-WORD RT_ENGINE::GetPulseFS(WORD cNum, WORD bNum)
+WORD ENGINE::GetPulseFS(WORD cNum, WORD bNum)
 {
     return Clusters[cNum].PulseFSs[bNum];
 }
 
-void RT_ENGINE::SetPulseFS(WORD cNum, WORD bNum, WORD state)
+void ENGINE::SetPulseFS(WORD cNum, WORD bNum, WORD state)
 {
     Clusters[cNum].PulseFSs[bNum] = state;
 }
 
-BOOL RT_ENGINE::IsPulseFS_E(WORD cNum, WORD bNum, WORD state)
+BOOL ENGINE::IsPulseFS_E(WORD cNum, WORD bNum, WORD state)
 {
     return (Clusters[cNum].PulseFSs[bNum] == state);
 }
 
-BOOL RT_ENGINE::IsPulseFS_L (WORD cNum, WORD bNum, WORD state)
+BOOL ENGINE::IsPulseFS_L (WORD cNum, WORD bNum, WORD state)
 {
     return (Clusters[cNum].PulseFSs[bNum] < state);
 }
 
-BOOL RT_ENGINE::IsPulseFS_LE(WORD cNum, WORD bNum, WORD state)
+BOOL ENGINE::IsPulseFS_LE(WORD cNum, WORD bNum, WORD state)
 {
     return (Clusters[cNum].PulseFSs[bNum] <= state);
 }
 
-BOOL RT_ENGINE::IsPulseFS_G (WORD cNum, WORD bNum, WORD state)
+BOOL ENGINE::IsPulseFS_G (WORD cNum, WORD bNum, WORD state)
 {
     return (Clusters[cNum].PulseFSs[bNum] > state);
 }
 
-BOOL RT_ENGINE::IsPulseFS_GE(WORD cNum, WORD bNum, WORD state)
+BOOL ENGINE::IsPulseFS_GE(WORD cNum, WORD bNum, WORD state)
 {
     return (Clusters[cNum].PulseFSs[bNum] >= state);
 }
 
-WORD RT_ENGINE::GetToneFS(WORD cNum, WORD bNum)
+WORD ENGINE::GetToneFS(WORD cNum, WORD bNum)
 {
     return Clusters[cNum].ToneFSs[bNum];
 }
 
-void RT_ENGINE::SetToneFS(WORD cNum, WORD bNum, WORD state)
+void ENGINE::SetToneFS(WORD cNum, WORD bNum, WORD state)
 {
     Clusters[cNum].ToneFSs[bNum] = state;
 }
 
-BOOL RT_ENGINE::IsToneFS_E (WORD cNum, WORD bNum, WORD state)
+BOOL ENGINE::IsToneFS_E (WORD cNum, WORD bNum, WORD state)
 {
     return (Clusters[cNum].ToneFSs[bNum] == state);
 }
 
-BOOL RT_ENGINE::IsToneFS_L (WORD cNum, WORD bNum, WORD state)
+BOOL ENGINE::IsToneFS_L (WORD cNum, WORD bNum, WORD state)
 {
     return (Clusters[cNum].ToneFSs[bNum] < state);
 }
 
-BOOL RT_ENGINE::IsToneFS_LE(WORD cNum, WORD bNum, WORD state)
+BOOL ENGINE::IsToneFS_LE(WORD cNum, WORD bNum, WORD state)
 {
     return (Clusters[cNum].ToneFSs[bNum] <= state);
 }
 
-BOOL RT_ENGINE::IsToneFS_G (WORD cNum, WORD bNum, WORD state)
+BOOL ENGINE::IsToneFS_G (WORD cNum, WORD bNum, WORD state)
 {
     return (Clusters[cNum].ToneFSs[bNum] > state);
 }
 
-BOOL RT_ENGINE::IsToneFS_GE(WORD cNum, WORD bNum, WORD state)
+BOOL ENGINE::IsToneFS_GE(WORD cNum, WORD bNum, WORD state)
 {
     return (Clusters[cNum].ToneFSs[bNum] >= state);
 }
 
-BOOL RT_ENGINE::IsFalseOne(WORD cNum, WORD bNum)
+BOOL ENGINE::IsFalseOne(WORD cNum, WORD bNum)
 {
 	if
 	(
@@ -408,32 +408,32 @@ BOOL RT_ENGINE::IsFalseOne(WORD cNum, WORD bNum)
 		return FALSE;
 }
 
-BOOL RT_ENGINE::GetPrePaid(WORD cNum, WORD bNum)
+BOOL ENGINE::GetPrePaid(WORD cNum, WORD bNum)
 {
 	return Clusters[cNum].PrePaid[bNum];
 }
 
-void RT_ENGINE::SetPrePaid(WORD cNum, WORD bNum, BOOL value)
+void ENGINE::SetPrePaid(WORD cNum, WORD bNum, BOOL value)
 {
 	Clusters[cNum].PrePaid[bNum] = value;
 }
 
-BOOL RT_ENGINE::GetFirstPreValue(WORD cNum, WORD bNum)
+BOOL ENGINE::GetFirstPreValue(WORD cNum, WORD bNum)
 {
 	return Clusters[cNum].FirstPreValue[bNum];
 }
 
-void RT_ENGINE::SetFirstPreValue(WORD cNum, WORD bNum, BOOL value)
+void ENGINE::SetFirstPreValue(WORD cNum, WORD bNum, BOOL value)
 {
 	Clusters[cNum].FirstPreValue[bNum] = value;
 }
 
-double RT_ENGINE::GetPreValue(WORD cNum, WORD bNum)
+double ENGINE::GetPreValue(WORD cNum, WORD bNum)
 {
     return Clusters[cNum].PreValue[bNum];
 }
 
-void RT_ENGINE::SetPreValue(WORD cNum, WORD bNum, double value)
+void ENGINE::SetPreValue(WORD cNum, WORD bNum, double value)
 {
     // fix:
     //   Clusters[cNum].PreValue[bNum] = value;
@@ -441,27 +441,27 @@ void RT_ENGINE::SetPreValue(WORD cNum, WORD bNum, double value)
     memcpy(&Clusters[cNum].PreValue[bNum], &value, sizeof(double));
 }
 
-DWORD RT_ENGINE::GetPreTime(WORD cNum, WORD bNum)
+DWORD ENGINE::GetPreTime(WORD cNum, WORD bNum)
 {
 	return Clusters[cNum].PreTime[bNum];
 }
 
-void RT_ENGINE::SetPreTime(WORD cNum, WORD bNum, DWORD value)
+void ENGINE::SetPreTime(WORD cNum, WORD bNum, DWORD value)
 {
 	Clusters[cNum].PreTime[bNum] = value;
 }
 
-WORD RT_ENGINE::GetNumOfCalls(WORD cNum, WORD bNum) const
+WORD ENGINE::GetNumOfCalls(WORD cNum, WORD bNum) const
 {
 	return Clusters[cNum].NumOfCalls[bNum];
 }
 
-void RT_ENGINE::SetNumOfCalls(WORD cNum, WORD bNum, WORD numOfCalls)
+void ENGINE::SetNumOfCalls(WORD cNum, WORD bNum, WORD numOfCalls)
 {
 	Clusters[cNum].NumOfCalls[bNum] = numOfCalls;
 }
 
-WORD RT_ENGINE::GetUnifiedState(WORD cNum, WORD bNum)
+WORD ENGINE::GetUnifiedState(WORD cNum, WORD bNum)
 {
 	// Unify pulse and tone states
 	WORD state = GetToneFS(cNum, bNum); // tone has a high priority
@@ -510,55 +510,55 @@ WORD RT_ENGINE::GetUnifiedState(WORD cNum, WORD bNum)
 	return state;
 }
 
-void RT_ENGINE::GetDumpData(void * & ptr, int &size)
+void ENGINE::GetDumpData(void * & ptr, int &size)
 {
 	 ptr  = Clusters;
 	 size = sizeof(BoothCluster) * g_cfg->ACTIVE_CLUSTERS;
 }
 
-void RT_ENGINE::SetDumpData(void * ptr, int size)
+void ENGINE::SetDumpData(void * ptr, int size)
 {
 	memcpy(Clusters, ptr, size);
 }
 
-BOOL RT_ENGINE::GetReceipt(DynamicReceipt & dynReceipt)
+BOOL ENGINE::GetReceipt(DynamicReceipt & dynReceipt)
 {
 	RTReceiptQueueMutex mutex;
 	return Receipts->Get(dynReceipt);
 }
 
-void RT_ENGINE::GetClusters(BoothCluster clusters[])
+void ENGINE::GetClusters(BoothCluster clusters[])
 {
 	RTBoothClustersMutex mutex;
 	memcpy(clusters, Clusters, sizeof(BoothCluster) * g_cfg->ACTIVE_CLUSTERS);
 }
 
-BYTE RT_ENGINE::GetGeneralPort() const
+BYTE ENGINE::GetGeneralPort() const
 {
 	return GeneralPort;
 }
 
-void RT_ENGINE::SetGeneralPort(BYTE generalPort)
+void ENGINE::SetGeneralPort(BYTE generalPort)
 {
 	GeneralPort = generalPort;
 }
 
-BYTE RT_ENGINE::GetDataPortSpy(WORD cNum) const
+BYTE ENGINE::GetDataPortSpy(WORD cNum) const
 {
 	return Clusters[cNum].DataPort.Spy;
 }
 
-void RT_ENGINE::SetDataPortSpy(WORD cNum, BYTE value)
+void ENGINE::SetDataPortSpy(WORD cNum, BYTE value)
 {
 	Clusters[cNum].DataPort.Spy = value;
 }
 
-BoothCluster::_DataPort & RT_ENGINE::GetDataPort(WORD cNum)
+BoothCluster::_DataPort & ENGINE::GetDataPort(WORD cNum)
 {
 	return Clusters[cNum].DataPort;
 }
 
-void RT_ENGINE::StoreCurrentDigit(WORD cNum, WORD bNum)
+void ENGINE::StoreCurrentDigit(WORD cNum, WORD bNum)
 {
 	// store digit, and adjust ASCII string (first adjust)
 	Clusters[cNum].Phones[bNum][Clusters[cNum].NumOfDigits[bNum]+1] = '\0';
@@ -566,202 +566,202 @@ void RT_ENGINE::StoreCurrentDigit(WORD cNum, WORD bNum)
 	Clusters[cNum].NumOfDigits[bNum]++; // a new digit
 }
 
-void RT_ENGINE::GetPhone(WORD cNum, WORD bNum, PHONE & phone) const
+void ENGINE::GetPhone(WORD cNum, WORD bNum, PHONE & phone) const
 {
 	strcpy((char *)&phone, (char *)&Clusters[cNum].Phones[bNum]);
 }
 
-void RT_ENGINE::ResetPhone(WORD cNum, WORD bNum)
+void ENGINE::ResetPhone(WORD cNum, WORD bNum)
 {
 	memset(&Clusters[cNum].Phones[bNum], 0, sizeof(PHONE));
 }
 
-BOOL RT_ENGINE::GetFound(WORD cNum, WORD bNum) const
+BOOL ENGINE::GetFound(WORD cNum, WORD bNum) const
 {
 	return Clusters[cNum].Found[bNum];
 }
 
-void RT_ENGINE::SetFound(WORD cNum, WORD bNum, BOOL value) const
+void ENGINE::SetFound(WORD cNum, WORD bNum, BOOL value) const
 {
 	Clusters[cNum].Found[bNum] = value;
 }
 
-WORD RT_ENGINE::GetCallAttr(WORD cNum, WORD bNum) const
+WORD ENGINE::GetCallAttr(WORD cNum, WORD bNum) const
 {
 	return Clusters[cNum].CallAttrs[bNum];
 }
 
-void RT_ENGINE::SetCallAttr(WORD cNum, WORD bNum, WORD attr)
+void ENGINE::SetCallAttr(WORD cNum, WORD bNum, WORD attr)
 {
 	Clusters[cNum].CallAttrs[bNum] = attr;
 }
 
-WORD RT_ENGINE::GetTariff(WORD cNum, WORD bNum) const
+WORD ENGINE::GetTariff(WORD cNum, WORD bNum) const
 {
 	return Clusters[cNum].Tariffs[bNum];
 }
 
-void RT_ENGINE::SetTariff(WORD cNum, WORD bNum, WORD tariff)
+void ENGINE::SetTariff(WORD cNum, WORD bNum, WORD tariff)
 {
 	Clusters[cNum].Tariffs[bNum] = tariff;
 }
 
-int RT_ENGINE::GetStartTime(WORD cNum, WORD bNum)
+int ENGINE::GetStartTime(WORD cNum, WORD bNum)
 {
 	return Clusters[cNum].StartTimes[bNum];
 }
 
-void RT_ENGINE::SetStartTime(WORD cNum, WORD bNum, int time)
+void ENGINE::SetStartTime(WORD cNum, WORD bNum, int time)
 {
 	Clusters[cNum].StartTimes[bNum] = time;
 }
 
-int RT_ENGINE::GetStartDate(WORD cNum, WORD bNum)
+int ENGINE::GetStartDate(WORD cNum, WORD bNum)
 {
 	return Clusters[cNum].StartDates[bNum];
 }
 
-void RT_ENGINE::SetStartDate(WORD cNum, WORD bNum, int date)
+void ENGINE::SetStartDate(WORD cNum, WORD bNum, int date)
 {
 	Clusters[cNum].StartDates[bNum] = date;
 }
 
-BOOL RT_ENGINE::GetLocked(WORD cNum, WORD bNum) const
+BOOL ENGINE::GetLocked(WORD cNum, WORD bNum) const
 {
 	return Clusters[cNum].Locked[bNum];
 }
 
-void RT_ENGINE::SetLocked(WORD cNum, WORD bNum, BOOL locked)
+void ENGINE::SetLocked(WORD cNum, WORD bNum, BOOL locked)
 {
 	Clusters[cNum].Locked[bNum] = locked;
 }
 
-SHORT RT_ENGINE::GetLastSpyBooth() const
+SHORT ENGINE::GetLastSpyBooth() const
 {
 	return LastSpyBooth;
 }
 
-void RT_ENGINE::SetLastSpyBooth(WORD booth)
+void ENGINE::SetLastSpyBooth(WORD booth)
 {
 	LastSpyBooth = booth;
 }
 
-void RT_ENGINE::SaveLastSpyBooth()
+void ENGINE::SaveLastSpyBooth()
 {
 	LastSpyBooth = SpyBooth;
 }
 
-SHORT RT_ENGINE::GetSpyBooth() const
+SHORT ENGINE::GetSpyBooth() const
 {
 	return SpyBooth;
 }
 
-void RT_ENGINE::SetSpyBooth(WORD booth)
+void ENGINE::SetSpyBooth(WORD booth)
 {
 	SpyBooth = booth;
 }
 
-int RT_ENGINE::GetCurrentDate()
+int ENGINE::GetCurrentDate()
 {
 	return CurrentDate;
 }
 
-void RT_ENGINE::SetCurrentDate(int date)
+void ENGINE::SetCurrentDate(int date)
 {
 	CurrentDate = date;
 }
 
-int RT_ENGINE::GetCurrentTime()
+int ENGINE::GetCurrentTime()
 {
 	return CurrentTime;
 }
 
-void RT_ENGINE::SetCurrentTime(int time)
+void ENGINE::SetCurrentTime(int time)
 {
 	CurrentTime = time;
 }
 
-SHORT RT_ENGINE::GetNotIncBooth() const
+SHORT ENGINE::GetNotIncBooth() const
 {
 	return NotIncBooth;
 }
 
-void RT_ENGINE::SetNotIncBooth(SHORT booth)
+void ENGINE::SetNotIncBooth(SHORT booth)
 {
 	NotIncBooth = booth;
 }
 
-SHORT RT_ENGINE::GetBadInterBooth() const
+SHORT ENGINE::GetBadInterBooth() const
 {
 	return BadInterBooth;
 }
 
-void RT_ENGINE::SetBadInterBooth(SHORT booth)
+void ENGINE::SetBadInterBooth(SHORT booth)
 {
 	BadInterBooth = booth;
 }
 
-SHORT RT_ENGINE::GetComErrBooth() const
+SHORT ENGINE::GetComErrBooth() const
 {
 	return ComErrBooth;
 }
 
-void RT_ENGINE::SetComErrBooth(SHORT booth)
+void ENGINE::SetComErrBooth(SHORT booth)
 {
 	ComErrBooth = booth;
 }
 
-SHORT RT_ENGINE::GetDialErrBooth() const
+SHORT ENGINE::GetDialErrBooth() const
 {
 	return DialErrBooth;
 }
 
-void RT_ENGINE::SetDialErrBooth(SHORT booth)
+void ENGINE::SetDialErrBooth(SHORT booth)
 {
 	DialErrBooth = booth;
 }
 
-BOOL RT_ENGINE::GetSimula(WORD cNum, WORD bNum) const
+BOOL ENGINE::GetSimula(WORD cNum, WORD bNum) const
 {
 	return Clusters[cNum].Simula[bNum];
 }
 
-void RT_ENGINE::SetSimula(WORD cNum, WORD bNum, BOOL value) const
+void ENGINE::SetSimula(WORD cNum, WORD bNum, BOOL value) const
 {
 	Clusters[cNum].Simula[bNum] = value;
 }
 
-void RT_ENGINE::GetSimulaPhone(WORD cNum, WORD bNum, PHONE & phone) const
+void ENGINE::GetSimulaPhone(WORD cNum, WORD bNum, PHONE & phone) const
 {
 	strcpy((char *)&phone, (char *)&Clusters[cNum].SimulaPhones[bNum]);
 }
 
-void RT_ENGINE::SetSimulaPhone(WORD cNum, WORD bNum, PHONE const & phone)
+void ENGINE::SetSimulaPhone(WORD cNum, WORD bNum, PHONE const & phone)
 {
 	strcpy((char *)&Clusters[cNum].SimulaPhones[bNum], (char *)&phone);
 }
 
-void RT_ENGINE::ResetSimulaPhone(WORD cNum, WORD bNum)
+void ENGINE::ResetSimulaPhone(WORD cNum, WORD bNum)
 {
 	strcpy((char *)&Clusters[cNum].SimulaPhones[bNum], "");
 }
 
-BOOL RT_ENGINE::GetNoReceipt(WORD cNum, WORD bNum) const
+BOOL ENGINE::GetNoReceipt(WORD cNum, WORD bNum) const
 {
 	return Clusters[cNum].NoReceipt[bNum];
 }
 
-void RT_ENGINE::SetNoReceipt(WORD cNum, WORD bNum, BOOL value) const
+void ENGINE::SetNoReceipt(WORD cNum, WORD bNum, BOOL value) const
 {
 	Clusters[cNum].NoReceipt[bNum] = value;
 }
 
-BOOL RT_ENGINE::GetNoStatistics(WORD cNum, WORD bNum) const
+BOOL ENGINE::GetNoStatistics(WORD cNum, WORD bNum) const
 {
 	return Clusters[cNum].NoStatistics[bNum];
 }
 
-void RT_ENGINE::SetNoStatistics(WORD cNum, WORD bNum, BOOL value) const
+void ENGINE::SetNoStatistics(WORD cNum, WORD bNum, BOOL value) const
 {
 	Clusters[cNum].NoStatistics[bNum] = value;
 }
