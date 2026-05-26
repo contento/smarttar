@@ -56,7 +56,7 @@ Working list of milestones and tasks. Detailed findings live in
       cause)*
 - [ ] *(add other UI bugs as they surface)*
 
-## Milestone: UI improvements (new edition)
+## Milestone: UI improvements (new edition) — v4.0
 
 - [ ] **Higher-resolution display via Zinc** — Zinc 3.5 supports SVGA
       modes through its BGI backend; the project currently runs at the
@@ -231,7 +231,7 @@ max_duration_secs = 1800
   Must be a new widget / menu entry; the old `UIW_SIMULA` window is
   off-limits per the milestone framing.
 
-## Milestone: Toolchain portability
+## Milestone: Toolchain portability — v4.0
 
 - [ ] **Build with open-source toolchains** — investigate whether
       SmartTar can build with Open Watcom (closest historical
@@ -299,3 +299,7 @@ when scoped.
 - **OpenZinc** — open-source continuation of Zinc Interface Library;
   may be relevant for UI bug fixes or toolchain portability work.
   <http://www.openzinc.com/index.html>
+- **Open Watcom** — open-source successor to Watcom C/C++; closest
+  drop-in replacement for Borland C++ 3.1 targeting 16/32-bit DOS.
+  Could replace BCC286 + Pharlap in the "Toolchain portability"
+  milestone (see above).  <https://github.com/open-watcom/open-watcom-v2>
