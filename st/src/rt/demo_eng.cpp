@@ -373,17 +373,64 @@ void DEMO_ENGINE::GenCall(DemoBooth & b)
 		}
 	}
 
-	// Generate digits (1-9 for all positions; real classification comes
-	// from the tariff engine matching against ph_info.dat prefixes).
+	// Build a dial sequence the tariff engine will actually recognize:
+	//   access prefix from g_cfg (so the call gets classified as
+	//   LOCAL/DDN/DDI), then a real place prefix from ph_info.dat
+	//   territory (so PLACE_INFO::Search hits an entry instead of
+	//   "--- No Incluida ---"), then random subscriber digits to fill
+	//   out to numDigits.  Pools below are representative entries
+	//   from util/inf2dat/{local,ddn,ddi}.inf -- keep them small;
+	//   exhaustive coverage isn't the point.
 	DemoCallType & ct = _types[b.type];
 	b.numDigits = (BYTE)ct.numDigits;
 	if (b.numDigits > 16)
 		b.numDigits = 16;
-	for (int d = 0; d < b.numDigits; d++)
+
+	// LOCAL: any 7-digit number starting with 2/3/4 hits Medellin in
+	// local.inf (prefixes 200-499).
+	static const char  localFirst[] = { 2, 3, 4 };
+	// DDN: after stripping the carrier "09", these prefixes exist in
+	// ddn.inf.  All start in 1..7 so they never collide with
+	// BORDER_ACCESS (9) at the 3rd dialed digit.
+	static const char *nalPool[] = {
+		"12", "13", "14", "15", "16", "17",
+		"23", "25", "27", "47", "57", "67"
+	};
+	// DDI: after stripping "009", these exist in ddi.inf.
+	// Mix of NANP area codes and 2-digit country codes.
+	static const char *interPool[] = {
+		"1212", "1305", "1416", "1646",
+		"33",   "34",   "39",   "44",   "49",   "54",   "55",   "56"
+	};
+
+	BYTE d = 0;
+	if (b.type == 0)
 	{
-		BYTE digit = (BYTE)((LcgNext() % 9) + 1); // 1..9
-		b.digits[d] = digit;
+		// LOCAL: just the subscriber number.
+		b.digits[d++] = (BYTE)localFirst[LcgNext() % 3];
 	}
+	else if (b.type == 1)
+	{
+		// DDN: access(0) + operator(9), then a real DDN prefix.
+		b.digits[d++] = (BYTE)g_cfg->ACCESS;
+		b.digits[d++] = (BYTE)g_cfg->OPERATOR_ACCESS;
+		const char *p = nalPool[LcgNext() % (sizeof(nalPool)/sizeof(nalPool[0]))];
+		while (*p && d < b.numDigits)
+			b.digits[d++] = (BYTE)(*p++ - '0');
+	}
+	else
+	{
+		// DDI: access(0) + inter(0) + operator(9), then a real DDI prefix.
+		b.digits[d++] = (BYTE)g_cfg->ACCESS;
+		b.digits[d++] = (BYTE)g_cfg->INTER_ACCESS;
+		b.digits[d++] = (BYTE)g_cfg->OPERATOR_ACCESS;
+		const char *p = interPool[LcgNext() % (sizeof(interPool)/sizeof(interPool[0]))];
+		while (*p && d < b.numDigits)
+			b.digits[d++] = (BYTE)(*p++ - '0');
+	}
+	// Pad subscriber digits (1..9).
+	while (d < b.numDigits)
+		b.digits[d++] = (BYTE)((LcgNext() % 9) + 1);
 
 	// Call duration: uniform in [min, max] — stored in b.duration, not
 	// b.countdown (countdown is reused for the offhook-wait phase).
