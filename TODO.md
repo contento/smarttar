@@ -296,4 +296,6 @@ full context and severity rationale.
 Loose notes that aren't ready to be scheduled. Promote into a milestone
 when scoped.
 
-- *(empty — add as ideas arise)*
+- **OpenZinc** — open-source continuation of Zinc Interface Library;
+  may be relevant for UI bug fixes or toolchain portability work.
+  <http://www.openzinc.com/index.html>

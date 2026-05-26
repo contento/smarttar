@@ -79,8 +79,8 @@ build.log
 BUILD.LOG
 st/build.log
 st/BUILD.LOG
-run.log
-RUN.LOG
+run*.log
+RUN*.LOG
 
 # ==============================================================================
 # DOSBox-X capture directory (screenshots / AVI / WAV, configured via
