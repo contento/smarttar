@@ -60,7 +60,7 @@ public:
 	void RefreshBoothDisplay(void);
 
 private:
-	static RT_ENGINE       			   *RTEngine;
+	static ENGINE       			   *RTEngine;
 	static CIRCULAR_QUEUE<DynamicReceipt> *PRNReceipts;
 	static CIRCULAR_QUEUE<DynamicReceipt> *Receipts;
 
