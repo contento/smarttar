@@ -32,13 +32,6 @@ void ENGINE::DoLock(WORD cNum, WORD bNum)
 
 void ENGINE::DoOnHook(WORD cNum, WORD bNum)
 {
-#if defined(__DEMO__)
-    ResetData(cNum, bNum);
-    SetPulseFS(cNum, bNum, LOCK);
-    if (!Clusters[cNum].Available)
-        SetToneFS(cNum, bNum, NOPHONE);
-    return ; // dont process !!!
-#else
 	if (BIT(Clusters[cNum].DataPort.OOD, bNum))
     {
 		ResetStateCount(cNum, bNum);
@@ -55,7 +48,6 @@ void ENGINE::DoOnHook(WORD cNum, WORD bNum)
 			if (GetStateCount(cNum, bNum) >= g_cfg->T_INTER_RING)
 				SetToneFS(cNum, bNum, LOCK);
 	}
-#endif
 }
 
 void ENGINE::DoRingUp(WORD cNum, WORD bNum)
