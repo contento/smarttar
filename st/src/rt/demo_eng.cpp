@@ -113,7 +113,10 @@ void DEMO_ENGINE::OnTimerTick(WORD cNum, BoothCluster::_DataPort & dp)
 			{
 				GenCall(b);
 				b.phase     = DP_OFFHOOK;
-				b.countdown = (DWORD)g_cfg->T_OFF_HOOK + 5;
+				// T_OFF_HOOK is in ms; the ISR fires once per T_EVAL ms,
+				// so wait g_cfg->T_OFF_HOOK / T_EVAL ticks plus a small
+				// margin for the FSM's Inc/Dec dance to settle.
+				b.countdown = (DWORD)g_cfg->T_OFF_HOOK / T_EVAL + 5;
 				dp.OOD |= (BYTE)(1 << bNum);
 			}
 			else
@@ -130,7 +133,10 @@ void DEMO_ENGINE::OnTimerTick(WORD cNum, BoothCluster::_DataPort & dp)
 			if (b.countdown == 0)
 			{
 				b.digitIdx   = 0;
-				b.dtmfTimer  = (WORD)g_cfg->T_DTMF_FLAG + 2;
+				// dtmfTimer is decremented per ISR tick.  Convert the
+				// ms-valued g_cfg threshold into ticks before adding the
+				// safety margin.
+				b.dtmfTimer  = (WORD)(g_cfg->T_DTMF_FLAG / T_EVAL + 2);
 				// put first digit into DTMFDigits for this booth slot
 				DWORD mask = ~(0x0FUL << (bNum * 4));
 				dp.DTMFDigits = (dp.DTMFDigits & mask)
@@ -157,7 +163,7 @@ void DEMO_ENGINE::OnTimerTick(WORD cNum, BoothCluster::_DataPort & dp)
 			{
 				// tone done; drop flag so FSM reads the digit
 				dp.DTMFFlags &= ~(BYTE)(1 << bNum);
-				b.dtmfTimer   = (WORD)g_cfg->T_DTMF_INTERDIG + 2;
+				b.dtmfTimer   = (WORD)(g_cfg->T_DTMF_INTERDIG / T_EVAL + 2);
 				b.phase       = DP_DIALING_LO;
 			}
 			else
@@ -175,8 +181,9 @@ void DEMO_ENGINE::OnTimerTick(WORD cNum, BoothCluster::_DataPort & dp)
 				b.digitIdx++;
 				if (b.digitIdx >= b.numDigits)
 				{
-					// all digits sent; drive answer signal
-					b.dtmfTimer = (WORD)g_cfg->T_BIAS + 10;
+					// all digits sent; drive answer signal long enough
+					// for the FSM's bias counter to clear T_BIAS-T_BIAS_MARGIN.
+					b.dtmfTimer = (WORD)(g_cfg->T_BIAS / T_EVAL + 10);
 					b.phase     = DP_ANSWER_WAIT;
 				}
 				else
@@ -186,7 +193,7 @@ void DEMO_ENGINE::OnTimerTick(WORD cNum, BoothCluster::_DataPort & dp)
 					dp.DTMFDigits = (dp.DTMFDigits & mask)
 					              | ((DWORD)b.digits[b.digitIdx] << (bNum * 4));
 					dp.DTMFFlags |= (BYTE)(1 << bNum);
-					b.dtmfTimer   = (WORD)g_cfg->T_DTMF_FLAG + 2;
+					b.dtmfTimer   = (WORD)(g_cfg->T_DTMF_FLAG / T_EVAL + 2);
 					b.phase       = DP_DIALING_HI;
 				}
 			}
