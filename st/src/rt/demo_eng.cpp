@@ -389,17 +389,24 @@ void DEMO_ENGINE::GenCall(DemoBooth & b)
 	// LOCAL: any 7-digit number starting with 2/3/4 hits Medellin in
 	// local.inf (prefixes 200-499).
 	static const char  localFirst[] = { 2, 3, 4 };
-	// DDN: after stripping the carrier "09", these prefixes exist in
-	// ddn.inf.  All start in 1..7 so they never collide with
-	// BORDER_ACCESS (9) at the 3rd dialed digit.
+	// DDN: after stripping the carrier "09", these prefixes are
+	// guaranteed to find a place in ddn.inf within 1-2 subscriber
+	// digits.  All from Bogota Etb (12,13,141-149,150,155,161-169,17):
+	//   - 12, 13, 17 are 2-digit singles      -> match at dialed digit 4
+	//   - 14, 16 expand via range 14X / 16X   -> match at dialed digit 5
+	//     for any subscriber 1-9
+	// Don't add 2-digit "1X" combos that aren't singles in ddn.inf
+	// (e.g. "15" only matches a few specific 3rd digits) -- the FSM
+	// locks the booth at NumOfDigits >= NAL_DIGITS_NOT_INCLUDED (9)
+	// if Search never succeeds, killing the call mid-dial.
 	static const char *nalPool[] = {
-		"12", "13", "14", "15", "16", "17",
-		"23", "25", "27", "47", "57", "67"
+		"12", "13", "14", "16", "17"
 	};
 	// DDI: after stripping "009", these exist in ddi.inf.
-	// Mix of NANP area codes and 2-digit country codes.
+	// Mix of NANP area codes (4-digit singles/ranges) and 2-digit
+	// country codes -- both match exactly at their natural length.
 	static const char *interPool[] = {
-		"1212", "1305", "1416", "1646",
+		"1212", "1305", "1416",
 		"33",   "34",   "39",   "44",   "49",   "54",   "55",   "56"
 	};
 
