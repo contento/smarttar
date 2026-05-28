@@ -268,6 +268,14 @@ International telephony information — numbering plan and tariff data for DDI (
 
 `local.inf`, `ddn.inf`, and `ddi.inf` are compiled together by `SETUP` into `bin/ph_info.dat`.
 
+### `util/inf2dat/phones.csv`
+
+Reference dataset of real, currently-published public phone numbers (government, utilities, universities, hospitals, embassies, banks, airlines) for Colombia, USA, Spain, and Mexico, gathered from each organization's official contact page. Provides the demo engine with dial sequences that resolve to named destinations in `ph_info.dat` instead of synthesized random subscriber digits, so demo-mode calls produce realistic invoice rows.
+
+Numbers are normalized to the 2003-era Colombian dial plan: the post-2021 `60X` area prefix (CRC Resolución 5826) is stripped from `dial_from_smarttar` so the digits match what the `local.inf` / `ddn.inf` / `ddi.inf` numbering tree expects. The `published_number` column preserves the as-published modern format for traceability.
+
+RFC 4180 CSV with all string fields double-quoted, leading `;`-prefixed comment block. Not yet consumed by [`src/rt/demo_eng.cpp`](st/src/rt/demo_eng.cpp) — that still pulls from hardcoded prefix pools; wiring `phones.csv` into `GenCall` is a follow-up.
+
 ---
 
 ## Runtime Data Files
