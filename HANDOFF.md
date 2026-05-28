@@ -106,6 +106,33 @@ for NAL.
     source for the arrival/duration parameters. MAKEFILE copies it
     into `bin/` (rule near line 237).
 
+### Real-number dataset (commits d6fe4cd / a1853d9 / b48f802)
+
+  * [st/util/inf2dat/phones.csv](st/util/inf2dat/phones.csv) -- 56
+    real, currently-published public phone numbers (gov, utilities,
+    universities, hospitals, embassies, banks, airlines) gathered
+    from each organization's official contact page. RFC 4180 CSV
+    with all string fields double-quoted, leading `;`-prefixed
+    comment block, CRLF (`.gitattributes` rule `*.csv text eol=crlf`).
+  * Coverage: 14 LOCAL (Medellin + Eastern Antioquia towns Marinilla,
+    La Ceja, El Santuario -- distinct local.inf prefixes 548/553/546),
+    20 NAL (Bogota, Cali x2, Pasto, Bucaramanga, Pereira, Manizales,
+    Armenia, Ibague, Cucuta, Neiva, Barranquilla, Cartagena -- area
+    codes 1/2/5/6/7/8), 22 INTER (USA, Canada, Spain, Italy, France,
+    Germany, UK, Mexico, Argentina, Brazil, Chile -- country codes
+    1/33/34/39/44/49/52/54/55/56). Each number verified against
+    util/inf2dat/{local,ddn,ddi}.inf so the call resolves to a named
+    destination, not "--- No Incluida ---".
+  * Colombian numbers are normalized to the 2003-era dial plan
+    (modern `60X` area prefix from CRC Resolucion 5826 stripped from
+    `dial_from_smarttar`; `published_number` keeps the modern format).
+  * **Not yet wired into `GenCall`.** The engine still draws from
+    hardcoded `localFirst` / `nalPool` / `interPool` arrays in
+    [st/src/rt/demo_eng.cpp](st/src/rt/demo_eng.cpp). Wiring is the
+    next milestone task (see "To do next" below).
+  * Documented in [README.md](README.md) and [README.es.md](README.es.md)
+    under the Configuration section.
+
 ## File map
 
 **Headers ([st/include/](st/include/)):**
@@ -180,13 +207,35 @@ shrink the dial; (1) means a timing race between the demo's last
   1. **Reproduce the lock on the other PC** -- ask GCC to share the
      exact red status-bar message and the call type (Loc/Nal/Int)
      when the booth dies.
-  2. **Strip remaining `__DEMO__` gates** (deferred from Phase 1):
+  2. **Wire `phones.csv` into `GenCall`** -- replace the hardcoded
+     `localFirst` / `nalPool` / `interPool` arrays in
+     [st/src/rt/demo_eng.cpp](st/src/rt/demo_eng.cpp) with rows read
+     from [st/util/inf2dat/phones.csv](st/util/inf2dat/phones.csv) at
+     `InitHardware` time (not ISR). Borland-C-friendly parser:
+     `fopen`/`fgets`, skip lines starting with `;`, simple double-
+     quoted-field tokenizer, store category + `dial_from_smarttar`
+     in three pre-allocated `BYTE[16]` arrays per call type. Same
+     ISR contract -- pool array indexed by `LcgNext() % poolSize`,
+     no heap from `OnTimerTick`. MAKEFILE distributes `phones.csv`
+     to `bin/` the way `demo.ini` is distributed.
+  3. **Strip remaining `__DEMO__` gates** (deferred from Phase 1):
      `st.cpp` (dongle, STM2 init), `control.cpp` (STM2 recovery,
      persist cycle), `ctrl_ev.cpp`, `db_eng.cpp`, `filehdr.cpp`,
      `rt_eng.cpp::RecoverState`. None are engine concerns proper.
-  3. **Phase 3 polish** (optional, see [TODO.md](TODO.md)):
+  4. **Phase 3 polish** (optional, see [TODO.md](TODO.md)):
      time-of-day variation, scripted `.scn` replay, operator
      controls. The old `UIW_SIMULA` window is off-limits.
+
+## Sibling milestone -- documentation
+
+A new milestone added to [TODO.md](TODO.md) under "Documentation --
+Obsidian wiki (EN + ES)" consolidates the scattered docs (README,
+the four `.docx` manuals in [st/docs/](st/docs/), `help.txt`,
+`STABILITY_AUDIT.md`, `HANDOFF.md`, `RELEASING.md`, `CLAUDE.md`)
+into a single browsable Obsidian vault per language. Not blocking
+DEMO_ENGINE -- they're independent tracks. Mentioned here so the
+next session sees the broader documentation context when revising
+the demo dataset or its README references.
 
 ## Notes / known issues
 
