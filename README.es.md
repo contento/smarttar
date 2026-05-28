@@ -259,6 +259,14 @@ Información de telefonía internacional — plan de numeración y datos tarifar
 
 `local.inf`, `ddn.inf` y `ddi.inf` son compilados juntos por `SETUP` en `bin/ph_info.dat`.
 
+### `util/inf2dat/phones.csv`
+
+Conjunto de datos de referencia con números telefónicos públicos reales y vigentes (gobierno, servicios públicos, universidades, hospitales, embajadas, bancos, aerolíneas) para Colombia, EE.UU., España y México, recopilados desde la página oficial de contacto de cada organización. Le proporciona al motor de demostración secuencias de marcado que resuelven a destinos con nombre en `ph_info.dat` en lugar de dígitos de abonado aleatorios sintetizados, de modo que las llamadas en modo demo produzcan filas de factura realistas.
+
+Los números están normalizados al plan de marcado colombiano de la era 2003: el prefijo de área post-2021 `60X` (Resolución CRC 5826) se elimina de `dial_from_smarttar` para que los dígitos coincidan con lo que espera el árbol de numeración `local.inf` / `ddn.inf` / `ddi.inf`. La columna `published_number` conserva el formato moderno tal como se publica, para trazabilidad.
+
+CSV RFC 4180 con todos los campos de texto entre comillas dobles y un bloque de comentarios inicial prefijado con `;`. Aún no es consumido por [`src/rt/demo_eng.cpp`](st/src/rt/demo_eng.cpp) — ese módulo sigue tomando los prefijos de pools cableados; integrar `phones.csv` en `GenCall` queda como tarea de seguimiento.
+
 ---
 
 ## Archivos de datos en tiempo de ejecución
