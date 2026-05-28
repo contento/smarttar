@@ -126,10 +126,24 @@ for NAL.
   * Colombian numbers are normalized to the 2003-era dial plan
     (modern `60X` area prefix from CRC Resolucion 5826 stripped from
     `dial_from_smarttar`; `published_number` keeps the modern format).
-  * **Not yet wired into `GenCall`.** The engine still draws from
-    hardcoded `localFirst` / `nalPool` / `interPool` arrays in
-    [st/src/rt/demo_eng.cpp](st/src/rt/demo_eng.cpp). Wiring is the
-    next milestone task (see "To do next" below).
+  * **Wired into `GenCall` as of d2cd5df.** `DEMO_ENGINE::ParsePhones()`
+    reads `phones.csv` from the working directory at `InitHardware`
+    time and fills `_phones[3]` (one `PhonePool` per call type, each
+    holding up to `DEMO_MAX_PHONES_PER_TYPE`=32 entries of 16 digits).
+    `GenCall` writes the access prefix (none/09/009) per call type
+    then copies a random pool entry's dial sequence. Missing or
+    malformed `phones.csv` -> empty pool -> fallback to the original
+    hardcoded prefix arrays (graceful, demo still works). MAKEFILE
+    distributes `phones.csv` into `bin/` alongside `demo.ini`. Build
+    verified clean (`./make-headless.sh demo`, zero warnings); runtime
+    verification (named destinations show up in the UI for each booth)
+    deferred to the next session on GCC's other PC.
+  * **Borland 3.1 quirk:** `DEMO_MAX_PHONES_PER_TYPE` /
+    `DEMO_MAX_DIGITS_PER_PHONE` live as file-scope `#define`s, not
+    private nested enums. Borland C++ 3.1 applies access control to
+    private enum constants when used as array bounds in another
+    private struct of the same class -- produces "is not accessible"
+    errors. Don't refactor them back into the class without testing.
   * Documented in [README.md](README.md) and [README.es.md](README.es.md)
     under the Configuration section.
 
@@ -206,23 +220,15 @@ shrink the dial; (1) means a timing race between the demo's last
 
   1. **Reproduce the lock on the other PC** -- ask GCC to share the
      exact red status-bar message and the call type (Loc/Nal/Int)
-     when the booth dies.
-  2. **Wire `phones.csv` into `GenCall`** -- replace the hardcoded
-     `localFirst` / `nalPool` / `interPool` arrays in
-     [st/src/rt/demo_eng.cpp](st/src/rt/demo_eng.cpp) with rows read
-     from [st/util/inf2dat/phones.csv](st/util/inf2dat/phones.csv) at
-     `InitHardware` time (not ISR). Borland-C-friendly parser:
-     `fopen`/`fgets`, skip lines starting with `;`, simple double-
-     quoted-field tokenizer, store category + `dial_from_smarttar`
-     in three pre-allocated `BYTE[16]` arrays per call type. Same
-     ISR contract -- pool array indexed by `LcgNext() % poolSize`,
-     no heap from `OnTimerTick`. MAKEFILE distributes `phones.csv`
-     to `bin/` the way `demo.ini` is distributed.
-  3. **Strip remaining `__DEMO__` gates** (deferred from Phase 1):
+     when the booth dies. Now that `GenCall` dials real published
+     numbers, the lock should either disappear (if the prior
+     synthesized digits were tripping `NOT_INCLUDED_CALL_MASK`) or
+     persist with a different error message that narrows the cause.
+  2. **Strip remaining `__DEMO__` gates** (deferred from Phase 1):
      `st.cpp` (dongle, STM2 init), `control.cpp` (STM2 recovery,
      persist cycle), `ctrl_ev.cpp`, `db_eng.cpp`, `filehdr.cpp`,
      `rt_eng.cpp::RecoverState`. None are engine concerns proper.
-  4. **Phase 3 polish** (optional, see [TODO.md](TODO.md)):
+  3. **Phase 3 polish** (optional, see [TODO.md](TODO.md)):
      time-of-day variation, scripted `.scn` replay, operator
      controls. The old `UIW_SIMULA` window is off-limits.
 
