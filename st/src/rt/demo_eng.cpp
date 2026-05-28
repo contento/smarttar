@@ -38,7 +38,8 @@ DEMO_ENGINE::DEMO_ENGINE(WORD numOfClusters)
 	  _totalWeight(0),
 	  _meanArrivalTicks(1000)
 {
-	memset(_types, 0, sizeof(_types));
+	memset(_types,  0, sizeof(_types));
+	memset(_phones, 0, sizeof(_phones));
 	InitHardware(numOfClusters);
 	RecoverState();
 	InstallISRs();
@@ -64,6 +65,7 @@ void DEMO_ENGINE::InitHardware(WORD numOfClusters)
 	memset(_booths, 0, sizeof(DemoBooth) * _numBooths);
 
 	ParseConfig();
+	ParsePhones();
 
 	// Seed per-booth arrivals with staggered initial delays so booths
 	// don't all fire on tick 0.
@@ -359,6 +361,81 @@ void DEMO_ENGINE::ParseConfig(void)
 }
 
 // -------------------------------------------------------------------------
+// ParsePhones: read phones.csv from the working directory and fill the
+// per-type pools.  RFC 4180 CSV with all string fields double-quoted;
+// lines starting with ';' are comments, the first '"category",...'
+// line is the header.  We only need columns 0 (category) and 7
+// (dial_from_smarttar).  Missing/malformed file -> empty pools, and
+// GenCall falls back to its small hardcoded prefix set.
+// Called from InitHardware (not ISR).
+// -------------------------------------------------------------------------
+
+void DEMO_ENGINE::ParsePhones(void)
+{
+	FILE *fp = fopen("phones.csv", "r");
+	if (!fp)
+		return;
+
+	char line[512];
+	while (fgets(line, sizeof(line), fp))
+	{
+		// Skip comments and the header row (which starts with '"c...').
+		if (line[0] == ';' || line[0] == '\n' || line[0] == '\r')
+			continue;
+		if (line[0] != '"')
+			continue;
+		if (line[1] == 'c' && line[2] == 'a')   // "category" header
+			continue;
+
+		// Parse: walk the line as "<f0>","<f1>",...,"<f10>". No commas
+		// inside fields (we control the dataset), no escaped quotes.
+		char *fields[11];
+		int   nFields = 0;
+		char *p = line;
+		int   parseOK = 1;
+		while (*p && nFields < 11)
+		{
+			if (*p != '"') { parseOK = 0; break; }
+			p++;
+			fields[nFields++] = p;
+			while (*p && *p != '"') p++;
+			if (*p != '"') { parseOK = 0; break; }
+			*p++ = '\0';            // terminate the field
+			if (*p == ',') p++;     // skip comma between fields
+		}
+		if (!parseOK || nFields < 8)
+			continue;
+
+		// Field 0 = category
+		int typeIdx = -1;
+		if      (strcmp(fields[0], "LOCAL") == 0) typeIdx = 0;
+		else if (strcmp(fields[0], "NAL")   == 0) typeIdx = 1;
+		else if (strcmp(fields[0], "INTER") == 0) typeIdx = 2;
+		if (typeIdx < 0)
+			continue;
+
+		PhonePool & pool = _phones[typeIdx];
+		if (pool.count >= DEMO_MAX_PHONES_PER_TYPE)
+			continue;
+
+		// Field 7 = dial_from_smarttar -- convert ASCII digits to BYTE 0..9
+		BYTE  n = 0;
+		char *d = fields[7];
+		while (*d && n < DEMO_MAX_DIGITS_PER_PHONE)
+		{
+			if (*d >= '0' && *d <= '9')
+				pool.digits[pool.count][n++] = (BYTE)(*d - '0');
+			d++;
+		}
+		if (n == 0)
+			continue;
+		pool.digitCount[pool.count] = n;
+		pool.count++;
+	}
+	fclose(fp);
+}
+
+// -------------------------------------------------------------------------
 // GenCall: pre-generate one call's digit sequence and duration.
 // Called from OnTimerTick when a booth fires (not in tight ISR inner
 // loop, but still in ISR context -- no malloc, no runtime).
@@ -380,73 +457,78 @@ void DEMO_ENGINE::GenCall(DemoBooth & b)
 		}
 	}
 
-	// Build a dial sequence the tariff engine will actually recognize:
-	//   access prefix from g_cfg (so the call gets classified as
-	//   LOCAL/DDN/DDI), then a real place prefix from ph_info.dat
-	//   territory (so PLACE_INFO::Search hits an entry instead of
-	//   "--- No Incluida ---"), then random subscriber digits to fill
-	//   out to numDigits.  Pools below are representative entries
-	//   from util/inf2dat/{local,ddn,ddi}.inf -- keep them small;
-	//   exhaustive coverage isn't the point.
 	DemoCallType & ct = _types[b.type];
 	b.numDigits = (BYTE)ct.numDigits;
 	if (b.numDigits > 16)
 		b.numDigits = 16;
 
-	// LOCAL: any 7-digit number starting with 2/3/4 hits Medellin in
-	// local.inf (prefixes 200-499).
-	static const char  localFirst[] = { 2, 3, 4 };
-	// DDN: after stripping the carrier "09", these prefixes are
-	// guaranteed to find a place in ddn.inf within 1-2 subscriber
-	// digits.  All from Bogota Etb (12,13,141-149,150,155,161-169,17):
-	//   - 12, 13, 17 are 2-digit singles      -> match at dialed digit 4
-	//   - 14, 16 expand via range 14X / 16X   -> match at dialed digit 5
-	//     for any subscriber 1-9
-	// Don't add 2-digit "1X" combos that aren't singles in ddn.inf
-	// (e.g. "15" only matches a few specific 3rd digits) -- the FSM
-	// locks the booth at NumOfDigits >= NAL_DIGITS_NOT_INCLUDED (9)
-	// if Search never succeeds, killing the call mid-dial.
-	static const char *nalPool[] = {
-		"12", "13", "14", "16", "17"
-	};
-	// DDI: after stripping "009", these exist in ddi.inf.
-	// Mix of NANP area codes (4-digit singles/ranges) and 2-digit
-	// country codes -- both match exactly at their natural length.
-	static const char *interPool[] = {
-		"1212", "1305", "1416",
-		"33",   "34",   "39",   "44",   "49",   "54",   "55",   "56"
-	};
-
+	// Access prefix per call type -- so the FSM classifies the call as
+	// LOCAL/DDN/DDI before the place lookup runs.
 	BYTE d = 0;
-	if (b.type == 0)
+	if (b.type == 1)        // NAL: access(0) + operator(9)
 	{
-		// LOCAL: just the subscriber number.
-		b.digits[d++] = (BYTE)localFirst[LcgNext() % 3];
-	}
-	else if (b.type == 1)
-	{
-		// DDN: access(0) + operator(9), then a real DDN prefix.
 		b.digits[d++] = (BYTE)g_cfg->ACCESS;
 		b.digits[d++] = (BYTE)g_cfg->OPERATOR_ACCESS;
-		const char *p = nalPool[LcgNext() % (sizeof(nalPool)/sizeof(nalPool[0]))];
-		while (*p && d < b.numDigits)
-			b.digits[d++] = (BYTE)(*p++ - '0');
 	}
-	else
+	else if (b.type == 2)   // INTER: access(0) + inter(0) + operator(9)
 	{
-		// DDI: access(0) + inter(0) + operator(9), then a real DDI prefix.
 		b.digits[d++] = (BYTE)g_cfg->ACCESS;
 		b.digits[d++] = (BYTE)g_cfg->INTER_ACCESS;
 		b.digits[d++] = (BYTE)g_cfg->OPERATOR_ACCESS;
-		const char *p = interPool[LcgNext() % (sizeof(interPool)/sizeof(interPool[0]))];
-		while (*p && d < b.numDigits)
-			b.digits[d++] = (BYTE)(*p++ - '0');
 	}
-	// Pad subscriber digits (1..9).
+
+	// Real-number pool from phones.csv: a random row's full dial sequence
+	// is the rest of the digits.  Each row was vetted against
+	// util/inf2dat/{local,ddn,ddi}.inf so the call resolves to a named
+	// destination rather than "--- No Incluida ---".
+	PhonePool & pool = _phones[b.type];
+	if (pool.count > 0)
+	{
+		BYTE idx = (BYTE)(LcgNext() % pool.count);
+		BYTE n   = pool.digitCount[idx];
+		for (BYTE i = 0; i < n && d < b.numDigits; i++)
+			b.digits[d++] = pool.digits[idx][i];
+	}
+	else
+	{
+		// Fallback when phones.csv is missing or empty -- minimal
+		// hardcoded prefixes that still hit named ph_info.dat entries.
+		// LOCAL: 2/3/4 prefix -> Medellin(Ant) 200-499.
+		// NAL: Bogota Etb 2-digit singles (12,13,17) + ranges (14X,16X).
+		// INTER: NANP area codes + 2-digit country codes from ddi.inf.
+		static const char  localFirst[] = { 2, 3, 4 };
+		static const char *nalPool[] = {
+			"12", "13", "14", "16", "17"
+		};
+		static const char *interPool[] = {
+			"1212", "1305", "1416",
+			"33",   "34",   "39",   "44",   "49",   "54",   "55",   "56"
+		};
+		if (b.type == 0)
+		{
+			b.digits[d++] = (BYTE)localFirst[LcgNext() % 3];
+		}
+		else if (b.type == 1)
+		{
+			const char *p = nalPool[LcgNext() % (sizeof(nalPool)/sizeof(nalPool[0]))];
+			while (*p && d < b.numDigits)
+				b.digits[d++] = (BYTE)(*p++ - '0');
+		}
+		else
+		{
+			const char *p = interPool[LcgNext() % (sizeof(interPool)/sizeof(interPool[0]))];
+			while (*p && d < b.numDigits)
+				b.digits[d++] = (BYTE)(*p++ - '0');
+		}
+	}
+
+	// Pad with random subscriber digits (1..9) if the pool row was
+	// shorter than numDigits.  Most rows are exact length; this
+	// only fires for the Italy/Germany short entries.
 	while (d < b.numDigits)
 		b.digits[d++] = (BYTE)((LcgNext() % 9) + 1);
 
-	// Call duration: uniform in [min, max] — stored in b.duration, not
+	// Call duration: uniform in [min, max] -- stored in b.duration, not
 	// b.countdown (countdown is reused for the offhook-wait phase).
 	DWORD range = (ct.maxDurTicks > ct.minDurTicks)
 	            ? (ct.maxDurTicks - ct.minDurTicks) : 1;
