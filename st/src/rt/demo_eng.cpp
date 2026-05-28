@@ -374,7 +374,18 @@ void DEMO_ENGINE::ParsePhones(void)
 {
 	FILE *fp = fopen("phones.csv", "r");
 	if (!fp)
+	{
+		// Leave a diagnostic breadcrumb so the runtime tells us why
+		// GenCall fell back to the hardcoded pools.
+		FILE *dbg = fopen("phones.dbg", "w");
+		if (dbg)
+		{
+			fprintf(dbg, "DEMO_ENGINE::ParsePhones: fopen(\"phones.csv\") FAILED\n");
+			fprintf(dbg, "  -> GenCall will use the hardcoded fallback pools.\n");
+			fclose(dbg);
+		}
 		return;
+	}
 
 	char line[512];
 	while (fgets(line, sizeof(line), fp))
@@ -433,6 +444,32 @@ void DEMO_ENGINE::ParsePhones(void)
 		pool.count++;
 	}
 	fclose(fp);
+
+	// Write a one-shot diagnostic so we can confirm at runtime that
+	// ParsePhones found phones.csv and loaded entries (the Zinc UI
+	// captures stdout, so a printf is invisible).  File lands in the
+	// same CWD as phones.csv (= bin/ when launched via run.bat).
+	FILE *dbg = fopen("phones.dbg", "w");
+	if (dbg)
+	{
+		fprintf(dbg, "DEMO_ENGINE::ParsePhones loaded: %u LOCAL, %u NAL, %u INTER\n",
+			(unsigned)_phones[0].count,
+			(unsigned)_phones[1].count,
+			(unsigned)_phones[2].count);
+		static const char *labels[3] = { "LOCAL", "NAL", "INTER" };
+		for (int t = 0; t < 3; t++)
+		{
+			PhonePool & p = _phones[t];
+			for (BYTE i = 0; i < p.count; i++)
+			{
+				fprintf(dbg, "  %-5s [%2u] dial=", labels[t], (unsigned)i);
+				for (BYTE k = 0; k < p.digitCount[i]; k++)
+					fputc('0' + p.digits[i][k], dbg);
+				fprintf(dbg, " (%u digits)\n", (unsigned)p.digitCount[i]);
+			}
+		}
+		fclose(dbg);
+	}
 }
 
 // -------------------------------------------------------------------------
