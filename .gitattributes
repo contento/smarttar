@@ -32,6 +32,7 @@ MAKEFILE    text eol=crlf
 # --- DOS-side data / docs read by the running app ---
 *.inf       text eol=crlf
 *.txt       text eol=crlf
+*.csv       text eol=crlf
 
 # --- Host-side files (read by macOS/Linux tools, not DOS) ---
 *.sh             text eol=lf

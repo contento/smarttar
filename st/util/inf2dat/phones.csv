@@ -1,0 +1,76 @@
+; phones.csv -- Real public phone numbers (gov, utilities, universities,
+; hospitals, transport, embassies, banks, airlines) gathered 2026-05-27
+; from each organization's official site via web search.
+;
+; Purpose: a dataset DEMO_ENGINE (st/src/rt/demo_eng.cpp::GenCall) can draw
+; from instead of synthesizing random subscriber digits, so demo runs
+; produce dial sequences that resolve to named destinations in ph_info.dat
+; (built from util/inf2dat/{local,ddn,ddi}.inf).
+;
+; Format: RFC 4180 CSV with all string fields double-quoted.  Lines that
+; start with ';' (this header block) are comments -- the consuming parser
+; in Borland C++ 3.1 skips them with a single `if (line[0]==';') continue;`.
+; CRLF line endings (enforced by .gitattributes `*.csv text eol=crlf`).
+;
+; Columns:
+;   category            LOCAL | NAL | INTER
+;   name                Organization / destination (ASCII only).
+;   country             ISO 3166-1 alpha-2.
+;   country_code        ITU-T E.164 country calling code.
+;   region              City / state.  Informational only.
+;   area_code           City or area dial code as dialed from SmartTar.
+;   subscriber          Subscriber digits only, no formatting.
+;   dial_from_smarttar  Exact digit sequence the engine feeds the FSM AFTER
+;                       prepending access digits (LOCAL: empty access;
+;                       NAL: '09'; INTER: '009'). This is the field GenCall
+;                       consumes.
+;   published_number    As shown on the organization's own contact page.
+;   source              URL where the number was found.
+;   notes               Optional context.
+;
+; Dial-plan note: Colombian numbers are normalized to the 2003-era plan
+; SmartTar was built for.  Modern Colombian numbers (post-Resolución CRC
+; 5826, 2021) carry a 60+area prefix (604 Antioquia, 601 Bogota/Cundi-
+; namarca, 605 Caribbean coast).  That prefix is stripped from
+; dial_from_smarttar so it matches the ph_info.dat numbering tree.  The
+; published_number column preserves the modern format.
+;
+; INTER budget note: the engine's INTER_DIGITS=14 leaves 11 digits after
+; the '009' access.  Some Mexico City entries are 12 digits and lose a
+; trailing digit when the engine truncates -- the country/city prefix
+; still matches ddi.inf so call classification is unaffected.
+;
+"category","name","country","country_code","region","area_code","subscriber","dial_from_smarttar","published_number","source","notes"
+"LOCAL","Alcaldia de Medellin -- Linea Unica de Atencion a la Ciudadania","CO","57","Medellin Antioquia","4","4444144","4444144","+57 (604) 44 44 144","https://www.medellin.gov.co/es/secretaria-de-gestion-humana/servicio-a-la-ciudadania/informacion-de-contacto-y-directorio-institucional/",""
+"LOCAL","Alcaldia de Medellin -- conmutador general","CO","57","Medellin Antioquia","4","3855555","3855555","+57 (604) 385 55 55","https://www.medellin.gov.co/es/secretaria-de-gestion-humana/servicio-a-la-ciudadania/informacion-de-contacto-y-directorio-institucional/",""
+"LOCAL","EPM Empresas Publicas de Medellin -- atencion al cliente","CO","57","Medellin Antioquia","4","4444115","4444115","604 4444 115","https://www.epm.com.co/clientesyusuarios/servicio-al-cliente/comunicate-con-nosotros/",""
+"LOCAL","Universidad de Antioquia -- facultad","CO","57","Medellin Antioquia","4","2196520","2196520","(57+4) 219 65 20","https://www.udea.edu.co/",""
+"LOCAL","Universidad de Antioquia -- otro departamento","CO","57","Medellin Antioquia","4","2195900","2195900","219 59 00","https://www.udea.edu.co/",""
+"LOCAL","Hospital Pablo Tobon Uribe -- PBX","CO","57","Medellin Antioquia","4","4459000","4459000","+57 (604) 445 90 00","https://hptu.org/en/pages/contacto",""
+"LOCAL","Hospital Pablo Tobon Uribe -- central de citas","CO","57","Medellin Antioquia","4","3604788","3604788","+57 (604) 360 47 88","https://hptu.org/en/pages/contacto",""
+"LOCAL","Metro de Medellin -- Linea Hola Metro","CO","57","Medellin Antioquia","4","4449598","4449598","444 95 98","https://www.facebook.com/metrodemedellin/videos/la-linea-hola-metro-444-95-98/1661463830809972/",""
+"LOCAL","Metro de Medellin -- atencion al cliente","CO","57","Medellin Antioquia","4","4445545","4445545","444 55 45","https://www.metrodemedellin.gov.co/atencionalciudadano",""
+"LOCAL","Aeropuerto Jose Maria Cordova (Rionegro)","CO","57","Rionegro Antioquia","4","4025110","4025110","+57 (604) 402 5110","https://www.aeropuertorionegro.co/","Rionegro is in the Jose Maria Cordova service area -- dialed as a Medellin local call from the Aburra Valley."
+"NAL","Alcaldia Mayor de Bogota -- conmutador","CO","57","Bogota D.C.","1","3855000","13855000","(601) 3 85 50 00","https://bogota.gov.co/",""
+"NAL","Avianca -- call center Bogota (reservas 24h)","CO","57","Bogota D.C.","1","3073940","13073940","+57 (601) 307 3940","https://www.avianca.com/co/",""
+"NAL","Aeropuerto Internacional El Dorado -- Bogota","CO","57","Bogota D.C.","1","2662000","12662000","+57 601 2662000","https://eldorado.aero/en/contacto",""
+"NAL","Universidad Nacional de Colombia -- Bogota conmutador","CO","57","Bogota D.C.","1","3165000","13165000","(+57 1) 316 5000","https://unal.edu.co/contactenos",""
+"NAL","Universidad Nacional de Colombia -- Bogota segunda linea","CO","57","Bogota D.C.","1","4068888","14068888","(+57) 601 4068888","https://unal.edu.co/contactenos",""
+"NAL","Embajada de los Estados Unidos en Colombia -- Bogota","CO","57","Bogota D.C.","1","2752000","12752000","(+57) (601) 275-2000","https://co.usembassy.gov/contact/",""
+"NAL","Embajada de Espana en Colombia -- Bogota","CO","57","Bogota D.C.","1","6220090","16220090","+57 (601) 622 00 90","https://www.exteriores.gob.es/Embajadas/bogota/es/Embajada/Paginas/Contacto.aspx",""
+"NAL","Bancolombia -- sucursal telefonica Bogota","CO","57","Bogota D.C.","1","3430000","13430000","(+57) 601 343 0000","https://www.bancolombia.com/personas/contactanos",""
+"NAL","Alcaldia de Barranquilla -- conmutador","CO","57","Barranquilla Atlantico","5","4010205","54010205","+57 (605) 4010205","https://www.barranquilla.gov.co/adi/contactanos/directorio-telefonico",""
+"NAL","Alcaldia Mayor de Cartagena de Indias -- conmutador","CO","57","Cartagena Bolivar","5","6411370","56411370","+57 605 641 13 70","https://www.cartagena.gov.co/canales-de-atencion",""
+"INTER","The White House -- main switchboard","US","1","Washington DC","202","4561414","12024561414","202-456-1414","https://www.whitehouse.gov/contact/",""
+"INTER","The White House -- comments line","US","1","Washington DC","202","4561111","12024561111","202-456-1111","https://www.whitehouse.gov/contact/",""
+"INTER","U.S. Department of State -- main number","US","1","Washington DC","202","6474000","12026474000","202-647-4000","https://www.state.gov/official-addresses/",""
+"INTER","U.S. Department of State -- from outside USA","US","1","Washington DC","202","5014444","12025014444","+1 202-501-4444","https://www.state.gov/official-addresses/",""
+"INTER","U.S. State Dept Overseas Citizens Services (24h hotline)","US","1","Washington DC","202","6475225","12026475225","202-647-5225","https://travel.state.gov/",""
+"INTER","Moncloa -- Presidencia del Gobierno de Espana (centralita)","ES","34","Madrid","91","3353535","34913353535","91 335 35 35","https://www.lamoncloa.gob.es/",""
+"INTER","Ayuntamiento de Madrid -- centralita","ES","34","Madrid","91","5881000","34915881000","915 881 000","https://www.madrid.es/",""
+"INTER","Ayuntamiento de Madrid -- 010 Linea Madrid desde fuera","ES","34","Madrid","91","4800010","34914800010","914 800 010","https://www.madrid.es/",""
+"INTER","Ayuntamiento de Barcelona -- centralita","ES","34","Barcelona","93","4027000","34934027000","934 027 000","https://ajuntament.barcelona.cat/",""
+"INTER","Ayuntamiento de Barcelona -- 010 area metropolitana","ES","34","Barcelona","93","1537010","34931537010","931 537 010","https://ajuntament.barcelona.cat/",""
+"INTER","Palacio Nacional de Mexico -- conmutador (Presidencia)","MX","52","Ciudad de Mexico","55","10005600","525510005600","55 1000 5600","https://www.gob.mx/palacionacional","12-digit dial exceeds engine INTER_DIGITS=14 by one -- trailing digit truncated. Country/city prefix 5255 still matches ddi.inf so the call classifies as Mexico City correctly."
+"INTER","Palacio Nacional de Mexico -- linea visitantes","MX","52","Ciudad de Mexico","55","36881255","525536881255","01 55 3688 1255","https://www.gob.mx/palacionacional","12-digit dial -- trailing digit truncated by engine. See Palacio Nacional conmutador note."
+"INTER","UNAM -- Rectoria Ciudad Universitaria","MX","52","Ciudad de Mexico","55","56221280","525556221280","55 5622 1280","https://telefonia.unam.mx/","12-digit dial -- trailing digit truncated by engine. See Palacio Nacional conmutador note."
