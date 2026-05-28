@@ -196,7 +196,7 @@ CFG_DESTS=\
 .asm.obj:
 	$(ASM) $(ASM_OPTS) $<, $@
 
-$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\PH_INFO.DAT $(CFG_DESTS) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(OBJS) $(DLLS)
+$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\PH_INFO.DAT $(CFG_DESTS) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\phones.csv $(OBJS) $(DLLS)
 	$(LINK) $(LINK_OPTS) @&&!
 $(STARTUP_OBJS) $(OBJS)
 $*, ,$(LIBS), $(DEF_FILE)
@@ -236,6 +236,10 @@ $(BIN_DIR)\st.ini: $(INI2CFG_DIR)\st.ini
 	@copy $(INI2CFG_DIR)\st.ini $(BIN_DIR)\st.ini > NUL
 $(BIN_DIR)\demo.ini: $(INI2CFG_DIR)\demo.ini
 	@copy $(INI2CFG_DIR)\demo.ini $(BIN_DIR)\demo.ini > NUL
+# Real-number dataset for DEMO_ENGINE -- canonical source in util/inf2dat;
+# DEMO_ENGINE::ParsePhones reads it from bin/ at startup.
+$(BIN_DIR)\phones.csv: $(INF2DAT_DIR)\phones.csv
+	@copy $(INF2DAT_DIR)\phones.csv $(BIN_DIR)\phones.csv > NUL
 # Telephony binary database -- compiled from source .inf files by INF2DAT.
 # Depends on st.cfg being distributed first so inf2dat can load it.
 $(BIN_DIR)\PH_INFO.DAT: $(INF2DAT_DIR)\ddi.inf $(INF2DAT_DIR)\ddn.inf $(INF2DAT_DIR)\local.inf $(UTIL_DIR)\inf2dat\st.cfg

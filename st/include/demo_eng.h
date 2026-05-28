@@ -13,6 +13,14 @@
 // base class InstallISRs(), writes BoothCluster::_DataPort fields from
 // inside OnTimerTick() so downstream consumers can't tell it's synthetic.
 //
+
+// File-scope #define instead of a private nested enum: Borland C++ 3.1
+// applies access-control to private enum constants even when used as
+// array bounds elsewhere in the same class, producing "is not accessible"
+// errors on the PhonePool struct member below.
+#define DEMO_MAX_PHONES_PER_TYPE   32
+#define DEMO_MAX_DIGITS_PER_PHONE  16   /* matches DemoBooth::digits[16] */
+
 class DEMO_ENGINE : public ENGINE
 {
 public:
@@ -61,6 +69,21 @@ private:
 		DWORD maxDurTicks;
 	};
 
+	// --- real-number pool (loaded once from phones.csv at startup) --------
+	// One pool per call type (LOCAL/NAL/INTER).  GenCall picks a random
+	// entry to dial instead of synthesizing random digits, so the call
+	// resolves to a named ph_info.dat destination.  Sized for the current
+	// dataset (14/20/22) plus headroom; raise DEMO_MAX_PHONES_PER_TYPE
+	// (top of file) if phones.csv grows past 32 entries in any single
+	// category.  ISR-safe: pre-allocated in the class, never touched
+	// from OnTimerTick.
+	struct PhonePool
+	{
+		BYTE digits     [DEMO_MAX_PHONES_PER_TYPE][DEMO_MAX_DIGITS_PER_PHONE];
+		BYTE digitCount [DEMO_MAX_PHONES_PER_TYPE];
+		BYTE count;
+	};
+
 	// --- members -----------------------------------------------------------
 	DemoBooth    *_booths;      // [ACTIVE_CLUSTERS * CLUSTER_SIZE]
 	WORD          _numBooths;
@@ -68,9 +91,11 @@ private:
 	WORD          _totalWeight;
 	WORD          _meanArrivalTicks; // per-booth mean inter-arrival
 	DemoCallType  _types[3];         // LOCAL, NAL, INTER
+	PhonePool     _phones[3];        // LOCAL, NAL, INTER -- post-access digits
 
 	// --- helpers (called from InitHardware, not ISR) ----------------------
 	void ParseConfig(void);
+	void ParsePhones(void);
 	void GenCall(DemoBooth & b);
 
 	// --- ISR-safe RNG -----------------------------------------------------
