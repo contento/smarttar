@@ -1,2 +1,5 @@
 # Generated documentation outputs (rebuild with build-docs.sh)
 _build/
+
+# Python bytecode cache from the doc tools
+tools/__pycache__/
