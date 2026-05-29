@@ -41,6 +41,7 @@ public:
 
 	static BOOL RTEngineIsBusy(void);
 	static BOOL RTEngineIsBoothBusy(WORD cNum, WORD bNum);
+	static BOOL RTEngineIsDemo(void);
 
 	static WORD RTEngineGetNumOfCalls(WORD cNum, WORD bNum);
 

@@ -206,8 +206,9 @@ for NAL.
      `rt_eng.cpp::RecoverState`. None are engine concerns proper.
   2. **Phase 3 polish** (optional, see [TODO.md](TODO.md)):
      time-of-day variation, scripted `.scn` replay, operator
-     controls, quit-confirmation when demo is running. The old
-     `UIW_SIMULA` window is off-limits.
+     controls. (Quit-confirmation-when-demo-is-running done in
+     this milestone -- `st.cpp::Exit()` now has the third
+     branch.) The old `UIW_SIMULA` window is off-limits.
   3. **MAKEFILE PH_INFO.DAT copy step** still returns errorlevel 1
      after `mk_ph.bat` succeeds (worked around with a manual
      `cp st/util/inf2dat/PH_INFO.DAT st/bin/`). Same class of

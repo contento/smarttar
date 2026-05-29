@@ -230,16 +230,14 @@ max_duration_secs = 1800
 - Lightweight operator controls — start/stop generator, reload rules.
   Must be a new widget / menu entry; the old `UIW_SIMULA` window is
   off-limits per the milestone framing.
-- **Quit confirmation when demo is running.** Today Alt-X / File-Quit
-  closes the app with active fake calls in flight. The existing
-  "El sistema esta procesando informacion. Por favor verifique todas
-  las cabinas." dialog (the production guard that blocks quit while
-  real booths are mid-call) is the right pattern to mirror -- find
-  its call site and add a parallel branch that fires when
-  `MakeEngine` returned a `DEMO_ENGINE`. Either prompt "Demo is
-  running -- stop and quit?" or stop the generator silently before
-  exit. Avoids leaving the impression that a real call session was
-  abandoned.
+- [x] **Quit confirmation when demo is running.** `st.cpp::Exit()`
+  now has a third branch: when `CONTROLLER::RTEngineIsDemo()` returns
+  TRUE, the busy-blocked "verifique las cabinas" dialog is skipped
+  and a "Detener la simulacion y salir ?" prompt with Si/No fires
+  instead.  Si sends `L_EXIT`; the demo ISR detaches via the
+  existing `ENGINE` dtor chain (no extra cleanup needed).  Added
+  `virtual BOOL ENGINE::IsDemo() { return FALSE; }` overridden to
+  TRUE in `DEMO_ENGINE`, plus `CONTROLLER::RTEngineIsDemo()` shim.
 
 ## Milestone: Toolchain portability — v4.0
 

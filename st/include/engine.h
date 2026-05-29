@@ -233,6 +233,11 @@ public:
 	BOOL IsBusy(void);
 	BOOL IsBoothBusy(WORD cNum, WORD bNum);
 
+	// TRUE if this is the synthetic DEMO_ENGINE; overridden there.
+	// Lets the Exit() dialog distinguish "real booths busy -- block quit"
+	// from "demo generator running -- prompt to stop and quit".
+	virtual BOOL IsDemo(void) { return FALSE; }
+
 protected:
 
 	WORD CurrentDate; // packed date

@@ -265,7 +265,8 @@ EVENT_TYPE Exit(UI_DISPLAY *display, UI_EVENT_MANAGER *, UI_WINDOW_MANAGER *wind
 		+ new UIW_TITLE("SmartTar", WOF_JUSTIFY_CENTER)
 	;
 	// check to see if it's possible to go out
-	BOOL sysIsBusy = CONTROLLER::RTEngineIsBusy();
+	BOOL isDemo    = CONTROLLER::RTEngineIsDemo();
+	BOOL sysIsBusy = !isDemo && CONTROLLER::RTEngineIsBusy();
 	if (sysIsBusy)
 	{
 		*window
@@ -274,6 +275,18 @@ EVENT_TYPE Exit(UI_DISPLAY *display, UI_EVENT_MANAGER *, UI_WINDOW_MANAGER *wind
 		+ new UIW_PROMPT(15, 2, "Por favor verifique todas las cabinas.")
 		+ new UIW_BUTTON(19, 5, 15, "~Aceptar", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, S_CLOSE)
 		;
+	}
+	else if (isDemo)
+	{
+		*window
+		+ new UIW_BUTTON( 3, 3, 9, "", BTF_NO_3D|BTF_AUTO_SIZE|BTF_STATIC_BITMAPARRAY, WOF_NON_SELECTABLE, NULL, 0, "ST")
+		+ new UIW_PROMPT(15, 2, "Detener la simulación y salir ?")
+		+ new UIW_BUTTON(14, 5, 11, "~Si", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, L_EXIT)
+		+ ( wNoButton =
+				new UIW_BUTTON(31, 5, 11, "~No", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, S_CLOSE)
+		  )
+		;
+		wNoButton->woStatus |= WOS_CURRENT;
 	}
 	else
 	{
