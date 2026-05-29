@@ -162,10 +162,16 @@ Implications:
       Phase 2 adds real generation.
 - [ ] Factory wired to `[ENGINE] kind = real | demo` in `st.ini`
       (default `real`). Add the key via `ini2cfg`.
-- [ ] Strip `#ifdef __DEMO__` from the RT layer; the gate becomes
-      "factory instantiates `DEMO_ENGINE`" instead. `__DEMO__` may
-      remain elsewhere (dongle, EEPROM) where it gates non-engine
-      concerns — review case by case.
+- [x] Strip `#ifdef __DEMO__` from the RT layer; the gate becomes
+      "factory instantiates `DEMO_ENGINE`" instead.  Done in two
+      passes: compound `!defined(__TEST__) && !defined(__DEMO__)`
+      gates (28 sites, 7 files) then standalone gates (17 sites in
+      control.cpp / st.cpp / tb_sp.cpp).  `CFG::IsDemoMode()`
+      helper added for runtime checks.  Reduced from 58 references
+      to 5 functional gates total -- the 4 in st.cpp dongle/STM2/
+      EEPROM tangle (deferred, mix `__NO_DONGLE__` with `DONGLE`
+      class scope) and `cfg.cpp:919` (intentional default-selector
+      for `ENGINE_KIND`).
 
 **Phase 2 — Poisson generator + rules.**
 

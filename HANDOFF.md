@@ -201,18 +201,17 @@ for NAL.
 
 ## To do next
 
-  1. **Finish stripping `__DEMO__` gates.**  Compound
-     `!defined(__TEST__) && !defined(__DEMO__)` gates done (28
-     occurrences across 7 files: rt_eng / filehdr / db_eng /
-     ctrl_ev / st / control / tb_sp).  New `CFG::IsDemoMode()`
-     helper available for runtime checks.  Remaining: 22
-     standalone `#if defined/!defined(__DEMO__)` gates across
-     `st.cpp` (11), `control.cpp` (10), `tb_sp.cpp` (1).  These
-     mix include guards (drop) with runtime code (wrap in
-     `if (!g_cfg->IsDemoMode())`) and need per-site analysis.
-     `cfg.cpp:919` stays gated -- it's the default-value
-     selector for `ENGINE_KIND` (`__DEMO__` build still produces
-     a demo-default binary).
+  1. **Finish the last 4 `__DEMO__` gates in `st.cpp`** (dongle
+     /STM2/EEPROM tangle at lines 116/158 + dongle.h include at
+     line 16 + event-loop dongle re-check at line 192).  These
+     mix `__NO_DONGLE__` build-time flag with `DONGLE` class
+     scope -- need a surgical refactor that hoists `DONGLE
+     dongle;` out of the `if/else` so both the initial check and
+     the event-loop re-check can reach it, then converts the
+     outer `__DEMO__` to runtime.  Down from 58 references at
+     start of this milestone to 5 functional gates (the 4 in
+     st.cpp + 1 default-selector in `cfg.cpp:919` that stays as
+     a build-time hint for `makedemo`).
   2. **Phase 3 polish remainder** (optional, see [TODO.md](TODO.md)):
      time-of-day variation, scripted `.scn` replay.  DONE this
      session: quit-confirmation when demo is running
