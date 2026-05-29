@@ -1,0 +1,59 @@
+{
+  "_comment": "Source-of-truth mapping: vault Markdown -> generated docs. build-docs.sh reads this. Manual chapter order comes from the NN- filename prefix; index.md is excluded from docx assembly.",
+  "outputs_dir": "_build",
+  "manuals": [
+    {
+      "id": "guia-usuario-es",
+      "src_dir": "es/manual-usuario",
+      "output": "SmartTar_Guia_del_Usuario_ES.docx",
+      "title": "SmartTar — Guía del Usuario",
+      "subtitle": "Versión 2.34",
+      "vendor": "MicroDiseño Ltda.",
+      "copyright": "Copyright © 1993–2003. Todos los derechos reservados."
+    },
+    {
+      "id": "manual-referencia-es",
+      "src_dir": "es/manual-referencia",
+      "output": "SmartTar_Manual_de_Referencia_ES.docx",
+      "title": "SmartTar — Manual de Referencia",
+      "subtitle": "Versión 2.34",
+      "vendor": "MicroDiseño Ltda.",
+      "copyright": "Copyright © 1993–2003. Todos los derechos reservados."
+    },
+    {
+      "id": "users-guide-en",
+      "src_dir": "en/users-guide",
+      "output": "SmartTar_Users_Guide_EN.docx",
+      "title": "SmartTar — User's Guide",
+      "subtitle": "Version 2.34",
+      "vendor": "MicroDiseño Ltda.",
+      "copyright": "Copyright © 1993–2003. All rights reserved."
+    },
+    {
+      "id": "reference-manual-en",
+      "src_dir": "en/reference-manual",
+      "output": "SmartTar_Reference_Manual_EN.docx",
+      "title": "SmartTar — Reference Manual",
+      "subtitle": "Version 2.34",
+      "vendor": "MicroDiseño Ltda.",
+      "copyright": "Copyright © 1993–2003. All rights reserved."
+    },
+    {
+      "id": "stc-es",
+      "src_dir": "es/stc",
+      "output": "SmartTar_STC_ES.docx",
+      "title": "SmartTar Communicator (STC)",
+      "subtitle": "Versión 1.0 — Descripción Técnica",
+      "vendor": "MicroDiseño Ltda.",
+      "copyright": "Copyright © 1993–2003. Todos los derechos reservados.",
+      "single_page": true
+    }
+  ],
+  "help": {
+    "src_dir": "es/ayuda",
+    "output": "help.txt",
+    "encoding": "iso-8859-1",
+    "line_ending": "lf",
+    "note": "Zinc in-app help (Spanish). genhelp compiles help.txt -> help.dat. The EN/ help mirror is documentation-only and is not compiled into the app."
+  }
+}
