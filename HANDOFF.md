@@ -201,23 +201,25 @@ for NAL.
 
 ## To do next
 
-  1. **Strip remaining `__DEMO__` gates** (deferred from Phase 1):
-     `st.cpp` (dongle, STM2 init), `control.cpp` (STM2 recovery,
-     persist cycle), `ctrl_ev.cpp`, `db_eng.cpp`, `filehdr.cpp`,
-     `rt_eng.cpp::RecoverState`.  Scoped this session, deferred:
-     58 references across 8 files; each gate is doing real work
-     (skip dongle / STM2 / DB init when no hardware), not just
-     engine selection.  Converting them to runtime checks via
-     `g_cfg->ENGINE_KIND` is a focused refactor session of its
-     own, not a tail-end cleanup.
-  2. **Phase 3 polish** (optional, see [TODO.md](TODO.md)):
-     time-of-day variation, scripted `.scn` replay, operator
-     controls.  (Quit-confirmation-when-demo-is-running DONE --
-     `st.cpp::Exit()` now has a third branch that fires when
-     `CONTROLLER::RTEngineIsDemo()` is TRUE; "Detener la
-     simulacion y salir ?" prompt, Si sends L_EXIT, ENGINE dtor
-     chain handles the ISR detach.)  The old `UIW_SIMULA` window
-     is off-limits.
+  1. **Finish stripping `__DEMO__` gates.**  Compound
+     `!defined(__TEST__) && !defined(__DEMO__)` gates done (28
+     occurrences across 7 files: rt_eng / filehdr / db_eng /
+     ctrl_ev / st / control / tb_sp).  New `CFG::IsDemoMode()`
+     helper available for runtime checks.  Remaining: 22
+     standalone `#if defined/!defined(__DEMO__)` gates across
+     `st.cpp` (11), `control.cpp` (10), `tb_sp.cpp` (1).  These
+     mix include guards (drop) with runtime code (wrap in
+     `if (!g_cfg->IsDemoMode())`) and need per-site analysis.
+     `cfg.cpp:919` stays gated -- it's the default-value
+     selector for `ENGINE_KIND` (`__DEMO__` build still produces
+     a demo-default binary).
+  2. **Phase 3 polish remainder** (optional, see [TODO.md](TODO.md)):
+     time-of-day variation, scripted `.scn` replay.  DONE this
+     session: quit-confirmation when demo is running
+     (`st.cpp::Exit()` third branch); operator controls
+     start/stop (`Configuracion -> Detener/Reanudar simulacion`
+     menu entry wired to `DEMO_ENGINE::_paused`).  The old
+     `UIW_SIMULA` window is off-limits.
 
 ## Done this session (since the last HANDOFF refresh)
 
