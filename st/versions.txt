@@ -1,3 +1,32 @@
+[ 2.60.0 ]
+ - May 29 2026: New call simulator (DEMO_ENGINE). A software-only traffic
+                generator that replaces the cabin/PBX/EEPROM hardware for
+                development, training, and demos -- no telephony rig required.
+                  * Engine is now selected at runtime via ENGINE_KIND in
+                    st.ini ("demo" = DEMO_ENGINE, "real" = RT_ENGINE). The
+                    old build-time __DEMO__ gates were converted to runtime
+                    g_cfg->IsDemoMode() checks (dongle, STM2, EEPROM, Dump).
+                  * Poisson arrival generator with per-run config in demo.ini.
+                  * GenCall draws from a real public-number dataset
+                    (util/inf2dat/phones.csv, 56 numbers) so dialed digits
+                    match ph_info.dat tariff/numbering rules instead of
+                    landing on NOT_INCLUDED.
+                  * Pause/resume the generator from the Informacion menu
+                    (demo-only item); quit-confirmation dialog while the
+                    demo is running; graceful stop/exit drain and an
+                    optional total-time limit.
+                  * CallAttrs pinned during dial to avoid a NOT_INCLUDED
+                    lock mid-call.
+                Dev/infra alongside the simulator:
+                  * Bundled toolchains (bc, pharlap, zinc, util) consolidated
+                    under a single top-level vendor/ tree.
+                  * Canonical data pipeline: ini2cfg compiles st.ini->st.cfg
+                    and inf2dat compiles the .inf sources->ph_info.dat, both
+                    wired into the MAKEFILE.
+                  * Host runners renamed make-headless/run-headless -> build/run
+                    (.sh and .ps1); help.dat builds unconditionally (HELP=1
+                    retired); demo is the documented default build variant.
+
 [ 2.50.0 ]
  - May 17 2026: Era-boundary jump from 2.34.2. No user-facing application change;
                 same Pharlap-extender st.exe with the same UI and behavior. This
