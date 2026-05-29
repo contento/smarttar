@@ -2,10 +2,15 @@
 
 Status snapshot for resuming on another machine. Branch: `demo-engine`.
 
-**Status: Phase 1 + Phase 2 COMPLETE. Builds clean (`./make-headless.sh
-demo`, zero warnings, zero errors). Runtime: dials and connects, but
-GCC reported the calls "hang" with the wrong digit count — last
-timing/pool fix pushed; needs to be re-verified on the next machine.**
+**Status: Phase 1 + Phase 2 COMPLETE. Mid-dial hang-up FIXED. The
+"-- No Incluida --" symptom on every booth was traced to a missing
+`bin/PH_INFO.DAT` (place tree empty -> every `Search()` returned
+nothing). Root cause: `st/util/inf2dat/inf2dat.exe` had never been
+built; the main MAKEFILE's PH_INFO.DAT rule swallowed the failure
+with `-@`. Fixed by rebuilding `inf2dat.exe` from its now-functional
+sub-makefile (see CLAUDE.md `util/inf2dat/` entry). Calls now
+resolve to named destinations. Builds clean
+(`./make-headless.sh demo`, zero warnings, zero errors).**
 
 ## Design (Template Method over Strategy)
 
@@ -193,44 +198,22 @@ for NAL.
     distribution rule. Borland MAKE 3.6 needs explicit rules per
     [CLAUDE.md](CLAUDE.md) build notes.
 
-## Open issue (handoff blocker)
-
-**GCC reported that calls "hang" with the wrong digit count.** I
-traced the demo state machine and the FSM cycle-by-cycle and couldn't
-find a path that triggers `LOCK | COMERR` or `LOCK | DIALERR` once
-the digit pools and timing are correct. The candidates are:
-
-  1. `IsAnswerable` returning FALSE while `Answer` is HIGH -> red
-     status bar "N errores de comunicacion en cabina: X".
-  2. `MaxNumOfDigits` or `IsLockable` tripping in `DoDTMFFlag` ->
-     red status bar "N errores de marcacion en cabina: X".
-  3. `NOT_INCLUDED_CALL_MASK` still set in `Clusters[].CallAttrs[]`
-     when `NumOfDigits` crosses the `*_DIGITS_NOT_INCLUDED` threshold
-     in `DoInterdig` -> red status bar "Localidad no incluida en
-     cabina: X".
-
-When resuming, run `./run-headless.sh` and watch the red status bar
-at the bottom of the SmartTar window during a locking call. That
-message tells you which path fired -- and once we know which one,
-the fix is targeted (e.g. (3) means we need to widen the pool or
-shrink the dial; (1) means a timing race between the demo's last
-`DP_DIALING_LO` and `DP_ANSWER_WAIT`).
-
 ## To do next
 
-  1. **Reproduce the lock on the other PC** -- ask GCC to share the
-     exact red status-bar message and the call type (Loc/Nal/Int)
-     when the booth dies. Now that `GenCall` dials real published
-     numbers, the lock should either disappear (if the prior
-     synthesized digits were tripping `NOT_INCLUDED_CALL_MASK`) or
-     persist with a different error message that narrows the cause.
-  2. **Strip remaining `__DEMO__` gates** (deferred from Phase 1):
+  1. **Strip remaining `__DEMO__` gates** (deferred from Phase 1):
      `st.cpp` (dongle, STM2 init), `control.cpp` (STM2 recovery,
      persist cycle), `ctrl_ev.cpp`, `db_eng.cpp`, `filehdr.cpp`,
      `rt_eng.cpp::RecoverState`. None are engine concerns proper.
-  3. **Phase 3 polish** (optional, see [TODO.md](TODO.md)):
+  2. **Phase 3 polish** (optional, see [TODO.md](TODO.md)):
      time-of-day variation, scripted `.scn` replay, operator
-     controls. The old `UIW_SIMULA` window is off-limits.
+     controls, quit-confirmation when demo is running. The old
+     `UIW_SIMULA` window is off-limits.
+  3. **MAKEFILE PH_INFO.DAT copy step** still returns errorlevel 1
+     after `mk_ph.bat` succeeds (worked around with a manual
+     `cp st/util/inf2dat/PH_INFO.DAT st/bin/`). Same class of
+     latent bug exists for `ini2cfg.exe` (never built). Fix the
+     copy step + add a sub-make for `ini2cfg` so the main build
+     becomes self-bootstrapping again.
 
 ## Sibling milestone -- documentation
 
