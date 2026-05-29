@@ -2,15 +2,16 @@
 
 Status snapshot for resuming on another machine. Branch: `demo-engine`.
 
-**Status: Phase 1 + Phase 2 COMPLETE. Mid-dial hang-up FIXED. The
-"-- No Incluida --" symptom on every booth was traced to a missing
-`bin/PH_INFO.DAT` (place tree empty -> every `Search()` returned
-nothing). Root cause: `st/util/inf2dat/inf2dat.exe` had never been
-built; the main MAKEFILE's PH_INFO.DAT rule swallowed the failure
-with `-@`. Fixed by rebuilding `inf2dat.exe` from its now-functional
-sub-makefile (see CLAUDE.md `util/inf2dat/` entry). Calls now
-resolve to named destinations. Builds clean
-(`./build.sh demo`, zero warnings, zero errors).**
+**Status: Phase 1 + Phase 2 COMPLETE.  Mid-dial hang-up FIXED.
+"-- No Incluida --" symptom RESOLVED (root cause: missing
+`bin/PH_INFO.DAT`; `inf2dat.exe` and `ini2cfg.exe` were never
+built, sub-makefiles now functional).  Build self-bootstraps
+end-to-end from a clean working tree via `./build.sh demo`
+(zero warnings, zero errors).  Quit-confirmation when demo is
+running added (`st.cpp::Exit()` third branch).  Scripts renamed
+`make-headless.{sh,ps1}` -> `build.{sh,ps1}` and
+`run-headless.{sh,ps1}` -> `run.{sh,ps1}`.  See "Done this
+session" below for the per-commit ledger.**
 
 ## Design (Template Method over Strategy)
 
@@ -203,18 +204,54 @@ for NAL.
   1. **Strip remaining `__DEMO__` gates** (deferred from Phase 1):
      `st.cpp` (dongle, STM2 init), `control.cpp` (STM2 recovery,
      persist cycle), `ctrl_ev.cpp`, `db_eng.cpp`, `filehdr.cpp`,
-     `rt_eng.cpp::RecoverState`. None are engine concerns proper.
+     `rt_eng.cpp::RecoverState`.  Scoped this session, deferred:
+     58 references across 8 files; each gate is doing real work
+     (skip dongle / STM2 / DB init when no hardware), not just
+     engine selection.  Converting them to runtime checks via
+     `g_cfg->ENGINE_KIND` is a focused refactor session of its
+     own, not a tail-end cleanup.
   2. **Phase 3 polish** (optional, see [TODO.md](TODO.md)):
      time-of-day variation, scripted `.scn` replay, operator
-     controls. (Quit-confirmation-when-demo-is-running done in
-     this milestone -- `st.cpp::Exit()` now has the third
-     branch.) The old `UIW_SIMULA` window is off-limits.
-  3. **MAKEFILE PH_INFO.DAT copy step** still returns errorlevel 1
-     after `mk_ph.bat` succeeds (worked around with a manual
-     `cp st/util/inf2dat/PH_INFO.DAT st/bin/`). Same class of
-     latent bug exists for `ini2cfg.exe` (never built). Fix the
-     copy step + add a sub-make for `ini2cfg` so the main build
-     becomes self-bootstrapping again.
+     controls.  (Quit-confirmation-when-demo-is-running DONE --
+     `st.cpp::Exit()` now has a third branch that fires when
+     `CONTROLLER::RTEngineIsDemo()` is TRUE; "Detener la
+     simulacion y salir ?" prompt, Si sends L_EXIT, ENGINE dtor
+     chain handles the ISR detach.)  The old `UIW_SIMULA` window
+     is off-limits.
+
+## Done this session (since the last HANDOFF refresh)
+
+  * **"-- No Incluida --" everywhere on every booth** -- traced to
+    missing `bin/PH_INFO.DAT` (place tree empty -> `Search()` always
+    fails).  Fixed by rebuilding `st/util/inf2dat/inf2dat.exe` from
+    its sub-makefile (SRC_DIR was a stale `c:\prj\st\source`, missed
+    3 modules that drifted into deps post-2003).  See commits
+    `4b43479` (BUILD: rebuild util/inf2dat pipeline) and the
+    follow-ups.
+  * **`ini2cfg.exe` had the same never-built situation** -- added
+    [st/util/ini2cfg/makefile](st/util/ini2cfg/makefile) mirroring
+    the inf2dat sub-makefile.  Bootstrap once with
+    `cd st\util\ini2cfg && make -DRUN`.
+  * **MAKEFILE `PH_INFO.DAT` copy step `error 1` quirk** --
+    diagnosed.  Borland MAKE 3.6 mis-propagates errorlevel from
+    `.bat`-internal commands and deletes the (just-created) target.
+    `mk_ph.bat` / `mk_cfg.bat` work correctly when invoked from
+    DOSBox-X directly.  Workaround: moved both bat invocations OUT
+    of MAKE into `build.sh` / `build.ps1` as a preamble step,
+    dropped the broken rules from `st/MAKEFILE`.  Build now
+    self-bootstraps end-to-end from a clean working tree.
+  * **`make-headless.sh` / `run-headless.sh` renamed to `build.sh`
+    / `run.sh`** (+ `.ps1` variants).  "Headless" was inaccurate
+    (DOSBox-X still opens a window); the new names just describe
+    what they do.  All doc references updated.
+  * **Quit-confirmation when demo is running** -- new branch in
+    `st.cpp::Exit()`.  Mechanism: `virtual BOOL ENGINE::IsDemo()`
+    overridden in `DEMO_ENGINE`, plus `CONTROLLER::RTEngineIsDemo()`
+    shim.  Pattern mirrors the existing busy-block dialog.
+  * **TODO Stability milestone reshaped** -- 4 spot-verified
+    CRITICALs from audit S6 promoted to a "Next batch" sub-section
+    with file:line specifics, so the milestone is now a queue
+    instead of an inventory pointer.
 
 ## Sibling milestone -- documentation
 
