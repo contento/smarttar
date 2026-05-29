@@ -79,12 +79,12 @@ jobs:
         run: |
           # Capture DOSBox-X's stdout + stderr to a sidecar file so a
           # silent immediate-exit (the symptom we saw on the first run)
-          # leaves a trail. make-headless.ps1 tees DOSBox-X output to
+          # leaves a trail. build.ps1 tees DOSBox-X output to
           # dosbox-x-build.log when MAKE_HEADLESS_DEBUG is set.
           $env:MAKE_HEADLESS_DEBUG = '1'
-          .\make-headless.ps1 $env:BUILD_VARIANT
+          .\build.ps1 $env:BUILD_VARIANT
           $rc = $LASTEXITCODE
-          Write-Host "make-headless.ps1 exit code: $rc"
+          Write-Host "build.ps1 exit code: $rc"
           exit $rc
 
       - name: Diagnostics on build failure
@@ -98,7 +98,7 @@ jobs:
           } else { Write-Host '(missing)' }
           Write-Host ''
           Write-Host '=== dosbox-x stderr/stdout from the build (if captured) ==='
-          if (Test-Path dosbox-x-build.log) { Get-Content dosbox-x-build.log } else { Write-Host '(missing — make-headless still null-redirects)' }
+          if (Test-Path dosbox-x-build.log) { Get-Content dosbox-x-build.log } else { Write-Host '(missing — build script still null-redirects)' }
           Write-Host ''
           Write-Host '=== dosbox-x.conf (post-mount-rewrite) ==='
           Get-Content dosbox-x.conf
