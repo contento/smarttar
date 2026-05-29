@@ -176,6 +176,16 @@ BOOL CONTROLLER::RTEngineIsDemo(void)
 	return RTEngine->IsDemo();
 }
 
+void CONTROLLER::RTEngineToggleDemoPause(void)
+{
+	RTEngine->TogglePaused();
+}
+
+BOOL CONTROLLER::RTEngineIsDemoPaused(void)
+{
+	return RTEngine->IsPaused();
+}
+
 WORD CONTROLLER::RTEngineGetNumOfCalls(WORD cNum, WORD bNum)
 {
 	return RTEngine->GetNumOfCalls(cNum, bNum);

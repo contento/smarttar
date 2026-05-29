@@ -34,6 +34,9 @@ public:
 
 	virtual BOOL IsDemo(void) { return TRUE; }
 
+	virtual void TogglePaused(void) { _paused = !_paused; }
+	virtual BOOL IsPaused(void)     { return _paused; }
+
 private:
 
 	// --- per-booth demo schedule phases ------------------------------------
@@ -92,6 +95,7 @@ private:
 	DWORD         _lcgState;
 	WORD          _totalWeight;
 	WORD          _meanArrivalTicks; // per-booth mean inter-arrival
+	BOOL          _paused;           // when TRUE, OnTimerTick is a no-op
 	DemoCallType  _types[3];         // LOCAL, NAL, INTER
 	PhonePool     _phones[3];        // LOCAL, NAL, INTER -- post-access digits
 

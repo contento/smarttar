@@ -238,6 +238,12 @@ public:
 	// from "demo generator running -- prompt to stop and quit".
 	virtual BOOL IsDemo(void) { return FALSE; }
 
+	// Pause/resume the synthetic generator (DEMO_ENGINE only).  No-op
+	// on RT_ENGINE -- real hardware can't be "paused" via menu.  Wired
+	// to UE_DEMO_TOGGLE via CONTROLLER::RTEngineToggleDemo().
+	virtual void TogglePaused(void) {}
+	virtual BOOL IsPaused(void) { return FALSE; }
+
 protected:
 
 	WORD CurrentDate; // packed date

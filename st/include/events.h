@@ -181,5 +181,6 @@ const USER_EVENT UE_PRINT_FROM_DB_VIEW      = 10214;
 const USER_EVENT UE_LOADPR_DLLS             = 10215;
 const USER_EVENT UE_UPDATE_TOTAL_DISPLAY    = 10216;
 const USER_EVENT UE_PHQUERY					= 10217;
+const USER_EVENT UE_DEMO_TOGGLE             = 10218; // 2.50 -- pause/resume DEMO_ENGINE
 
 #endif // __EVENTS_H
