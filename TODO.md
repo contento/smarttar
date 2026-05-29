@@ -227,9 +227,14 @@ max_duration_secs = 1800
 - Time-of-day variation (peak vs off-peak arrival rates).
 - Scripted scenario replay (a recorded `.scn` sequence for repeatable
   regression tests).
-- Lightweight operator controls — start/stop generator, reload rules.
-  Must be a new widget / menu entry; the old `UIW_SIMULA` window is
-  off-limits per the milestone framing.
+- [x] **Lightweight operator controls -- start/stop generator** -- new
+  "Detener/Reanudar simulacion" entry under the Configuracion menu
+  (`view.cpp` line ~155).  Toggles a `_paused` flag on `DEMO_ENGINE`;
+  `OnTimerTick` returns early when set so booths freeze in place.
+  Wired via `virtual ENGINE::TogglePaused()` / `IsPaused()` and a
+  `CONTROLLER::RTEngineToggleDemoPause()` shim mirroring the
+  `IsDemo()` pattern.  Reload-rules portion deferred (no rules
+  changing at runtime yet).  UIW_SIMULA stays off-limits.
 - [x] **Quit confirmation when demo is running.** `st.cpp::Exit()`
   now has a third branch: when `CONTROLLER::RTEngineIsDemo()` returns
   TRUE, the busy-blocked "verifique las cabinas" dialog is skipped
