@@ -363,10 +363,31 @@ docx -> md regeneration on push (manuals change rarely).
 Findings from [STABILITY_AUDIT.md](STABILITY_AUDIT.md) — see that file for
 full context and severity rationale.
 
-- [ ] Address CRITICAL findings (audit § 3)
-- [ ] Address HIGH findings (audit § 3)
-- [ ] Address MEDIUM / LOW findings (audit § 3) — opportunistically
-- [ ] Verification pass per audit § 6
+**Next batch (from audit § 6 spot-verified -- start here):**
+
+- [ ] **C1** `src/ctrl/ctrl_ev.cpp:488` -- UE_RNPP `while (it)` never
+      advances iterator; hangs the UI when "Pagar recibos por cabina"
+      is selected.  Single-line fix (add `it++;` mirroring UE_RPP at
+      line 469).
+- [ ] **C2** `src/rt/serial.cpp:191` -- Ring-buffer overflow check
+      has empty body; writes at line 193 unconditional, corrupts
+      queue.  Also depends on `BufLen` being power-of-two via
+      precedence accident (`BufLen-1` binds tighter than `&`).
+- [ ] **C3** `src/dongle.cpp:34` -- `!biosprint(...) & BIOS_PRINT_BUSY`
+      has `!` binding before `&`; the dongle-busy short-circuit is
+      always 0 (dead code).  Add parens around `biosprint(...) &
+      BIOS_PRINT_BUSY` and re-invert.
+- [ ] **C4** `src/ct/ct_util.cpp:30` -- `"\x1B\x70\x00\x0A\0x0A\xFF"`
+      -- the `\0x0A` is `\0` then literal `x0A`.  Cash-drawer command
+      sequence is malformed (9 bytes, not 6).
+
+**Remaining batches (drain into the four lists above as scheduled):**
+
+- [ ] Address remaining CRITICAL findings (audit § 3 C5-C22).
+- [ ] Address HIGH findings (audit § 3).
+- [ ] Address MEDIUM / LOW findings (audit § 3) -- opportunistically.
+- [ ] Verification pass per audit § 6 once the spot-verified set is
+      cleared.
 
 ## Milestone: Repo layout -- vendor consolidation
 
