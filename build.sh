@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Run a SmartTar build inside DOSBox-X non-interactively.
 #
-# Usage:   ./make-headless.sh [--force] [--keep-log-in-st]
+# Usage:   ./build.sh [--force] [--keep-log-in-st]
 #                              [demo|dbg|eda|prod]
 # Default: demo, log at repo root (build.log)
 #
@@ -75,8 +75,8 @@ if (( force )); then
   banner_suffix=" (force rebuild)"
 fi
 
-echo "make-headless: building variant '$variant'$banner_suffix (log: $log) ..."
-echo "make-headless: streaming compile output below; window stays silent."
+echo "build: building variant '$variant'$banner_suffix (log: $log) ..."
+echo "build: streaming compile output below; window stays silent."
 echo "----------------------------------------------------------------------"
 
 # Touch the log so tail has something to follow even before DOSBox-X starts
@@ -91,7 +91,9 @@ trap 'kill $TAIL_PID 2>/dev/null; wait $TAIL_PID 2>/dev/null' EXIT
   -c "echo === SmartTar build starting (variant ${variant}) ===" \
   -c "echo === log: ${dos_log} (silent until exit) ===" \
   -c "echo ." \
-  -c "command /c make${variant}.bat $make_args > ${dos_log}" \
+  -c "command /c util\ini2cfg\mk_cfg.bat >> ${dos_log}" \
+  -c "command /c util\inf2dat\mk_ph.bat >> ${dos_log}" \
+  -c "command /c make${variant}.bat $make_args >> ${dos_log}" \
   -c "echo ." \
   -c "echo === Build finished ===" \
   -c "exit" >/dev/null 2>&1 || true
