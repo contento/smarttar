@@ -98,12 +98,33 @@ void DEMO_ENGINE::RecoverState(void)
 
 void DEMO_ENGINE::OnTimerTick(WORD cNum, BoothCluster::_DataPort & dp)
 {
+	// Map b.type -> CALL_ATTR (st_defs.h).  Used to pin CallAttrs once
+	// the FSM has left OFFHOOK, so DoInterdig's NOT_INCLUDED threshold
+	// check (rt_do.cpp:355) doesn't fire LOCK on a stale controller
+	// refresh.  Controller's cookViewPhoneInfo runs Search() every
+	// VIEW_REFRESH_TIME=500ms and flags partial dials as NOT_INCLUDED
+	// before the prefix is in the place tree; demo dials at ~120ms/digit,
+	// far faster than the refresh, so by the time NumOfDigits crosses
+	// LOCAL_DIGITS_NOT_INCLUDED=4 / NAL_DIGITS_NOT_INCLUDED=9 /
+	// INTER_DIGITS_NOT_INCLUDED=10, CallAttrs still has NOT_INCLUDED
+	// from an earlier "1-digit prefix unknown" Search -- and the booth
+	// gets LOCKed mid-dial.  This write loses races with the controller
+	// only briefly (10ms ISR window); EvalState reads CallAttrs after
+	// our write each tick, so DoInterdig never sees the stale flag.
+	static const WORD demoCallAttr[3] = { LOCAL_CALL, DDN_CALL, DDI_CALL };
+
 	for (WORD bNum = 0; bNum < CLUSTER_SIZE; bNum++)
 	{
 		WORD bAbs = cNum * CLUSTER_SIZE + bNum;
 		if (bAbs >= _numBooths)
 			break;
 		DemoBooth & b = _booths[bAbs];
+
+		// Pin CallAttrs to the known call type during the active dial.
+		// Skip DP_IDLE (no call) and DP_OFFHOOK (DoOffHook -> ResetData
+		// clobbers CallAttrs every tick until the FSM leaves OFFHOOK).
+		if (b.phase != DP_IDLE && b.phase != DP_OFFHOOK)
+			Clusters[cNum].CallAttrs[bNum] = demoCallAttr[b.type];
 
 		switch (b.phase)
 		{
