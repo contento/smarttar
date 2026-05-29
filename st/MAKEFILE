@@ -243,7 +243,7 @@ $(BIN_DIR)\phones.csv: $(INF2DAT_DIR)\phones.csv
 # Telephony binary database -- compiled from source .inf files by INF2DAT.
 # Depends on st.cfg being distributed first so inf2dat can load it.
 $(BIN_DIR)\PH_INFO.DAT: $(INF2DAT_DIR)\ddi.inf $(INF2DAT_DIR)\ddn.inf $(INF2DAT_DIR)\local.inf $(UTIL_DIR)\inf2dat\st.cfg
-	-@$(INF2DAT_DIR)\mk_ph.bat
+	@$(INF2DAT_DIR)\mk_ph.bat
 	@copy $(INF2DAT_DIR)\PH_INFO.DAT $(BIN_DIR)\PH_INFO.DAT > NUL
 
 # ============================================================================
