@@ -50,8 +50,12 @@ DOS toolchain). Outputs go to `_build/` so you can diff against the originals in
 
 ```sh
 cp _build/help.txt ../help.txt        # promote
-cd ../.. && ./build.sh demo HELP=1    # genhelp compiles help.txt -> help.dat
+cd ../.. && ./build.sh                # rebuilds; genhelp compiles help.txt -> help.dat
 ```
+
+`build.sh` defaults to the `demo` variant, so no argument is needed, and
+`help.dat` is rebuilt unconditionally by the MAKEFILE (there is no `HELP=1`
+flag to pass).
 
 ## Encoding (important)
 
