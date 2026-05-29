@@ -171,6 +171,11 @@ BOOL CONTROLLER::RTEngineIsBusy(void)
 	return RTEngine->IsBusy();
 }
 
+BOOL CONTROLLER::RTEngineIsDemo(void)
+{
+	return RTEngine->IsDemo();
+}
+
 WORD CONTROLLER::RTEngineGetNumOfCalls(WORD cNum, WORD bNum)
 {
 	return RTEngine->GetNumOfCalls(cNum, bNum);

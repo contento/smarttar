@@ -32,6 +32,8 @@ public:
 	virtual void OnTimerTick(WORD cNum, BoothCluster::_DataPort & dataPort);
 	virtual void OnTimerEnd(void);
 
+	virtual BOOL IsDemo(void) { return TRUE; }
+
 private:
 
 	// --- per-booth demo schedule phases ------------------------------------
