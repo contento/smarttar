@@ -78,11 +78,13 @@ The test: Every changed line should trace directly to the user's request.
 ## Repository Layout
 
 ```text
-bc/          Borland C++ 3.1 toolchain (compiler, debugger, TASM, TLIB, etc.)
-pharlap/     Pharlap 286 DOS extender (BCC286, BIND286, CFIG286, RUN286, DLLs)
-zinc/        Zinc 3.5 UI framework (headers, libs, tools — incl. GENHELP.EXE
+vendor/      Bundled third-party / external toolchain (not first-party):
+  bc/        Borland C++ 3.1 toolchain (compiler, debugger, TASM, TLIB, etc.)
+  pharlap/   Pharlap 286 DOS extender (BCC286, BIND286, CFIG286, RUN286, DLLs)
+  zinc/      Zinc 3.5 UI framework (headers, libs, tools — incl. GENHELP.EXE
              which the MAKEFILE's help.dat rule invokes)
-util/        DOS utilities for development (NC, MOUSE, PKLITE, PKZIP, SWEEP, etc.)
+  util/      DOS utilities for development (NC, MOUSE, PKLITE, PKZIP, SWEEP, etc.)
+             (Distinct from st/util/, which is first-party build utilities.)
 dosbox-x.conf  Project-local DOSBox-X config (CPU/mem tuning, PATH wiring,
                [sdl] mouse_emulation=integration for Zinc UI, etc.)
 build.sh     Host-side runner (bash, macOS/Linux). Drives DOSBox-X
@@ -122,7 +124,7 @@ st/          Application source
   lib/       Static libraries
   bin/       Output binaries and runtime data files
   res/       Zinc UI binary resource (RES.DAT) — tracked source, edited
-             via Zinc Designer (zinc/BIN/DESIGN.EXE). MAKEFILE copies it
+             via Zinc Designer (vendor/zinc/BIN/DESIGN.EXE). MAKEFILE copies it
              into bin/ during build.
   docs/      Screenshots and user/reference documentation (Word, images)
   test/      Per-module development test programs (ph_eng, db_eng, cfg, rt_eng, etc.)
@@ -199,7 +201,7 @@ After linking, `BIND286` embeds the Pharlap run-time stub; `CFIG286` tunes it:
 | `NODONGLE=1` | Defines `__NO_DONGLE__` (requires `DEMO=1`) |
 | `EDA=1` | Defines `__EDA__` |
 | `RUN=1` | Runs `BIND286` + `CFIG286` after link (produces runnable protected-mode EXE) |
-| ~~`HELP=1`~~ | Obsolete / no-op. `bin/help.dat` is a dependency of `bin/st.exe` and is rebuilt automatically from `docs/help.txt` whenever it changes (`genhelp` rule in MAKEFILE; requires `zinc\BIN` on PATH — already wired in `dosbox-x.conf`). No flag needed. |
+| ~~`HELP=1`~~ | Obsolete / no-op. `bin/help.dat` is a dependency of `bin/st.exe` and is rebuilt automatically from `docs/help.txt` whenever it changes (`genhelp` rule in MAKEFILE; requires `vendor\zinc\BIN` on PATH — already wired in `dosbox-x.conf`). No flag needed. |
 
 **Day-to-day dev variant: `demo`.** The current dev environment has no real telephony hardware (booths / PBX / EEPROM) or copy-protection dongle, so the working default is `./build.sh` -- `demo` is the default variant when none is given, so the bare command and `./build.sh demo` are equivalent (both set `-DDEMO -DRUN -DNODONGLE`). Engine selection is now **runtime** (`g_cfg->ENGINE_KIND` in `st.ini`); `__DEMO__` still acts as a build-time hint that flips the default `ENGINE_KIND` value to `"demo"` in `cfg.cpp::SetDefault`, but the per-call-site gates are gone -- non-engine code paths (dongle, STM2 persist, EEPROM, `Dump()`) check `g_cfg->IsDemoMode()` at runtime instead.  Four `__DEMO__` gates remain in `st.cpp` around the dongle/STM2/EEPROM init tangle (lines 16 / 116 / 192) -- deferred because they interleave with the `__NO_DONGLE__` build flag and `DONGLE` class scope.  Only switch to `prod` / `eda` when explicitly working on something that must exercise those paths, or when comparing against the CI release build (which runs `prod`).
 

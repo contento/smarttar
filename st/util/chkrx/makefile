@@ -5,8 +5,8 @@ CC = bcc +CHKRX.CFG
 TASM = TASM
 TLIB = tlib
 TLINK = tlink
-LIBPATH = ..\..\..\BC\LIB;
-INCLUDEPATH = ..\..\..\BC\INCLUDE;..\..\..\ZINC\INCLUDE;..\..\INCLUDE
+LIBPATH = ..\..\..\VENDOR\BC\LIB;
+INCLUDEPATH = ..\..\..\VENDOR\BC\INCLUDE;..\..\..\VENDOR\ZINC\INCLUDE;..\..\INCLUDE
 
 
 #		*Implicit Rules*

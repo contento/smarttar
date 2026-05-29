@@ -64,16 +64,18 @@ SmartTar is a DOS-based point-of-sale system designed for Colombian telecommunic
 | DOS extender | Pharlap 286 v3.0 |
 | Build system | Borland `MAKE` |
 
-All toolchain binaries are vendored under [`BC/`](BC/), [`PHARLAP/`](PHARLAP/), and [`ZINC/`](ZINC/).
+All toolchain binaries are vendored under [`vendor/`](vendor/) — [`vendor/bc/`](vendor/bc/), [`vendor/pharlap/`](vendor/pharlap/), and [`vendor/zinc/`](vendor/zinc/).
 
 ---
 
 ## Repository Layout
 
 ```text
-BC/              Borland C++ 3.1 — compiler, debugger (TD), TASM, TLIB, TLINK
-PHARLAP/         Pharlap 286 DOS Extender — BCC286, BIND286, CFIG286, RUN286, runtime DLLs
-ZINC/            Zinc Interface Library 3.5 — headers, pre-built libs, GENHELP, DESIGN
+vendor/          Bundled third-party toolchain:
+  bc/            Borland C++ 3.1 — compiler, debugger (TD), TASM, TLIB, TLINK
+  pharlap/       Pharlap 286 DOS Extender — BCC286, BIND286, CFIG286, RUN286, runtime DLLs
+  zinc/          Zinc Interface Library 3.5 — headers, pre-built libs, GENHELP, DESIGN
+  util/          DOS development utilities (NC, QEdit, PKWARE, mouse driver)
 dosbox-x.conf    Project-local DOSBox-X config (auto-loaded when launched from repo root)
 build.sh Host-side runner (bash); drives a full DOSBox-X build non-interactively
 build.ps1 PowerShell Core equivalent for Windows 11
@@ -103,7 +105,7 @@ st/              Application
 
 ## Development Environment (DOSBox-X)
 
-The repo ships a project-local [`dosbox-x.conf`](dosbox-x.conf) tuned for the SmartTar target: 386 hardware, DOS 5.0, Pharlap 286 protected mode, 32 MB extended memory, raised DOS file handles for compilation, and a pre-populated `PATH` covering `bc\BIN`, `pharlap\BIN`, and the `util/` subdirectories.
+The repo ships a project-local [`dosbox-x.conf`](dosbox-x.conf) tuned for the SmartTar target: 386 hardware, DOS 5.0, Pharlap 286 protected mode, 32 MB extended memory, raised DOS file handles for compilation, and a pre-populated `PATH` covering `vendor\bc\BIN`, `vendor\pharlap\BIN`, and the `vendor\util\` subdirectories.
 
 ### Install DOSBox-X
 

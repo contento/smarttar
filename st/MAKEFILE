@@ -51,7 +51,7 @@ CC=bcc286
 ASM=tasm
 LINK=tlink
 BIND=bind286
-RTK_DIR=..\pharlap\bin
+RTK_DIR=..\vendor\pharlap\bin
 
 DONGLE=
 !if $d(DEMO)
@@ -72,7 +72,7 @@ EDA=
 # TLINK library search path. The -L in st.cfg is BCC286's (forwarded to
 # TLINK only when BCC286 invokes the linker). We call TLINK directly, so
 # we must pass the lib path here too.
-LINK_LIBPATH=/L..\bc\lib;..\pharlap\lib;..\zinc\lib;lib
+LINK_LIBPATH=/L..\vendor\bc\lib;..\vendor\pharlap\lib;..\vendor\zinc\lib;lib
 
 !if $d(DEBUG)
 OBJ_CC_OPTIONS= -c +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA) -v
@@ -89,7 +89,7 @@ ASM_OPTS=/mx
 # Borland C++ 3.1 startup module for Pharlap 286 protected mode.
 # Lives in pharlap/LIB/ — full path needed because TLINK's /L only
 # applies to .lib files, not .obj files.
-STARTUP_OBJS=..\pharlap\lib\c0pl.obj
+STARTUP_OBJS=..\vendor\pharlap\lib\c0pl.obj
 LIBS=phapi d16_zil d16_gfx bc_16gfx emu286 emu mathl bcl286 ptclassl pbidsl
 DEF_FILE=$(APP).def
 

@@ -17,7 +17,7 @@ ASM=tasm
 ASM_OPTS=/mx /zi /o
 LINK=tlink
 BIND=bind286
-RTK_DIR=..\..\..\pharlap\bin
+RTK_DIR=..\..\..\vendor\pharlap\bin
 
 #-------------------------------------------------------------------------------
 

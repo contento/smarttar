@@ -419,56 +419,45 @@ full context and severity rationale.
 - [ ] Verification pass per audit § 6 once the spot-verified set is
       cleared.
 
-## Milestone: Repo layout -- vendor consolidation
+## Milestone: Repo layout -- vendor consolidation [DONE]
 
-Move the four bundled third-party / external toolchain trees -- `bc/`,
+Moved the four bundled third-party / external toolchain trees -- `bc/`,
 `pharlap/`, `zinc/`, and `util/` -- into a single top-level
 `vendor/` directory so the project root holds only first-party
 artifacts (`st/`, `build.sh` / `run.sh` / `build.ps1` / `run.ps1`, `dosbox-x.conf`,
 docs).
 
-**Surface area to update** (every relative path that walks through one
-of these four trees has to be retargeted):
+**Surface area updated** (every relative path that walks through one
+of these four trees was retargeted by *inserting* a `vendor\` segment --
+the `..\` depth is unchanged, since the project root is unchanged):
 
-- [ ] Move trees:
-      `bc/` -> `vendor/bc/`,
-      `pharlap/` -> `vendor/pharlap/`,
-      `zinc/` -> `vendor/zinc/`,
-      `util/` -> `vendor/util/`.
-      (`st/util/` stays put -- that's first-party build utilities, not
-      a vendored toolchain.)
-- [ ] `dosbox-x.conf` PATH:
-      `C:\BC\BIN;C:\PHARLAP\BIN;C:\ZINC\BIN;...;C:\UTIL\...` ->
-      `C:\VENDOR\BC\BIN;C:\VENDOR\PHARLAP\BIN;C:\VENDOR\ZINC\BIN;...;C:\VENDOR\UTIL\...`.
-- [ ] `st/MAKEFILE`: `..\bc\lib`, `..\pharlap\lib`, `..\zinc\lib`,
-      `..\pharlap\lib\c0pl.obj`, `RTK_DIR=..\pharlap\bin` -> all gain
-      `vendor\` segment.
-- [ ] `st/st.cfg` (BCC config): `-I..\bc\include;..\pharlap\include;..\zinc\include`
-      and matching `-L` -> add `vendor\`.
-- [ ] `st/util/util.cfg`: `-I..\..\..\bc\include;..\..\..\pharlap\include;
-      ..\..\..\zinc\include` -> bump each by one more `..\` to land in
-      `vendor\`. Same for `-L`. Same for `st/util/inf2dat/makefile`'s
-      `LINK_LIBPATH` and `STARTUP_OBJS` (and every other sub-makefile
-      under `st/util/*/makefile`).
-- [ ] Anything under `st/test/*/makefile` (same `..\..\..\bc\...`
-      pattern), if those build today.
-- [ ] [CLAUDE.md](CLAUDE.md): "Repository Layout" section, every
-      reference to `bc/`, `pharlap/`, `zinc/`, `util/` at the top
-      level.
-- [ ] [README.md](README.md) / [README.es.md](README.es.md): same.
-- [ ] [.gitignore](.gitignore): comment line "BC/, PHARLAP/, UTIL/,
-      ZINC/, Documents/ are intentionally NOT listed here" -> update.
-- [ ] [.gitattributes](.gitattributes) if any rules are scoped to
-      those top-level paths.
-- [ ] CI workflow [.github/workflows/release.yml](.github/workflows/release.yml)
-      if it walks any of these paths.
-- [ ] `build.sh` / `build.ps1` / `run.sh` /
-      `run.ps1` -- verify (they currently reference only `st/`
-      and the dosbox-x conf, so this may be a no-op).
+- [x] Move trees: `bc/` -> `vendor/bc/`, `pharlap/` -> `vendor/pharlap/`,
+      `zinc/` -> `vendor/zinc/`, `util/` -> `vendor/util/`.
+      (`st/util/` stays put -- first-party build utilities, not vendored.)
+- [x] `dosbox-x.conf` PATH + comments: `C:\BC\BIN;...;C:\UTIL\...` ->
+      `C:\VENDOR\BC\BIN;...;C:\VENDOR\UTIL\...`.
+- [x] `st/MAKEFILE`: `..\bc\lib`, `..\pharlap\lib`, `..\zinc\lib`,
+      `..\pharlap\lib\c0pl.obj`, `RTK_DIR=..\pharlap\bin` -> `..\vendor\...`.
+- [x] `st/st.cfg` (BCC config): `-I`/`-L` `..\{bc,pharlap,zinc}\...`
+      -> `..\vendor\{bc,pharlap,zinc}\...`.
+- [x] `st/util/util.cfg` + every `st/util/*/makefile` that referenced a
+      tree (`inf2dat`, `ini2cfg`, `setup`, `viewer`, `chkrx`):
+      `..\..\..\{bc,pharlap,zinc}\...` -> `..\..\..\vendor\{...}\...`,
+      `c:\pharlap\bin` -> `c:\vendor\pharlap\bin`.
+- [x] `st/test/*` build configs/makefiles (`test.cfg`, `pr_fmt/test.cfg`,
+      and the per-module makefiles' `RTK_DIR`): same vendor\ insertion.
+- [x] [CLAUDE.md](CLAUDE.md): "Repository Layout" + `vendor/zinc/BIN` refs.
+- [x] [README.md](README.md) / [README.es.md](README.es.md): layout + prose.
+- [x] [.gitignore](.gitignore): "intentionally NOT listed here" comment.
+- [x] [.gitattributes](.gitattributes): no path-scoped rules -- no change.
+- [x] CI [.github/workflows/release.yml](.github/workflows/release.yml):
+      `Copy-Item pharlap\BIN\*.DLL` -> `vendor\pharlap\BIN\*.DLL`.
+- [x] `build.sh` / `build.ps1` / `run.sh` / `run.ps1` -- no-op confirmed
+      (their `util\...` refs are `st\util\...`, run after `cd ST`).
+- [x] [RELEASING.md](RELEASING.md): `pharlap/BIN/*.DLL` packaging note.
 
-Do this in **one big commit** rather than split per-tree -- the build
-won't pass until every path is updated together, so partial commits
-would just be broken intermediate states.
+Done in one big commit -- the build won't pass until every path is
+updated together, so partial commits would be broken intermediate states.
 
 ## Milestone: Maintenance hygiene
 

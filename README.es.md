@@ -55,16 +55,18 @@ SmartTar es un sistema punto de venta para DOS, diseñado para operadores de tel
 | Extensor DOS | Pharlap 286 v3.0 |
 | Sistema de construcción | Borland `MAKE` |
 
-Todas las herramientas están incluidas en el repositorio bajo [`BC/`](BC/), [`PHARLAP/`](PHARLAP/) y [`ZINC/`](ZINC/).
+Todas las herramientas están incluidas en el repositorio bajo [`vendor/`](vendor/) — [`vendor/bc/`](vendor/bc/), [`vendor/pharlap/`](vendor/pharlap/) y [`vendor/zinc/`](vendor/zinc/).
 
 ---
 
 ## Estructura del repositorio
 
 ```text
-BC/              Borland C++ 3.1 — compilador, depurador (TD), TASM, TLIB, TLINK
-PHARLAP/         Pharlap 286 DOS Extender — BCC286, BIND286, CFIG286, RUN286, DLLs en runtime
-ZINC/            Zinc Interface Library 3.5 — headers, librerías, GENHELP, DESIGN
+vendor/          Herramientas de terceros incluidas:
+  bc/            Borland C++ 3.1 — compilador, depurador (TD), TASM, TLIB, TLINK
+  pharlap/       Pharlap 286 DOS Extender — BCC286, BIND286, CFIG286, RUN286, DLLs en runtime
+  zinc/          Zinc Interface Library 3.5 — headers, librerías, GENHELP, DESIGN
+  util/          Utilidades DOS para desarrollo (NC, QEdit, PKWARE, driver de mouse)
 dosbox-x.conf    Configuración local del proyecto para DOSBox-X (carga automática desde la raíz)
 build.sh Lanzador del host (bash); ejecuta la compilación dentro de DOSBox-X en modo no interactivo
 build.ps1 Equivalente para Windows 11 en PowerShell Core
@@ -94,7 +96,7 @@ st/              Aplicación
 
 ## Entorno de desarrollo (DOSBox-X)
 
-El repositorio incluye un [`dosbox-x.conf`](dosbox-x.conf) local al proyecto, afinado para el target de SmartTar: hardware 386, DOS 5.0, modo protegido Pharlap 286, 32 MB de memoria extendida, manejadores de archivo de DOS ampliados para compilación, y un `PATH` ya poblado con `bc\BIN`, `pharlap\BIN` y los subdirectorios de `util/`.
+El repositorio incluye un [`dosbox-x.conf`](dosbox-x.conf) local al proyecto, afinado para el target de SmartTar: hardware 386, DOS 5.0, modo protegido Pharlap 286, 32 MB de memoria extendida, manejadores de archivo de DOS ampliados para compilación, y un `PATH` ya poblado con `vendor\bc\BIN`, `vendor\pharlap\BIN` y los subdirectorios de `vendor\util\`.
 
 ### Instalar DOSBox-X
 
