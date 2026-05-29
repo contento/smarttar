@@ -4,7 +4,7 @@
 
 #include "stdst.h"
 
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #include <info.h>
 #endif
 
@@ -22,7 +22,7 @@ FILE_HEADER::FILE_HEADER(void)
     UpgradeAppVersion = APP_UPGRADE_VER;
     time = _GetSysTime();
     date = _GetSysDate();
-#if !defined(__NOAPPINFO__) && !defined(__DEMO__) // v.220
+#if !defined(__NOAPPINFO__) // v.220 (__DEMO__ part dropped 2.50 -- engine mode is now runtime)
 	extern SUPER_APP_INFO g_superAppInfo;
 	APP_INFO appInfo = g_superAppInfo.Data;
 	if (g_superAppInfo.Attr.Serialized)

@@ -44,6 +44,12 @@ public:
 	}
 	BOOL IsHollyday(WORD year, WORD month, WORD day);
 	BOOL IsHollyday(WORD packedDate);
+	// 2.50 -- runtime check for engine concrete (replaces __DEMO__
+	// gates in non-engine call sites: dongle skip, STM2 skip, etc.).
+	BOOL IsDemoMode(void)
+	{
+		return ENGINE_KIND[0] == 'd' || ENGINE_KIND[0] == 'D';
+	}
 	inline BOOL IsExtension(WORD cNum, WORD bNum);
 	void nextTurn(void);
 	//

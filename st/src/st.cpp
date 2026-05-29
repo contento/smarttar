@@ -34,7 +34,7 @@ char *g_LONG_APP_NAME  	= "SmartTar";
 
 APP_INFO g_appInfo;
 
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #include <stm2.h>
 STM2 *g_STM2  = NULL;
 #endif
@@ -55,7 +55,7 @@ main(int , char *argv[])
 		Log log(Log::OUT|Log::CREATE);
 		log.put(Log::NORMALSTART);
 	}
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 	g_STM2 = new STM2;
 	g_STM2->login();
 #endif
@@ -242,7 +242,7 @@ void clean(UI_DISPLAY *display, UI_EVENT_MANAGER *eventManager, UI_WINDOW_MANAGE
     delete windowManager;
     delete eventManager;
     delete display;
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 	g_STM2->logout();
 	delete g_STM2;
 #endif

@@ -7,14 +7,14 @@
 #include <control.h>
 #include <db_eng.h>
 
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #include <stm2.h>
 #endif
 
 #include <info.h>
 #include <st_bids.h>
 
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOAPPINFO__)
 extern SUPER_APP_INFO g_superAppInfo;
 #endif
@@ -29,7 +29,7 @@ static const char *DB_EXT_NAME = "RXX";
 // [ DB_ENGINE ]
 // ----------------------------------------------------------------------------
 
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOSTM2__)
 extern STM2 *g_STM2;
 #endif
@@ -41,7 +41,7 @@ DB_ENGINE::DB_ENGINE(void)
 	DBStorage       = new DB_STORAGE(NULL, DB_NAME, FALSE);
     DBStatistics    = new DB_STATISTICS(NULL, DB_NAME, FALSE);
     //
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOAPPINFO__)
 	if (g_superAppInfo.Attr.STPro)
     {
@@ -53,7 +53,7 @@ DB_ENGINE::DB_ENGINE(void)
 	// another turn
     ArcDBStorage    = NULL;
     ArcDBStatistics = NULL;
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOSTM2__)
 	if (g_STM2->getStatus() == STM2::BAD_SHUTDOWN)
         Recover();
@@ -73,7 +73,7 @@ DB_ENGINE::~DB_ENGINE(void)
     delete DBStatistics;
     delete DBStorage;
     //
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOAPPINFO__)
 	if (g_superAppInfo.Attr.STPro)
     {
@@ -88,7 +88,7 @@ void DB_ENGINE::Flush(void)
 {
     DBStorage->Flush();
     DBStatistics->Flush();
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOAPPINFO__)
 	if (g_superAppInfo.Attr.STPro)
     {
@@ -106,7 +106,7 @@ BOOL DB_ENGINE::Repair(void)
 {
 	DBStorage->Repair();
 	DBStatistics->Repair(DBStorage);
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOSTM2__)
 	g_STM2->put(STM2::STATISTICSENTRIES, (*DBStatistics)[0]);
 	g_STM2->put(STM2::STATISTICSDOUBLEPRNENTRIES, DBStatistics->GetDoublePrnEntry(0));
@@ -124,7 +124,7 @@ BOOL DB_ENGINE::Archive(void)
 	// by repairing we force to re-Init the database files
 	Repair();
 
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOSTM2__)
 	// 2.21.1 Build 2
 	g_STM2->emptyReceipts(); // we assume the receipts are stored
@@ -136,14 +136,14 @@ BOOL DB_ENGINE::Archive(void)
 
 BOOL DB_ENGINE::ExtArchive(void)
 {
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOAPPINFO__)
 	if (!g_superAppInfo.Attr.STPro)
 		return FALSE;
 #endif
 #endif
 	DBExtStorage->Archive();
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOAPPINFO__)
 	if (g_superAppInfo.Attr.STPro)
 		DBExtStatistics->Archive();
@@ -153,7 +153,7 @@ BOOL DB_ENGINE::ExtArchive(void)
 #endif
 #endif
 
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOSTM2__)
 	// 2.21.1 Build 2
 	g_STM2->emptyReceipts(); // we assume the receipts are stored
@@ -165,7 +165,7 @@ BOOL DB_ENGINE::ExtArchive(void)
 
 BOOL DB_ENGINE::ExtRepair(void)
 {
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOAPPINFO__)
 	if (!g_superAppInfo.Attr.STPro)
         return FALSE;
@@ -181,7 +181,7 @@ BOOL DB_ENGINE::ExtRepair(void)
 
 void DB_ENGINE::Recover(void)
 {
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 	// Rebuild because the file system may will be corrupt
 	DBStorage->Repair();
 
@@ -320,7 +320,7 @@ void DB_ENGINE::Recover(void)
 
 	Flush();
 
-#endif // !defined(__TEST__) && !defined(__DEMO__)
+#endif // !defined(__TEST__)
 }
 
 BOOL DB_ENGINE::Add(DynamicReceipt& dynReceipt)
@@ -338,7 +338,7 @@ BOOL DB_ENGINE::Add(DynamicReceipt& dynReceipt)
 		}
 		else
 		{
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOAPPINFO__)
 			if (g_superAppInfo.Attr.STPro)
 			{
@@ -355,7 +355,7 @@ BOOL DB_ENGINE::Add(DynamicReceipt& dynReceipt)
 
 		dynReceipt.Attr_.Storable = FALSE;
 
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOSTM2__)
 		g_STM2->put(STM2::RECEIPTS, &dynReceipt.m_r);
 #endif
@@ -372,7 +372,7 @@ BOOL DB_ENGINE::Add(DynamicReceipt& dynReceipt)
 		if (!dynReceipt.m_r.Stat.Extension)
 		{
 			bCounted = DBStatistics->Add(dynReceipt.m_r);
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOSTM2__)
 			g_STM2->put(STM2::STATISTICSENTRIES, (*DBStatistics)[0]);
 			g_STM2->put(STM2::STATISTICSDOUBLEPRNENTRIES, DBStatistics->GetDoublePrnEntry(0));
@@ -382,7 +382,7 @@ BOOL DB_ENGINE::Add(DynamicReceipt& dynReceipt)
 		}
 		else
 		{
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOSTM2__)
 			if (g_superAppInfo.Attr.STPro)
 			{
@@ -413,7 +413,7 @@ BOOL DB_ENGINE::Update(DynamicReceipt& dynReceipt)
 	}
 	else
 	{
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOAPPINFO__)
 		if (g_superAppInfo.Attr.STPro)
 			bUpdated = DBExtStorage->Update(dynReceipt.m_r);
@@ -455,7 +455,7 @@ BOOL DB_ENGINE::Update(long number, WORD modifier)
 	if (!DBStatistics->Add(dynReceipt, FALSE))
 		return FALSE;
 
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOSTM2__)
 	g_STM2->put(STM2::STATISTICSENTRIES, (*DBStatistics)[0]);
 	g_STM2->put(STM2::STATISTICSDOUBLEPRNENTRIES, DBStatistics->GetDoublePrnEntry(0));
