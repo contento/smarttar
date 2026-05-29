@@ -8,7 +8,7 @@
 #include <db_eng.h>
 #include <eng_fact.h>
 
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #include <stm2.h>
 #endif
 

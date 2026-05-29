@@ -12,7 +12,7 @@
 #include <cstr.h>
 #include <info.h>
 
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #include <stm2.h>
 extern STM2 *g_STM2;
 #endif
@@ -315,7 +315,7 @@ EVENT_TYPE CONTROLLER::Event(const UI_EVENT &event)
                     if (higher)
 						g_cfg->N_RECEIPT = higher;
 					extern SUPER_APP_INFO g_superAppInfo;
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #if !defined(__NOAPPINFO__)
 					if (g_superAppInfo.Attr.STPro)
                     {
@@ -323,7 +323,7 @@ EVENT_TYPE CONTROLLER::Event(const UI_EVENT &event)
                         if (higher)
 							g_cfg->E_N_RECEIPT = higher;
 					}
-#endif // !defined(__TEST__) && !defined(__DEMO__)
+#endif // !defined(__TEST__)
 #endif // !defined(__NOAPPINFO__)
 					g_cfg->Save();
 					//
@@ -712,7 +712,7 @@ EVENT_TYPE CONTROLLER::Event(const UI_EVENT &event)
 					// first event
 					int date, time;
 
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 					g_STM2->get(STM2::LOGINDATE, &date);
 					g_STM2->get(STM2::LOGINTIME, &time);
 					log.put(date, time, Log::NORMALSTART);

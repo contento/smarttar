@@ -17,7 +17,7 @@
 #include <help.hpp>
 #endif
 
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #include <stm2.h>
 extern STM2 *g_STM2;
 #endif

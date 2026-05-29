@@ -11,7 +11,7 @@
 
 #include <rt_eng.h>
 
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
 #include <stm2.h>
 extern STM2 *g_STM2;
 #endif
@@ -84,7 +84,10 @@ void RT_ENGINE::InitHardware(WORD numOfClusters)
 //
 void RT_ENGINE::RecoverState(void)
 {
-#if !defined(__TEST__) && !defined(__DEMO__)
+#if !defined(__TEST__)
+	// Only called when the factory built an RT_ENGINE (real hardware).
+	// DEMO_ENGINE has its own no-op RecoverState override, so no
+	// runtime IsDemoMode() guard needed here.
 	if (g_STM2->getStatus() != STM2::OK && g_STM2->getStatus() != STM2::GARBAGE)
 	{
 		// last states of clusters
@@ -93,7 +96,7 @@ void RT_ENGINE::RecoverState(void)
 		for (WORD i=0; i < g_cfg->ACTIVE_CLUSTERS; i++)
 			memset(&Clusters[i].Found, FALSE, sizeof(BOOL)*CLUSTER_SIZE);
 	}
-#endif // !defined(__TEST__) && !defined(__DEMO__)
+#endif // !defined(__TEST__)
 }
 
 //
