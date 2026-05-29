@@ -138,7 +138,7 @@ make RUN=1
 | `DEMO=1` | Define `__DEMO__` — activa modo demo |
 | `NODONGLE=1` | Define `__NO_DONGLE__` — omite verificación del dongle (requiere `DEMO=1`) |
 | `EDA=1` | Define `__EDA__` — variante para operador EDA |
-| `HELP=1` | Regenera `bin/help.dat` desde `docs/help.txt` vía `genhelp` |
+| ~~`HELP=1`~~ | Obsoleto / sin efecto. `bin/help.dat` es dependencia de `bin/st.exe` y se regenera automáticamente desde `docs/help.txt` vía `genhelp` cuando cambia — no se necesita ninguna bandera |
 
 **Build demo (no requiere dongle):**
 
@@ -178,7 +178,7 @@ make DEBUG=1 RUN=1
 .\build.ps1 -KeepLogInSt   # el log queda en st\build.log en lugar de .\build.log
 ```
 
-Ambos scripts lanzan DOSBox-X con `-c "command /c make<variante>.bat HELP=1 …"`, capturan toda la salida a `build.log` (transmitida en vivo con `tail -F` / `Get-Content -Wait`), esperan a que DOSBox-X termine y reportan éxito/fallo según si el batch imprimió `Build succeeded.`. Solo se puede ejecutar una instancia a la vez (DOSBox-X bloquea su pantalla). Para sobrescribir la ubicación del binario, usa `DOSBOX_X` (variable de entorno bash) o `$env:DOSBOX_X` (PowerShell).
+Ambos scripts lanzan DOSBox-X con `-c "command /c make<variante>.bat …"`, capturan toda la salida a `build.log` (transmitida en vivo con `tail -F` / `Get-Content -Wait`), esperan a que DOSBox-X termine y reportan éxito/fallo según si el batch imprimió `Build succeeded.`. Solo se puede ejecutar una instancia a la vez (DOSBox-X bloquea su pantalla). Para sobrescribir la ubicación del binario, usa `DOSBOX_X` (variable de entorno bash) o `$env:DOSBOX_X` (PowerShell).
 
 ### Ejecutar SmartTar desde el host
 

@@ -147,7 +147,7 @@ make RUN=1
 | `DEMO=1` | Define `__DEMO__` — activates demo mode |
 | `NODONGLE=1` | Define `__NO_DONGLE__` — skip dongle check (requires `DEMO=1`) |
 | `EDA=1` | Define `__EDA__` — build variant for EDA operator |
-| `HELP=1` | Regenerate `bin/help.dat` from `docs/help.txt` via `genhelp` |
+| ~~`HELP=1`~~ | Obsolete / no-op. `bin/help.dat` is a dependency of `bin/st.exe` and is regenerated automatically from `docs/help.txt` via `genhelp` whenever it changes — no flag needed |
 
 **Demo build (no dongle required):**
 
@@ -187,7 +187,7 @@ make DEBUG=1 RUN=1
 .\build.ps1 -KeepLogInSt   # log lands in st\build.log instead of .\build.log
 ```
 
-Both scripts launch DOSBox-X with `-c "command /c make<variant>.bat HELP=1 …"`, capture all output to `build.log` (streamed live via `tail -F` / `Get-Content -Wait`), wait for DOSBox-X to exit, and report success/failure based on whether the build batch printed `Build succeeded.`. Only one instance can run at a time (DOSBox-X locks its display). Override the DOSBox-X binary location with `DOSBOX_X` (bash env var) or `$env:DOSBOX_X` (PowerShell).
+Both scripts launch DOSBox-X with `-c "command /c make<variant>.bat …"`, capture all output to `build.log` (streamed live via `tail -F` / `Get-Content -Wait`), wait for DOSBox-X to exit, and report success/failure based on whether the build batch printed `Build succeeded.`. Only one instance can run at a time (DOSBox-X locks its display). Override the DOSBox-X binary location with `DOSBOX_X` (bash env var) or `$env:DOSBOX_X` (PowerShell).
 
 ### Launch SmartTar from the host
 
