@@ -20,7 +20,7 @@ Working list of milestones and tasks. Detailed findings live in
 - [x] Resurrect the build under Borland MAKE 3.6 (explicit per-`.obj`
       rules; `.PATH.x` doesn't exist in MAKE 3.6, only 4.0+)
 - [x] Wire `help.dat` regen (zinc/BIN on PATH, `HELP=1` flag in
-      [make-headless](make-headless.sh))
+      [build.sh](build.sh))
 - [x] Source `RES.DAT` from `st/res/`, copy to `st/bin/` via MAKEFILE rule
 - [x] TLINK lib-path + `c0pl.obj` full path
 - [x] `st.def` CRLF (TLINK choked on bare LF)
@@ -68,7 +68,7 @@ Working list of milestones and tasks. Detailed findings live in
   menu-bar entry) so the operator can switch between palettes
   without recompiling.~~ **Abandoned 2026-05-25 — dead end.**
   Investigated on the `zinc-theme-switching` branch (multi-style
-  binaries via `-DSTYLE=...` build flag + `make-headless` `-Style`
+  binaries via `-DSTYLE=...` build flag + `build` `-Style`
   wiring); dropped as a product decision. Do not revive without
   reopening the topic explicitly.
 
@@ -373,7 +373,7 @@ full context and severity rationale.
 Move the four bundled third-party / external toolchain trees -- `bc/`,
 `pharlap/`, `zinc/`, and `util/` -- into a single top-level
 `vendor/` directory so the project root holds only first-party
-artifacts (`st/`, `make-headless.*`, `run-headless.*`, `dosbox-x.conf`,
+artifacts (`st/`, `build.sh` / `run.sh` / `build.ps1` / `run.ps1`, `dosbox-x.conf`,
 docs).
 
 **Surface area to update** (every relative path that walks through one
@@ -411,8 +411,8 @@ of these four trees has to be retargeted):
       those top-level paths.
 - [ ] CI workflow [.github/workflows/release.yml](.github/workflows/release.yml)
       if it walks any of these paths.
-- [ ] `make-headless.sh` / `make-headless.ps1` / `run-headless.sh` /
-      `run-headless.ps1` -- verify (they currently reference only `st/`
+- [ ] `build.sh` / `build.ps1` / `run.sh` /
+      `run.ps1` -- verify (they currently reference only `st/`
       and the dosbox-x conf, so this may be a no-op).
 
 Do this in **one big commit** rather than split per-tree -- the build

@@ -75,10 +75,10 @@ BC/              Borland C++ 3.1 — compiler, debugger (TD), TASM, TLIB, TLINK
 PHARLAP/         Pharlap 286 DOS Extender — BCC286, BIND286, CFIG286, RUN286, runtime DLLs
 ZINC/            Zinc Interface Library 3.5 — headers, pre-built libs, GENHELP, DESIGN
 dosbox-x.conf    Project-local DOSBox-X config (auto-loaded when launched from repo root)
-make-headless.sh Host-side runner (bash); drives a full DOSBox-X build non-interactively
-make-headless.ps1 PowerShell Core equivalent for Windows 11
-run-headless.sh  Host-side launcher (bash) for st.exe inside DOSBox-X; closes DOSBox-X on exit
-run-headless.ps1 PowerShell equivalent for Windows 11
+build.sh Host-side runner (bash); drives a full DOSBox-X build non-interactively
+build.ps1 PowerShell Core equivalent for Windows 11
+run.sh  Host-side launcher (bash) for st.exe inside DOSBox-X; closes DOSBox-X on exit
+run.ps1 PowerShell equivalent for Windows 11
 .gitattributes   Enforces CRLF for DOS files, LF for host files
 st/              Application
   src/           C++ and C source files, organized by subsystem
@@ -169,45 +169,45 @@ make DEBUG=1 RUN=1
 
 ### Headless from the host
 
-[`make-headless.sh`](make-headless.sh) (macOS / Linux / bash) and [`make-headless.ps1`](make-headless.ps1) (Windows 11 / PowerShell Core 7+) drive a complete DOSBox-X build from your host shell without you having to type anything inside DOS:
+[`build.sh`](build.sh) (macOS / Linux / bash) and [`build.ps1`](build.ps1) (Windows 11 / PowerShell Core 7+) drive a complete DOSBox-X build from your host shell without you having to type anything inside DOS:
 
 ```sh
 # bash (macOS / Linux)
-./make-headless.sh                # defaults to demo
-./make-headless.sh debug
-./make-headless.sh --force prod   # -B (force rebuild) + production variant
-./make-headless.sh --keep-log-in-st   # log lands in st/build.log instead of ./build.log
+./build.sh                # defaults to demo
+./build.sh debug
+./build.sh --force prod   # -B (force rebuild) + production variant
+./build.sh --keep-log-in-st   # log lands in st/build.log instead of ./build.log
 ```
 
 ```powershell
 # PowerShell (Windows 11)
-.\make-headless.ps1                # defaults to demo
-.\make-headless.ps1 debug
-.\make-headless.ps1 prod -Force    # -B (force rebuild) + production variant
-.\make-headless.ps1 -KeepLogInSt   # log lands in st\build.log instead of .\build.log
+.\build.ps1                # defaults to demo
+.\build.ps1 debug
+.\build.ps1 prod -Force    # -B (force rebuild) + production variant
+.\build.ps1 -KeepLogInSt   # log lands in st\build.log instead of .\build.log
 ```
 
 Both scripts launch DOSBox-X with `-c "command /c make<variant>.bat HELP=1 …"`, capture all output to `build.log` (streamed live via `tail -F` / `Get-Content -Wait`), wait for DOSBox-X to exit, and report success/failure based on whether the build batch printed `Build succeeded.`. Only one instance can run at a time (DOSBox-X locks its display). Override the DOSBox-X binary location with `DOSBOX_X` (bash env var) or `$env:DOSBOX_X` (PowerShell).
 
 ### Launch SmartTar from the host
 
-[`run-headless.sh`](run-headless.sh) and [`run-headless.ps1`](run-headless.ps1) launch the already-built `st/bin/st.exe` inside DOSBox-X and close DOSBox-X automatically when the app exits:
+[`run.sh`](run.sh) and [`run.ps1`](run.ps1) launch the already-built `st/bin/st.exe` inside DOSBox-X and close DOSBox-X automatically when the app exits:
 
 ```sh
 # bash
-./run-headless.sh                 # close DOSBox-X when SmartTar exits
-./run-headless.sh --keep-open     # leave the DOS prompt up after exit
-./run-headless.sh -- arg1 arg2    # anything after `--` is forwarded to st.exe
+./run.sh                 # close DOSBox-X when SmartTar exits
+./run.sh --keep-open     # leave the DOS prompt up after exit
+./run.sh -- arg1 arg2    # anything after `--` is forwarded to st.exe
 ```
 
 ```powershell
 # PowerShell
-.\run-headless.ps1
-.\run-headless.ps1 -KeepOpen
-.\run-headless.ps1 -- arg1 arg2
+.\run.ps1
+.\run.ps1 -KeepOpen
+.\run.ps1 -- arg1 arg2
 ```
 
-The close-on-exit behavior works because each script queues `-c "exit"` immediately after the `st` invocation, so DOSBox-X exits the instant `st.exe` returns control to `COMMAND.COM`. Build first (`./make-headless.sh ...`) — these scripts only launch, they don't build.
+The close-on-exit behavior works because each script queues `-c "exit"` immediately after the `st` invocation, so DOSBox-X exits the instant `st.exe` returns control to `COMMAND.COM`. Build first (`./build.sh ...`) — these scripts only launch, they don't build.
 
 ### Output
 

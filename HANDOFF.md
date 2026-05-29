@@ -10,7 +10,7 @@ built; the main MAKEFILE's PH_INFO.DAT rule swallowed the failure
 with `-@`. Fixed by rebuilding `inf2dat.exe` from its now-functional
 sub-makefile (see CLAUDE.md `util/inf2dat/` entry). Calls now
 resolve to named destinations. Builds clean
-(`./make-headless.sh demo`, zero warnings, zero errors).**
+(`./build.sh demo`, zero warnings, zero errors).**
 
 ## Design (Template Method over Strategy)
 
@@ -140,7 +140,7 @@ for NAL.
     malformed `phones.csv` -> empty pool -> fallback to the original
     hardcoded prefix arrays (graceful, demo still works). MAKEFILE
     distributes `phones.csv` into `bin/` alongside `demo.ini`. Build
-    verified clean (`./make-headless.sh demo`, zero warnings); runtime
+    verified clean (`./build.sh demo`, zero warnings); runtime
     verification (named destinations show up in the UI for each booth)
     deferred to the next session on GCC's other PC.
   * **Borland 3.1 quirk:** `DEMO_MAX_PHONES_PER_TYPE` /

@@ -85,20 +85,24 @@ zinc/        Zinc 3.5 UI framework (headers, libs, tools — incl. GENHELP.EXE
 util/        DOS utilities for development (NC, MOUSE, PKLITE, PKZIP, SWEEP, etc.)
 dosbox-x.conf  Project-local DOSBox-X config (CPU/mem tuning, PATH wiring,
                [sdl] mouse_emulation=integration for Zinc UI, etc.)
-make-headless.sh  Host-side runner (bash, macOS/Linux). Drives DOSBox-X
-                  non-interactively. variant=demo|debug|eda|prod;
-                  --force passes -B; --keep-log-in-st puts build.log
-                  inside st/. Streams log via tail -F as the build runs.
-make-headless.ps1 PowerShell Core 7+ equivalent for Windows 11. Same
-                  flags in PS form: -Variant, -Force, -KeepLogInSt.
-                  Uses Get-Content -Wait for the live stream.
-run-headless.sh   Host-side launcher (bash) for st.exe inside DOSBox-X.
-                  Closes DOSBox-X when SmartTar exits (trailing -c exit
-                  fires the moment st.exe returns). --keep-open leaves
-                  the DOS prompt up after exit; args after `--` are
-                  forwarded to st.exe like st\run.bat does.
-run-headless.ps1  PowerShell equivalent. Same -KeepOpen switch; args
-                  after `--` forward to st.exe.
+build.sh     Host-side runner (bash, macOS/Linux). Drives DOSBox-X
+             non-interactively. variant=demo|debug|eda|prod;
+             --force passes -B; --keep-log-in-st puts build.log
+             inside st/. Streams log via tail -F as the build runs.
+             Runs mk_cfg.bat + mk_ph.bat as a preamble before make,
+             because Borland MAKE 3.6 misreports errorlevel from
+             those bats (see HANDOFF / TODO -- bats work when
+             invoked directly, fail under MAKE).
+build.ps1    PowerShell Core 7+ equivalent for Windows 11. Same
+             flags in PS form: -Variant, -Force, -KeepLogInSt.
+             Uses Get-Content -Wait for the live stream.
+run.sh       Host-side launcher (bash) for st.exe inside DOSBox-X.
+             Closes DOSBox-X when SmartTar exits (trailing -c exit
+             fires the moment st.exe returns). --keep-open leaves
+             the DOS prompt up after exit; args after `--` are
+             forwarded to st.exe like st\run.bat does.
+run.ps1      PowerShell equivalent. Same -KeepOpen switch; args
+             after `--` forward to st.exe.
 st/          Application source
   src/    .cpp / .c source files, organized into subsystem subdirectories:
     ph/      Telephony engine, tariff, place lookup, query, utilities, parser
@@ -197,7 +201,7 @@ After linking, `BIND286` embeds the Pharlap run-time stub; `CFIG286` tunes it:
 | `RUN=1` | Runs `BIND286` + `CFIG286` after link (produces runnable protected-mode EXE) |
 | `HELP=1` | Regenerates `bin/help.dat` from `docs/help.txt` via `genhelp` (requires `zinc\BIN` on PATH — already wired in `dosbox-x.conf`) |
 
-**Day-to-day dev variant: `demo`.** The current dev environment has no real telephony hardware (booths / PBX / EEPROM) or copy-protection dongle, so the working default is `./make-headless.sh demo` (which sets `-DDEMO -DRUN -DNODONGLE`). The `__DEMO__` gates in `rt_eng.cpp`, `rt_isr.cpp`, `ctrl_ev.cpp`, etc. stub out the hardware paths. Only switch to `prod` / `eda` when explicitly working on something that must exercise the non-demo code (or when comparing against the CI release build, which runs `prod`).
+**Day-to-day dev variant: `demo`.** The current dev environment has no real telephony hardware (booths / PBX / EEPROM) or copy-protection dongle, so the working default is `./build.sh demo` (which sets `-DDEMO -DRUN -DNODONGLE`). The `__DEMO__` gates in `rt_eng.cpp`, `rt_isr.cpp`, `ctrl_ev.cpp`, etc. stub out the hardware paths. Only switch to `prod` / `eda` when explicitly working on something that must exercise the non-demo code (or when comparing against the CI release build, which runs `prod`).
 
 Example debug build:
 
