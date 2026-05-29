@@ -28,9 +28,7 @@ SPOOLER    *g_spooler	= NULL;
 SSAVER     *g_ssaver 	= NULL;
 DB_ENGINE  *g_dbEngine 	= NULL;
 
-#if !defined(__DEMO__)
 extern STM2 *g_STM2;
-#endif
 // --- Global variables
 BOOL   g_extAreChangeable = FALSE;
 
@@ -67,21 +65,25 @@ CONTROLLER::CONTROLLER(UI_EVENT_MANAGER *eventManager, UI_WINDOW_MANAGER *window
 	//
 	g_cfg = new CFG;
 	g_cfg->Load();
-#if !defined(__DEMO__)
-	if (g_STM2->getStatus() == STM2::BAD_SHUTDOWN)
+	// Old __DEMO__-build behavior: bounds-check unconditionally.
+	// Old real-build behavior: STM2 recovery on BAD_SHUTDOWN, then
+	// bounds-check inside the same if-block.  Preserve both:
+	BOOL doBoundsCheck = g_cfg->IsDemoMode();
+	if (!g_cfg->IsDemoMode() && g_STM2->getStatus() == STM2::BAD_SHUTDOWN)
 	{
 		g_STM2->get(STM2::RECEIPTNUMBER, &g_cfg->N_RECEIPT);
 		g_STM2->get(STM2::EXTENSIONRECEIPTNUMBER, &g_cfg->E_N_RECEIPT);
-#endif
+		doBoundsCheck = TRUE;
+	}
+	if (doBoundsCheck)
+	{
 		// avoid bad record number
 		if (g_cfg->N_RECEIPT < 0 || g_cfg->N_RECEIPT >= DB_STORAGE::MAX_RECEIPTS)
 			g_cfg->N_RECEIPT = 0;
 
 		if (g_cfg->E_N_RECEIPT < 0 || g_cfg->E_N_RECEIPT >= DB_STORAGE::MAX_RECEIPTS)
 			g_cfg->E_N_RECEIPT = 0;
-#if !defined(__DEMO__)
 	}
-#endif
 
 	g_phEngine = new PH_ENGINE;
 	g_phEngine->Load();
@@ -163,12 +165,10 @@ CONTROLLER::CONTROLLER(UI_EVENT_MANAGER *eventManager, UI_WINDOW_MANAGER *window
 		}
 	}
 
-#if !defined(__DEMO__)
-	if (TraceInfo::s_bTest)
+	if (!g_cfg->IsDemoMode() && TraceInfo::s_bTest)
 	{
 		ReplaceDump();
 	}
-#endif // #if !defined(__DEMO__)
 
 	//
 	// !!! to test GP Exception handler
@@ -262,26 +262,27 @@ void CONTROLLER::Poll(void)
 		lastTime.Export(&intTime);
 		RTEngine->SetCurrentTime(intTime);
 
-#if !defined(__DEMO__)
-		// recover info
-		g_STM2->put(STM2::EXTENSIONRECEIPTNUMBER, &g_cfg->E_N_RECEIPT);
-		g_STM2->put(STM2::RECEIPTNUMBER, &g_cfg->N_RECEIPT);
-
-		if (!(sec%5))
+		if (!g_cfg->IsDemoMode())
 		{
-			static BoothCluster s_clusters[MAX_CLUSTER];
-			RTEngine->GetClusters(s_clusters);
-			g_STM2->put(STM2::BOOTHCLUSTERS, s_clusters);
+			// recover info
+			g_STM2->put(STM2::EXTENSIONRECEIPTNUMBER, &g_cfg->E_N_RECEIPT);
+			g_STM2->put(STM2::RECEIPTNUMBER, &g_cfg->N_RECEIPT);
 
-			int date = RTEngine->GetCurrentDate();
-			g_STM2->put(STM2::DATE, &date);
+			if (!(sec%5))
+			{
+				static BoothCluster s_clusters[MAX_CLUSTER];
+				RTEngine->GetClusters(s_clusters);
+				g_STM2->put(STM2::BOOTHCLUSTERS, s_clusters);
 
-			int time = RTEngine->GetCurrentTime();
-			g_STM2->put(STM2::TIME, &time);
+				int date = RTEngine->GetCurrentDate();
+				g_STM2->put(STM2::DATE, &date);
 
-			g_dbEngine->SetErrors(g_cfg->N_DIAL_ERR, g_cfg->N_COM_ERR);
+				int time = RTEngine->GetCurrentTime();
+				g_STM2->put(STM2::TIME, &time);
+
+				g_dbEngine->SetErrors(g_cfg->N_DIAL_ERR, g_cfg->N_COM_ERR);
+			}
 		}
-#endif
 		ProcessPrepaid(); // 2.21.8 build 16
 
 		UpdateStatusBar(); // give a chance for the status bar
@@ -532,12 +533,10 @@ void interrupt far CONTROLLER::NewGPFHandler(EXCEP_FRAME eFrame)
 {
 	_exceptionIsOn = TRUE;
 
-#if !defined(__DEMO__)
-	if (TraceInfo::s_bTest)
+	if (!g_cfg->IsDemoMode() && TraceInfo::s_bTest)
 	{
 		Dump();
 	}
-#endif // #if !defined(__DEMO__)
 
 	delete RTEngine;
 	delete g_dbEngine;
@@ -590,7 +589,6 @@ void interrupt far CONTROLLER::NewGPFHandler(EXCEP_FRAME eFrame)
 		exit(1);
 }
 
-#if !defined(__DEMO__)
 
 void CONTROLLER::Dump()
 {
@@ -692,7 +690,6 @@ void CONTROLLER::ReplaceDump()
 	buffer = NULL;
 }
 
-#endif // #if !defined(__DEMO__)
 
 // Free-store exception handler.
 void CONTROLLER::NewHandler(void)

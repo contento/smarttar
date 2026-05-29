@@ -42,10 +42,8 @@ STM2 *g_STM2  = NULL;
 static void Prolog(void);
 static void clean(UI_DISPLAY *display, UI_EVENT_MANAGER *eventManager, UI_WINDOW_MANAGER *windowManager);
 
-#if !defined(__DEMO__)
 static BOOL cancelBadShutDown(void);
 static void logSTM2(char c);
-#endif // __DEMO__
 //
 EVENT_TYPE Exit(UI_DISPLAY *display, UI_EVENT_MANAGER *, UI_WINDOW_MANAGER *windowManager);
 
@@ -163,8 +161,7 @@ DONGLE dongle;
 	*eventManager
 		+ (controller = new CONTROLLER(eventManager, windowManager))
 	;
-#if !defined(__DEMO__)
-    if (g_cfg->GetStatus() != CFG::OK)
+    if (!g_cfg->IsDemoMode() && g_cfg->GetStatus() != CFG::OK)
     {
         UI_WINDOW_OBJECT::errorSystem->ReportError(windowManager, WOS_NO_STATUS,
                 "\n\n""      Acceso Negado\n"
@@ -177,7 +174,6 @@ DONGLE dongle;
         clean(display, eventManager, windowManager);
         return (2);
     }
-#endif
     UI_KEY key;
     key.shiftState = S_ALT;
     key.value = ALT_F10 >> 8;
@@ -313,15 +309,15 @@ void Prolog(void)
 	g_appInfo = g_superAppInfo.Data;
 	if (TraceInfo::s_bDevelopment)
 		g_superAppInfo.Attr.STPro = TRUE;
-#if defined(__DEMO__)
-	g_superAppInfo.Attr.STPro = TRUE;
-#endif
+	if (g_cfg->IsDemoMode())
+		g_superAppInfo.Attr.STPro = TRUE;
 	if (g_superAppInfo.Attr.Serialized)
 		_Decrypt(&g_appInfo, sizeof(APP_INFO));
 	// I love colors. GCC/gcc.
 	UI_DISPLAY::backgroundPalette->fillPattern     = PTN_SOLID_FILL;
 	UI_DISPLAY::backgroundPalette->colorBackground = GREEN;
-#if !defined(__DEMO__)
+	if (!g_cfg->IsDemoMode())
+	{
 	WORD status = g_STM2->getStatus();
 	if (status != STM2::NONE)
 	{
@@ -355,10 +351,9 @@ void Prolog(void)
 			break;
 		}
 	}
-#endif
+	}
 }
 
-#if !defined(__DEMO__)
 BOOL cancelBadShutDown(void)
 {
 	BOOL ok = TRUE;
@@ -434,4 +429,3 @@ void logSTM2(char c)
 	chmod(filename, S_IREAD);
 }
 
-#endif // __DEMO__

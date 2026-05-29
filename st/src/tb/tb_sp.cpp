@@ -272,9 +272,8 @@ EVENT_TYPE UIW_SP_SERV::Event(const UI_EVENT &event)
 		g_cfg->N_RECEIPT = (g_cfg->N_RECEIPT+1)%DB_STORAGE::MAX_RECEIPTS;
 		if (!g_cfg->N_RECEIPT)
 			g_cfg->N_RECEIPT++;
-#if !defined(__DEMO__)
-		g_STM2->put(STM2::RECEIPTNUMBER, &g_cfg->N_RECEIPT);
-#endif
+		if (!g_cfg->IsDemoMode())
+			g_STM2->put(STM2::RECEIPTNUMBER, &g_cfg->N_RECEIPT);
 		//
 		UI_DATE date;
 		UI_TIME time;
