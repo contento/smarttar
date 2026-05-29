@@ -515,3 +515,14 @@ when scoped.
   printer driver loaded as a new `pr_*.dll` and use the existing
   spooler path. Path (a) is self-contained, path (b) reuses the
   printer abstraction. Decide before scoping.
+- **PDF print driver (one PDF per day)** -- a new `pr_*.dll` that
+  plugs into the existing physical-printer path (same per-receipt
+  format/spooler flow as the real drivers in `src/pr/pr_*.c`), but
+  instead of emitting to a physical port it appends each printed
+  receipt to a daily PDF file (e.g. `RX-YYYYMMDD.pdf`, one receipt
+  per page, rolled over at the turn-of-day boundary). This is the
+  "live" counterpart to the bulk "Print all receipts as PDF" entry
+  above -- it captures receipts as they are printed rather than
+  exporting RX.DAT history after the fact, and concretely realizes
+  that entry's path (b). Reuses the same emit logic, so scope the
+  raw-PDF bytestream writer once and share it between both.
