@@ -152,6 +152,7 @@ void UIW_VIEW::addMenu(void)
 							"&Cambiar código de acceso", MNIF_SEND_MESSAGE, BTF_NO_3D, WOF_NO_FLAGS, NULL, UE_CHANGE_PASSWD)
       )
 	+ new UIW_POP_UP_ITEM("Si&mulacion del sistema\t(F2)"  , MNIF_SEND_MESSAGE, BTF_NO_3D, WOF_NO_FLAGS, NULL, UE_SIMULA           )
+	+ new UIW_POP_UP_ITEM("&Detener/Reanudar simulacion"   , MNIF_SEND_MESSAGE, BTF_NO_3D, WOF_NO_FLAGS, NULL, UE_DEMO_TOGGLE      )
     + new UIW_POP_UP_ITEM("", MNIF_SEPARATOR)
     + new UIW_POP_UP_ITEM("Desacti&var este menú"    , MNIF_SEND_MESSAGE, BTF_NO_3D, WOF_NO_FLAGS, NULL, UE_DEACTIVATE_CONFIG)
     ;

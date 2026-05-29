@@ -36,7 +36,8 @@ DEMO_ENGINE::DEMO_ENGINE(WORD numOfClusters)
 	  _numBooths(0),
 	  _lcgState(12345678UL),
 	  _totalWeight(0),
-	  _meanArrivalTicks(1000)
+	  _meanArrivalTicks(1000),
+	  _paused(FALSE)
 {
 	memset(_types,  0, sizeof(_types));
 	memset(_phones, 0, sizeof(_phones));
@@ -98,6 +99,12 @@ void DEMO_ENGINE::RecoverState(void)
 
 void DEMO_ENGINE::OnTimerTick(WORD cNum, BoothCluster::_DataPort & dp)
 {
+	// Paused via menu (UE_DEMO_TOGGLE -> TogglePaused).  Booths freeze
+	// in whatever phase they're in until resumed; no FSM advancement,
+	// no new arrivals.  Active calls just stop ticking down.
+	if (_paused)
+		return;
+
 	// Map b.type -> CALL_ATTR (st_defs.h).  Used to pin CallAttrs once
 	// the FSM has left OFFHOOK, so DoInterdig's NOT_INCLUDED threshold
 	// check (rt_do.cpp:355) doesn't fire LOCK on a stale controller

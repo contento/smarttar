@@ -12,6 +12,7 @@
 #include <hb_ids.h>
 #include <events.h>
 #include <ph_query.h>
+#include <control.h>  // 2.50 -- for CONTROLLER::RTEngineToggleDemoPause()
 
 #ifndef USE_HELP_CONTEXTS
 #define USE_HELP_CONTEXTS
@@ -158,6 +159,9 @@ EVENT_TYPE UIW_VIEW::Event(const UI_EVENT &event)
 		if (!FlagSet(WConfigMenu->woFlags, WOF_NON_SELECTABLE))
 			(void *)&(*windowManager + new UIW_SIMULA);
         break;
+	case UE_DEMO_TOGGLE: // 2.50 -- pause/resume DEMO_ENGINE generator
+		CONTROLLER::RTEngineToggleDemoPause();
+		break;
     case UE_DEACTIVATE_CONFIG:
         WMenu->Event(UI_EVENT(L_RIGHT, 0));
         WConfigMenu->woFlags |= WOF_NON_SELECTABLE;
