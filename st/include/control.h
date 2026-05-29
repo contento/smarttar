@@ -162,10 +162,11 @@ private:
     static PEHANDLER OldGPFHandler;
     static void 		 NewHandler(void);
 
-#if !defined(__DEMO__)
+	// Dump/ReplaceDump are always declared (definitions live in
+	// control.cpp gated only by TraceInfo::s_bTest at the call sites).
+	// Used to be #ifdef'd out in demo builds; engine mode is runtime now.
 	static void Dump();
 	static void ReplaceDump();
-#endif // #if !defined(__DEMO__)
 #endif
 };
 
