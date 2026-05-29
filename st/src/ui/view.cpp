@@ -11,6 +11,7 @@
 #include <hb_ids.h>
 #include <info.h>
 #include <b_button.h>
+#include <control.h>  // 2.50 -- CONTROLLER::RTEngineIsDemo() demo gate
 
 #ifndef USE_HELP_CONTEXTS
 #define USE_HELP_CONTEXTS
@@ -152,7 +153,6 @@ void UIW_VIEW::addMenu(void)
 							"&Cambiar código de acceso", MNIF_SEND_MESSAGE, BTF_NO_3D, WOF_NO_FLAGS, NULL, UE_CHANGE_PASSWD)
       )
 	+ new UIW_POP_UP_ITEM("Si&mulacion del sistema\t(F2)"  , MNIF_SEND_MESSAGE, BTF_NO_3D, WOF_NO_FLAGS, NULL, UE_SIMULA           )
-	+ new UIW_POP_UP_ITEM("&Detener/Reanudar simulacion"   , MNIF_SEND_MESSAGE, BTF_NO_3D, WOF_NO_FLAGS, NULL, UE_DEMO_TOGGLE      )
     + new UIW_POP_UP_ITEM("", MNIF_SEPARATOR)
     + new UIW_POP_UP_ITEM("Desacti&var este menú"    , MNIF_SEND_MESSAGE, BTF_NO_3D, WOF_NO_FLAGS, NULL, UE_DEACTIVATE_CONFIG)
     ;
@@ -177,6 +177,10 @@ void UIW_VIEW::addMenu(void)
            new UIW_POP_UP_ITEM("Acti&var menú de extensiones", MNIF_SEND_MESSAGE, BTF_NO_3D, WOF_NO_FLAGS, NULL, UE_E_ACTIVATE)
       )
     ;
+	if (CONTROLLER::RTEngineIsDemo())          // 2.50 -- demo-only operator control
+		*WInfoMenu
+		+ new UIW_POP_UP_ITEM("", MNIF_SEPARATOR)
+		+ new UIW_POP_UP_ITEM("&Detener/Reanudar simulacion", MNIF_SEND_MESSAGE, BTF_NO_3D, WOF_NO_FLAGS, NULL, UE_DEMO_TOGGLE);
 	WInfoMenu->helpContext = H_INFO_MENU;
     //
     WPrintMenu = new UIW_PULL_DOWN_ITEM("&Impresión");
