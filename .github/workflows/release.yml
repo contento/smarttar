@@ -171,7 +171,7 @@ jobs:
           Copy-Item st\bin\RES.DAT       $stage\
           Copy-Item st\bin\*.inf         $stage\
           # Pharlap runtime DLLs the BIND step binds against at runtime.
-          Copy-Item pharlap\BIN\*.DLL    $stage\
+          Copy-Item vendor\pharlap\BIN\*.DLL    $stage\
           Compress-Archive -Path $stage -DestinationPath "out\$name.zip"
           Get-ChildItem out\
 

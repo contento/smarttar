@@ -1,5 +1,5 @@
 # ==============================================================================
-# BC/, PHARLAP/, UTIL/, ZINC/, Documents/ are intentionally NOT listed here
+# vendor/ (bc, pharlap, util, zinc) and Documents/ are intentionally NOT listed here
 # — their contents are always tracked
 # ==============================================================================
 

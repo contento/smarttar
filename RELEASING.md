@@ -85,7 +85,7 @@ The workflow at [`.github/workflows/release.yml`](.github/workflows/release.yml)
 4. Runs `.\build.ps1 prod`.
 5. Confirms `st/bin/st.exe`, `pr_*.dll`, `help.dat`, `RES.DAT` all exist.
 6. Verifies the tag matches `ST_VERSION` in `st/include/version.h` — fails the build if they disagree (catches "forgot to run `bump-version.sh`/`.ps1`" mistakes).
-7. Packages `st/bin/` artifacts plus the Pharlap runtime DLLs (`pharlap/BIN/*.DLL`) into `smarttar-X.Y.Z.zip` via `Compress-Archive`.
+7. Packages `st/bin/` artifacts plus the Pharlap runtime DLLs (`vendor/pharlap/BIN/*.DLL`) into `smarttar-X.Y.Z.zip` via `Compress-Archive`.
 8. Creates a GitHub Release attached to the tag, using GitHub's auto-generated release notes plus a small body block pointing at `versions.txt`.
 
 You can also trigger a dry-run from the Actions tab via **workflow_dispatch** — that runs the same build but uploads the ZIP as a workflow artifact instead of creating a Release. **Strongly recommended before tagging a real release for the first time**, to shake down environment-specific quirks (mount paths, DOSBox-X launching headlessly under the runner's session, etc.).

@@ -1,7 +1,7 @@
 # Zinc Designer / RES.DAT workflow
 
 > **DRAFT — not yet verified by Gonzalo.** This was drafted from repo
-> inspection (MAKEFILE rules, `st/bin/mvres.bat`, `zinc/BIN/` contents,
+> inspection (MAKEFILE rules, `st/bin/mvres.bat`, `vendor/zinc/BIN/` contents,
 > file layout). Steps marked **`FIXME`** are best-guess; correct them on
 > the next pass through the workflow.
 
@@ -28,7 +28,7 @@ artifact. Edits must end up in `st/res/RES.DAT` to persist.
 
 ## Tooling
 
-In [zinc/BIN/](../../zinc/BIN/):
+In [vendor/zinc/BIN/](../../vendor/zinc/BIN/):
 
 | Binary | Purpose |
 | ------ | ------- |
@@ -39,7 +39,7 @@ In [zinc/BIN/](../../zinc/BIN/):
 | `GENHELP.EXE` | Compiles `docs/help.txt` to `bin/help.dat` (unrelated to RES.DAT; called via `HELP=1`) |
 | `P_DESIGN.ZNC` | Zinc Designer config / palette file. Lives alongside the EXE — leave it where it is. **`FIXME`** confirm what this actually is |
 
-`zinc/BIN` is already on the PATH inside DOSBox-X (see
+`vendor/zinc/BIN` is already on the PATH inside DOSBox-X (see
 [dosbox-x.conf](../../dosbox-x.conf)), so `DESIGN` can be invoked from
 anywhere.
 
@@ -114,7 +114,7 @@ anywhere.
   Designer's text-input field use the DOS code page or Latin-1?
 - **Don't run the Designer while `st.exe` is open** in the same DOSBox-X
   instance. **`FIXME`** verify whether this is actually a constraint.
-- **`P_DESIGN.ZNC`** sits in `zinc/BIN/` — leave it there. Moving or
+- **`P_DESIGN.ZNC`** sits in `vendor/zinc/BIN/` — leave it there. Moving or
   deleting it may break the Designer's startup config. **`FIXME`**
   describe what it actually does.
 
