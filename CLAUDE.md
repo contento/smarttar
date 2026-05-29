@@ -126,6 +126,15 @@ st/          Application source
     inf2dat/   Canonical source for telephony .inf files (ddi.inf, ddn.inf,
                local.inf -- ISO-8859-1) and INF2DAT.EXE compiler. The
                MAKEFILE runs inf2dat here and copies PH_INFO.DAT to bin/.
+               INF2DAT.EXE is built from its own sub-makefile in this dir
+               (`cd st\util\inf2dat && make -DRUN`); the main MAKEFILE
+               assumes it already exists. The sub-makefile links cfg /
+               ph_eng / ph_place / ph_tar / ph_util / st_util / parser /
+               traceinf / filehdr / info from the main src\ tree -- when
+               any of those gain new external dependencies, add the
+               corresponding MODULE_N + rule here too. inf2dat runs with
+               STTEST=1 so a missing util\inf2dat\st.cfg is tolerated; a
+               corrupt st.cfg is not, so delete (don't stub) when in doubt.
     ini2cfg/   Canonical source for ST.INI (app config). INI2CFG.EXE
                compiles ST.INI -> ST.CFG. The MAKEFILE runs ini2cfg and
                distributes ST.CFG to bin/ and every util/ subdir via

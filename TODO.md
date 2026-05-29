@@ -230,6 +230,16 @@ max_duration_secs = 1800
 - Lightweight operator controls — start/stop generator, reload rules.
   Must be a new widget / menu entry; the old `UIW_SIMULA` window is
   off-limits per the milestone framing.
+- **Quit confirmation when demo is running.** Today Alt-X / File-Quit
+  closes the app with active fake calls in flight. The existing
+  "El sistema esta procesando informacion. Por favor verifique todas
+  las cabinas." dialog (the production guard that blocks quit while
+  real booths are mid-call) is the right pattern to mirror -- find
+  its call site and add a parallel branch that fires when
+  `MakeEngine` returned a `DEMO_ENGINE`. Either prompt "Demo is
+  running -- stop and quit?" or stop the generator silently before
+  exit. Avoids leaving the impression that a real call session was
+  abandoned.
 
 ## Milestone: Toolchain portability — v4.0
 
@@ -360,6 +370,57 @@ full context and severity rationale.
 - [ ] Address MEDIUM / LOW findings (audit § 3) — opportunistically
 - [ ] Verification pass per audit § 6
 
+## Milestone: Repo layout -- vendor consolidation
+
+Move the four bundled third-party / external toolchain trees -- `bc/`,
+`pharlap/`, `zinc/`, and `util/` -- into a single top-level
+`vendor/` directory so the project root holds only first-party
+artifacts (`st/`, `make-headless.*`, `run-headless.*`, `dosbox-x.conf`,
+docs).
+
+**Surface area to update** (every relative path that walks through one
+of these four trees has to be retargeted):
+
+- [ ] Move trees:
+      `bc/` -> `vendor/bc/`,
+      `pharlap/` -> `vendor/pharlap/`,
+      `zinc/` -> `vendor/zinc/`,
+      `util/` -> `vendor/util/`.
+      (`st/util/` stays put -- that's first-party build utilities, not
+      a vendored toolchain.)
+- [ ] `dosbox-x.conf` PATH:
+      `C:\BC\BIN;C:\PHARLAP\BIN;C:\ZINC\BIN;...;C:\UTIL\...` ->
+      `C:\VENDOR\BC\BIN;C:\VENDOR\PHARLAP\BIN;C:\VENDOR\ZINC\BIN;...;C:\VENDOR\UTIL\...`.
+- [ ] `st/MAKEFILE`: `..\bc\lib`, `..\pharlap\lib`, `..\zinc\lib`,
+      `..\pharlap\lib\c0pl.obj`, `RTK_DIR=..\pharlap\bin` -> all gain
+      `vendor\` segment.
+- [ ] `st/st.cfg` (BCC config): `-I..\bc\include;..\pharlap\include;..\zinc\include`
+      and matching `-L` -> add `vendor\`.
+- [ ] `st/util/util.cfg`: `-I..\..\..\bc\include;..\..\..\pharlap\include;
+      ..\..\..\zinc\include` -> bump each by one more `..\` to land in
+      `vendor\`. Same for `-L`. Same for `st/util/inf2dat/makefile`'s
+      `LINK_LIBPATH` and `STARTUP_OBJS` (and every other sub-makefile
+      under `st/util/*/makefile`).
+- [ ] Anything under `st/test/*/makefile` (same `..\..\..\bc\...`
+      pattern), if those build today.
+- [ ] [CLAUDE.md](CLAUDE.md): "Repository Layout" section, every
+      reference to `bc/`, `pharlap/`, `zinc/`, `util/` at the top
+      level.
+- [ ] [README.md](README.md) / [README.es.md](README.es.md): same.
+- [ ] [.gitignore](.gitignore): comment line "BC/, PHARLAP/, UTIL/,
+      ZINC/, Documents/ are intentionally NOT listed here" -> update.
+- [ ] [.gitattributes](.gitattributes) if any rules are scoped to
+      those top-level paths.
+- [ ] CI workflow [.github/workflows/release.yml](.github/workflows/release.yml)
+      if it walks any of these paths.
+- [ ] `make-headless.sh` / `make-headless.ps1` / `run-headless.sh` /
+      `run-headless.ps1` -- verify (they currently reference only `st/`
+      and the dosbox-x conf, so this may be a no-op).
+
+Do this in **one big commit** rather than split per-tree -- the build
+won't pass until every path is updated together, so partial commits
+would just be broken intermediate states.
+
 ## Milestone: Maintenance hygiene
 
 - [x] Centralize version into `st/include/version.h`; bump scripts keep
@@ -407,3 +468,12 @@ when scoped.
   drop-in replacement for Borland C++ 3.1 targeting 16/32-bit DOS.
   Could replace BCC286 + Pharlap in the "Toolchain portability"
   milestone (see above).  <https://github.com/open-watcom/open-watcom-v2>
+- **Print all receipts as PDF** — new entry under the Tools menu
+  (`tb_tools.cpp` / `mb_print.cpp`) that batch-exports every receipt
+  in RX.DAT to a single PDF file (one receipt per page). DOS has no
+  native PDF library, so two paths to scope: (a) emit raw PDF
+  bytestream from C++ (small subset of PDF 1.4 -- text + simple
+  layout is feasible in pure code); (b) print to a virtual PDF
+  printer driver loaded as a new `pr_*.dll` and use the existing
+  spooler path. Path (a) is self-contained, path (b) reuses the
+  printer abstraction. Decide before scoping.
