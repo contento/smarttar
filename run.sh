@@ -3,7 +3,7 @@
 # the user exits the app (the trailing -c "exit" runs as soon as st.exe
 # returns control to COMMAND.COM).
 #
-# Usage:   ./run-headless.sh [--keep-open] [--log [file]] [-- <args>]
+# Usage:   ./run.sh [--keep-open] [--log [file]] [-- <args>]
 #
 # Flags:
 #   --keep-open   After st.exe exits, drop into the DOS prompt instead
@@ -58,7 +58,7 @@ if ! command -v "$DOSBOX_X" >/dev/null 2>&1; then
 fi
 
 if [[ ! -f st/bin/st.exe ]]; then
-  echo "st/bin/st.exe not found. Build first: ./make-headless.sh [variant]" >&2
+  echo "st/bin/st.exe not found. Build first: ./build.sh [variant]" >&2
   exit 1
 fi
 

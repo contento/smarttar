@@ -4,12 +4,12 @@
   Launch SmartTar inside DOSBox-X. Closes DOSBox-X when the app exits.
 
 .DESCRIPTION
-  PowerShell counterpart to run-headless.sh. The trailing -c "exit"
+  PowerShell counterpart to run.sh. The trailing -c "exit"
   fires the moment st.exe returns control to COMMAND.COM, so closing
   the SmartTar app also closes the DOSBox-X window. Pass -KeepOpen to
   drop into the DOS prompt instead.
 
-  Usage:   .\run-headless.ps1 [-KeepOpen] [-Log [file]] [-- <args>]
+  Usage:   .\run.ps1 [-KeepOpen] [-Log [file]] [-- <args>]
 
   Anything after `--` is forwarded as positional args to st.exe (same
   pass-through as st\run.bat).
@@ -36,15 +36,15 @@
   Windows PowerShell 5.1 and on pwsh on macOS/Linux.
 
 .EXAMPLE
-  .\run-headless.ps1
+  .\run.ps1
   Launch SmartTar; DOSBox-X closes when the app exits (logs to run.log).
 
 .EXAMPLE
-  .\run-headless.ps1 -KeepOpen
+  .\run.ps1 -KeepOpen
   Launch SmartTar; leave the DOS prompt up after exit.
 
 .EXAMPLE
-  .\run-headless.ps1 -Log custom.log
+  .\run.ps1 -Log custom.log
   Launch SmartTar and capture debug output to custom.log.
 #>
 
@@ -81,7 +81,7 @@ if (-not $dosboxX -or -not (Test-Path -LiteralPath $dosboxX)) {
 }
 
 if (-not (Test-Path -LiteralPath 'st\bin\st.exe')) {
-    Write-Error 'st\bin\st.exe not found. Build first: .\make-headless.ps1 [variant]'
+    Write-Error 'st\bin\st.exe not found. Build first: .\build.ps1 [variant]'
     exit 1
 }
 

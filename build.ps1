@@ -4,11 +4,11 @@
   Run a SmartTar build inside DOSBox-X non-interactively (PowerShell / Windows).
 
 .DESCRIPTION
-  Equivalent to make-headless.sh for hosts that don't have bash.
+  Equivalent to build.sh for hosts that don't have bash.
   Tested on PowerShell Core 7+ on Windows 11; should also work on
   Windows PowerShell 5.1 and on pwsh on macOS/Linux.
 
-  Usage:   .\make-headless.ps1 [-Force] [-KeepLogInSt] [demo|dbg|eda|prod]
+  Usage:   .\build.ps1 [-Force] [-KeepLogInSt] [demo|dbg|eda|prod]
   Default: demo, log at repo root (build.log)
 
   Only one instance can run at a time (DOSBox-X locks its config / display).
@@ -35,11 +35,11 @@
   Override the dosbox-x.exe location with the DOSBOX_X env var.
 
 .EXAMPLE
-  .\make-headless.ps1
+  .\build.ps1
   Demo build, log at .\build.log.
 
 .EXAMPLE
-  .\make-headless.ps1 prod -Force
+  .\build.ps1 prod -Force
   Force-rebuild the production variant.
 #>
 
@@ -96,8 +96,8 @@ if ($Force) {
     $bannerSuffix = ' (force rebuild)'
 }
 
-Write-Host "make-headless: building variant '$Variant'$bannerSuffix (log: $log) ..."
-Write-Host 'make-headless: streaming compile output below.'
+Write-Host "build: building variant '$Variant'$bannerSuffix (log: $log) ..."
+Write-Host 'build: streaming compile output below.'
 Write-Host ('-' * 70)
 
 # Truncate or create the log. Remove-Item fails when a previous run's
@@ -107,7 +107,9 @@ Write-Host ('-' * 70)
 $dosboxArgs = @(
     '-conf',       'dosbox-x.conf',
     '-fastlaunch',
-    '-c',          "command /c make$Variant.bat $makeArgs > $dosLog",
+    '-c',          "command /c util\ini2cfg\mk_cfg.bat >> $dosLog",
+    '-c',          "command /c util\inf2dat\mk_ph.bat >> $dosLog",
+    '-c',          "command /c make$Variant.bat $makeArgs >> $dosLog",
     '-c',          'exit'
 )
 
