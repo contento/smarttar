@@ -226,6 +226,7 @@ public:
 	void GetClusters(BoothCluster clusters[]);
 
 	BOOL GetReceipt(DynamicReceipt & dynReceipt);
+	void ForceStoreActiveCalls(void); // 2.50 -- settle in-progress TALK calls (drain/exit)
 
 	WORD GetNumOfCalls(WORD cNum, WORD bNum) const;
 	void SetNumOfCalls(WORD cNum, WORD bNum, WORD numOfCalls);

@@ -177,6 +177,10 @@ CONTROLLER::CONTROLLER(UI_EVENT_MANAGER *eventManager, UI_WINDOW_MANAGER *window
 
 CONTROLLER::~CONTROLLER()
 {
+	// 2.50 -- settle calls still connected so a graceful stop / exit bills
+	// them; they are then printed/archived by the flush loop below.
+	RTEngine->ForceStoreActiveCalls();
+
 	// flush all receipts
 
 	DynamicReceipt dynReceipt;

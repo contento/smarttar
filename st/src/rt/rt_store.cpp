@@ -143,3 +143,21 @@ void ENGINE::StoreReceipt(WORD cNum, WORD bNum)
 
 #endif
 }
+
+// -------------------------------------------------------------------------
+// ForceStoreActiveCalls: 2.50 -- settle calls still connected (TALK) so a
+// graceful stop / exit bills them instead of dropping them.  Enqueues a
+// receipt for every booth past T_TALK (StoreReceipt locks the booth so it
+// is not re-stored); shorter, pre-answer calls are dropped, matching
+// DoStore's own threshold.  Safe to call when idle (no-op).
+// -------------------------------------------------------------------------
+void ENGINE::ForceStoreActiveCalls(void)
+{
+	for (WORD cNum = 0; cNum < g_cfg->ACTIVE_CLUSTERS; cNum++)
+		for (WORD bNum = 0; bNum < CLUSTER_SIZE; bNum++)
+		{
+			if ((GetToneFS(cNum, bNum) == TALK || GetPulseFS(cNum, bNum) == TALK)
+			    && GetElapsedCount(cNum, bNum) >= g_cfg->T_TALK)
+				StoreReceipt(cNum, bNum);
+		}
+}

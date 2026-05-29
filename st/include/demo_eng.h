@@ -34,7 +34,7 @@ public:
 
 	virtual BOOL IsDemo(void) { return TRUE; }
 
-	virtual void TogglePaused(void) { _paused = !_paused; }
+	virtual void TogglePaused(void);          // 2.50 -- graceful drain (see .cpp)
 	virtual BOOL IsPaused(void)     { return _paused; }
 
 private:
@@ -96,6 +96,9 @@ private:
 	WORD          _totalWeight;
 	WORD          _meanArrivalTicks; // per-booth mean inter-arrival
 	BOOL          _paused;           // when TRUE, OnTimerTick is a no-op
+	BOOL          _draining;         // 2.50 -- hanging up active calls before pause
+	DWORD         _simTicks;         // 2.50 -- run-ticks elapsed (only while running)
+	DWORD         _simLimitTicks;    // 2.50 -- total run cap in ticks (0 = unlimited)
 	DemoCallType  _types[3];         // LOCAL, NAL, INTER
 	PhonePool     _phones[3];        // LOCAL, NAL, INTER -- post-access digits
 
@@ -103,6 +106,9 @@ private:
 	void ParseConfig(void);
 	void ParsePhones(void);
 	void GenCall(DemoBooth & b);
+	// 2.50 -- graceful-stop helpers (ISR-safe; called from OnTimerTick)
+	void DrainTick(WORD cNum, BoothCluster::_DataPort & dp);
+	BOOL AllBoothsIdle(void);
 
 	// --- ISR-safe RNG -----------------------------------------------------
 	DWORD LcgNext(void)

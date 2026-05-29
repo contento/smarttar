@@ -37,7 +37,10 @@ DEMO_ENGINE::DEMO_ENGINE(WORD numOfClusters)
 	  _lcgState(12345678UL),
 	  _totalWeight(0),
 	  _meanArrivalTicks(1000),
-	  _paused(FALSE)
+	  _paused(FALSE),
+	  _draining(FALSE),
+	  _simTicks(0UL),
+	  _simLimitTicks(0UL)
 {
 	memset(_types,  0, sizeof(_types));
 	memset(_phones, 0, sizeof(_phones));
@@ -99,11 +102,27 @@ void DEMO_ENGINE::RecoverState(void)
 
 void DEMO_ENGINE::OnTimerTick(WORD cNum, BoothCluster::_DataPort & dp)
 {
-	// Paused via menu (UE_DEMO_TOGGLE -> TogglePaused).  Booths freeze
-	// in whatever phase they're in until resumed; no FSM advancement,
-	// no new arrivals.  Active calls just stop ticking down.
+	// Fully paused: nothing to drive.  The FSM (EvalToneState, run from
+	// the same ISR) keeps ticking, so any hang-ups queued during the
+	// preceding drain still settle while we sit here.
 	if (_paused)
 		return;
+
+	// Total-time cap: count run-ticks once per tick (cluster 0 only) and
+	// trip the graceful drain when the budget is spent.
+	if (cNum == 0 && !_draining)
+	{
+		_simTicks++;
+		if (_simLimitTicks && _simTicks >= _simLimitTicks)
+			_draining = TRUE;
+	}
+
+	// Graceful stop in progress: hang up active calls, start no new ones.
+	if (_draining)
+	{
+		DrainTick(cNum, dp);
+		return;
+	}
 
 	// Map b.type -> CALL_ATTR (st_defs.h).  Used to pin CallAttrs once
 	// the FSM has left OFFHOOK, so DoInterdig's NOT_INCLUDED threshold
@@ -285,6 +304,70 @@ void DEMO_ENGINE::OnTimerEnd(void)
 }
 
 // -------------------------------------------------------------------------
+// TogglePaused: menu entry point (UE_DEMO_TOGGLE).  Stopping is graceful --
+// we enter a draining state (OnTimerTick -> DrainTick) instead of freezing
+// booths mid-call.  Resuming clears the drain and grants a fresh run budget
+// for the total-time cap.
+// -------------------------------------------------------------------------
+void DEMO_ENGINE::TogglePaused(void)
+{
+	if (_paused)            // resume
+	{
+		_paused   = FALSE;
+		_draining = FALSE;
+		_simTicks = 0UL;    // fresh budget for the total-time cap
+	}
+	else if (!_draining)    // begin graceful stop
+	{
+		_draining = TRUE;
+	}
+}
+
+// -------------------------------------------------------------------------
+// DrainTick: ISR-safe.  Drives every active booth in this cluster to hang
+// up -- clearing OOD makes a connected (TALK) call run the normal
+// TALK->STORE settlement (receipt + RX.DAT); a pre-answer dial attempt
+// aborts with no record.  Once every booth across all clusters is idle it
+// latches _paused; the FSM keeps settling the hung-up calls after that.
+// -------------------------------------------------------------------------
+void DEMO_ENGINE::DrainTick(WORD cNum, BoothCluster::_DataPort & dp)
+{
+	if (cNum == 0 && AllBoothsIdle())
+	{
+		_paused   = TRUE;
+		_draining = FALSE;
+		return;
+	}
+
+	for (WORD bNum = 0; bNum < CLUSTER_SIZE; bNum++)
+	{
+		WORD bAbs = cNum * CLUSTER_SIZE + bNum;
+		if (bAbs >= _numBooths)
+			break;
+		DemoBooth & b = _booths[bAbs];
+
+		// Idle line state, either way; the difference is whether we still
+		// have a call to tear down.
+		dp.OOD      &= ~(BYTE)(1 << bNum);
+		dp.DTMFFlags &= ~(BYTE)(1 << bNum);
+		dp.Answer   &= ~(BYTE)(1 << bNum);
+		dp.ThreadC  |=  (BYTE)(1 << bNum);
+		b.phase = DP_IDLE;   // no new arrivals while draining
+	}
+}
+
+// -------------------------------------------------------------------------
+// AllBoothsIdle: TRUE when no booth has an active demo call in flight.
+// -------------------------------------------------------------------------
+BOOL DEMO_ENGINE::AllBoothsIdle(void)
+{
+	for (WORD i = 0; i < _numBooths; i++)
+		if (_booths[i].phase != DP_IDLE)
+			return FALSE;
+	return TRUE;
+}
+
+// -------------------------------------------------------------------------
 // ParseConfig: read demo.ini from the working directory.
 // Called from InitHardware (not ISR).  Simple key=value INI parser.
 // -------------------------------------------------------------------------
@@ -316,6 +399,7 @@ void DEMO_ENGINE::ParseConfig(void)
 
 	WORD callsPerMinute = 6;
 	WORD seed           = 0;
+	WORD totalMinutes   = 60; // 2.50 -- total run cap (0 = unlimited)
 
 	FILE *fp = fopen("demo.ini", "r");
 	if (fp)
@@ -348,6 +432,8 @@ void DEMO_ENGINE::ParseConfig(void)
 					callsPerMinute = (WORD)atoi(val);
 				else if (strcmp(key, "seed") == 0)
 					seed = (WORD)atoi(val);
+				else if (strcmp(key, "total_minutes") == 0)
+					totalMinutes = (WORD)atoi(val);
 			}
 			else if (section >= 1 && section <= 3)
 			{
@@ -366,6 +452,9 @@ void DEMO_ENGINE::ParseConfig(void)
 	// Apply seed (0 = use the constructor default).
 	if (seed != 0)
 		_lcgState = (DWORD)seed;
+
+	// 2.50 -- total simulation cap: minutes -> ticks (100 Hz = 6000/min).
+	_simLimitTicks = (DWORD)totalMinutes * 6000UL;
 
 	// Compute total weight and mean inter-arrival per booth (ticks).
 	_totalWeight = 0;
