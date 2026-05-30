@@ -63,8 +63,10 @@ void ENGINE::InstallISRs(void)
 	OldIV08h = getvect(0x08);
 	setvect(0x08, NewISR08h);
 	if (g_cfg->CHECK_PAUSE_KEY)
+	{
 		OldIV09h = getvect(0x09);
-	setvect(0x09, NewISR09h);
+		setvect(0x09, NewISR09h);
+	}
 	OldIV1Bh = getvect(0x1B);
 	setvect(0x1B, NewISR1Bh);
 	OldIV23h = getvect(0x23);

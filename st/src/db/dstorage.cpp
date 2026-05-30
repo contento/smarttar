@@ -67,7 +67,9 @@ DB_STORAGE::DB_STORAGE(const char *path, const char *name, int readOnly) :
 	if (!ReadOnly && ((Status & NO_DATA_FILE) || (Status & BAD_DATA_FILE)))
 	{
 		DataFile = creat(DataFilename, S_IREAD|S_IWRITE);
-		if (WriteDataHeader(m_dataHeader))
+		if (DataFile == -1)
+			Status |= BAD_DATA_FILE;
+		else if (WriteDataHeader(m_dataHeader))
 			Status |= NEW_DATA_FILE;
 		else
 			Status |= BAD_DATA_FILE;
@@ -95,7 +97,9 @@ DB_STORAGE::DB_STORAGE(const char *path, const char *name, int readOnly) :
 	if (!ReadOnly && ((Status & NO_INDEX_FILE) || (Status & BAD_INDEX_FILE)))
 	{
 		IndexFile = creat(IndexFilename, S_IREAD|S_IWRITE);
-		if (WriteIndexHeader(m_indexHeader))
+		if (IndexFile == -1)
+			Status |= BAD_INDEX_FILE;
+		else if (WriteIndexHeader(m_indexHeader))
 			Status |= NEW_INDEX_FILE;
 		else
 			Status |= BAD_INDEX_FILE;
@@ -259,7 +263,8 @@ BOOL DB_STORAGE::RepairDataFile(void)
 				nNumbers++;
 				pNumbers[nNumbers-1] = receipt.Number;
 
-				write(tmpFile, &receipt, sizeof(Receipt));
+				if (write(tmpFile, &receipt, sizeof(Receipt)) != sizeof(Receipt))
+					return FALSE;
 			}
 #if defined(__TEST__)
 #if !defined(__UTIL__)
@@ -340,7 +345,8 @@ BOOL DB_STORAGE::RepairIndexFile(void)
 			indexEntry.Number      = receipt.Number;
 			indexEntry.BoothNumber = receipt.BoothNumber;
 			indexEntry.SeekPos     = seekPos;
-			write(IndexFile, &indexEntry, sizeof(IndexEntry));
+			if (write(IndexFile, &indexEntry, sizeof(IndexEntry)) != sizeof(IndexEntry))
+				return FALSE;
 			// datafileHeader
 			if (!m_indexHeader.LowerNumber)
 				m_indexHeader.LowerNumber = indexEntry.Number;
