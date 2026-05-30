@@ -403,7 +403,7 @@ full context and severity rationale.
       has empty body; writes at line 193 unconditional, corrupts
       queue.  Also depends on `BufLen` being power-of-two via
       precedence accident (`BufLen-1` binds tighter than `&`).
-- [ ] **C3** `src/dongle.cpp:34` -- `!biosprint(...) & BIOS_PRINT_BUSY`
+- [x] **C3** `src/dongle.cpp:34` -- `!biosprint(...) & BIOS_PRINT_BUSY`
       has `!` binding before `&`; the dongle-busy short-circuit is
       always 0 (dead code).  Add parens around `biosprint(...) &
       BIOS_PRINT_BUSY` and re-invert.
