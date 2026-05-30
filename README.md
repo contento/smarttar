@@ -13,7 +13,7 @@
 
 Real-time telephone tariff management system for public telephone booths
 
-Developed by [MicroDiseño Ltda.](https://microdiseno.com) · Copyright © 1993–2003 · Version 2.34
+Developed by [MicroDiseño Ltda.](https://microdiseno.com) · Copyright © 1993–2003 · Version 2.60.0 (resurrected 2026)
 
 ![SmartTar](st/docs/SmartTar.jpg)
 

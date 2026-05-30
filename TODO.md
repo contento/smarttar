@@ -393,7 +393,7 @@ docx -> md regeneration on push (manuals change rarely).
 Findings from [STABILITY_AUDIT.md](STABILITY_AUDIT.md) — see that file for
 full context and severity rationale.
 
-**Next batch (from audit § 6 spot-verified -- start here):**
+**Spot-verified CRITICALs (audit § 6) -- all four DONE, committed:**
 
 - [x] **C1** `src/ctrl/ctrl_ev.cpp:488` -- UE_RNPP `while (it)` never
       advances iterator; hangs the UI when "Pagar recibos por cabina"
@@ -413,7 +413,9 @@ full context and severity rationale.
 
 **Remaining batches (drain into the four lists above as scheduled):**
 
-- [ ] Address remaining CRITICAL findings (audit § 3 C5-C22).
+- [ ] Address remaining CRITICAL findings (audit § 3 C5-C22) -- **next up: C5**
+      (`rt_eng.cpp:123`, vector-09h leak); all unverified, confirm at the
+      cited file:line before fixing.
 - [ ] Address HIGH findings (audit § 3).
 - [ ] Address MEDIUM / LOW findings (audit § 3) -- opportunistically.
 - [ ] Verification pass per audit § 6 once the spot-verified set is
