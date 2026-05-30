@@ -399,7 +399,7 @@ full context and severity rationale.
       advances iterator; hangs the UI when "Pagar recibos por cabina"
       is selected.  Single-line fix (add `it++;` mirroring UE_RPP at
       line 469).
-- [ ] **C2** `src/rt/serial.cpp:191` -- Ring-buffer overflow check
+- [x] **C2** `src/rt/serial.cpp:191` -- Ring-buffer overflow check
       has empty body; writes at line 193 unconditional, corrupts
       queue.  Also depends on `BufLen` being power-of-two via
       precedence accident (`BufLen-1` binds tighter than `&`).
