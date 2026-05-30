@@ -413,9 +413,8 @@ full context and severity rationale.
 
 **Remaining batches (drain into the four lists above as scheduled):**
 
-- [ ] Address remaining CRITICAL findings (audit § 3 C5-C22) -- **next up: C5**
-      (`rt_eng.cpp:123`, vector-09h leak); all unverified, confirm at the
-      cited file:line before fixing.
+- [ ] Address remaining CRITICAL findings (audit § 3 C5-C22) -- **C5–C9 DONE** (`58e68d5`),
+      **next up: C10+** (verified as defended) / **C11+** (unverified).
 - [ ] Address HIGH findings (audit § 3).
 - [ ] Address MEDIUM / LOW findings (audit § 3) -- opportunistically.
 - [ ] Verification pass per audit § 6 once the spot-verified set is

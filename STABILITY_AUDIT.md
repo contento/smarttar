@@ -169,7 +169,14 @@ Five CRITICAL findings spot-verified against source. **C1–C4 are now fixed and
 | **C4** `ct_util.cpp:30` | ✅ Confirmed → **FIXED** (`9c10a7e`). `\0x0A` parses as `\0` + literal `x0A`. |
 | `ctrl_ev.cpp:523` (Agent C had this as CRITICAL) | ❌ **False positive.** `break;` at line 520 exits the switch correctly. Removed from this list. |
 
-C5–C22 and all HIGH findings remain **unverified and unfixed** — they should be confirmed by reading the cited file:line before applying a fix. **C5 is the next item to verify.**
+**C5–C9 are fixed and committed** (`58e68d5`):
+- C5: Vector 0x09h leak (fixed)
+- C6: Stale reference / false positive (all setvect calls have semicolons)
+- C7: creat() return unchecked (fixed)
+- C8: write() return unchecked in RepairDataFile (fixed)
+- C9: write() return unchecked in RepairIndexFile (fixed)
+
+C10–C22 and all HIGH findings remain **unverified and unfixed**. **C10 verified as defended** (both writes checked in Add(), non-atomicity is design limitation). **Next: C11.**
 
 ---
 
