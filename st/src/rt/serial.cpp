@@ -188,10 +188,13 @@ void interrupt SERIAL::NewSerialISR(...)
     disable();
     if ((inportb(PortBase+IIR)&RX_MASK)==RX_ID)
     {
-        if (((BufEnd+1) & BufLen-1) == BufStart)
-            ; // Overflow, ignore it !!!
-        Buffer[BufEnd++] = inportb(PortBase+RXR);
-        BufEnd &= BufLen - 1;
+        if (((BufEnd+1) & (BufLen-1)) == BufStart)
+            (void)inportb(PortBase+RXR); // Overflow: buffer full -- read & discard to clear the UART RX int, don't store
+        else
+        {
+            Buffer[BufEnd++] = inportb(PortBase+RXR);
+            BufEnd &= BufLen - 1;
+        }
     }
     outportb(ICR, EOI);
     enable();
