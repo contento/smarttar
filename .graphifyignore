@@ -1,0 +1,39 @@
+# graphify ignore -- keep the graph focused on first-party SmartTar code.
+# NOTE: graphify uses .graphifyignore INSTEAD of the root .gitignore, so the
+# build-artifact exclusions below must be repeated here (they are not inherited).
+
+# Third-party toolchain / frameworks (not first-party SmartTar code)
+vendor/
+
+# Build outputs & intermediates
+st/bin/
+st/build/
+st/lib/
+st/_bin/
+st/_bin-*/
+_releases/
+
+# Binary artifacts
+*.obj
+*.lib
+*.dll
+*.exe
+*.map
+*.sym
+*.dsk
+
+# Zinc binary resource
+st/res/
+
+# Binary docs (keep help.txt -- it is real content)
+st/docs/*.doc
+st/docs/*.docx
+st/docs/*.bmp
+st/docs/*.gif
+
+# DOSBox-X screenshots / captures
+capture/
+
+# Logs & OS cruft
+*.log
+.DS_Store
