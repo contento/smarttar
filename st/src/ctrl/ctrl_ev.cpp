@@ -512,6 +512,7 @@ EVENT_TYPE CONTROLLER::Event(const UI_EVENT &event)
 									+ new UIW_STRING(1, 0,  70, s, -1, STF_NO_FLAGS, WOF_NO_FLAGS);
 								}
 							}
+							it++;
 						}
 
 						// end 2.21.8 build 9
