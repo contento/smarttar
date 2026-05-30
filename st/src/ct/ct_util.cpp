@@ -27,7 +27,7 @@ void CONTROLLER::activateCash(UI_TIME& lastTime, WORD lastHundreth, WORD current
 		case g_cfg->CFG::DR_40:
         case CFG::SR_28:
 		case g_cfg->CFG::SR_40:
-			g_spooler->Print(channel, "\x1B\x70\x00\x0A\0x0A\xFF", TRUE);
+			g_spooler->Print(channel, "\x1B\x70\x00\x0A\x0A\xFF", TRUE);
             break; // TM
         case CFG::DR_18:
             g_spooler->Print(channel,  "\x1C");

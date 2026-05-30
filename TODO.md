@@ -407,7 +407,7 @@ full context and severity rationale.
       has `!` binding before `&`; the dongle-busy short-circuit is
       always 0 (dead code).  Add parens around `biosprint(...) &
       BIOS_PRINT_BUSY` and re-invert.
-- [ ] **C4** `src/ct/ct_util.cpp:30` -- `"\x1B\x70\x00\x0A\0x0A\xFF"`
+- [x] **C4** `src/ct/ct_util.cpp:30` -- `"\x1B\x70\x00\x0A\0x0A\xFF"`
       -- the `\0x0A` is `\0` then literal `x0A`.  Cash-drawer command
       sequence is malformed (9 bytes, not 6).
 
