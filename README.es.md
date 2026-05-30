@@ -4,7 +4,7 @@
 
 Sistema de gestión de tarifas telefónicas en tiempo real para cabinas telefónicas públicas
 
-Desarrollado por [MicroDiseño Ltda.](https://microdiseno.com) · Derechos reservados © 1993–2003 · Versión 2.34
+Desarrollado por [MicroDiseño Ltda.](https://microdiseno.com) · Derechos reservados © 1993–2003 · Versión 2.60.0 (resucitado 2026)
 
 ![SmartTar](st/docs/SmartTar.jpg)
 

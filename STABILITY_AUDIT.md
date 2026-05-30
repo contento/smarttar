@@ -159,17 +159,17 @@ The four agent reports above are summarized inline. If you want the raw text, th
 
 ## 6. Verification status
 
-Five CRITICAL findings spot-verified against source:
+Five CRITICAL findings spot-verified against source. **C1–C4 are now fixed and committed** (see git log `5bcee3f`, `7a730a3`, `fde0e49`, `9c10a7e`).
 
 | # | Status |
 |---|---|
-| **C1** `ctrl_ev.cpp:488` | ✅ Confirmed. `DB_STORAGE::Iterator::Current()` does not advance; no `++it` in loop body. Preceding case UE_RPP at 469 has it; UE_RNPP copy-paste omitted it. |
-| **C2** `serial.cpp:191` | ✅ Confirmed. Empty `;` body, writes at line 193 unconditional. |
-| **C3** `dongle.cpp:34` | ✅ Confirmed. `!` precedence makes guard always 0. |
-| **C4** `ct_util.cpp:30` | ✅ Confirmed. `\0x0A` parses as `\0` + literal `x0A`. |
+| **C1** `ctrl_ev.cpp:488` | ✅ Confirmed → **FIXED** (`5bcee3f`). `DB_STORAGE::Iterator::Current()` does not advance; no `++it` in loop body. Preceding case UE_RPP at 469 has it; UE_RNPP copy-paste omitted it. Fix: added `it++;` mirroring UE_RPP. |
+| **C2** `serial.cpp:191` | ✅ Confirmed → **FIXED** (`7a730a3`). Empty `;` body, writes at line 193 unconditional. |
+| **C3** `dongle.cpp:34` | ✅ Confirmed → **FIXED** (`fde0e49`). `!` precedence makes guard always 0. |
+| **C4** `ct_util.cpp:30` | ✅ Confirmed → **FIXED** (`9c10a7e`). `\0x0A` parses as `\0` + literal `x0A`. |
 | `ctrl_ev.cpp:523` (Agent C had this as CRITICAL) | ❌ **False positive.** `break;` at line 520 exits the switch correctly. Removed from this list. |
 
-All other CRITICAL/HIGH findings remain **unverified** — they should be confirmed by reading the cited file:line before applying a fix.
+C5–C22 and all HIGH findings remain **unverified and unfixed** — they should be confirmed by reading the cited file:line before applying a fix. **C5 is the next item to verify.**
 
 ---
 
@@ -177,13 +177,13 @@ All other CRITICAL/HIGH findings remain **unverified** — they should be confir
 
 Per CLAUDE.md Working Style: confirm approach before broad changes.
 
-1. **Quick wins (verified, low blast radius):**
-   - `ctrl_ev.cpp:488` — add `it++;` before closing `}` of UE_RNPP while-loop (copy from sibling case at line 469).
-   - `dongle.cpp:34` — add parens: `if (!(biosprint(...) & BIOS_PRINT_BUSY))`.
-   - `ct_util.cpp:30` — fix to `"\x1B\x70\x00\x0A\x0A\xFF"` (or whatever the intended sequence was — verify against device manual).
-   - `serial.cpp:191` — change `;` to `return;` (or whatever discard semantics the ring buffer should have).
+1. **Quick wins (verified, low blast radius) — ✅ DONE (C1–C4 committed):**
+   - ~~`ctrl_ev.cpp:488` — add `it++;` before closing `}` of UE_RNPP while-loop (copy from sibling case at line 469).~~ Fixed (`5bcee3f`).
+   - ~~`dongle.cpp:34` — add parens: `if (!(biosprint(...) & BIOS_PRINT_BUSY))`.~~ Fixed (`fde0e49`).
+   - ~~`ct_util.cpp:30` — fix to `"\x1B\x70\x00\x0A\x0A\xFF"`.~~ Fixed (`9c10a7e`).
+   - ~~`serial.cpp:191` — change `;` to `return;`.~~ Fixed (`7a730a3`).
 
-2. **Verify-then-fix CRITICALs:** C5–C22. Read each cited file:line first.
+2. **Verify-then-fix CRITICALs:** C5–C22 — **next up, start at C5.** Read each cited file:line first.
 
 3. **Strategic (not quick):**
    - Add `volatile` to ISR-shared state in `rt_eng.h` (must be tested under load).
