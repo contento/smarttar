@@ -395,7 +395,7 @@ full context and severity rationale.
 
 **Next batch (from audit § 6 spot-verified -- start here):**
 
-- [ ] **C1** `src/ctrl/ctrl_ev.cpp:488` -- UE_RNPP `while (it)` never
+- [x] **C1** `src/ctrl/ctrl_ev.cpp:488` -- UE_RNPP `while (it)` never
       advances iterator; hangs the UI when "Pagar recibos por cabina"
       is selected.  Single-line fix (add `it++;` mirroring UE_RPP at
       line 469).
