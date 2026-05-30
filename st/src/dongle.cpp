@@ -31,7 +31,7 @@ BOOL DONGLE::read(char *line)
 {
     const UINT BIOS_PRINT_STATUS = 0x02;
     const UINT BIOS_PRINT_BUSY   = 0x80;
-    if (!biosprint(BIOS_PRINT_STATUS, 0, 0) & BIOS_PRINT_BUSY)
+    if (!(biosprint(BIOS_PRINT_STATUS, 0, 0) & BIOS_PRINT_BUSY))
         return FALSE;
     //
     bias();
