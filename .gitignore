@@ -83,6 +83,11 @@ run*.log
 RUN*.LOG
 
 # ==============================================================================
+# graphify knowledge graph (regenerated from source via `graphify update .`)
+# ==============================================================================
+graphify-out/
+
+# ==============================================================================
 # DOSBox-X capture directory (screenshots / AVI / WAV, configured via
 # [dosbox] captures = capture in dosbox-x.conf)
 # ==============================================================================
