@@ -29,7 +29,7 @@ CC=bcc286
 ASM=tasm
 LINK=tlink
 BIND=bind286
-RTK_DIR=c:\vendor\pharlap\bin
+RTK_DIR=..\..\..\vendor\pharlap\bin
 
 DONGLE=
 !if $d(DEMO)

@@ -464,7 +464,7 @@ the `..\` depth is unchanged, since the project root is unchanged):
       tree (`inf2dat`, `ini2cfg`, `setup`, `viewer`, `chkrx`):
       `..\..\..\{bc,pharlap,zinc}\...` -> `..\..\..\vendor\{...}\...`,
       `c:\pharlap\bin` -> `c:\vendor\pharlap\bin`.
-- [x] `st/test/*` build configs/makefiles (`test.cfg`, `pr_fmt/test.cfg`,
+- [x] `st/testbeds/*` build configs/makefiles (`test.cfg`, `pr_fmt/test.cfg`,
       and the per-module makefiles' `RTK_DIR`): same vendor\ insertion.
 - [x] [CLAUDE.md](CLAUDE.md): "Repository Layout" + `vendor/zinc/BIN` refs.
 - [x] [README.md](README.md) / [README.es.md](README.es.md): layout + prose.
