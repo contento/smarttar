@@ -192,7 +192,7 @@ BOOL PH_ENGINE::PLACE_INFO::Search(const PHONE& phone, PLACE_ENTRY& entry)
 	int len = strlen((char *)&phone);
 	int slot = phone[0] - '0';
 
-	for (int i = 0; i < len && !found; i++)
+	for (int i = 0; i < len && i < (int)sizeof(partialPhone)-1 && !found; i++)
 	{
 		partialPhone[i] = phone[i];
 		partialPhone[i+1] = '\0';
@@ -572,6 +572,8 @@ BOOL PH_ENGINE::PLACE_INFO::GetNumbers(Parser::Iterator& it, NUMBERS_PER_LINE *n
 
 			slot = phone[0] - '0';
 			// ---
+			if (numbers[slot].Count >= MAX_NUMBERS_PER_LINE)
+				return FALSE; // bad format: too many numbers on this line
 			if (isRange)
 			{
 				if (!numbers[prevSlot].Count)

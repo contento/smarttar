@@ -55,12 +55,13 @@ BOOL Log::open(const char *filename, int openMode)
             {
                 file = new fstream(filename, ios::in|ios::out|ios::binary|ios::app);
             }
-            openOk = (file)?TRUE:FALSE;
+            openOk = (file && !file->fail())?TRUE:FALSE;
         }
     }
     if (!openOk)
     {
         delete file;
+        file = NULL;
     }
     return openOk;
 }

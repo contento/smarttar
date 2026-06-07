@@ -51,6 +51,9 @@ BOOL SPOOLER::Print(BYTE channel, const char *s, BOOL with0xFF)
 {
 //	SpoolerQueueMutex mutex;
 
+	if (channel >= NumOfChannels)
+		return FALSE;
+
 	int numOfChars = strlen(s);
 	int i = 0;
 	//
@@ -84,6 +87,8 @@ BOOL SPOOLER::Print(BYTE channel, const char *s, BOOL with0xFF)
 BOOL SPOOLER::Print(BYTE channel, char byte)
 {
 //	SpoolerQueueMutex mutex;
+	if (channel >= NumOfChannels)
+		return FALSE;
 	int retValue = Buffers[channel]->Put(byte); // Buffers = Data
 	return retValue;
 }
