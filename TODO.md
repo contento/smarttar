@@ -72,7 +72,7 @@ Working list of milestones and tasks. Detailed findings live in
   wiring); dropped as a product decision. Do not revive without
   reopening the topic explicitly.
 
-## Milestone: `DEMO_ENGINE` — pluggable engine for demo mode
+## Milestone: `DEMO_ENGINE` — pluggable engine for demo mode [Phases 1-2 DONE, merged to main]
 
 New capability. **Not related to the abandoned SIMULA work** (`UIW_SIMULA`
 F2 window in `mb_simul.cpp`, `RT_ENGINE::SIMULA` state, `Simula[]` /
@@ -147,20 +147,20 @@ Implications:
 
 **Phase 1 — Skeleton (no behavior change).**
 
-- [ ] Extract an `ENGINE` interface (pure-virtual base) from
+- [x] Extract an `ENGINE` interface (pure-virtual base) from
       `RT_ENGINE`'s public surface. Must include the ISR lifecycle
       (`Install()` / `Uninstall()` for IRQ0 + the keyboard / break /
       crit-error vectors) so concretes own their own vector
       management — not just data accessors.
-- [ ] `RT_ENGINE` becomes a concrete implementing the interface; the
+- [x] `RT_ENGINE` becomes a concrete implementing the interface; the
       existing `NewISR08h` / `NewISR09h` / `NewISR23h` / `NewISR1Bh` /
       `NewISR24h` move behind `Install()`. No behavior change in
       production builds.
-- [ ] Empty `DEMO_ENGINE` concrete that compiles and links. Its
+- [x] Empty `DEMO_ENGINE` concrete that compiles and links. Its
       `Install()` hooks IRQ0 with a stub `DemoISR08h` that does
       nothing (booths stay idle). Proves the swap end-to-end before
       Phase 2 adds real generation.
-- [ ] Factory wired to `[ENGINE] kind = real | demo` in `st.ini`
+- [x] Factory wired to `[ENGINE] kind = real | demo` in `st.ini`
       (default `real`). Add the key via `ini2cfg`.
 - [x] Strip `#ifdef __DEMO__` from the RT layer; the gate becomes
       "factory instantiates `DEMO_ENGINE`" instead.  Done in two
@@ -209,21 +209,21 @@ min_duration_secs = 120
 max_duration_secs = 1800
 ```
 
-- [ ] Implement Poisson arrival generator (one stream, classified into
+- [x] Implement Poisson arrival generator (one stream, classified into
       `LOCAL` / `NAL` / `INTER` by the per-type weights). All
       generator state pre-allocated at `Install()` time so the ISR
       never touches the heap.
-- [ ] Ship a private ISR-safe RNG (LCG, fixed seed from config) —
+- [x] Ship a private ISR-safe RNG (LCG, fixed seed from config) —
       `rand()` is not reentrant under Borland C++ 3.1.
-- [ ] Duration sampling: uniform in `[min, max]` for v1 (exponential /
+- [x] Duration sampling: uniform in `[min, max]` for v1 (exponential /
       normal can come later if needed).
-- [ ] Destination numbers: draw from the existing `.inf` place tables
+- [x] Destination numbers: draw from the existing `.inf` place tables
       (`util/inf2dat/local.inf`, `ddn.inf`, `ddi.inf`) so tariff
       calculation exercises real data.
-- [ ] Parse `demo_engine.ini` in `DEMO_ENGINE` ctor using the same
+- [x] Parse `demo_engine.ini` in `DEMO_ENGINE` ctor using the same
       patterns as `cfg.cpp`; fail loud if missing or malformed when
       `kind = demo`.
-- [ ] `DemoISR08h` writes `DataPort.OOD` / `.Answer` / `.ThreadC` /
+- [x] `DemoISR08h` writes `DataPort.OOD` / `.Answer` / `.ThreadC` /
       `.DTMFFlags` / `.U_DTMFDigits[]` (same fields RT's ISR writes)
       to advance each booth through ONHOOK → RINGUP → OFFHOOK →
       ANSWER → TALK → ONHOOK on its scheduled timeline.
@@ -413,9 +413,13 @@ full context and severity rationale.
 
 **Remaining batches (drain into the four lists above as scheduled):**
 
-- [ ] Address remaining CRITICAL findings (audit § 3 C5-C22) -- **C5–C9 DONE** (`58e68d5`),
-      **next up: C10+** (verified as defended) / **C11+** (unverified).
-- [ ] Address HIGH findings (audit § 3).
+- [x] Address remaining CRITICAL findings (audit § 3 C5-C22) -- **ALL DONE.**
+      C5–C9 (`58e68d5`), C11–C22 (`f497445`), C19 (`d4bbd49`),
+      C14/C15 (`d7d24ca`). C10 verified-defended (no code change).
+- [~] Address HIGH findings (audit § 3) -- 3 mechanical fixes done
+      (`aeb1372`: cfg `memmove`, control `delete[]`, spooler null-order).
+      Remainder triaged in the audit: bounds/IO (Bucket B) and
+      ISR/concurrency (Bucket C, needs load testing) -- both open.
 - [ ] Address MEDIUM / LOW findings (audit § 3) -- opportunistically.
 - [ ] Verification pass per audit § 6 once the spot-verified set is
       cleared.
