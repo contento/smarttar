@@ -23,6 +23,9 @@ SmartTar is a DOS 5.0 protected-mode point-of-sale / tariff management system. C
 - **Assembler**: Turbo Assembler (`TASM`)
 - **Linker**: `TLINK` + `BIND286` (Pharlap binder)
 - **Build tool**: Borland `MAKE`
+### Conventions
+
+- **DOS 8.3 filenames**: All filenames MUST respect the DOS 8.3 limit (8-char name, 3-char extension). This applies to `.cpp`, `.h`, `.prj`, directories, and any file the build toolchain touches. No exceptions — DOS 5.0/6.x does not support long filenames.
 
 ## Project Goal
 
