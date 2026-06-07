@@ -216,7 +216,10 @@ BOOL DB_STORAGE::RepairDataFile(void)
 
 	int nWritten = write(tmpFile, &m_dataHeader, sizeof(DataHeader));
 	if (nWritten != sizeof(DataHeader))
+	{
+		close(tmpFile);
 		return FALSE;
+	}
 
 	// take from data file and Recover to tmp file
 #if defined(__TEST__)
@@ -264,7 +267,11 @@ BOOL DB_STORAGE::RepairDataFile(void)
 				pNumbers[nNumbers-1] = receipt.Number;
 
 				if (write(tmpFile, &receipt, sizeof(Receipt)) != sizeof(Receipt))
+				{
+					delete [] pNumbers;
+					close(tmpFile);
 					return FALSE;
+				}
 			}
 #if defined(__TEST__)
 #if !defined(__UTIL__)
