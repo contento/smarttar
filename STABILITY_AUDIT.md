@@ -58,8 +58,8 @@ Format: `SEVERITY | file:line | finding | why it matters`. **V** = spot-verified
 | C11 | `src/db/dstatist.cpp:82-86` | Four `write()` calls in ctor unchecked — disk-full leaves stats file header-less / truncated; in-memory copy looks fine until reopen. | ✅ |
 | C12 | `src/ph/ph_place.cpp:589-594` | `GetNumbers` writes `numbers[slot].Numbers[Count++]` with no bounds vs `MAX_NUMBERS_PER_LINE` — malformed `.inf` line overflows embedded array. | ✅ |
 | C13 | `src/ph/ph_place.cpp:201-202` | `Search()`: `partialPhone[i]` indexed up to `len-1` where `len = strlen(phone)`; PHONE is 17 bytes; 16-char phone + terminator overruns by 1. | ✅ |
-| C14 | `src/ctrl/control.cpp:541-548` | `NewGPFHandler` calls `delete RTEngine/g_dbEngine/...` inside the #0Dh GPF ISR — `delete` re-enters PHAPI/heap; recovery path itself can deadlock. | — |
-| C15 | `src/ctrl/control.cpp:697-717` | OOM `new_handler` deletes some globals but not `g_dbEngine`, `g_phEngine`, `g_cfg`, `g_spooler` — partial teardown leaks files, leaves DB inconsistent. | — |
+| C14 | `src/ctrl/control.cpp:541-548` | `NewGPFHandler` calls `delete RTEngine/g_dbEngine/...` inside the #0Dh GPF ISR — `delete` re-enters PHAPI/heap; recovery path itself can deadlock. | ✅ |
+| C15 | `src/ctrl/control.cpp:697-717` | OOM `new_handler` deletes some globals but not `g_dbEngine`, `g_phEngine`, `g_cfg`, `g_spooler` — partial teardown leaks files, leaves DB inconsistent. | ✅ |
 | C16 | `src/ui/view.cpp:70-73` | `~UIW_VIEW` only deletes `m_callInfo`; never deletes the 2-D widget arrays `WBoothNumbers`/`WStates`/`WAreas`/`WPhones`/`WCities`/`WElapsedTimes`/`WTariffs`/`WValues`/`WNumOfCalls`, `ToneFSs`/`PulseFSs`/`States[i].Bitmap`. Large leak; likely also dangling pointers. *(Note: Zinc widgets owned by parent — but the **arrays of pointers** themselves still need `delete[]`.)* | ✅ |
 | C17 | `src/tb/tb_man.cpp:80-83,127` | `UIW_MANUAL` allocates `s_receipts`/`s_totals`/`s_wNCs`/`s_wPRs`/`s_wReceipts` as statics; dtor only frees first two. Re-opening dialog overwrites pointers → leak + cross-instance aliasing. | ✅ |
 | C18 | `src/spooler.cpp:30-33` | `NumOfChannels` clamped but `Print(channel, ...)` never validates the channel arg against `MAX_SPOOL_CHANNELS=4`; caller-supplied out-of-range channel indexes uninitialized `Buffers[]` pointer. | ✅ |
@@ -189,7 +189,12 @@ Five CRITICAL findings spot-verified against source. **C1–C4 are now fixed and
 
 **C19 fixed and committed** (`d4bbd49`): `Buffers`/`PrintfBuffer` made instance members so each `SPOOLER` owns its queues — cross-instance stomp now structurally impossible (latent today, g_spooler is a singleton).
 
-Still open: **C10** verified as defended (both writes checked in Add(), non-atomicity is a design limitation — no code change). **C14, C15** (control.cpp GPF/OOM teardown — `delete` from inside the #0Dh ISR / partial OOM teardown) remain unfixed, plus all HIGH findings. **Next: C14.**
+**C14/C15 fixed and committed** (`d7d24ca`):
+
+- C14: `NewGPFHandler` now restores the original #0Dh handler **before** the teardown deletes (so a fault mid-`delete` goes to the Pharlap default instead of recursing into our half-torn-down handler), plus a static `inTeardown` backstop. **Caveat:** fully avoiding `delete` from a fault context would need an `ENGINE` redesign (uninstall ISRs without `delete`) — out of scope; this bounds the damage rather than eliminating the re-entry.
+- C15: OOM `new_handler` now `delete`s `g_dbEngine` (clean DB flush, the one teardown it skipped vs the GPF path). `g_phEngine`/`g_cfg`/`g_spooler` left out deliberately — at `exit(1)` the leak is moot and allocating teardown could re-enter OOM.
+
+**All CRITICALs (C1–C22) are now resolved** — fixed, or verified-defended (**C10**: both writes checked in `Add()`; non-atomic data-vs-index window is a design limitation, no code change). **Next: HIGH findings.**
 
 ---
 
@@ -203,7 +208,7 @@ Per CLAUDE.md Working Style: confirm approach before broad changes.
    - ~~`ct_util.cpp:30` — fix to `"\x1B\x70\x00\x0A\x0A\xFF"`.~~ Fixed (`9c10a7e`).
    - ~~`serial.cpp:191` — change `;` to `return;`.~~ Fixed (`7a730a3`).
 
-2. **Verify-then-fix CRITICALs:** C5–C13, C16–C22 fixed. **Next up: C14, C15.** Read each cited file:line first.
+2. **Verify-then-fix CRITICALs:** ✅ DONE — all of C1–C22 resolved (fixed, or C10 verified-defended). **Next up: the HIGH findings (§ "HIGH").** Read each cited file:line first.
 
 3. **Strategic (not quick):**
    - Add `volatile` to ISR-shared state in `rt_eng.h` (must be tested under load).
