@@ -108,7 +108,7 @@ run.ps1      PowerShell equivalent. Same -KeepOpen switch; args
 wiki/        Obsidian documentation vault (EN + ES) -- single source of
              truth for documentation. build-docs.sh / build-docs.ps1
              (self-locating) regenerates the .docx manuals into
-             wiki/_build/ (gitignored). Note: st/res/help.txt is a source
+             st/docs/build/ (gitignored). Note: st/res/help.txt is a source
              asset for the app, NOT a wiki output -- edit it directly.
              dev/ holds developer workflow docs (Zinc Designer, etc.).
              Moved here from st/docs/wiki so the project-wide vault is

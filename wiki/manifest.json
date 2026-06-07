@@ -1,6 +1,6 @@
 {
   "_comment": "Source-of-truth mapping: vault Markdown -> generated docs. build-docs.sh reads this. Manual chapter order comes from the NN- filename prefix; index.md is excluded from docx assembly.",
-  "outputs_dir": "_build",
+  "outputs_dir": "../st/docs/build",
   "manuals": [
     {
       "id": "guia-usuario-es",
