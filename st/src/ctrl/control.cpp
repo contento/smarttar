@@ -209,7 +209,7 @@ CONTROLLER::~CONTROLLER()
 	delete [] manualInfo;
 	delete boothDisplay;
 	delete [] m_pDisplayInfos;
-	delete errorMemory;
+	delete [] errorMemory;
 	// never try to delete by hand g_dbEngine, DPrinter, View because
 	// they must be deleted for the event or window manager !!!
 #ifdef DOSX286
@@ -710,7 +710,7 @@ void CONTROLLER::NewHandler(void)
 	// Free enouph memory for reporting error.
 	if (errorMemory)
 	{
-		delete errorMemory;
+		delete [] errorMemory;
 		errorMemory = NULL;
 		// Report out of memory error.
 		UI_WINDOW_OBJECT::errorSystem->Beep();

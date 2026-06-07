@@ -683,7 +683,7 @@ BOOL CFG::Line2Entry(const ENTRY *table, const char *line)
 			{
 				for (WORD i=0; strLine[i]; i++)
 					if (isspace(strLine[i]))
-						strcpy(&strLine[i], &strLine[i+1]);
+						memmove(&strLine[i], &strLine[i+1], strlen(&strLine[i+1]) + 1);
 			}
 			strcpy((char *)table[offset].Value, strLine);
 			break;
