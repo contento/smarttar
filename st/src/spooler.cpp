@@ -212,10 +212,12 @@ BOOL SPOOLER::PrintChar(BYTE channel, char byte)
     else
     {
 		// via COM
-        WORD msr = Serial->GetStatus() >> 8;
-        if (Serial && (msr & SERIAL::CTS))
-            if (Serial->Put(byte))
+        if (Serial)
+        {
+            WORD msr = Serial->GetStatus() >> 8;
+            if ((msr & SERIAL::CTS) && Serial->Put(byte))
                 return TRUE;
+        }
     }
     return FALSE;
 }
