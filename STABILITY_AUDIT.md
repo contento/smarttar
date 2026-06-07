@@ -16,7 +16,7 @@ git pull
 
 Paste this prompt to Claude:
 
-> Continue the stability audit from `STABILITY_AUDIT.md`. Status: findings from four subsystem agents are recorded; 5 of the CRITICAL items were spot-verified (see §6). The remaining unverified CRITICAL/HIGH findings still need source-level confirmation before any fixes. Next step is your choice: (a) finish verifying the remaining CRITICAL findings, (b) start fixing the **confirmed** CRITICALs in §6, or (c) prioritize differently. Confirm approach before broad changes (per CLAUDE.md Working Style).
+> Continue the stability audit from `STABILITY_AUDIT.md`. Status: **all CRITICALs (C1–C22) are resolved** (fixed or verified-defended; see §6), and 3 mechanical HIGH findings are done (`aeb1372`). The remaining **HIGH** findings are triaged into Bucket B (bounds/overflow/IO — verify each cited file:line, then fix) and Bucket C (ISR/concurrency/`volatile` — needs a DOSBox-X build + load-test loop, confirm approach first). See [HANDOFF.md](HANDOFF.md) for the live resume snapshot. Confirm approach before broad changes (per CLAUDE.md Working Style).
 
 The four sub-agent reports are summarized in §3–§5 below. They were one-shot — re-running them would produce different prose but similar findings.
 
