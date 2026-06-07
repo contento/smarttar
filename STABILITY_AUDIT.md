@@ -14,9 +14,11 @@ git pull
 # Then in Claude Code, in the project directory:
 ```
 
-Paste this prompt to Claude:
-
-> Continue the stability audit from `STABILITY_AUDIT.md`. Status: **all CRITICALs (C1–C22) are resolved** (fixed or verified-defended; see §6), and 3 mechanical HIGH findings are done (`aeb1372`). The remaining **HIGH** findings are triaged into Bucket B (bounds/overflow/IO — verify each cited file:line, then fix) and Bucket C (ISR/concurrency/`volatile` — needs a DOSBox-X build + load-test loop, confirm approach first). See [HANDOFF.md](HANDOFF.md) for the live resume snapshot. Confirm approach before broad changes (per CLAUDE.md Working Style).
+**Status: CLOSED — substantially complete (2026-06-07).** See §8. All
+CRITICALs + the hardware-independent HIGH/MEDIUM findings are resolved
+(fixed or DEFENDED); only Tier 3 (ISR/concurrency) is deferred, parked in
+[ISR_VOLATILE_NOTES.md](wiki/dev/ISR_VOLATILE_NOTES.md) pending a DOSBox-X
+load-test session. To resume Tier 3, start from that note (not this audit).
 
 The four sub-agent reports are summarized in §3–§5 below. They were one-shot — re-running them would produce different prose but similar findings.
 
@@ -107,25 +109,25 @@ UI / controller:
 - ✅ **FIXED** (`aeb1372`) `src/ctrl/control.cpp:60-67,207,702` — `errorMemory = new char[0x2000]` but freed with non-array `delete` — UB, possible heap corruption. Both frees (`~CONTROLLER`, `NewHandler`) now `delete []`.
 
 Infra:
-- `src/cfg.cpp:1083` — `E_FIRST_EXT` clamps via `CLUSTERS*CLUSTER_SIZE` but raw INI input is not clamped before `AdjustHeader/Adjust`.
+- ⏸️ **DEFENDED — clamp applied before use.** `src/cfg.cpp:1083` — `E_FIRST_EXT` clamps via `CLUSTERS*CLUSTER_SIZE` (now at `cfg.cpp:1091-1092`) and the only downstream use (`cfg.cpp:1136`) runs after the clamp; no unclamped path observed.
 - ✅ **FIXED** (`aeb1372`) `src/cfg.cpp:681-684` — `_DelSpaces` overlapping `strcpy(&strLine[i], &strLine[i+1])` is UB per ANSI; should be `memmove`. Now `memmove`. *(Adjacent, NOT fixed: the `i++` after the shift skips the char moved into slot `i`, so runs of consecutive spaces aren't fully collapsed -- separate logic issue, left alone.)*
-- `src/cfg.cpp:198-220` — `AdjustFooter` writes into `P_FOOTER[0x90]` at fixed offsets without checking that `P_FOOTER1/2` ≤ 64 chars.
+- ⏸️ **DEFENDED — bounded by `STR64` type.** `src/cfg.cpp:198-220` — `AdjustFooter` writes into `P_FOOTER[0x90]`=144 at fixed offsets; `P_FOOTER1/2` are `STR64` (≤63 chars) and the local `footer[0x44]`=68, so every DR_80/DR_40/DR_18 path stays within bounds (verified by hand: worst case ~132 < 144).
 - ✅ **FIXED** (`aeb1372`) `src/spooler.cpp:213-214` — `Serial->GetStatus()` dereferenced **before** the `if (Serial && ...)` null check on the same line. COM branch now guarded by `if (Serial)` first.
 - `src/spooler.cpp:52,86,93,104,163` — `SpoolerQueueMutex` commented out everywhere — queue head/tail unsynchronized between `Print()` (callers) and `Poll()` (main loop).
-- `src/spooler.cpp:54-71` — `strlen(s)` called before the 0xFF-scan; if `s` lacks NUL within 0xFF, walks off-end.
-- `src/stm2.cpp:50-67` — `check()` probes banks then restores; power loss mid-probe never writes back. No backup mechanism.
-- `src/stm2.cpp:200-203` — Partial read sets `ret=FALSE` but buffer already partially overwritten; caller can't detect corrupt data.
-- `src/mutex.cpp:14-18` — Spin uses `btr`/`bts` busy-wait, no timeout, no interrupt-disable; document the invariant.
-- `src/st.cpp:97-114` — Borland `new` returns NULL on OOM, not throws — `defaultStorage->storageError` deref will fault if alloc failed.
+- ✅ **FIXED** (`038f489`) `src/spooler.cpp:54-71` — `strlen(s)` called before the 0xFF-scan; if `s` lacks NUL within 0xFF, walks off-end. `strlen` now deferred to the `else` (NUL-terminated) branch.
+- ⏸️ **WONTFIX — no clean fix, hardware-loss case.** `src/stm2.cpp:50-67` — `check()` probes banks then restores; power loss mid-probe never writes back. No backup mechanism. (Power-loss atomicity needs an EEPROM redesign; out of scope.)
+- ⏸️ **DEFENDED — `ret=FALSE` is the failure signal.** `src/stm2.cpp:200-203` — Partial read sets `ret=FALSE`; buffer is left partially overwritten but the FALSE return tells the caller not to trust it. `read()` can't be un-done without a temp buffer; no clean fix.
+- ✅ **DONE** (`038f489`) `src/mutex.cpp:14-18` — Spin uses `btr`/`bts` busy-wait, no timeout, no interrupt-disable. Invariant now documented in the header comment (ISR-unsafe; one shared word per class; no fairness).
+- ✅ **FIXED** (`038f489`) `src/st.cpp:97-114` — Borland `new` returns NULL on OOM, not throws — `defaultStorage->storageError` deref will fault if alloc failed. `_new_handler` isn't installed until the CONTROLLER ctor (line 162), so the line-93 alloc is unguarded; added a `!defaultStorage ||` check routing OOM through the existing error path. *(Broader note: lines 85/87/91/114 share the same pre-handler window — flagged for GCC, not fixed; hoisting the handler install earlier is a CONTROLLER-dependency change.)*
 
 ### MEDIUM / LOW
 
 Full lists in the agent transcripts (file references below). Highlights:
 
-- `src/eeprom.cpp:93-101` — Loop `for (i=0; i<=nBytes; i++) { ...; i++; ... }` accesses `wrBytes[80]/[81]` when `nBytes==80` (OOB; buffer is BYTE[80]).
+- ✅ **FIXED** (`038f489`) `src/eeprom.cpp:93-101` — Loop `for (i=0; i<=nBytes; i++) { ...; i++; ... }` accesses `wrBytes[80]/[81]` when `nBytes==80` (OOB; buffer is BYTE[80]). Changed `<=` to `<`. **Flagged (not fixed):** `wrBytes[80]` vs `MAX_LEN=0x400` is a deeper mismatch — `swab()` would overflow for any `nBytes` in (80,1024]; no caller hits it, left for GCC.
 - `src/eeprom.cpp:30` — `strlen(bytes)` on non-NUL-terminated byte buffer.
-- `src/ui/bdisplay.cpp:103-160` — `sprintf` into `STR16` of `%0.2f` floats with `totalCost`; 7+ digits + decimal overflows 16-byte buffer.
-- `src/ui/w_table.cpp:527-553` — `delete vScroll;` without nulling; re-entry of `ScrollCompute` checks non-null → use-after-free.
+- ⏸️ **DEFENDED — value range.** `src/ui/bdisplay.cpp:103-160` — `sprintf` into `STR16` of `%0.2f` floats with `totalCost`; overflow needs ~10^12 (≥12 integer digits), unreachable for a booth POS in COP. BCC 3.1 has no `snprintf`; bumping 8 buffers speculatively rejected per "surgical".
+- ✅ **FIXED** (`038f489`) `src/ui/w_table.cpp:527-553` — `delete vScroll;` without nulling; re-entry of `ScrollCompute` checks non-null → use-after-free. Now `vScroll/hScroll/corner = NULL` after each free (the two deletes immediately followed by re-`new` left as-is).
 - `src/ui/w_table.cpp:84` — `Event()` derefs `object` (Current()) without null check.
 - `src/ctrl/ctrl_rf.cpp:370,620` — `static WORD maxBooth = g_cfg->ACTIVE_CLUSTERS*CLUSTER_SIZE;` captured once; config change post-init makes refresh skip booths.
 - `src/st_util.cpp:316-329` — `_CopyFile`: leaks source file handle on failed creat / failed alloc.
@@ -219,3 +221,48 @@ Per CLAUDE.md Working Style: confirm approach before broad changes.
    - Refactor `pr_*.c` duplication — out of scope (stability only).
    - Refactor 765-line `CONTROLLER::Event` — out of scope.
    - Remove pre-existing dead code (per CLAUDE.md §3 — flag, don't delete).
+
+---
+
+## 8. Milestone status — CLOSED (substantially complete), 2026-06-07
+
+This audit is now **archived as a historical record**. The actionable,
+hardware-independent work is done; the remainder is deliberately deferred.
+
+**Resolved:**
+
+- **All 22 CRITICALs (C1–C22)** — fixed or verified-defended (§6).
+- **HIGH / MEDIUM bounds, IO, lifetime findings** — the DB/telephony batch
+  (`ad15670`, `082c188`), the UI/controller batch (`fd0e188`), the mechanical
+  batch (`aeb1372`), and the final Bucket-B + clear-MEDIUM batch (`038f489`:
+  spooler `strlen`, st.cpp OOM guard, eeprom off-by-one, w_table
+  use-after-free, mutex invariant doc).
+- Several findings closed as **DEFENDED / WONTFIX** with rationale recorded
+  inline (cfg `AdjustFooter` STR64-bounded, cfg `E_FIRST_EXT` clamped,
+  stm2 partial-read FALSE-signalled, bdisplay STR16 value-range, dstatist
+  back-compat, etc.).
+
+**Deferred — Tier 3 (ISR / real-time concurrency), needs hardware + load test:**
+
+The `rt/` ISR-vs-main-loop group is parked in
+[ISR_VOLATILE_NOTES.md](wiki/dev/ISR_VOLATILE_NOTES.md), which is the design
+pass + load-test checklist for a future session that has the DOSBox-X build +
+busy-scenario loop. Key points carried forward:
+
+- The missing `volatile` is **dormant** — `st.cfg` enables no optimization, so
+  the compiler already reloads shared state. **GUARD-RAIL:** do **not** add
+  `-O`/`-Z`/`-G`/`-Or` to `st.cfg` or any build variant without first doing the
+  `volatile`/atomicity audit in ISR_VOLATILE_NOTES — that is what would
+  activate the risk. (The note lives here and in ISR_VOLATILE_NOTES rather
+  than in `st.cfg` itself, because Borland `.cfg` files treat every line as a
+  compiler option and have no comment syntax.)
+- Real-but-low-impact, optimization-independent: torn 32-bit reads
+  (`rt_util.cpp`) and the `GetClusters` snapshot — fix plan = brief
+  flag-preserving `cli` window (P1) / accept+document (P2).
+- Independent ISR logic items: `serial.cpp:87` IRQ-mask `~`, `serial.cpp:198`
+  in-ISR `enable()`, `rt_isr.cpp:91` carry-flag chain — small fixes, each
+  wants the load loop to confirm.
+
+If this audit doc is ever physically relocated (e.g. into the docs wiki under
+the Documentation milestone), update the back-links in `TODO.md`, `HANDOFF.md`,
+`README`, and `ISR_VOLATILE_NOTES.md`.
