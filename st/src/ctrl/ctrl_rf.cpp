@@ -581,8 +581,9 @@ void CONTROLLER::RefreshBoothDisplay(void)
 	case RT_ENGINE::NAL:
 	case RT_ENGINE::INTER:
 		PHONE phone;
-		strcpy(phone, View->WAreas[cNum][bNum]->DataGet());
-		strcat(phone, View->WPhones[cNum][bNum]->DataGet());
+		strncpy(phone, View->WAreas[cNum][bNum]->DataGet(), sizeof(phone)-1);
+		phone[sizeof(phone)-1] = '\0';
+		strncat(phone, View->WPhones[cNum][bNum]->DataGet(), sizeof(phone)-1-strlen(phone));
 		//
 		strcpy(m_pDisplayInfos[boothCount].phone, phone);
 		// trunc -> 16. v.2.20.2

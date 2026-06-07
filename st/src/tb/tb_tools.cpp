@@ -55,7 +55,7 @@ EVENT_TYPE UIW_SPY::Event(const UI_EVENT &event)
 		UIW_INTEGER *wBoothNumber = (UIW_INTEGER *) Get("W_BOOTH");
 		int boothNum = wBoothNumber->DataGet();
 
-		if (boothNum < 0 || boothNum > (g_cfg->ACTIVE_CLUSTERS*CLUSTER_SIZE))
+		if (boothNum < 1 || boothNum > (g_cfg->ACTIVE_CLUSTERS*CLUSTER_SIZE))
 		{
 			errorSystem->ReportError
 			(
@@ -205,7 +205,7 @@ EVENT_TYPE UIW_LOCK::Event(const UI_EVENT &event)
         UIW_INTEGER *wBoothNumber = (UIW_INTEGER *) Get("W_BOOTH");
 		int boothNum = wBoothNumber->DataGet();
 
-		if (boothNum < 0 || boothNum > (g_cfg->ACTIVE_CLUSTERS*CLUSTER_SIZE))
+		if (boothNum < 1 || boothNum > (g_cfg->ACTIVE_CLUSTERS*CLUSTER_SIZE))
 		{
 			errorSystem->ReportError
 			(
