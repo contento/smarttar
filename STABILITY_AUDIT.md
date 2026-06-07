@@ -95,15 +95,15 @@ DB / telephony:
 - ⏳ **DEFERRED — design call ('2.21.8 Build 6' TRUE-on-zero; touches all FindNextNumber callers).** `src/db/dstorage.cpp:802-819` — `IndexCache::Load` returns TRUE on zero bytes read; callers can't distinguish empty index from successful load; `FindNextNumber` may spin forever returning 0.
 
 UI / controller:
-- `src/ctrl/control.cpp:494` — `static char msg[0x40]` + `sprintf("%d errores de comunicación en cabina: %s", N, Name)` — long Name overruns.
-- `src/ui/w_statbr.cpp:240` — `UIW_STAT_BAR::setMsg` unchecked `strcpy` into `Msg[0x40]`; callers pass arbitrarily long messages.
-- `src/ui/w_statbr.cpp:162-167` — `static char *helpText = HelpText` initialized once; if first call has `HelpText==NULL`, subsequent `strcmp(NULL, ...)` faults.
-- `src/ui/w_statbr.cpp:269-284` — `setHelpInfo` derefs `HelpInfo` sentinel without NULL guard.
-- `src/ui/view.cpp:44` — `new PH_ENGINE::CallInfo[NumOfClusters][CLUSTER_SIZE]` — multidimensional new with non-const first dim (Borland extension); on failure, dtor's `delete[] m_callInfo` faults.
-- `src/ui/view.cpp:96-110` — `loadStatBMP` does `new UCHAR[w*h]` without checking that `bmpFile.Load` actually populated `w`/`h`; garbage dims → huge alloc.
-- `src/tb/tb_tools.cpp:58,208` — `UIW_SPY`/`UIW_LOCK` validate `boothNum < 0 || boothNum > N*16` then `--boothNum` — accepts 0, decrements to `-1`, garbage cluster/booth downstream.
-- `src/ctrl/ctrl_rf.cpp:584-587` — `RefreshBoothDisplay` strcpy(area)+strcat(phone) into PHONE-sized buffer without length check.
-- `src/ctrl/ctrl_rf.cpp:319-332` — `sprintf` into bounded `watchDogMessage` with %f's can produce >64-char strings; flows into `setMsg` → strcpy into `Msg[0x40]`.
+- ⏸️ **DEFENDED — Name[13] keeps every msg < 64.** `src/ctrl/control.cpp:494` — `static char msg[0x40]` + `sprintf("%d errores de comunicación en cabina: %s", N, Name)` — long Name overruns.
+- ✅ **FIXED** (`fd0e188`) `src/ui/w_statbr.cpp:240` — `UIW_STAT_BAR::setMsg` unchecked `strcpy` into `Msg[0x40]`; callers pass arbitrarily long messages.
+- ✅ **FIXED** (`fd0e188`) `src/ui/w_statbr.cpp:162-167` — `static char *helpText = HelpText` initialized once; if first call has `HelpText==NULL`, subsequent `strcmp(NULL, ...)` faults.
+- ✅ **FIXED** (`fd0e188`) `src/ui/w_statbr.cpp:269-284` — `setHelpInfo` derefs `HelpInfo` sentinel without NULL guard.
+- ⏸️ **FALSE POSITIVE — delete[] NULL is a no-op; new_handler exits on OOM.** `src/ui/view.cpp:44` — `new PH_ENGINE::CallInfo[NumOfClusters][CLUSTER_SIZE]` — multidimensional new with non-const first dim (Borland extension); on failure, dtor's `delete[] m_callInfo` faults.
+- ⏸️ **WONTFIX — trusted RES.DAT; corrupt dims fail to an OOM-exit, not corruption.** `src/ui/view.cpp:96-110` — `loadStatBMP` does `new UCHAR[w*h]` without checking that `bmpFile.Load` actually populated `w`/`h`; garbage dims → huge alloc.
+- ✅ **FIXED** (`fd0e188`) `src/tb/tb_tools.cpp:58,208` — `UIW_SPY`/`UIW_LOCK` validate `boothNum < 0 || boothNum > N*16` then `--boothNum` — accepts 0, decrements to `-1`, garbage cluster/booth downstream.
+- ✅ **FIXED** (`fd0e188`) `src/ctrl/ctrl_rf.cpp:584-587` — `RefreshBoothDisplay` strcpy(area)+strcat(phone) into PHONE-sized buffer without length check.
+- ⏸️ **DEFENDED — watchDogMessage[80] fits; now also bounded by setMsg.** `src/ctrl/ctrl_rf.cpp:319-332` — `sprintf` into bounded `watchDogMessage` with %f's can produce >64-char strings; flows into `setMsg` → strcpy into `Msg[0x40]`.
 - ✅ **FIXED** (`aeb1372`) `src/ctrl/control.cpp:60-67,207,702` — `errorMemory = new char[0x2000]` but freed with non-array `delete` — UB, possible heap corruption. Both frees (`~CONTROLLER`, `NewHandler`) now `delete []`.
 
 Infra:
