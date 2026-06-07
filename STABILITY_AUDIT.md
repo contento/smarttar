@@ -70,7 +70,7 @@ Format: `SEVERITY | file:line | finding | why it matters`. **V** = spot-verified
 
 ### HIGH
 
-ISR / real-time (`rt/`):
+ISR / real-time (`rt/`): **see [ISR_VOLATILE_NOTES.md](ISR_VOLATILE_NOTES.md) for the design pass** — key result: the `volatile` gap is **dormant** (st.cfg enables no optimization, so the compiler already reloads shared state); the real present hazards are torn 32-bit reads + `GetClusters` snapshot. Plan + load-test checklist there.
 - `src/rt/serial.cpp:46-53` — All `SERIAL` state is `static`; constructing a second instance clobbers ISR vector + buffer pointer, leaks prior `Buffer`.
 - `src/rt/serial.cpp:87` — `inportb(IMR) | ~((Port==COM1)?IRQ4:IRQ3)` — `~` on promoted int produces `0xFFxx`; can mask off unrelated IRQs (timer, keyboard).
 - `src/rt/serial.cpp:198` — Explicit `enable()` in ISR exit re-enables IF even if caller had IF=0; lets nested interrupts fire before IRET.
