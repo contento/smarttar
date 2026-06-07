@@ -286,6 +286,18 @@ max_duration_secs = 1800
 
 ## Milestone: Documentation -- Obsidian wiki (EN + ES)
 
+**Status (2026-06-07): substantially built, living at root [wiki/](wiki/)**
+(moved there from `st/docs/wiki` -- matches the structure draft below). The
+EN + ES User's Guide, Reference Manual, and in-app help pages exist, with a
+self-locating `build-docs.sh` + `manifest.json` pandoc / `md2help.py` pipeline
+that regenerates the `.docx` manuals and `help.txt` into `wiki/_build/`
+(promoted to `st/docs/`). The shipped layout diverged from the draft below
+(organized as users-guide / reference-manual / help, not the
+Build&Run/Architecture/Operations vault sketched here). **Remaining:** fold in
+the dev/maintenance docs listed below, and reconcile the checklist with what
+actually shipped. The checkboxes below describe the *original plan*, not
+current state.
+
 Bring the scattered docs ([README.md](README.md), [README.es.md](README.es.md),
 the four `.docx` manuals in [st/docs/](st/docs/), the in-app `help.txt`,
 [STABILITY_AUDIT.md](STABILITY_AUDIT.md), [HANDOFF.md](HANDOFF.md),
