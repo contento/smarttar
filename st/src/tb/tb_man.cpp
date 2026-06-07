@@ -126,6 +126,11 @@ UIW_MANUAL::~UIW_MANUAL(void)
 {
 	delete [] s_receipts;
 	delete [] s_totals;
+	// the widgets themselves are owned by s_wData (Zinc parent); free only
+	// the pointer-array storage allocated alongside s_receipts/s_totals.
+	delete [] s_wNCs;
+	delete [] s_wPRs;
+	delete [] s_wReceipts;
 }
 
 static BoothDisplay::Info s_boothDisplayInfo;

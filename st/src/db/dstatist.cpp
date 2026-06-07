@@ -79,11 +79,16 @@ DB_STATISTICS::DB_STATISTICS(const char *path, const char *name, WORD readOnly)
         for (int i=0; i < DS_MAXENTRIES; i++)
             Entries[i].Init();
         File = creat(Filename, S_IREAD|S_IWRITE);
-        write(File, Header, sizeof(HEADER));
-        write(File, Entries, sizeof(DS_ENTRY)*DS_MAXENTRIES);
-        write(File, DoublePRNEntries, sizeof(DS_DOUBLEPRNENTRY)*DS_MAXDOUBLEPRNENTRIES);
-        write(File, CellularEntries, sizeof(DS_CELLULARENTRY)*DS_MAXCELLULARENTRIES);
-        Status |= NEW;
+        if (File == -1)
+            Status |= BAD_FILE; // disk-full / permission: do not write to fd -1
+        else
+        {
+            write(File, Header, sizeof(HEADER));
+            write(File, Entries, sizeof(DS_ENTRY)*DS_MAXENTRIES);
+            write(File, DoublePRNEntries, sizeof(DS_DOUBLEPRNENTRY)*DS_MAXDOUBLEPRNENTRIES);
+            write(File, CellularEntries, sizeof(DS_CELLULARENTRY)*DS_MAXCELLULARENTRIES);
+            Status |= NEW;
+        }
     }
 }
 

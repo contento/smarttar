@@ -405,9 +405,11 @@ void CFG::FillCfgTable(ENTRY *table)
 {
     // fill table using a macro to expand entry
 #define Entry(entry, type) 			\
+	if (offset < MAX_ID_VALUES) {   	\
 	table[offset].Type  = type;   	\
 	table[offset].Id    = #entry; 	\
 	table[offset].Value = &entry; 	\
+	}                             	\
 	offset++;
 
 	WORD offset = 0;

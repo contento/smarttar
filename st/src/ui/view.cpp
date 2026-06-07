@@ -70,6 +70,20 @@ UIW_VIEW::UIW_VIEW(int numOfClusters, int numOfGroups)
 
 UIW_VIEW::~UIW_VIEW()
 {
+	// Free the pointer-array storage allocated in addTable(). The widgets
+	// themselves are owned and destroyed by the parent window (Zinc), so we
+	// only release the contiguous [NumOfClusters][CLUSTER_SIZE] arrays here.
+	delete [] WBoothNumbers;
+	delete [] WStates;
+	delete [] WAreas;
+	delete [] WPhones;
+	delete [] WCities;
+	delete [] WElapsedTimes;
+	delete [] WTariffs;
+	delete [] WValues;
+	delete [] WNumOfCalls;
+	delete [] ToneFSs;
+	delete [] PulseFSs;
 	delete [] m_callInfo;
 }
 
