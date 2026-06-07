@@ -83,16 +83,16 @@ ISR / real-time (`rt/`):
 - `src/rt/rt_util.cpp:533` — `GetClusters` does `memcpy` under `RTBoothClustersMutex` but ISR writes `Clusters[]` without the mutex (one-way protection) — main can read mid-update.
 
 DB / telephony:
-- `src/ph/ph_place.cpp:374` — `GetPlace` strcat into `tmpPlace[512]` checks size before cat but doesn't track remaining space; long colon-less `.inf` lines can overflow.
-- `src/ph/ph_query.cpp:240-241` — `strncpy(szPhone+nAccess, pszToken, nLen)` then null-term; if `nLen+nAccess >= sizeof(PHONE)=17`, both the strncpy and terminator overrun.
-- `src/ph/ph_query.cpp:95-101` — `while (pszCP[n] != ':')` no bounds on `n` vs `CITY_NAME=21`; missing `:` walks until fault.
-- `src/ph/parser.cpp:21` — `strlen(line)` O(n²) per loop iter; long `.inf` line >512 overflows `tmpLine[512]` via `tmpLine[iChar++]`.
-- `src/ph/ph_place.cpp:259` — `rightNumber = numbers[i+1]` when leftNumber has RANGE flag, no check that `i+1 < numCount`.
-- `src/db/dstorage.cpp:209-214` — `RepairDataFile` early-return leaks `tmpFile` descriptor; no `chmod` restore on DataFile.
-- `src/db/dstatist.cpp:51-67` — Mixed handling of short reads — truncated `.STA` treated as valid for some fields, corrupts `Subtract` math.
-- `src/ph/ph_eng.cpp:84-102` — `ok &= SaveXXX(file)` does **not** short-circuit; failed save midway leaves polluted `PH_INFO.DAT` marked written.
-- `src/db/dstorage.cpp:399-403` — `Add()` rewinds `dfSeekPos` on remainder without log/warn — silent data overwrite.
-- `src/db/dstorage.cpp:802-819` — `IndexCache::Load` returns TRUE on zero bytes read; callers can't distinguish empty index from successful load; `FindNextNumber` may spin forever returning 0.
+- ✅ **FIXED** (`ad15670`) `src/ph/ph_place.cpp:374` — `GetPlace` strcat into `tmpPlace[512]` checks size before cat but doesn't track remaining space; long colon-less `.inf` lines can overflow.
+- ✅ **FIXED** (`ad15670`) `src/ph/ph_query.cpp:240-241` — `strncpy(szPhone+nAccess, pszToken, nLen)` then null-term; if `nLen+nAccess >= sizeof(PHONE)=17`, both the strncpy and terminator overrun.
+- ✅ **FIXED** (`ad15670`) `src/ph/ph_query.cpp:95-101` — `while (pszCP[n] != ':')` no bounds on `n` vs `CITY_NAME=21`; missing `:` walks until fault.
+- ✅ **FIXED** (`ad15670`) `src/ph/parser.cpp:21` — `strlen(line)` O(n²) per loop iter; long `.inf` line >512 overflows `tmpLine[512]` via `tmpLine[iChar++]`.
+- ✅ **FIXED** (`ad15670`) `src/ph/ph_place.cpp:259` — `rightNumber = numbers[i+1]` when leftNumber has RANGE flag, no check that `i+1 < numCount`.
+- ✅ **FIXED** (`082c188`) `src/db/dstorage.cpp:209-214` — `RepairDataFile` early-return leaks `tmpFile` descriptor; no `chmod` restore on DataFile.
+- ⏸️ **WONTFIX — intentional old-.STA back-compat.** `src/db/dstatist.cpp:51-67` — Mixed handling of short reads — truncated `.STA` treated as valid for some fields, corrupts `Subtract` math.
+- ⏸️ **FALSE POSITIVE — nested ifs already short-circuit.** `src/ph/ph_eng.cpp:84-102` — `ok &= SaveXXX(file)` does **not** short-circuit; failed save midway leaves polluted `PH_INFO.DAT` marked written.
+- ⏸️ **WONTFIX — by design (drops corrupt partial tail).** `src/db/dstorage.cpp:399-403` — `Add()` rewinds `dfSeekPos` on remainder without log/warn — silent data overwrite.
+- ⏳ **DEFERRED — design call ('2.21.8 Build 6' TRUE-on-zero; touches all FindNextNumber callers).** `src/db/dstorage.cpp:802-819` — `IndexCache::Load` returns TRUE on zero bytes read; callers can't distinguish empty index from successful load; `FindNextNumber` may spin forever returning 0.
 
 UI / controller:
 - `src/ctrl/control.cpp:494` — `static char msg[0x40]` + `sprintf("%d errores de comunicación en cabina: %s", N, Name)` — long Name overruns.
