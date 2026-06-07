@@ -299,7 +299,7 @@ actually shipped. The checkboxes below describe the *original plan*, not
 current state.
 
 Bring the scattered docs ([README.md](README.md), [README.es.md](README.es.md),
-the four `.docx` manuals in [st/docs/](st/docs/), the in-app `help.txt`,
+the four `.docx` manuals in [st/docs/archive/](st/docs/archive/), the in-app `help.txt` in [st/res/](st/res/),
 [STABILITY_AUDIT.md](STABILITY_AUDIT.md), [HANDOFF.md](HANDOFF.md),
 [RELEASING.md](RELEASING.md), [CLAUDE.md](CLAUDE.md),
 [dosbox-x-smarttar-setup.md](dosbox-x-smarttar-setup.md),
@@ -350,7 +350,7 @@ Everything currently in the "Configuration" / "Architecture" /
 "Runtime Data Files" sections moves into wiki pages; the README keeps
 only what a first-time visitor needs in the first 30 seconds.
 
-**Manual ingestion.** The four `.docx` manuals in `st/docs/` are the
+**Manual ingestion.** The four `.docx` manuals in `st/docs/archive/` are the
 authoritative content but locked in a Word-era format. Conversion path:
 
   1. Bulk-convert `.docx` -> `.md` with `pandoc -t gfm-raw_html`
@@ -359,13 +359,14 @@ authoritative content but locked in a Word-era format. Conversion path:
      one topic per note), wikilink conversion (`[chapter X]` ->
      `[[Chapter X]]`), image relinking (the `.docx` embedded images
      need to be extracted to `attachments/` and re-referenced).
-  3. The original `.docx` files stay in [st/docs/](st/docs/) as the
+  3. The original `.docx` files stay in [st/docs/archive/](st/docs/archive/) as the
      historical record but are no longer the working copy. Add a
-     "Source: st/docs/SmartTar_Reference_Manual_EN.docx" footer to
+     "Source: st/docs/archive/SmartTar_Reference_Manual_EN.docx" footer to
+     each imported page.
      each imported page.
 
 **`help.txt` cross-reference.** The in-app help text
-([st/docs/help.txt](st/docs/help.txt)) drives `bin/help.dat` via
+([st/res/help.txt](st/res/help.txt)) drives `bin/help.dat` via
 `genhelp`. It overlaps the Reference Manual but is keyboard-focused.
 Cross-link each wiki page to its matching help.txt section so editors
 know to update both when behavior changes.

@@ -25,7 +25,6 @@ OBJ_DIR=build
 BIN_DIR=bin
 LIB_DIR=lib
 INCLUDE_DIR=include
-DOC_DIR=docs
 RES_DIR=res
 INF2DAT_DIR=util\inf2dat
 INI2CFG_DIR=util\ini2cfg
@@ -44,8 +43,7 @@ UTIL_DIR=util
 .PATH.obj=$(OBJ_DIR)
 .PATH.dll=$(BIN_DIR)
 .PATH.lib=$(LIB_DIR)
-.PATH.txt=$(DOC_DIR)
-.PATH.doc=$(DOC_DIR)
+.PATH.txt=$(RES_DIR)
 
 CC=bcc286
 ASM=tasm
@@ -206,8 +204,8 @@ $*, ,$(LIBS), $(DEF_FILE)
 	cfig286 $(BIN_DIR)\$(EXE_FILE) -NISTACK 10 -LDTSIZE 4096
 !endif
 
-$(BIN_DIR)\$(HELP_FILE): $(DOC_DIR)\help.txt
-	@genhelp $(DOC_DIR)\help.txt $(HELP_FILE) > NUL
+$(BIN_DIR)\$(HELP_FILE): $(RES_DIR)\help.txt
+	@genhelp $(RES_DIR)\help.txt $(HELP_FILE) > NUL
 	@move $(HELP_FILE)	$(BIN_DIR) > NUL
 	@move help.hpp $(INCLUDE_DIR) > NUL
 

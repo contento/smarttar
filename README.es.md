@@ -6,7 +6,7 @@ Sistema de gestión de tarifas telefónicas en tiempo real para cabinas telefón
 
 Desarrollado por [MicroDiseño Ltda.](https://microdiseno.com) · Derechos reservados © 1993–2003 · Versión 2.60.0 (resucitado 2026)
 
-![SmartTar](st/docs/SmartTar.jpg)
+![SmartTar](st/docs/archive/SmartTar.jpg)
 
 ---
 
@@ -340,8 +340,8 @@ SmartTar es una aplicación de un solo proceso en modo protegido. Los subsistema
 
 | Versión | Captura |
 | --- | --- |
-| 2.33 | ![SmartTar 2.33](st/docs/SmartTar%202.33.gif) |
-| 2.32.1 | ![SmartTar 2.32.1](st/docs/SmartTar%202.32.1.gif) |
+| 2.33 | ![SmartTar 2.33](st/docs/archive/SmartTar%202.33.gif) |
+| 2.32.1 | ![SmartTar 2.32.1](st/docs/archive/SmartTar%202.32.1.gif) |
 
 ---
 

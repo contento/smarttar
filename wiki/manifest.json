@@ -48,12 +48,5 @@
       "copyright": "Copyright © 1993–2003. Todos los derechos reservados.",
       "single_page": true
     }
-  ],
-  "help": {
-    "src_dir": "es/ayuda",
-    "output": "help.txt",
-    "encoding": "iso-8859-1",
-    "line_ending": "lf",
-    "note": "Zinc in-app help (Spanish). genhelp compiles help.txt -> help.dat. The EN/ help mirror is documentation-only and is not compiled into the app."
-  }
+  ]
 }
