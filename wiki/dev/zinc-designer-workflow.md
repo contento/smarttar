@@ -14,8 +14,8 @@ Two artifacts are derived from it:
 - `st/src/res.cpp` — generated C++ wiring (tracked source)
 - `st/include/res.hpp` — generated symbol IDs (tracked header)
 
-The canonical copy lives at [st/res/RES.DAT](../res/RES.DAT). The
-MAKEFILE rule at [st/MAKEFILE:210-211](../MAKEFILE) copies it into
+The canonical copy lives at [st/res/RES.DAT](../../st/res/RES.DAT). The
+MAKEFILE rule at [st/MAKEFILE:210-211](../../st/MAKEFILE) copies it into
 `st/bin/res.dat` on every build:
 
 ```make
@@ -36,7 +36,7 @@ In [vendor/zinc/BIN/](../../vendor/zinc/BIN/):
 | `WDESIGN.EXE` | Windows-mode designer variant — not needed for our workflow |
 | `BMP2DAT.EXE` | Converts `.BMP` images into the Zinc `.DAT` binary form for embedding |
 | `ICO2DAT.EXE` | Same, for `.ICO` |
-| `GENHELP.EXE` | Compiles `docs/help.txt` to `bin/help.dat` (unrelated to RES.DAT; called via `HELP=1`) |
+| `GENHELP.EXE` | Compiles `st/res/help.txt` to `bin/help.dat` (unrelated to RES.DAT) |
 | `P_DESIGN.ZNC` | Zinc Designer config / palette file. Lives alongside the EXE — leave it where it is. **`FIXME`** confirm what this actually is |
 
 `vendor/zinc/BIN` is already on the PATH inside DOSBox-X (see
@@ -76,7 +76,7 @@ anywhere.
    mvres
    ```
 
-   [st/bin/mvres.bat](../bin/mvres.bat) moves `res.hpp` to
+  [st/bin/mvres.bat](../../st/bin/mvres.bat) moves `res.hpp` to
    `..\include` and `res.cpp` to `..\src` (overwriting the tracked
    copies). It does **not** touch `res.dat`.
 6. **Copy `res.dat` back to the canonical location:**
@@ -93,7 +93,7 @@ anywhere.
    be extended to do it?
 7. **Rebuild.** `make` picks up the new `res.dat`, `res.cpp`, and
    `res.hpp`. The `res.obj` rule at
-   [st/MAKEFILE:312](../MAKEFILE) recompiles `src/res.cpp` and
+  [st/MAKEFILE:312](../../st/MAKEFILE) recompiles `src/res.cpp` and
    relinks `st.exe`.
 8. **Commit** all four files together so the binary and generated
    sources stay in sync:
@@ -120,8 +120,8 @@ anywhere.
 
 ## Related references
 
-- [st/MAKEFILE](../MAKEFILE) — RES.DAT copy rule (`$(BIN_DIR)\$(RES_FILE)`)
-- [st/bin/mvres.bat](../bin/mvres.bat) — moves generated `res.cpp` /
+- [st/MAKEFILE](../../st/MAKEFILE) — RES.DAT copy rule (`$(BIN_DIR)\$(RES_FILE)`)
+- [st/bin/mvres.bat](../../st/bin/mvres.bat) — moves generated `res.cpp` /
   `res.hpp` back into the tree
 - [CLAUDE.md](../../CLAUDE.md) — Latin-1 vs CP850 encoding policy
 - [dosbox-x.conf](../../dosbox-x.conf) — mouse/PATH setup that the

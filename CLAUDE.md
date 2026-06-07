@@ -106,10 +106,11 @@ run.sh       Host-side launcher (bash) for st.exe inside DOSBox-X.
 run.ps1      PowerShell equivalent. Same -KeepOpen switch; args
              after `--` forward to st.exe.
 wiki/        Obsidian documentation vault (EN + ES) -- single source of
-             truth for end-user docs. build-docs.sh / build-docs.ps1
+             truth for documentation. build-docs.sh / build-docs.ps1
              (self-locating) regenerates the .docx manuals into
              wiki/_build/ (gitignored). Note: st/res/help.txt is a source
              asset for the app, NOT a wiki output -- edit it directly.
+             dev/ holds developer workflow docs (Zinc Designer, etc.).
              Moved here from st/docs/wiki so the project-wide vault is
              not buried under the app-source tree.
 st/          Application source
@@ -135,10 +136,10 @@ st/          Application source
              asset for the app — edited directly in st/res/, NOT generated
              by the wiki. genhelp compiles it → help.dat + help.hpp.
              MAKEFILE copies these into bin/ and include/ during build.
-  docs/      Project documentation. Active: zinc-designer-workflow.md.
-             Archive: historical originals (help.doc, STC.doc, STC.rtf,
+  docs/      Historical documentation archive (help.doc, STC.doc, STC.rtf,
+             screenshots). Generated .docx manuals are gitignored here
              (regenerate via wiki/build-docs.sh or build-docs.ps1). The
-             wiki/ vault is the source of truth for user docs.
+             wiki/ vault is the source of truth for all docs.
   test/      Per-module development test programs (ph_eng, db_eng, cfg, rt_eng, etc.)
   util/      Build and maintenance utilities:
     inf2dat/   Canonical source for telephony .inf files (ddi.inf, ddn.inf,
