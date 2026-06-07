@@ -160,7 +160,7 @@ void UIW_STAT_BAR::refresh(EVENT_TYPE ccode, BOOL all)
         else
         {
             static char *helpText = HelpText;
-            if (strcmp(helpText, HelpText))
+            if (HelpText && (helpText == NULL || strcmp(helpText, HelpText)))
             {
                 helpText = HelpText;
                 drawDipMessage(region, HelpText, HelpPalette, ccode);
@@ -237,7 +237,8 @@ void UIW_STAT_BAR::refresh(EVENT_TYPE ccode, BOOL all)
 
 void UIW_STAT_BAR::setMsg(char *msg, int foreground, int background, int msgCount)
 {
-    strcpy(Msg, msg);
+    strncpy(Msg, msg, sizeof(Msg)-1);
+    Msg[sizeof(Msg)-1] = '\0';
     MsgPalette->colorAttribute  = attrib(foreground, background);
     MsgPalette->colorForeground = foreground;
     MsgPalette->colorBackground = background;
@@ -269,6 +270,8 @@ void UIW_STAT_BAR::drawDipMessage(UI_REGION& region, const char *msg, UI_PALETTE
 void UIW_STAT_BAR::setHelpInfo(UI_HELP_CONTEXT theHelpContext)
 {
     int ti = 0;
+    if (!HelpInfo)
+        return;
     do
     {
         if (HelpInfo[ti].Context == theHelpContext)
