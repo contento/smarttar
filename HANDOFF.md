@@ -12,27 +12,22 @@ Working through the CRITICALs in [STABILITY_AUDIT.md](STABILITY_AUDIT.md)
 on `main`, one small verified-then-fixed batch at a time. That doc is the
 source of truth for per-finding status; summary here:
 
-- **Fixed & committed:** C1–C13, C16–C18, C20–C22.
-  - C1–C4 (quick wins), C5–C9 (`58e68d5`), C11–C22 batch (`f497445`).
-- **C10:** verified as *defended* — `Add()` already checks both writes; the
-  non-atomic data-vs-index window is a design limitation, not a bug. No code
-  change.
-- **Open CRITICALs:**
-  - **C14** `control.cpp:541-548` — `NewGPFHandler` calls `delete` on the
-    engine/db globals *inside* the #0Dh GPF ISR; `delete` re-enters
-    PHAPI/heap, so the recovery path can itself deadlock.
-  - **C15** `control.cpp:697-717` — OOM `new_handler` tears down some globals
-    but leaves `g_dbEngine`/`g_phEngine`/`g_cfg`/`g_spooler` — partial
-    teardown leaks files and leaves the DB inconsistent.
-  - **C19** `spooler.cpp:23,33` — `Buffers` is a static class array
-    reallocated on every `SPOOLER` ctor; a second instantiation leaks the
-    prior queues and stomps the statics.
-  - Plus all HIGH findings (audit § "HIGH").
+- **All CRITICALs (C1–C22) resolved.** Fixed across `58e68d5` (C5–C9),
+  `f497445` (C11–C22 batch), `d4bbd49` (C19), `d7d24ca` (C14/C15), plus the
+  C1–C4 quick wins. **C10** is verified-*defended* (both writes already
+  checked in `Add()`; the non-atomic data-vs-index window is a design
+  limitation, no code change).
+- Two crash-path caveats worth remembering:
+  - **C14** bounds the GPF-handler heap re-entry (restore old handler before
+    teardown + `inTeardown` backstop) rather than eliminating it; fully
+    avoiding `delete` from a fault context needs an `ENGINE` redesign
+    (uninstall ISRs without `delete`) — deferred, out of scope.
+  - **C16** left `States[i].Bitmap` unfreed on purpose — `States` is `static`,
+    one app-lifetime allocation; freeing it in an instance dtor would break if
+    a second view ever existed.
 
-**Next step: C14, then C15, then C19.** C14/C15 are riskier than every batch
-so far — they touch the crash/OOM recovery paths, so the fix has to avoid
-heap re-entry, not just add a null check. Verify each cited file:line before
-touching it (audit § 7 step 2).
+**Next step: the HIGH findings** (audit § "HIGH"). Verify each cited
+file:line before touching it (audit § 7 step 2).
 
 ---
 
