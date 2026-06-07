@@ -104,13 +104,13 @@ UI / controller:
 - `src/tb/tb_tools.cpp:58,208` — `UIW_SPY`/`UIW_LOCK` validate `boothNum < 0 || boothNum > N*16` then `--boothNum` — accepts 0, decrements to `-1`, garbage cluster/booth downstream.
 - `src/ctrl/ctrl_rf.cpp:584-587` — `RefreshBoothDisplay` strcpy(area)+strcat(phone) into PHONE-sized buffer without length check.
 - `src/ctrl/ctrl_rf.cpp:319-332` — `sprintf` into bounded `watchDogMessage` with %f's can produce >64-char strings; flows into `setMsg` → strcpy into `Msg[0x40]`.
-- `src/ctrl/control.cpp:60-67,207,702` — `errorMemory = new char[0x2000]` but freed with non-array `delete` — UB, possible heap corruption.
+- ✅ **FIXED** (`aeb1372`) `src/ctrl/control.cpp:60-67,207,702` — `errorMemory = new char[0x2000]` but freed with non-array `delete` — UB, possible heap corruption. Both frees (`~CONTROLLER`, `NewHandler`) now `delete []`.
 
 Infra:
 - `src/cfg.cpp:1083` — `E_FIRST_EXT` clamps via `CLUSTERS*CLUSTER_SIZE` but raw INI input is not clamped before `AdjustHeader/Adjust`.
-- `src/cfg.cpp:681-684` — `_DelSpaces` overlapping `strcpy(&strLine[i], &strLine[i+1])` is UB per ANSI; should be `memmove`.
+- ✅ **FIXED** (`aeb1372`) `src/cfg.cpp:681-684` — `_DelSpaces` overlapping `strcpy(&strLine[i], &strLine[i+1])` is UB per ANSI; should be `memmove`. Now `memmove`. *(Adjacent, NOT fixed: the `i++` after the shift skips the char moved into slot `i`, so runs of consecutive spaces aren't fully collapsed -- separate logic issue, left alone.)*
 - `src/cfg.cpp:198-220` — `AdjustFooter` writes into `P_FOOTER[0x90]` at fixed offsets without checking that `P_FOOTER1/2` ≤ 64 chars.
-- `src/spooler.cpp:213-214` — `Serial->GetStatus()` dereferenced **before** the `if (Serial && ...)` null check on the same line.
+- ✅ **FIXED** (`aeb1372`) `src/spooler.cpp:213-214` — `Serial->GetStatus()` dereferenced **before** the `if (Serial && ...)` null check on the same line. COM branch now guarded by `if (Serial)` first.
 - `src/spooler.cpp:52,86,93,104,163` — `SpoolerQueueMutex` commented out everywhere — queue head/tail unsynchronized between `Print()` (callers) and `Poll()` (main loop).
 - `src/spooler.cpp:54-71` — `strlen(s)` called before the 0xFF-scan; if `s` lacks NUL within 0xFF, walks off-end.
 - `src/stm2.cpp:50-67` — `check()` probes banks then restores; power loss mid-probe never writes back. No backup mechanism.
