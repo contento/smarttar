@@ -289,7 +289,9 @@ max_duration_secs = 1800
 Bring the scattered docs ([README.md](README.md), [README.es.md](README.es.md),
 the four `.docx` manuals in [st/docs/](st/docs/), the in-app `help.txt`,
 [STABILITY_AUDIT.md](STABILITY_AUDIT.md), [HANDOFF.md](HANDOFF.md),
-[RELEASING.md](RELEASING.md), [CLAUDE.md](CLAUDE.md)) into a single
+[RELEASING.md](RELEASING.md), [CLAUDE.md](CLAUDE.md),
+[dosbox-x-smarttar-setup.md](dosbox-x-smarttar-setup.md),
+[ISR_VOLATILE_NOTES.md](ISR_VOLATILE_NOTES.md)) into a single
 browsable wiki built on Obsidian. Obsidian was picked because: (1) it
 treats a folder of plain Markdown as a vault -- no proprietary format,
 no server, git-friendly; (2) it has native bilingual support via
