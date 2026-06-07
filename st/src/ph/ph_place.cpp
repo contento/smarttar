@@ -249,7 +249,7 @@ BOOL PH_ENGINE::PLACE_INFO::PartialSearch(PHONE_NUMBER number, WORD slot, PLACE_
 		for (int i = 0; i < numCount && !found; i++)
 		{
 			leftNumber = numbers[i];
-			if (leftNumber & RANGE_INDICATOR_MASK)
+			if ((leftNumber & RANGE_INDICATOR_MASK) && (i+1) < numCount)
 			{
 				leftNumber  &= ~RANGE_INDICATOR_MASK; // no range
 				rightNumber  = numbers[i+1];
@@ -367,7 +367,7 @@ BOOL PH_ENGINE::PLACE_INFO::GetPlace(Parser::Iterator& it, CITY_NAME& place)
 	while (
 		it    &&
 		!TokenIs(it, ":") &&
-		strlen(tmpPlace) < sizeof(TEXT_FILE_LINE))
+		strlen(tmpPlace) + strlen(it.current()) < sizeof(TEXT_FILE_LINE))
 	{
 		strcat(tmpPlace, it.current());
 		++it;

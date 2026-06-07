@@ -92,7 +92,7 @@ EVENT_TYPE PhoneQueryWindow::ProcessPlaces(UI_WINDOW_OBJECT *object, UI_EVENT &,
 	// update place
 	char *pszCP = pwThis->m_pwCurrentPlace->DataGet();
 	int n = 0;
-	while (pszCP[n] != ':') // trim until ':'
+	while (pszCP[n] && pszCP[n] != ':' && n < (int)sizeof(CITY_NAME)-1) // trim until ':'
 	{
 		++n;
 	}
@@ -237,6 +237,8 @@ BOOL PhoneQueryWindow::Recalc()
 	}
 
 	nLen = (size_t)(pszCP-pszToken);
+	if (nLen > sizeof(szPhone)-1-nAccess)
+		nLen = sizeof(szPhone)-1-nAccess;
 	strncpy(szPhone+nAccess, pszToken, nLen);
 	szPhone[nLen+nAccess] = '\0';
 
