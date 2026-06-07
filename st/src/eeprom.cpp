@@ -90,7 +90,7 @@ void EEPROM::write(const BYTE *bytes, int nBytes)
     BYTE wrBytes[80];
     swab((char *)bytes, wrBytes, nBytes);
     BYTE address = 0x40; // ???
-    for (int i=0; i <= nBytes; i++)
+    for (int i=0; i < nBytes; i++)
     {
         init();
         out(address);

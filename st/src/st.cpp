@@ -92,7 +92,8 @@ main(int , char *argv[])
 
 	UI_WINDOW_OBJECT::defaultStorage = new UI_STORAGE("res.dat", UIS_READ);
 
-	if (UI_WINDOW_OBJECT::defaultStorage->storageError)
+	if (!UI_WINDOW_OBJECT::defaultStorage ||
+		UI_WINDOW_OBJECT::defaultStorage->storageError)
 	{
 		// Begin 2.21.8 Build 6
 		STR256 strMsg;
