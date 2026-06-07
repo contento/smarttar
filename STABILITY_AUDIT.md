@@ -55,18 +55,18 @@ Format: `SEVERITY | file:line | finding | why it matters`. **V** = spot-verified
 | C8 | `src/db/dstorage.cpp:262` | `RepairDataFile` ignores `write()` returns — partial writes during repair silently truncate; tmp file then renamed over real DataFile (line 282), destroying recoverable receipts. | — |
 | C9 | `src/db/dstorage.cpp:343` | `RepairIndexFile` ignores `write()` return — index/`NumOfEntries` counter desync, persisted at 362. | — |
 | C10 | `src/db/dstorage.cpp:433-447` | `Add()`: if `WriteIndexHeader` fails after entry written, data has the receipt but index header is stale; on next open, count rebuild differs. Non-atomic. | — |
-| C11 | `src/db/dstatist.cpp:82-86` | Four `write()` calls in ctor unchecked — disk-full leaves stats file header-less / truncated; in-memory copy looks fine until reopen. | — |
-| C12 | `src/ph/ph_place.cpp:589-594` | `GetNumbers` writes `numbers[slot].Numbers[Count++]` with no bounds vs `MAX_NUMBERS_PER_LINE` — malformed `.inf` line overflows embedded array. | — |
-| C13 | `src/ph/ph_place.cpp:201-202` | `Search()`: `partialPhone[i]` indexed up to `len-1` where `len = strlen(phone)`; PHONE is 17 bytes; 16-char phone + terminator overruns by 1. | — |
+| C11 | `src/db/dstatist.cpp:82-86` | Four `write()` calls in ctor unchecked — disk-full leaves stats file header-less / truncated; in-memory copy looks fine until reopen. | ✅ |
+| C12 | `src/ph/ph_place.cpp:589-594` | `GetNumbers` writes `numbers[slot].Numbers[Count++]` with no bounds vs `MAX_NUMBERS_PER_LINE` — malformed `.inf` line overflows embedded array. | ✅ |
+| C13 | `src/ph/ph_place.cpp:201-202` | `Search()`: `partialPhone[i]` indexed up to `len-1` where `len = strlen(phone)`; PHONE is 17 bytes; 16-char phone + terminator overruns by 1. | ✅ |
 | C14 | `src/ctrl/control.cpp:541-548` | `NewGPFHandler` calls `delete RTEngine/g_dbEngine/...` inside the #0Dh GPF ISR — `delete` re-enters PHAPI/heap; recovery path itself can deadlock. | — |
 | C15 | `src/ctrl/control.cpp:697-717` | OOM `new_handler` deletes some globals but not `g_dbEngine`, `g_phEngine`, `g_cfg`, `g_spooler` — partial teardown leaks files, leaves DB inconsistent. | — |
-| C16 | `src/ui/view.cpp:70-73` | `~UIW_VIEW` only deletes `m_callInfo`; never deletes the 2-D widget arrays `WBoothNumbers`/`WStates`/`WAreas`/`WPhones`/`WCities`/`WElapsedTimes`/`WTariffs`/`WValues`/`WNumOfCalls`, `ToneFSs`/`PulseFSs`/`States[i].Bitmap`. Large leak; likely also dangling pointers. *(Note: Zinc widgets owned by parent — but the **arrays of pointers** themselves still need `delete[]`.)* | — |
-| C17 | `src/tb/tb_man.cpp:80-83,127` | `UIW_MANUAL` allocates `s_receipts`/`s_totals`/`s_wNCs`/`s_wPRs`/`s_wReceipts` as statics; dtor only frees first two. Re-opening dialog overwrites pointers → leak + cross-instance aliasing. | — |
-| C18 | `src/spooler.cpp:30-33` | `NumOfChannels` clamped but `Print(channel, ...)` never validates the channel arg against `MAX_SPOOL_CHANNELS=4`; caller-supplied out-of-range channel indexes uninitialized `Buffers[]` pointer. | — |
+| C16 | `src/ui/view.cpp:70-73` | `~UIW_VIEW` only deletes `m_callInfo`; never deletes the 2-D widget arrays `WBoothNumbers`/`WStates`/`WAreas`/`WPhones`/`WCities`/`WElapsedTimes`/`WTariffs`/`WValues`/`WNumOfCalls`, `ToneFSs`/`PulseFSs`/`States[i].Bitmap`. Large leak; likely also dangling pointers. *(Note: Zinc widgets owned by parent — but the **arrays of pointers** themselves still need `delete[]`.)* | ✅ |
+| C17 | `src/tb/tb_man.cpp:80-83,127` | `UIW_MANUAL` allocates `s_receipts`/`s_totals`/`s_wNCs`/`s_wPRs`/`s_wReceipts` as statics; dtor only frees first two. Re-opening dialog overwrites pointers → leak + cross-instance aliasing. | ✅ |
+| C18 | `src/spooler.cpp:30-33` | `NumOfChannels` clamped but `Print(channel, ...)` never validates the channel arg against `MAX_SPOOL_CHANNELS=4`; caller-supplied out-of-range channel indexes uninitialized `Buffers[]` pointer. | ✅ |
 | C19 | `src/spooler.cpp:23,33` | `Buffers` is a static class array reallocated on every `SPOOLER` ctor — second instantiation leaks prior queues and stomps statics. | — |
-| C20 | `src/log.cpp:43-58` | After CREATE-branch reopen failure, `openOk=TRUE` but stream may be bad; subsequent `put()` silently loses log entries. | — |
-| C21 | `src/log.cpp:63` | Failed-open branch deletes `file` but does not null it — `~Log()` deletes again (double-free). | — |
-| C22 | `src/cfg.cpp:592-595` | Buffer-overrun check `if (offset > MAX_ID_VALUES)` runs **after** `FillCfgTable()` already wrote OOB. `MAX_ID_VALUES=0x100` must be raised any time entries are added. | — |
+| C20 | `src/log.cpp:43-58` | After CREATE-branch reopen failure, `openOk=TRUE` but stream may be bad; subsequent `put()` silently loses log entries. | ✅ |
+| C21 | `src/log.cpp:63` | Failed-open branch deletes `file` but does not null it — `~Log()` deletes again (double-free). | ✅ |
+| C22 | `src/cfg.cpp:592-595` | Buffer-overrun check `if (offset > MAX_ID_VALUES)` runs **after** `FillCfgTable()` already wrote OOB. `MAX_ID_VALUES=0x100` must be raised any time entries are added. | ✅ |
 
 ### HIGH
 
@@ -176,7 +176,18 @@ Five CRITICAL findings spot-verified against source. **C1–C4 are now fixed and
 - C8: write() return unchecked in RepairDataFile (fixed)
 - C9: write() return unchecked in RepairIndexFile (fixed)
 
-C10–C22 and all HIGH findings remain **unverified and unfixed**. **C10 verified as defended** (both writes checked in Add(), non-atomicity is design limitation). **Next: C11.**
+**C11–C22 are fixed and committed** (`f497445`):
+
+- C11: dstatist.cpp ctor write()s guarded; BAD_FILE on creat() failure (fixed)
+- C12: GetNumbers bounds vs MAX_NUMBERS_PER_LINE (fixed)
+- C13: Search loop capped at sizeof(partialPhone)-1 (fixed)
+- C16: ~UIW_VIEW delete[]s the 2-D pointer arrays (fixed). **Caveat:** `States[i].Bitmap` deliberately left — `States` is `static` (one allocation for app lifetime); freeing it in an instance dtor would be wrong if multiple views ever existed. App-lifetime leak, reclaimed at exit.
+- C17: ~UIW_MANUAL delete[]s s_wNCs/s_wPRs/s_wReceipts (fixed)
+- C18: spooler Print() overloads validate channel < NumOfChannels (fixed)
+- C20/C21: log.cpp checks file->fail() and nulls file after delete (fixed)
+- C22: FillCfgTable bounds offset < MAX_ID_VALUES inside the macro (fixed)
+
+Still open: **C10** verified as defended (both writes checked in Add(), non-atomicity is a design limitation — no code change). **C14, C15** (control.cpp GPF/OOM teardown) and **C19** (spooler static `Buffers` realloc) remain unfixed, plus all HIGH findings. **Next: C14.**
 
 ---
 
@@ -190,12 +201,12 @@ Per CLAUDE.md Working Style: confirm approach before broad changes.
    - ~~`ct_util.cpp:30` — fix to `"\x1B\x70\x00\x0A\x0A\xFF"`.~~ Fixed (`9c10a7e`).
    - ~~`serial.cpp:191` — change `;` to `return;`.~~ Fixed (`7a730a3`).
 
-2. **Verify-then-fix CRITICALs:** C5–C22 — **next up, start at C5.** Read each cited file:line first.
+2. **Verify-then-fix CRITICALs:** C5–C13, C16–C18, C20–C22 fixed. **Next up: C14, C15, C19.** Read each cited file:line first.
 
 3. **Strategic (not quick):**
    - Add `volatile` to ISR-shared state in `rt_eng.h` (must be tested under load).
    - Audit `write()`/`creat()` return value handling across `dstorage.cpp` / `dstatist.cpp` — adopt a consistent error path (likely setting a "DB unhealthy" flag + refusing further writes).
-   - Decide whether `~UIW_VIEW` leak (C16) is genuine or whether Zinc deletes the 2-D arrays via parent ownership.
+   - ~~Decide whether `~UIW_VIEW` leak (C16) is genuine or whether Zinc deletes the 2-D arrays via parent ownership.~~ Resolved (`f497445`): widgets are Zinc-owned, but the pointer-array storage is ours — now `delete[]`'d.
 
 4. **Do NOT do in this pass:**
    - Refactor `pr_*.c` duplication — out of scope (stability only).
