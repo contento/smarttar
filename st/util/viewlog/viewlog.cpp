@@ -8,6 +8,7 @@
 #include <st_util.h>
 #include <cfg.h>
 #include <log.h>
+#include "../util_cfg.h"
 
 CFG *g_cfg;
 
@@ -20,32 +21,8 @@ int main(int argc, char *argv[])
     << endl
     ;
 	g_cfg = new CFG;
-	WORD status = g_cfg->Load(); // load CFG
-    if (status != CFG::OK)
-    {
-        char *msg = " tiene una falla general.";
-        switch (status)
-        {
-        case CFG::NO_CFG_FILE :
-            msg = "no existe."    ;
-            break;
-        case CFG::BAD_CFG_FILE:
-            msg = "est  corrupto.";
-            break;
-        }
-        cerr << "El archivo de configuraci¢n " << msg << endl;
-    }
-    else
-    {
-        STR32 password;
-        cout << "Presione Esc para abortar operaci¢n." << endl;
-        cout << "C¢digo de acceso: ";
-        _ReadPassword(password, sizeof(CFG::PASSWORD)-1);
-        cout << endl;
-        if (strlen(password))
-        {
-			if (g_cfg->isUtilPassword(password))
-            {
+	if (!util_cfgLoad(g_cfg)) { delete g_cfg; return 1; }
+	if (!util_authenticate(g_cfg)) { delete g_cfg; return 1; }
                 Log *log;
                 if (argc > 1)
                 { // INF2DAT
@@ -80,13 +57,6 @@ int main(int argc, char *argv[])
                     }
                 }
                 delete log;
-            }
-            else
-            {
-                cerr << "Lo siento, acceso negado." << endl;
-            }
-        }
-    }
     //
 	delete g_cfg;
     return 0;

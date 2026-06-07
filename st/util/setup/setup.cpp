@@ -16,6 +16,7 @@
 #define USE_HELP_CONTEXTS
 #include <help.hpp>
 #endif
+#include "../util_cfg.h"
 
 CFG *g_cfg;
 
@@ -74,46 +75,11 @@ int main(WORD argc, char *argv[])
     if (!install)
     {
 		g_cfg = new CFG;
-		WORD status = g_cfg->Load(); // load CFG
-        if (status != CFG::OK)
-        {
-            char *msg = " tiene una falla general.";
-            switch (status)
-            {
-            case CFG::NO_CFG_FILE :
-                msg = "no existe."    ;
-                break;
-            case CFG::BAD_CFG_FILE:
-                msg = "est  corrupto.";
-                break;
-            }
-            cerr << "El archivo de configuraci¢n " << msg << endl;
-			delete g_cfg;
-            return 1;
-        }
+		if (!util_cfgLoad(g_cfg)) { delete g_cfg; return 1; }
     }
     if (!install)
     {
-        STR32 password;
-        if (argc > 1)
-            strcpy(password, argv[1]);
-        else
-        {
-            cout << "Presione Esc para abortar operaci¢n." << endl;
-            cout << "C¢digo de acceso: ";
-            _ReadPassword(password, sizeof(CFG::PASSWORD)-1);
-            if (!strlen(password))
-            {
-				delete g_cfg;
-                return 2;
-            }
-        }
-		if (!g_cfg->isUtilPassword(password))
-        {
-            cerr << "Lo siento, acceso negado." << endl;
-			delete g_cfg;
-            return 3;
-        }
+		if (!util_authenticate(g_cfg)) { delete g_cfg; return 1; }
 		delete g_cfg;
     }
     //
@@ -215,7 +181,7 @@ EVENT_TYPE SETUP::Event(const UI_EVENT &event)
 }
 
 static char *CONVERT_MSG  = "Procesando, por favor espere ...";
-static char *CHANGING_MSG = "Está usted a punto de cambiar información crítica.\n";
+static char *CHANGING_MSG = "Estï¿½ usted a punto de cambiar informaciï¿½n crï¿½tica.\n";
 
 EVENT_TYPE SETUP::Ini2Cfg(UI_WINDOW_OBJECT *object, UI_EVENT &, EVENT_TYPE ccode)
 {
@@ -383,14 +349,14 @@ EVENT_TYPE INSTALL::Event(const UI_EVENT &event)
             ok = eeprom.isCandidateVersion();
             if (ok)
 			{
-				// Force MicroDise¤o to program EEPROM before doing this.
+				// Force MicroDiseï¿½o to program EEPROM before doing this.
 				// eeprom.writeVersionId();
             }
         }
         if (!ok)
         {
             UI_WINDOW_OBJECT::errorSystem->ReportError(windowManager,
-                    WOS_NO_STATUS, "\n\n      Versión no válida\n");
+                    WOS_NO_STATUS, "\n\n      Versiï¿½n no vï¿½lida\n");
         }
         else
         {

@@ -10,6 +10,7 @@
 #include <cfg.h>
 #include <st_util.h>
 #include <db_eng.h>
+#include "../util_cfg.h"
 
 #ifdef DOSX286
 #include <phapi.h>
@@ -47,7 +48,7 @@ int main(void)
     //
     if (CheckCfg())
     {
-    	if (CheckPassword)
+    	if (CheckPassword())
 		{
         	DB_ENGINE dbEngine;
 			dbEngine.EnumReceipts(callback);
@@ -73,42 +74,10 @@ void NewHandler(void)
 
 BOOL CheckCfg()
 {
-	g_cfg = new CFG;
-	WORD status = g_cfg->Load(); // load CFG
-    if (status != CFG::OK)
-    {
-        char *msg = " tiene una falla general.";
-        switch (status)
-        {
-        case CFG::NO_CFG_FILE :
-            msg = "no existe."    ;
-            break;
-        case CFG::BAD_CFG_FILE:
-            msg = "est  corrupto.";
-            break;
-        }
-        cerr << "El archivo de configuraci¢n " << msg << endl;
-    }
-    return (status == CFG::OK);
+	return util_cfgLoad(g_cfg);
 }
 
 BOOL CheckPassword()
 {
-	BOOL retVal = FALSE;
-
-    STR32 password;
-    cout << "Presione Esc para abortar operaci¢n." << endl;
-    cout << "C¢digo de acceso: ";
-    strcpy(password, "Util");
-    //_ReadPassword(password, sizeof(CFG::PASSWORD)-1);
-    if (strlen(password))
-		if (g_cfg->isUtilPassword(password))
-	       	retVal = TRUE;
-
-	if (!retVal)
-    {
-		cerr << "Lo siento, acceso negado." << endl;
-    }
-
-    return retVal;
+	return util_authenticate(g_cfg);
 }

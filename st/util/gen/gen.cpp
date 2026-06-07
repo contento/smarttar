@@ -2,17 +2,17 @@
 // [ GEN.CPP ]
 //
 
-#include <iostream.h>>
-#include <fstream.h>>
-#include <strstrea.h>>
-#include <string.h>>
-#include <io.h>>
-#include <conio.h>>
-#include <process.h>>
-#include <dir.h>>
-//
-#include <info.h>>
-#include <st_util.h>>
+#include <iostream.h>
+#include <fstream.h>
+#include <strstrea.h>
+#include <string.h>
+#include <io.h>
+#include <conio.h>
+#include <process.h>
+#include <dir.h>
+ //
+#include <info.h>
+#include <st_util.h>
 
 static BOOL patchFile(const char *path, const char *filename, SUPER_APP_INFO &superAppInfo);
 
@@ -21,8 +21,8 @@ int main(int argc, char *argv[])
     cout
     << "GEN 2.04 (" << APP_VER_NAME << ')' << endl
     << APP_COPYRIGHT << endl << endl
-    << "  gen [c¢digo]" << endl
-    << "    c¢digo: c¢digo de la localidad." << endl << endl
+    << "  gen [cï¿½digo]" << endl
+    << "    cï¿½digo: cï¿½digo de la localidad." << endl << endl
     << "  (Advertencia: GEN usa PKZIP.EXE y ZIP2EXE.EXE)" << endl
     << endl
     ;
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     }
     if (strlen(argv[1]) != 3)
     {
-        cerr << "  C¢digo err¢neo." << endl;
+        cerr << "  Cï¿½digo errï¿½neo." << endl;
         return 2;
     }
     //
@@ -63,13 +63,13 @@ int main(int argc, char *argv[])
     }
     if (!found)
     {
-        cerr << "  C¢digo no encontrado." << endl;
+        cerr << "  Cï¿½digo no encontrado." << endl;
         return 2;
     }
     // valid options are: /2: SmartTar16, /4: SmartTar32
     if (clusters != 2 && clusters != 4)
     {
-        cerr << "  N£mero de bloques incorrecto {" << clusters << "} in GEN.LST" << endl;
+        cerr << "  Nï¿½mero de bloques incorrecto {" << clusters << "} in GEN.LST" << endl;
         return 2;
     }
     BOOL isEDA = FALSE, isPRO = FALSE;

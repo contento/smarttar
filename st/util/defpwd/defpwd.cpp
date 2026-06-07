@@ -4,6 +4,7 @@
 #include <iostream.h>
 #include <cfg.h>
 #include <st_util.h>
+#include "../util_cfg.h"
 
 #ifdef DOSX286
 #include <phapi.h>
@@ -29,39 +30,22 @@ int main(void)
     //
     CFG *_cfg;
     _cfg = new CFG;
-    WORD status = _cfg->Load(); // load CFG
-    if (status != CFG::OK)
+    if (!util_cfgLoad(_cfg)) { delete _cfg; return 0; }
+    STR32 password;
+    cout << "Presione Esc para abortar operaci\xE2n." << endl;
+    cout   << "C\xF3digo de acceso: ";
+    _ReadPassword(password, sizeof(CFG::PASSWORD)-1);
+    if (strlen(password))
     {
-        char *msg = " tiene una falla general.";
-        switch (status)
+        if (_isDatePassword(password))
         {
-        case CFG::NO_CFG_FILE :
-            msg = "no existe."    ;
-            break;
-        case CFG::BAD_CFG_FILE:
-            msg = "est  corrupto.";
-            break;
+            _cfg->setDefaultPasswords();
+            cout << "  Listo." << endl;
+            _cfg->Save();
         }
-        cerr << "El archivo de configuraci¢n " << msg << endl;
-    }
-    else
-    {
-        STR32 password;
-        cout << "Presione Esc para abortar operaci¢n." << endl;
-        cout << "C¢digo de acceso: ";
-        _ReadPassword(password, sizeof(CFG::PASSWORD)-1);
-        if (strlen(password))
+        else
         {
-            if (_isDatePassword(password))
-            {
-                _cfg->setDefaultPasswords();
-                cout << "  Listo." << endl;
-                _cfg->Save();
-            }
-            else
-            {
-                cerr << "Lo siento, acceso negado." << endl;
-            }
+            cerr << "Lo siento, acceso negado." << endl;
         }
     }
     delete _cfg;
