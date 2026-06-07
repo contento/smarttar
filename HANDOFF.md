@@ -1,281 +1,81 @@
-# DEMO_ENGINE — Handoff
+# SmartTar — Handoff
 
-Status snapshot for resuming on another machine. Branch: `demo-engine`.
+Status snapshot for resuming on another machine.
+Branch: `main` — **4 commits ahead of `origin/main`, unpushed** (the two
+stability batches below). Push is gated on GCC's confirmation.
 
-**Status: Phase 1 + Phase 2 COMPLETE.  Mid-dial hang-up FIXED.
-"-- No Incluida --" symptom RESOLVED (root cause: missing
-`bin/PH_INFO.DAT`; `inf2dat.exe` and `ini2cfg.exe` were never
-built, sub-makefiles now functional).  Build self-bootstraps
-end-to-end from a clean working tree via `./build.sh demo`
-(zero warnings, zero errors).  Quit-confirmation when demo is
-running added (`st.cpp::Exit()` third branch).  Scripts renamed
-`make-headless.{sh,ps1}` -> `build.{sh,ps1}` and
-`run-headless.{sh,ps1}` -> `run.{sh,ps1}`.  See "Done this
-session" below for the per-commit ledger.**
+---
 
-## Design (Template Method over Strategy)
+## Active thread: Stability audit
 
-The milestone committed to Strategy. After surveying `RT_ENGINE`'s
-public surface (~48 trivial accessors over a shared `Clusters[]` /
-`BoothCluster`), pure Strategy would have forced massive duplication.
-Refined to **Template Method**: concrete `ENGINE` base owns shared
-state, FSM dispatch, ISR install/uninstall, and accessors; four
-`virtual` hooks carry the per-subclass variation:
+Working through the CRITICALs in [STABILITY_AUDIT.md](STABILITY_AUDIT.md)
+on `main`, one small verified-then-fixed batch at a time. That doc is the
+source of truth for per-finding status; summary here:
 
-  * `InitHardware(WORD numOfClusters)` — RT probes ports, sets
-    `g_cfg->ACTIVE_CLUSTERS`, allocates `Clusters[]`, sets
-    `Available=TRUE`. DEMO trusts the configured cluster count, inits
-    FSMs to ONHOOK, and allocates the per-booth schedule array.
-  * `RecoverState()` — RT does STM2 receipt-recovery; DEMO no-ops.
-  * `OnTimerTick(cNum, dp)` — RT does `inportb`/`outportb` against
-    `APP_PORT_BASE + PO_*`; DEMO synthesizes `dp.OOD/.Answer/.DTMFFlags/
-    .DTMFDigits/.ThreadC` from the per-booth Poisson schedule.
-    **This is the concurrency contract seam** — same IRQ0 hook, same
-    `BoothCluster::_DataPort` writes, downstream code stays oblivious.
-  * `OnTimerEnd()` — RT writes `PO_GENERAL` once per tick; DEMO no-ops.
+- **Fixed & committed:** C1–C13, C16–C18, C20–C22.
+  - C1–C4 (quick wins), C5–C9 (`58e68d5`), C11–C22 batch (`f497445`).
+- **C10:** verified as *defended* — `Add()` already checks both writes; the
+  non-atomic data-vs-index window is a design limitation, not a bug. No code
+  change.
+- **Open CRITICALs:**
+  - **C14** `control.cpp:541-548` — `NewGPFHandler` calls `delete` on the
+    engine/db globals *inside* the #0Dh GPF ISR; `delete` re-enters
+    PHAPI/heap, so the recovery path can itself deadlock.
+  - **C15** `control.cpp:697-717` — OOM `new_handler` tears down some globals
+    but leaves `g_dbEngine`/`g_phEngine`/`g_cfg`/`g_spooler` — partial
+    teardown leaks files and leaves the DB inconsistent.
+  - **C19** `spooler.cpp:23,33` — `Buffers` is a static class array
+    reallocated on every `SPOOLER` ctor; a second instantiation leaks the
+    prior queues and stomps the statics.
+  - Plus all HIGH findings (audit § "HIGH").
 
-Static ISRs (`NewISR08h` etc.) and `pThis` live on `ENGINE` base.
-`pThis->OnTimerTick(...)` from inside the ISR — one vtable
-indirection per call, fine in DOS protected mode.
+**Next step: C14, then C15, then C19.** C14/C15 are riskier than every batch
+so far — they touch the crash/OOM recovery paths, so the fix has to avoid
+heap re-entry, not just add a null check. Verify each cited file:line before
+touching it (audit § 7 step 2).
 
-Factory (`MakeEngine`) reads `g_cfg->ENGINE_KIND` ("real" | "demo")
-and returns the right concrete. Build-time default (in
-`cfg.cpp::SetDefault`): `__DEMO__` → "demo"; otherwise "real". Can
-be overridden via `[ENGINE] ENGINE_KIND=...` in `st.ini`.
+---
 
-## Phase 2: Poisson generator (committed 6c3d9bd + fixes)
+## Completed & merged: DEMO_ENGINE milestone
 
-`DEMO_ENGINE::OnTimerTick` runs a per-booth state machine independent
-of the FSM in `ENGINE::Eval*State`:
+The runtime engine-selection arc is **complete and merged into `main`**; the
+`demo-engine` branch no longer exists. What shipped:
 
-  ```
-  DP_IDLE -> DP_OFFHOOK -> DP_DIALING_HI <-> DP_DIALING_LO
-          -> DP_ANSWER_WAIT -> DP_TALKING -> DP_IDLE
-  ```
+- Template-Method `ENGINE` base with `RT_ENGINE` / `DEMO_ENGINE` subclasses
+  and a `MakeEngine` factory driven by `g_cfg->ENGINE_KIND` (`st.ini`).
+- `DEMO_ENGINE` Poisson call generator + real-number `phones.csv` dataset, so
+  demo booths resolve to named destinations instead of "-- No Incluida --".
+- Build pipeline repair (`inf2dat`/`ini2cfg` sub-makefiles bootstrap), scripts
+  renamed `make-headless`→`build` and `run-headless`→`run` (`.sh` + `.ps1`).
+- Demo quit-confirmation (`st.cpp::Exit()`) and operator start/stop menu.
 
-Each transition pokes the right bits in `dp.OOD / .DTMFFlags /
-.DTMFDigits / .Answer / .ThreadC` so the FSM walks itself through
-`OFFHOOK -> DTMFFLAG -> INTERDIG -> ANSWER -> TALK -> STORE -> LOCK
--> ONHOOK`. Per-booth state (`DemoBooth`) is pre-allocated in
-`InitHardware` — ISR contract honored, no malloc/new in `OnTimerTick`.
+Architecture lives in the code (`st/src/rt/engine.cpp`, `rt_eng.cpp`,
+`demo_eng.cpp`, `eng_fact.cpp`) and is summarized in `README` /
+`GRAPH_REPORT.md`. `pre-simula-trash` tag at `e64284a` is the rollback point
+if the whole arc ever needs discarding.
 
-RNG is a private LCG on `_lcgState`, not `rand()` (not ISR-safe under
-Borland C++ 3.1). Inter-arrival is uniform in `[1, 2*meanArrivalTicks]`
-with mean derived from `[GLOBAL] calls_per_minute` in `demo.ini`
-divided across all booths. Call duration is uniform in `[min, max]`
-per call-type from `demo.ini` (`[LOCAL]`, `[NAL]`, `[INTER]`).
+### Deferred remnant: the last `__DEMO__` gates
 
-Type selection is weighted by `[*] weight`. Defaults if `demo.ini` is
-missing: 70 % LOCAL / 25 % NAL / 5 % INTER.
+Down from 58 references to **5 functional gates**: `st.cpp` lines 16 / 116 /
+158 / 192, plus the `cfg.cpp` default-selector (a build-time hint for
+`makedemo`, intended to stay). The st.cpp four interleave the `__NO_DONGLE__`
+build flag with `DONGLE` class scope around the dongle/STM2/EEPROM init
+tangle. To finish: hoist `DONGLE dongle;` out of the `if/else` so both the
+initial check and the event-loop re-check can reach it, then convert the
+outer `__DEMO__` to a runtime `g_cfg->IsDemoMode()` check. Not blocking
+anything — engine selection is already runtime.
 
-### Dial-digit generator (4f17414 + 8501731 + this commit)
+---
 
-GenCall doesn't synthesize uniform 1..9 anymore -- that produced
-numbers that no `ph_info.dat` prefix matched, so every booth ended up
-in `--- No Incluida ---`, and the `NOT_INCLUDED_CALL_MASK` lock path
-killed calls at `NumOfDigits >= NAL_DIGITS_NOT_INCLUDED` (9).
+## Notes / known issues (still apply)
 
-Current strategy (`st/src/rt/demo_eng.cpp::GenCall`):
-
-  * LOCAL: first digit picked from `{2,3,4}`; remaining 6 digits
-    random 1..9. Always hits `Local 20-29 / 30-39 / 40-49` in
-    `local.inf` by the 2nd dialed digit, so Search succeeds well
-    before `LOCAL_DIGITS_NOT_INCLUDED=4`.
-  * NAL: dials `ACCESS + OPERATOR_ACCESS` (`09` for Colombia) +
-    one of `{12, 13, 14, 16, 17}` (Bogota Etb entries that are
-    2-digit singles, or expand via the 141-149 / 161-169 ranges so
-    they match at digit 5 for any subscriber 1..9), then random
-    fillers to `NAL_DIGITS=10`.
-  * INTER: dials `ACCESS + INTER_ACCESS + OPERATOR_ACCESS` (`009`)
-    + one of `{1212, 1305, 1416, 33, 34, 39, 44, 49, 54, 55, 56}`
-    (NANP 4-digit area codes / 2-digit country codes that exist in
-    `ddi.inf`), then random fillers to `INTER_DIGITS=14`.
-
-Don't expand the NAL pool with any "1X" combo that isn't a 2-digit
-single (e.g. "15" only matches a few specific 3rd digits) -- if
-Search never succeeds, the booth locks once
-`NumOfDigits >= NAL_DIGITS_NOT_INCLUDED` (9), mid-dial.
-
-### Timing (this commit)
-
-Earlier passes treated `g_cfg->T_OFF_HOOK / T_DTMF_FLAG /
-T_DTMF_INTERDIG / T_BIAS` (all in **ms**) as if they were tick counts,
-so every dwell ran 10x longer than necessary -- a NAL call took ~13 s
-to dial. Fixed: every per-tick countdown is now
-`g_cfg->T_X / T_EVAL + <margin>` so the ms value is converted to ticks
-(`T_EVAL=10ms` from `engine.h`). Dialing now ~1.5 s for INTER, ~1.2 s
-for NAL.
-
-### Config
-
-  * [st/util/ini2cfg/demo.ini](st/util/ini2cfg/demo.ini) -- canonical
-    source for the arrival/duration parameters. MAKEFILE copies it
-    into `bin/` (rule near line 237).
-
-### Real-number dataset (commits d6fe4cd / a1853d9 / b48f802)
-
-  * [st/util/inf2dat/phones.csv](st/util/inf2dat/phones.csv) -- 56
-    real, currently-published public phone numbers (gov, utilities,
-    universities, hospitals, embassies, banks, airlines) gathered
-    from each organization's official contact page. RFC 4180 CSV
-    with all string fields double-quoted, leading `;`-prefixed
-    comment block, CRLF (`.gitattributes` rule `*.csv text eol=crlf`).
-  * Coverage: 14 LOCAL (Medellin + Eastern Antioquia towns Marinilla,
-    La Ceja, El Santuario -- distinct local.inf prefixes 548/553/546),
-    20 NAL (Bogota, Cali x2, Pasto, Bucaramanga, Pereira, Manizales,
-    Armenia, Ibague, Cucuta, Neiva, Barranquilla, Cartagena -- area
-    codes 1/2/5/6/7/8), 22 INTER (USA, Canada, Spain, Italy, France,
-    Germany, UK, Mexico, Argentina, Brazil, Chile -- country codes
-    1/33/34/39/44/49/52/54/55/56). Each number verified against
-    util/inf2dat/{local,ddn,ddi}.inf so the call resolves to a named
-    destination, not "--- No Incluida ---".
-  * Colombian numbers are normalized to the 2003-era dial plan
-    (modern `60X` area prefix from CRC Resolucion 5826 stripped from
-    `dial_from_smarttar`; `published_number` keeps the modern format).
-  * **Wired into `GenCall` as of d2cd5df.** `DEMO_ENGINE::ParsePhones()`
-    reads `phones.csv` from the working directory at `InitHardware`
-    time and fills `_phones[3]` (one `PhonePool` per call type, each
-    holding up to `DEMO_MAX_PHONES_PER_TYPE`=32 entries of 16 digits).
-    `GenCall` writes the access prefix (none/09/009) per call type
-    then copies a random pool entry's dial sequence. Missing or
-    malformed `phones.csv` -> empty pool -> fallback to the original
-    hardcoded prefix arrays (graceful, demo still works). MAKEFILE
-    distributes `phones.csv` into `bin/` alongside `demo.ini`. Build
-    verified clean (`./build.sh demo`, zero warnings); runtime
-    verification (named destinations show up in the UI for each booth)
-    deferred to the next session on GCC's other PC.
-  * **Borland 3.1 quirk:** `DEMO_MAX_PHONES_PER_TYPE` /
-    `DEMO_MAX_DIGITS_PER_PHONE` live as file-scope `#define`s, not
-    private nested enums. Borland C++ 3.1 applies access control to
-    private enum constants when used as array bounds in another
-    private struct of the same class -- produces "is not accessible"
-    errors. Don't refactor them back into the class without testing.
-  * Documented in [README.md](README.md) and [README.es.md](README.es.md)
-    under the Configuration section.
-
-## File map
-
-**Headers ([st/include/](st/include/)):**
-
-  * [engine.h](st/include/engine.h) -- `ENGINE` base. Hoisted from
-    old `rt_eng.h`. Four pure-virtual hooks. Static ISR machinery.
-    `pThis` typed `ENGINE *`. Exposes the `T_EVAL` constant (=10ms
-    per tick) the demo uses for ms->tick conversion.
-  * [rt_eng.h](st/include/rt_eng.h) -- slim: just
-    `class RT_ENGINE : public ENGINE` with the four overrides.
-  * [demo_eng.h](st/include/demo_eng.h) -- `class DEMO_ENGINE :
-    public ENGINE`. `DemoBooth` (per-booth schedule), `DemoCallType`
-    (per-type params), LCG state, ParseConfig/GenCall helpers.
-  * [eng_fact.h](st/include/eng_fact.h) -- declares `ENGINE
-    *MakeEngine(WORD numOfClusters)`.
-  * [cfg.h](st/include/cfg.h) -- added `char ENGINE_KIND[8];` near
-    `CELLULAR_TAX`.
-  * [control.h](st/include/control.h) -- `RTEngine` type changed
-    from `RT_ENGINE *` to `ENGINE *`.
-
-**Impl ([st/src/](st/src/)):**
-
-  * [st/src/rt/engine.cpp](st/src/rt/engine.cpp) -- `ENGINE` base
-    ctor/dtor, `InstallISRs` / `UninstallISRs`, `EvalToneState`,
-    `EvalPulseState`, `pThis` def.
-  * [st/src/rt/rt_eng.cpp](st/src/rt/rt_eng.cpp) -- slim. Only
-    `RT_ENGINE::` ctor/dtor and the four virtual overrides.
-  * [st/src/rt/rt_isr.cpp](st/src/rt/rt_isr.cpp) -- `ENGINE::` static
-    ISRs. `NewISR08h` dispatches `OnTimerTick` / `OnTimerEnd` via
-    `pThis`.
-  * [st/src/rt/demo_eng.cpp](st/src/rt/demo_eng.cpp) -- DEMO state
-    machine, INI parser, digit pools, GenCall, LCG.
-  * [st/src/rt/eng_fact.cpp](st/src/rt/eng_fact.cpp) -- `MakeEngine`.
-  * [st/src/cfg.cpp](st/src/cfg.cpp) -- `Entry(ENGINE_KIND, ...)` and
-    build-time default in `SetDefault`.
-  * [st/src/ctrl/control.cpp](st/src/ctrl/control.cpp) -- includes
-    `eng_fact.h`; uses `MakeEngine` instead of `new RT_ENGINE`.
-
-**Build:**
-
-  * [st/MAKEFILE](st/MAKEFILE) -- added `engine.obj`, `demo_eng.obj`,
-    `eng_fact.obj` to OBJS and `$(BIN_DIR)\demo.ini` to the EXE
-    dependency list; explicit per-`.obj` rules and a `demo.ini`
-    distribution rule. Borland MAKE 3.6 needs explicit rules per
-    [CLAUDE.md](CLAUDE.md) build notes.
-
-## To do next
-
-  1. **Finish the last 4 `__DEMO__` gates in `st.cpp`** (dongle
-     /STM2/EEPROM tangle at lines 116/158 + dongle.h include at
-     line 16 + event-loop dongle re-check at line 192).  These
-     mix `__NO_DONGLE__` build-time flag with `DONGLE` class
-     scope -- need a surgical refactor that hoists `DONGLE
-     dongle;` out of the `if/else` so both the initial check and
-     the event-loop re-check can reach it, then converts the
-     outer `__DEMO__` to runtime.  Down from 58 references at
-     start of this milestone to 5 functional gates (the 4 in
-     st.cpp + 1 default-selector in `cfg.cpp:919` that stays as
-     a build-time hint for `makedemo`).
-  2. **Phase 3 polish remainder** (optional, see [TODO.md](TODO.md)):
-     time-of-day variation, scripted `.scn` replay.  DONE this
-     session: quit-confirmation when demo is running
-     (`st.cpp::Exit()` third branch); operator controls
-     start/stop (`Configuracion -> Detener/Reanudar simulacion`
-     menu entry wired to `DEMO_ENGINE::_paused`).  The old
-     `UIW_SIMULA` window is off-limits.
-
-## Done this session (since the last HANDOFF refresh)
-
-  * **"-- No Incluida --" everywhere on every booth** -- traced to
-    missing `bin/PH_INFO.DAT` (place tree empty -> `Search()` always
-    fails).  Fixed by rebuilding `st/util/inf2dat/inf2dat.exe` from
-    its sub-makefile (SRC_DIR was a stale `c:\prj\st\source`, missed
-    3 modules that drifted into deps post-2003).  See commits
-    `4b43479` (BUILD: rebuild util/inf2dat pipeline) and the
-    follow-ups.
-  * **`ini2cfg.exe` had the same never-built situation** -- added
-    [st/util/ini2cfg/makefile](st/util/ini2cfg/makefile) mirroring
-    the inf2dat sub-makefile.  Bootstrap once with
-    `cd st\util\ini2cfg && make -DRUN`.
-  * **MAKEFILE `PH_INFO.DAT` copy step `error 1` quirk** --
-    diagnosed.  Borland MAKE 3.6 mis-propagates errorlevel from
-    `.bat`-internal commands and deletes the (just-created) target.
-    `mk_ph.bat` / `mk_cfg.bat` work correctly when invoked from
-    DOSBox-X directly.  Workaround: moved both bat invocations OUT
-    of MAKE into `build.sh` / `build.ps1` as a preamble step,
-    dropped the broken rules from `st/MAKEFILE`.  Build now
-    self-bootstraps end-to-end from a clean working tree.
-  * **`make-headless.sh` / `run-headless.sh` renamed to `build.sh`
-    / `run.sh`** (+ `.ps1` variants).  "Headless" was inaccurate
-    (DOSBox-X still opens a window); the new names just describe
-    what they do.  All doc references updated.
-  * **Quit-confirmation when demo is running** -- new branch in
-    `st.cpp::Exit()`.  Mechanism: `virtual BOOL ENGINE::IsDemo()`
-    overridden in `DEMO_ENGINE`, plus `CONTROLLER::RTEngineIsDemo()`
-    shim.  Pattern mirrors the existing busy-block dialog.
-  * **TODO Stability milestone reshaped** -- 4 spot-verified
-    CRITICALs from audit S6 promoted to a "Next batch" sub-section
-    with file:line specifics, so the milestone is now a queue
-    instead of an inventory pointer.
-
-## Sibling milestone -- documentation
-
-A new milestone added to [TODO.md](TODO.md) under "Documentation --
-Obsidian wiki (EN + ES)" consolidates the scattered docs (README,
-the four `.docx` manuals in [st/docs/](st/docs/), `help.txt`,
-`STABILITY_AUDIT.md`, `HANDOFF.md`, `RELEASING.md`, `CLAUDE.md`)
-into a single browsable Obsidian vault per language. Not blocking
-DEMO_ENGINE -- they're independent tracks. Mentioned here so the
-next session sees the broader documentation context when revising
-the demo dataset or its README references.
-
-## Notes / known issues
-
-  * **Latin-1 file editing**: `Edit` re-encoded `cfg.h` and
-    `control.cpp` to UTF-8 on first attempts, mixing UTF-8 sequences
-    with Latin-1 raw bytes (broken). Fix is byte-level via
-    `python3 << 'PYEOF' open(..., 'rb') ... PYEOF`. Verify with
-    `file <path>` after every Latin-1 edit (should report `ISO-8859`).
-  * **Dtor ordering**: original `RT_ENGINE::~RT_ENGINE` uninstalled
-    ISRs FIRST, then did the relay-off port write. After refactor,
-    derived dtor (relay-off) runs BEFORE base dtor (ISR uninstall).
-    ISR fires for a few ticks with `GP_CASH` already cleared.
-    Harmless in practice. Flag if anything misbehaves at shutdown.
-  * **`pre-simula-trash`** tag on `main` at `e64284a` is the rollback
-    point if the whole DEMO_ENGINE arc needs to be discarded.
+- **Latin-1 file editing**: UTF-8-native editors (incl. the `Edit` tool)
+  re-encode Latin-1/CP850 `.cpp`/`.h` files to UTF-8 on save, corrupting every
+  high-bit char. After any such edit, verify with `file <path>` — it must
+  report `ISO-8859` or `Non-ISO extended-ASCII`, never `UTF-8`. Repair
+  byte-level (see CLAUDE.md). Host-side files like this one are LF/UTF-8 and
+  safe.
+- **Engine dtor ordering**: derived `~DEMO_ENGINE`/`~RT_ENGINE` (relay-off
+  port write) runs before base `~ENGINE` (ISR uninstall), so the ISR fires for
+  a few ticks with `GP_CASH` already cleared. Harmless in practice; flag if
+  anything misbehaves at shutdown.
