@@ -13,6 +13,7 @@
 #ifdef DOSX286
 #include <phapi.h>
 #endif
+#include "../util_cfg.h"
 
 extern _stklen = 0x4000; // ~%^%&$#@!&*, _stklen GRRR ...
 
@@ -35,33 +36,10 @@ int main(void)
     _new_handler = NewHandler;
     //
 	g_cfg = new CFG;
-	WORD status = g_cfg->Load(); // load CFG
-    if (status != CFG::OK)
-    {
-        char *msg = " tiene una falla general.";
-        switch (status)
-        {
-        case CFG::NO_CFG_FILE :
-            msg = "no existe."    ;
-            break;
-        case CFG::BAD_CFG_FILE:
-            msg = "est  corrupto.";
-            break;
-        }
-        cerr << "El archivo de configuraci¢n " << msg << endl;
-    }
-    else
-    {
-        STR32 password;
-        cout << "Presione Esc para abortar operaci¢n." << endl;
-        cout << "C¢digo de acceso: ";
-        _ReadPassword(password, sizeof(CFG::PASSWORD)-1);
-        if (strlen(password))
-        {
-			if (g_cfg->isUtilPassword(password))
-            {
+	if (!util_cfgLoad(g_cfg)) { delete g_cfg; return 1; }
+	if (!util_authenticate(g_cfg)) { delete g_cfg; return 1; }
                 STR16 dateStr;
-                cout << "Fecha del £ltimo acumulado archivado (dd/mm/aaaa): ";
+                cout << "Fecha del ï¿½ltimo acumulado archivado (dd/mm/aaaa): ";
                 cin  >> dateStr;
                 // find last turn
                 WORD year, month, day;
@@ -124,15 +102,8 @@ int main(void)
                 }
                 else
                 {
-                    cerr << "Fecha inv lida." << endl;
+                    cerr << "Fecha invï¿½lida." << endl;
                 }
-            }
-            else
-            {
-                cerr << "Lo siento, acceso negado." << endl;
-            }
-        }
-    }
     //
 	delete g_cfg;
     //

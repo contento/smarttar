@@ -1,6 +1,31 @@
 //
 // [ RXPROCESS.CPP ]
 //
+// Converts SmartTar receipt binary database records into human-readable
+// plain text files (.LST for display, .PRN for printing with escape codes).
+//
+// Two conversion paths exist:
+//   processDAT / dat2PlainFile — exports individual receipts (telephony,
+//     telex, fax, card, other) with per-receipt detail lines.
+//   processSTA / sta2PlainFile — exports aggregated statistics entries
+//     (turn, day, week, month, year totals) with summary rows.
+//
+// Both paths read from the DB_ENGINE (current turn) or archived DB (arc),
+// and produce output in either LST (no separator) or PRN (space-separated,
+// with printer headers) format.
+//
+// Receipt binary format: each Receipt struct contains a Tag (receipt type),
+// Number, Date/Time, Stat (payment status flags), Value/Tax amounts, and
+// type-specific fields (phone, city, elapsed time, cards[], etc.).
+//
+// Filtering in listBooth(): receipts can be filtered by type (automatic vs
+// special), payment status (not paid / toll-free), and optionally limited
+// to telephony receipts when sorting by booth.
+//
+// NOTE: dat2PlainFile and sta2PlainFile share the same file-naming and
+// stream-opening pattern (build path → open .lst or .prn → write header →
+// iterate records). This is near-duplicated code; a shared helper could
+// reduce the ~40 lines of overlapping boilerplate.
 #include "stdst.h"
 
 #include <rxproces.h>
@@ -18,6 +43,9 @@ static const int   NUMINDENTSPACES = 5;
 
 extern CFG *g_cfg;
 
+// processDAT — Export individual receipt records to a plain-text file.
+// Loads the DAT database (current turn or archive by date/turn), then
+// calls dat2PlainFile twice: once for .LST (display) and once for .PRN (print).
 BOOL RXProcessor::processDAT(void)
 {
     BOOL ok = TRUE;
@@ -46,6 +74,9 @@ BOOL RXProcessor::processDAT(void)
     return ok;
 }
 
+// processSTA — Export aggregated statistics records to a plain-text file.
+// Same load pattern as processDAT, but calls sta2PlainFile which writes
+// summary entries (turn/day/week/month/year) instead of individual receipts.
 BOOL RXProcessor::processSTA(void)
 {
     BOOL ok = TRUE;
@@ -74,6 +105,16 @@ BOOL RXProcessor::processSTA(void)
     return ok;
 }
 
+// dat2PlainFile — Write individual receipt records to an .LST or .PRN file.
+//
+// Builds the output filename from cmdOptions.lstPath + rxBaseFilename with
+// a "dat"/"d" suffix (current turn vs archive) plus .lst or .prn extension.
+// If extTarget is PRNTARGET, a printer header is written and the file may
+// be appended to (if cmdOptions.appendDatResult is set).
+//
+// When sortByBooth is set, iterates booths 0..MAX_BOOTH and calls listBooth
+// for each, producing a per-booth grouping. Otherwise, a single pass with
+// boothNumber=-1 lists all receipts regardless of booth.
 BOOL RXProcessor::dat2PlainFile(WORD extTarget)
 {
     BOOL ok = TRUE;
@@ -90,22 +131,23 @@ BOOL RXProcessor::dat2PlainFile(WORD extTarget)
     }
     // prepare stream
     FILE_NAME lstFilename;
-    strcpy(lstFilename, cmdOptions.lstPath);
-    strcat(lstFilename, "\\");
-    strcat(lstFilename, cmdOptions.rxBaseFilename);
+    strncpy(lstFilename, cmdOptions.lstPath, sizeof(lstFilename)-1);
+    lstFilename[sizeof(lstFilename)-1] = '\0';
+    strncat(lstFilename, "\\", sizeof(lstFilename)-strlen(lstFilename)-1);
+    strncat(lstFilename, cmdOptions.rxBaseFilename, sizeof(lstFilename)-strlen(lstFilename)-1);
     if (cmdOptions.currentTurn)
-        strcat(lstFilename, "dat");
+        strncat(lstFilename, "dat", sizeof(lstFilename)-strlen(lstFilename)-1);
     else
-        strcat(lstFilename, "d");
+        strncat(lstFilename, "d", sizeof(lstFilename)-strlen(lstFilename)-1);
     ofstream lstStream;
     if (extTarget == LSTTARGET)
     {
-        strcat(lstFilename, LST_EXT);
+        strncat(lstFilename, LST_EXT, sizeof(lstFilename)-strlen(lstFilename)-1);
         lstStream.open(lstFilename);
     }
     else
     {
-        strcat(lstFilename, PRN_EXT);
+        strncat(lstFilename, PRN_EXT, sizeof(lstFilename)-strlen(lstFilename)-1);
         if (cmdOptions.appendDatResult)
             lstStream.open(lstFilename, ios::out|ios::app);
         else
@@ -138,22 +180,32 @@ BOOL RXProcessor::dat2PlainFile(WORD extTarget)
     return ok;
 }
 
+// sta2PlainFile — Write aggregated statistics to an .LST or .PRN file.
+//
+// Near-duplicate of dat2PlainFile: same file-naming pattern (lstPath +
+// rxBaseFilename, with "sta"/"s" suffix), same LST/PRN extension logic.
+// Instead of iterating individual receipts, calls listEntry five times
+// for TURN, DAY, WEEK, MONTH, and YEAR statistic periods.
+//
+// TODO: dat2PlainFile and sta2PlainFile share ~40 lines of identical
+// file-naming/stream-opening code that could be extracted to a helper.
 BOOL RXProcessor::sta2PlainFile(WORD extTarget)
 {
     BOOL ok = TRUE;
     // prepare stream
     FILE_NAME lstFilename;
-    strcpy(lstFilename, cmdOptions.lstPath);
-    strcat(lstFilename, "\\");
-    strcat(lstFilename, cmdOptions.rxBaseFilename);
+    strncpy(lstFilename, cmdOptions.lstPath, sizeof(lstFilename)-1);
+    lstFilename[sizeof(lstFilename)-1] = '\0';
+    strncat(lstFilename, "\\", sizeof(lstFilename)-strlen(lstFilename)-1);
+    strncat(lstFilename, cmdOptions.rxBaseFilename, sizeof(lstFilename)-strlen(lstFilename)-1);
     if (cmdOptions.currentTurn)
-        strcat(lstFilename, "sta");
+        strncat(lstFilename, "sta", sizeof(lstFilename)-strlen(lstFilename)-1);
     else
-        strcat(lstFilename, "s");
+        strncat(lstFilename, "s", sizeof(lstFilename)-strlen(lstFilename)-1);
     if (extTarget == LSTTARGET)
-		strcat(lstFilename, LST_EXT);
+		strncat(lstFilename, LST_EXT, sizeof(lstFilename)-strlen(lstFilename)-1);
     else
-        strcat(lstFilename, PRN_EXT);
+        strncat(lstFilename, PRN_EXT, sizeof(lstFilename)-strlen(lstFilename)-1);
     ofstream lstStream(lstFilename);
     if (lstStream)
     {
@@ -172,6 +224,18 @@ BOOL RXProcessor::sta2PlainFile(WORD extTarget)
 	return ok;
 }
 
+// listBooth — Iterate receipts and write accepted ones to the output stream.
+//
+// Walks the database iterator from lowerNumber for numReceipts entries.
+// For each receipt, applies filters in order:
+//   1. Type filter: onlySpecialReceipts keeps only TEL receipts;
+//      onlyAutomaticReceipts keeps only non-TEL receipts.
+//   2. Booth filter: when sortByBooth, only TEL and SPECIAL_TEL pass.
+//   3. Payment filter: onlyNotPaid keeps NOT_PAID_CALL;
+//      onlyTollFree keeps TOLL_FREE_CALL; both together exclude PAID_CALL.
+//
+// Accepted receipts are formatted via receipt2Line() using the appropriate
+// separator (empty for LST, space for PRN).
 void RXProcessor::listBooth(ostream& lstStream, WORD extTarget, DWORD lowerNumber, DWORD numReceipts, WORD boothNumber)
 {
 	DB_STORAGE::Iterator *pit = NULL;
@@ -261,6 +325,9 @@ void RXProcessor::listBooth(ostream& lstStream, WORD extTarget, DWORD lowerNumbe
 	delete pit;
 }
 
+// receipt2Line — Format a single receipt as one output line.
+// Dispatches to receipt2LineCommon + receipt2LineTotals + a type-specific
+// formatter (Tel/Telex/Fax/Card/Other) based on receipt.Tag.
 void RXProcessor::receipt2Line(Receipt const & receipt, ostream& lstStream, const char *separator)
 {
     // specific
@@ -312,6 +379,8 @@ void RXProcessor::receipt2Line(Receipt const & receipt, ostream& lstStream, cons
     lstStream << endl;
 }
 
+// receipt2LineCommon — Write the shared prefix fields for every receipt line:
+// serial number, receipt number, tag, payment status (hex), date, and time.
 void RXProcessor::receipt2LineCommon(Receipt const & receipt, ostream& lstStream, const char *separator)
 {
     WORD day, month, year;
@@ -345,6 +414,8 @@ void RXProcessor::receipt2LineCommon(Receipt const & receipt, ostream& lstStream
     ;
 }
 
+// receipt2LineTotals — Write the value/tax columns: nominal value (before tax),
+// tax percentage (with 0.20 rounding margin), tax amount, and total value.
 void RXProcessor::receipt2LineTotals(Receipt const & receipt, ostream& lstStream, const char *separator)
 {
     double nominalValue = (receipt.Value - receipt.Tax);
@@ -369,6 +440,10 @@ void RXProcessor::receipt2LineTotals(Receipt const & receipt, ostream& lstStream
     ;
 }
 
+// setDatPrnHeader — Write the PRN header for receipt (DAT) output.
+// Emits ESC/P printer control codes (draft 10 CPI), a timestamp with
+// the command-line arguments, and column headers (Ser, Numero, T/E,
+// Fecha, Hora, Valor, %IVA, IVA, Total, Especifico de Cada Recibo).
 void RXProcessor::setDatPrnHeader(ostream& lstStream, const char *separator)
 {
     lstStream
@@ -388,7 +463,7 @@ void RXProcessor::setDatPrnHeader(ostream& lstStream, const char *separator)
         << setiosflags(ios::left)
         << setw(4) << "Ser."
         << separator
-        << setw(8) << "N�mero"
+        << setw(8) << "N�mero"
         << separator
         << setw(5) << "T/E"
         << separator
@@ -410,6 +485,9 @@ void RXProcessor::setDatPrnHeader(ostream& lstStream, const char *separator)
     ;
 }
 
+// setStaPrnHeader — Write the PRN header for statistics (STA) output.
+// Column headers: Ser, T, Desde (date/time/range), Hasta, N.C. (not paid
+// count), P.R. (toll-free count), Subtotal, Impuesto, Total, Err.M., Err.C.
 void RXProcessor::setStaPrnHeader(ostream& lstStream, const char *separator)
 {
     lstStream
@@ -470,6 +548,9 @@ void RXProcessor::setStaPrnHeader(ostream& lstStream, const char *separator)
     lstStream << endl << endl;
 }
 
+// receipt2LineTel — Format the type-specific fields for telephone receipts:
+// booth number, phone number, city, elapsed time (hh:mm:ss), billed minutes,
+// per-minute rate, and percentage discount.
 void RXProcessor::receipt2LineTel(Receipt const & receipt, ostream& lstStream, const char *separator)
 {
 	WORD time = g_Milisec2Time(receipt.ElapsedTime, 0); // 2.21.8
@@ -499,6 +580,8 @@ void RXProcessor::receipt2LineTel(Receipt const & receipt, ostream& lstStream, c
     ;
 }
 
+// receipt2LineTelex — Format the type-specific fields for telex receipts:
+// city, amount (number of units), and unitary value.
 void RXProcessor::receipt2LineTelex(Receipt const & receipt, ostream& lstStream, const char* separator)
 {
     lstStream
@@ -520,6 +603,8 @@ void RXProcessor::receipt2LineTelex(Receipt const & receipt, ostream& lstStream,
     ;
 }
 
+// receipt2LineFax — Format the type-specific fields for fax receipts:
+// phone number, city, amount (pages), and unitary value.
 void RXProcessor::receipt2LineFax(Receipt const & receipt, ostream& lstStream, const char* separator)
 {
     lstStream
@@ -540,6 +625,9 @@ void RXProcessor::receipt2LineFax(Receipt const & receipt, ostream& lstStream, c
     ;
 }
 
+// receipt2LineCard — Format the type-specific fields for magnetic card
+// receipts: four card types with their configured IDs (from g_cfg->MCARD)
+// and usage counts, plus the total card count.
 void RXProcessor::receipt2LineCard(Receipt const & receipt, ostream& lstStream, const char* separator)
 {
     int amount = 0;
@@ -575,6 +663,8 @@ void RXProcessor::receipt2LineCard(Receipt const & receipt, ostream& lstStream, 
     ;
 }
 
+// receipt2LineOther — Format the type-specific fields for "other" receipts:
+// motif (description), amount, and unitary value.
 void RXProcessor::receipt2LineOther(Receipt const & receipt, ostream& lstStream, const char* separator)
 {
     lstStream
@@ -593,6 +683,16 @@ void RXProcessor::receipt2LineOther(Receipt const & receipt, ostream& lstStream,
 	;
 }
 
+// listEntry — Write one aggregated statistics row for a given period type
+// (TURN, DAY, WEEK, MONTH, YEAR). Outputs:
+//   - Header: serial, period type, from/to date+time+receipt# range
+//   - Payment summary: not-paid count/value, toll-free count/value
+//   - Totals: general subtotal, tax, total, dial/com errors
+//   - Telephony breakdown: national/cellular/inter by receipts, talk min,
+//     paid min, value
+//   - Special breakdown: special tel (national/cellular/inter), fax,
+//     internet, magnetic cards, other
+//   - Grand totals: special subtotal, tax, total
 void RXProcessor::listEntry(ostream& lstStream, WORD extTarget, WORD type, const char* separator)
 {
 	DS_ENTRY *entry;
@@ -802,6 +902,7 @@ void RXProcessor::listEntry(ostream& lstStream, WORD extTarget, WORD type, const
 	lstStream << endl;
 }
 
+// newLine — Insert a line break followed by indent spaces (for PRN wrapping).
 void RXProcessor::newLine(ostream& lstStream, WORD indent)
 {
 	lstStream

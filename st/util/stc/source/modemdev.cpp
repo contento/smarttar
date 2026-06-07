@@ -25,17 +25,19 @@ public:
         char sBytes[16];
         if (sending)
         {
-            strcpy(modemDevice->viewMessage, "Enviando ");
-            strcat(modemDevice->viewMessage, modemDevice->filename);
+            strncpy(modemDevice->viewMessage, "Enviando ", sizeof(modemDevice->viewMessage)-1);
+            modemDevice->viewMessage[sizeof(modemDevice->viewMessage)-1] = '\0';
+            strncat(modemDevice->viewMessage, modemDevice->filename, sizeof(modemDevice->viewMessage)-1-strlen(modemDevice->viewMessage));
         }
         else
         {
-            strcpy(modemDevice->viewMessage, "Recibiendo en ");
-            strcat(modemDevice->viewMessage, modemDevice->serverPath);
+            strncpy(modemDevice->viewMessage, "Recibiendo en ", sizeof(modemDevice->viewMessage)-1);
+            modemDevice->viewMessage[sizeof(modemDevice->viewMessage)-1] = '\0';
+            strncat(modemDevice->viewMessage, modemDevice->serverPath, sizeof(modemDevice->viewMessage)-1-strlen(modemDevice->viewMessage));
         }
-        strcat(modemDevice->viewMessage, ": ");
-        strcat(modemDevice->viewMessage, ltoa(nbytes, sBytes, 10));
-        strcat(modemDevice->viewMessage, " bytes");
+        strncat(modemDevice->viewMessage, ": ", sizeof(modemDevice->viewMessage)-1-strlen(modemDevice->viewMessage));
+        strncat(modemDevice->viewMessage, ltoa(nbytes, sBytes, 10), sizeof(modemDevice->viewMessage)-1-strlen(modemDevice->viewMessage));
+        strncat(modemDevice->viewMessage, " bytes", sizeof(modemDevice->viewMessage)-1-strlen(modemDevice->viewMessage));
         modemDevice->notifyEvent(UE_VIEW);
     }
 private:
@@ -98,16 +100,19 @@ void MODEM_DEVICE::processClient(void)
         if (lineStatus->RingDetected())
         {
             modem->AnswerPhone();
-            strcpy(viewMessage, "Conectando ...");
+            strncpy(viewMessage, "Conectando ...", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             notifyEvent(UE_VIEW);
             if (waitFor(MODEM_INPUT_CONNECT))
             {
-                strcpy(viewMessage, "Conectado");
+                strncpy(viewMessage, "Conectado", sizeof(viewMessage)-1);
+                viewMessage[sizeof(viewMessage)-1] = '\0';
                 connected = TRUE;
             }
             else
             {
-                strcpy(viewMessage, "No se pudo contestar la llamada");
+                strncpy(viewMessage, "No se pudo contestar la llamada", sizeof(viewMessage)-1);
+                viewMessage[sizeof(viewMessage)-1] = '\0';
             }
             notifyEvent(UE_VIEW);
         }
@@ -150,7 +155,8 @@ void MODEM_DEVICE::processClientConsoleOperation(void)
 {
     if (receiveMessage())
     {
-        strcpy(viewMessage, inputMessage);
+        strncpy(viewMessage, inputMessage, sizeof(viewMessage)-1);
+        viewMessage[sizeof(viewMessage)-1] = '\0';
         notifyEvent(UE_VIEW);
     }
 }
@@ -163,7 +169,7 @@ void MODEM_DEVICE::processClientSendOperation(void)
 {
     if (sendStatus == IDLE_FILE_PROCESS_STAT)
     {
-        strcpy(filename, ""); // to check for a valid filename after notify
+        filename[0] = '\0'; // to check for a valid filename after notify
         notifyEvent(UE_NEXT); // ask for the next filename to the client
         // we suppose a new file name after notifyEvent()
         if (strlen(filename))
@@ -214,7 +220,8 @@ void MODEM_DEVICE::sendFile(void)
             { // <- ACKNOWLEDGE |
                 if (!strcmp(inputMessage, MODEM_MESSAGE_ACKNOWLEDGE))
                 {
-                    strcpy(viewMessage, "Notificando al servidor");
+                    strncpy(viewMessage, "Notificando al servidor", sizeof(viewMessage)-1);
+                    viewMessage[sizeof(viewMessage)-1] = '\0';
                     notifyEvent(UE_VIEW);
                     sendStatus = ACK_AFTER_RECEIVE_STAT;
                 }
@@ -223,7 +230,8 @@ void MODEM_DEVICE::sendFile(void)
         }
     case ACK_AFTER_RECEIVE_STAT:
         {
-            strcpy(viewMessage, "Ruta enviada");
+            strncpy(viewMessage, "Ruta enviada", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             notifyEvent(UE_VIEW);
             sendMessage(serverPath); // | PATH ->
             sendStatus = PATH_STAT;
@@ -235,7 +243,8 @@ void MODEM_DEVICE::sendFile(void)
             { //  <- ACKNOWLEDGE |
                 if (!strcmp(inputMessage, MODEM_MESSAGE_ACKNOWLEDGE))
                 {
-                    strcpy(viewMessage, "Servidor preparándose");
+                    strncpy(viewMessage, "Servidor preparándose", sizeof(viewMessage)-1);
+                    viewMessage[sizeof(viewMessage)-1] = '\0';
                     notifyEvent(UE_VIEW);
                     sendStatus = ACK_AFTER_PATH_STAT;
                 }
@@ -243,7 +252,8 @@ void MODEM_DEVICE::sendFile(void)
                 {
                     // impossible to receive file
                     sendStatus = IDLE_FILE_PROCESS_STAT;
-                    strcpy(viewMessage, "El servidor no pudo recibir");
+                    strncpy(viewMessage, "El servidor no pudo recibir", sizeof(viewMessage)-1);
+                    viewMessage[sizeof(viewMessage)-1] = '\0';
                     notifyEvent(UE_VIEW);
                 }
             }
@@ -252,7 +262,10 @@ void MODEM_DEVICE::sendFile(void)
     case ACK_AFTER_PATH_STAT:
         {
             STR128 fn;
-            strcat(strcat(strcpy(fn, clientPath), "\\"), filename);
+            strncpy(fn, clientPath, sizeof(fn)-1);
+            fn[sizeof(fn)-1] = '\0';
+            strncat(fn, "\\", sizeof(fn)-1-strlen(fn));
+            strncat(fn, filename, sizeof(fn)-1-strlen(fn));
             // the remote machine is ready to receive the file
             TransferMonitor monitor(this);
             GFYmodem *fileTransfer = new GFYmodem(serial, &monitor);
@@ -260,12 +273,16 @@ void MODEM_DEVICE::sendFile(void)
             sendResult = fileTransfer->SendFile(fn);
             if (sendResult == GCPP_OK)
             {
-                strcat(strcpy(viewMessage, "Se envió "), fn);
+                strncpy(viewMessage, "Se envió ", sizeof(viewMessage)-1);
+                viewMessage[sizeof(viewMessage)-1] = '\0';
+                strncat(viewMessage, fn, sizeof(viewMessage)-1-strlen(viewMessage));
                 notifyEvent(UE_VIEW);
             }
             else
             {
-                strcat(strcpy(viewMessage, "Problemas enviando "), fn);
+                strncpy(viewMessage, "Problemas enviando ", sizeof(viewMessage)-1);
+                viewMessage[sizeof(viewMessage)-1] = '\0';
+                strncat(viewMessage, fn, sizeof(viewMessage)-1-strlen(viewMessage));
                 notifyEvent(UE_VIEW);
             }
             delete fileTransfer;
@@ -281,7 +298,7 @@ void MODEM_DEVICE::processClientReceiveOperation(void)
 {
     if (receiveStatus == IDLE_FILE_PROCESS_STAT)
     {
-        strcpy(filename, ""); // to check for a valid filename after notify
+        filename[0] = '\0'; // to check for a valid filename after notify
         notifyEvent(UE_NEXT); // ask for the next filename to the client
         // we suppose a new file name after notifyEvent()
         if (strlen(filename))
@@ -332,7 +349,8 @@ void MODEM_DEVICE::receiveFile(void)
             { // <- ACKNOWLEDGE |
                 if (!strcmp(inputMessage, MODEM_MESSAGE_ACKNOWLEDGE))
                 {
-                    strcpy(viewMessage, "Notificando al servidor");
+                    strncpy(viewMessage, "Notificando al servidor", sizeof(viewMessage)-1);
+                    viewMessage[sizeof(viewMessage)-1] = '\0';
                     notifyEvent(UE_VIEW);
                     receiveStatus = ACK_AFTER_SEND_CMD_STAT;
                 }
@@ -342,8 +360,12 @@ void MODEM_DEVICE::receiveFile(void)
     case ACK_AFTER_SEND_CMD_STAT:
         {
             STR128 fn;
-            strcat(strcat(strcpy(fn, serverPath), "\\"), filename);
-            strcpy(viewMessage, "Nombre enviado");
+            strncpy(fn, serverPath, sizeof(fn)-1);
+            fn[sizeof(fn)-1] = '\0';
+            strncat(fn, "\\", sizeof(fn)-1-strlen(fn));
+            strncat(fn, filename, sizeof(fn)-1-strlen(fn));
+            strncpy(viewMessage, "Nombre enviado", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             notifyEvent(UE_VIEW);
             sendMessage(fn); // | FILENAME ->
             receiveStatus = FILENAME_STAT;
@@ -355,7 +377,8 @@ void MODEM_DEVICE::receiveFile(void)
             { //  <- ACKNOWLEDGE |
                 if (!strcmp(inputMessage, MODEM_MESSAGE_ACKNOWLEDGE))
                 {
-                    strcpy(viewMessage, "Servidor preparándose");
+                    strncpy(viewMessage, "Servidor preparándose", sizeof(viewMessage)-1);
+                    viewMessage[sizeof(viewMessage)-1] = '\0';
                     notifyEvent(UE_VIEW);
                     receiveStatus = ACK_AFTER_FILENAME_STAT;
                 }
@@ -363,7 +386,8 @@ void MODEM_DEVICE::receiveFile(void)
                 {
                     // impossible to send file
                     receiveStatus = IDLE_FILE_PROCESS_STAT;
-                    strcpy(viewMessage, "El servidor no pudo enviar");
+                    strncpy(viewMessage, "El servidor no pudo enviar", sizeof(viewMessage)-1);
+                    viewMessage[sizeof(viewMessage)-1] = '\0';
                     notifyEvent(UE_VIEW);
                 }
             }
@@ -373,13 +397,15 @@ void MODEM_DEVICE::receiveFile(void)
         {
             // try to create or change the current dir
             char curDir[MAXPATH]; // preserve
-            strcpy(curDir, "X:\\");      // fill string with form of response: X:\
+            strncpy(curDir, "X:\\", sizeof(curDir)-1); // fill string with form of response: X:\
+            curDir[sizeof(curDir)-1] = '\0';
             curDir[0] = 'A' + getdisk(); // replace X with current drive letter
             getcurdir(0, curDir+3);      // fill rest of string with current directory
             mkdir(clientPath);
             if (chdir(clientPath) != 0)
             {
-                strcpy(viewMessage, "Ruta errónea");
+                strncpy(viewMessage, "Ruta errónea", sizeof(viewMessage)-1);
+                viewMessage[sizeof(viewMessage)-1] = '\0';
             }
             else
             {
@@ -390,11 +416,15 @@ void MODEM_DEVICE::receiveFile(void)
                 receiveResult = fileTransfer->ReceiveFile();
                 if (receiveResult == GCPP_OK)
                 {
-                    strcat(strcpy(viewMessage, "Se recibió en "), clientPath);
+                    strncpy(viewMessage, "Se recibió en ", sizeof(viewMessage)-1);
+                    viewMessage[sizeof(viewMessage)-1] = '\0';
+                    strncat(viewMessage, clientPath, sizeof(viewMessage)-1-strlen(viewMessage));
                 }
                 else
                 {
-                    strcat(strcpy(viewMessage, "Problemas recibiendo en "), clientPath);
+                    strncpy(viewMessage, "Problemas recibiendo en ", sizeof(viewMessage)-1);
+                    viewMessage[sizeof(viewMessage)-1] = '\0';
+                    strncat(viewMessage, clientPath, sizeof(viewMessage)-1-strlen(viewMessage));
                 }
                 delete fileTransfer;
             }
@@ -416,16 +446,19 @@ void MODEM_DEVICE::processServer(void)
         if (lineStatus->RingDetected())
         {
             modem->AnswerPhone();
-            strcpy(viewMessage, "Conectando ...");
+            strncpy(viewMessage, "Conectando ...", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             notifyEvent(UE_VIEW);
             if (waitFor(MODEM_INPUT_CONNECT))
             {
-                strcpy(viewMessage, "Conectado");
+                strncpy(viewMessage, "Conectado", sizeof(viewMessage)-1);
+                viewMessage[sizeof(viewMessage)-1] = '\0';
                 connected = TRUE;
             }
             else
             {
-                strcpy(viewMessage, "No se pudo contestar la llamada");
+                strncpy(viewMessage, "No se pudo contestar la llamada", sizeof(viewMessage)-1);
+                viewMessage[sizeof(viewMessage)-1] = '\0';
             }
             notifyEvent(UE_VIEW);
         }
@@ -466,20 +499,23 @@ void MODEM_DEVICE::processServerIdleOperation(void)
     {
         if (!strcmp(inputMessage, MODEM_MESSAGE_CONSOLE))
         {
-            strcpy(viewMessage, "Consola activada");
+            strncpy(viewMessage, "Consola activada", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             setOperation(CONSOLE_OPERATION);
             sendMessage(MODEM_MESSAGE_ACKNOWLEDGE);
         }
         else if (!strcmp(inputMessage, MODEM_MESSAGE_COMMAND))
         {
-            strcpy(viewMessage, "Comandos activados");
+            strncpy(viewMessage, "Comandos activados", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             setOperation(COMMAND_OPERATION);
             sendMessage(MODEM_MESSAGE_ACKNOWLEDGE);
         }
         else
         { // it's an unknown message !!!
             //~~~strcpy(viewMessage, "Esperando mensaje del cliente...");
-            strcpy(viewMessage, inputMessage); // to test
+            strncpy(viewMessage, inputMessage, sizeof(viewMessage)-1); // to test
+            viewMessage[sizeof(viewMessage)-1] = '\0';
         }
 
         notifyEvent(UE_VIEW);
@@ -492,13 +528,15 @@ void MODEM_DEVICE::processServerConsoleOperation(void)
     {
         if (!strcmp(inputMessage, MODEM_MESSAGE_COMMAND))
         {
-            strcpy(viewMessage, "Comandos activados");
+            strncpy(viewMessage, "Comandos activados", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             setOperation(COMMAND_OPERATION);
             sendMessage(MODEM_MESSAGE_ACKNOWLEDGE);
         }
         else
         {
-            strcpy(viewMessage, inputMessage);
+            strncpy(viewMessage, inputMessage, sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             sendMessage(inputMessage);
         }
         notifyEvent(UE_VIEW);
@@ -512,31 +550,36 @@ void MODEM_DEVICE::processServerCommandOperation(void)
         // wait for command
         if (!strcmp(inputMessage, MODEM_MESSAGE_CONSOLE))
         {
-            strcpy(viewMessage, "Consola activada");
+            strncpy(viewMessage, "Consola activada", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             setOperation(CONSOLE_OPERATION);
             sendMessage(MODEM_MESSAGE_ACKNOWLEDGE);
         }
         else 	if (!strcmp(inputMessage, MODEM_MESSAGE_SEND))
         {
-            strcpy(viewMessage, "Enviar activado");
+            strncpy(viewMessage, "Enviar activado", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             setOperation(SEND_OPERATION);
             sendMessage(MODEM_MESSAGE_ACKNOWLEDGE);
         }
         else if (!strcmp(inputMessage, MODEM_MESSAGE_RECEIVE))
         {
-            strcpy(viewMessage, "Recibir activado");
+            strncpy(viewMessage, "Recibir activado", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             setOperation(RECEIVE_OPERATION);
             sendMessage(MODEM_MESSAGE_ACKNOWLEDGE);
         }
         else if (!strcmp(inputMessage, MODEM_MESSAGE_CLOSE))
         {
-            strcpy(viewMessage, "Cierre remoto");
+            strncpy(viewMessage, "Cierre remoto", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             sendMessage(MODEM_MESSAGE_ACKNOWLEDGE);
             notifyEvent(UE_CLOSE);
         }
         else
         { // it's an unknown command !!!
-            strcpy(viewMessage, "Comando desconocido");
+            strncpy(viewMessage, "Comando desconocido", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             sendMessage(MODEM_MESSAGE_UNKNOWN);
         }
         notifyEvent(UE_VIEW);
@@ -549,22 +592,26 @@ void MODEM_DEVICE::processServerReceiveOperation(void)
     {
         if (!strcmp(inputMessage, MODEM_MESSAGE_CONSOLE))
         {
-            strcpy(viewMessage, "Consola activada");
+            strncpy(viewMessage, "Consola activada", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             setOperation(CONSOLE_OPERATION);
             sendMessage(MODEM_MESSAGE_ACKNOWLEDGE);
         }
         else if (!strcmp(inputMessage, MODEM_MESSAGE_COMMAND))
         {
-            strcpy(viewMessage, "Comandos activados");
+            strncpy(viewMessage, "Comandos activados", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             setOperation(COMMAND_OPERATION);
             sendMessage(MODEM_MESSAGE_ACKNOWLEDGE);
         }
         else
         { // it's the path of file
-            strcpy(serverPath, inputMessage);
+            strncpy(serverPath, inputMessage, sizeof(serverPath)-1);
+            serverPath[sizeof(serverPath)-1] = '\0';
             // try to create or change the current dir
             char curDir[MAXPATH]; // preserve
-            strcpy(curDir, "X:\\");      // fill string with form of response: X:\
+            strncpy(curDir, "X:\\", sizeof(curDir)-1); // fill string with form of response: X:\
+            curDir[sizeof(curDir)-1] = '\0';
             curDir[0] = 'A' + getdisk(); // replace X with current drive letter
             getcurdir(0, curDir+3);      // fill rest of string with current directory
             mkdir(serverPath);
@@ -577,18 +624,22 @@ void MODEM_DEVICE::processServerReceiveOperation(void)
                 receiveResult = fileTransfer->ReceiveFile();
                 if (receiveResult == GCPP_OK)
                 {
-                    strcat(strcpy(viewMessage, "Archivo recibido en "), serverPath);
+                    strncpy(viewMessage, "Archivo recibido en ", sizeof(viewMessage)-1);
+                    viewMessage[sizeof(viewMessage)-1] = '\0';
+                    strncat(viewMessage, serverPath, sizeof(viewMessage)-1-strlen(viewMessage));
                 }
                 else
                 {
-                    strcpy(viewMessage, "Problemas recibiendo archivo");
+                    strncpy(viewMessage, "Problemas recibiendo archivo", sizeof(viewMessage)-1);
+                    viewMessage[sizeof(viewMessage)-1] = '\0';
                 }
                 delete fileTransfer;
             }
             else
             {
                 sendMessage(MODEM_MESSAGE_UNKNOWN);
-                strcpy(viewMessage, "Ruta errónea");
+                strncpy(viewMessage, "Ruta errónea", sizeof(viewMessage)-1);
+                viewMessage[sizeof(viewMessage)-1] = '\0';
             }
             chdir(curDir); // restore
             //
@@ -604,20 +655,23 @@ void MODEM_DEVICE::processServerSendOperation(void)
     {
         if (!strcmp(inputMessage, MODEM_MESSAGE_CONSOLE))
         {
-            strcpy(viewMessage, "Consola activada");
+            strncpy(viewMessage, "Consola activada", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             setOperation(CONSOLE_OPERATION);
             sendMessage(MODEM_MESSAGE_ACKNOWLEDGE);
         }
         else if (!strcmp(inputMessage, MODEM_MESSAGE_COMMAND))
         {
-            strcpy(viewMessage, "Comandos activados");
+            strncpy(viewMessage, "Comandos activados", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             setOperation(COMMAND_OPERATION);
             sendMessage(MODEM_MESSAGE_ACKNOWLEDGE);
         }
         else
         { // it's the name of file
             STR128 fn;
-            strcpy(fn, inputMessage);
+            strncpy(fn, inputMessage, sizeof(fn)-1);
+            fn[sizeof(fn)-1] = '\0';
             // split filename
             char drive[MAXDRIVE];
             char ext[MAXEXT];
@@ -625,7 +679,7 @@ void MODEM_DEVICE::processServerSendOperation(void)
             flags=fnsplit(fn,drive, serverPath, filename, ext);
             if(flags & EXTENSION)
             {
-                strcat(filename, ext);
+                strncat(filename, ext, sizeof(filename)-1-strlen(filename));
             }
             if ((access(fn, 0) == 0))
             { // exist ?
@@ -636,18 +690,22 @@ void MODEM_DEVICE::processServerSendOperation(void)
                 sendResult = fileTransfer->SendFile(fn);
                 if (sendResult == GCPP_OK)
                 {
-                    strcat(strcpy(viewMessage, "enviando archivo "), fn);
+                    strncpy(viewMessage, "enviando archivo ", sizeof(viewMessage)-1);
+                    viewMessage[sizeof(viewMessage)-1] = '\0';
+                    strncat(viewMessage, fn, sizeof(viewMessage)-1-strlen(viewMessage));
                 }
                 else
                 {
-                    strcpy(viewMessage, "Problemas enviando archivo");
+                    strncpy(viewMessage, "Problemas enviando archivo", sizeof(viewMessage)-1);
+                    viewMessage[sizeof(viewMessage)-1] = '\0';
                 }
                 delete fileTransfer;
             }
             else
             {
                 sendMessage(MODEM_MESSAGE_UNKNOWN);
-                strcpy(viewMessage, "Archivo erróneo");
+                strncpy(viewMessage, "Archivo erróneo", sizeof(viewMessage)-1);
+                viewMessage[sizeof(viewMessage)-1] = '\0';
             }
             //
             setOperation(IDLE_OPERATION);
@@ -682,7 +740,8 @@ EVENT_TYPE MODEM_DEVICE::Event(const UI_EVENT &event)
 
 BOOL MODEM_DEVICE::activate()
 {
-    strcpy(viewMessage, "Activando ...");
+    strncpy(viewMessage, "Activando ...", sizeof(viewMessage)-1);
+    viewMessage[sizeof(viewMessage)-1] = '\0';
     notifyEvent(UE_VIEW);
     //
     active = FALSE;
@@ -693,7 +752,8 @@ BOOL MODEM_DEVICE::activate()
     unsigned short error;
     if (serial->GetCommError(error) != GCPP_OK)
     {
-        strcpy(viewMessage, "No se pudo instalar puerto serial");
+        strncpy(viewMessage, "No se pudo instalar puerto serial", sizeof(viewMessage)-1);
+        viewMessage[sizeof(viewMessage)-1] = '\0';
     }
     else
     {
@@ -711,19 +771,22 @@ BOOL MODEM_DEVICE::activate()
         modem->Install(serial);
         if (!waitFor(MODEM_INPUT_OK))
         {
-            strcpy(viewMessage, "No se pudo instalar modem");
+            strncpy(viewMessage, "No se pudo instalar modem", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
         }
         else
         {
             modem->Reset();
             if (!waitFor(MODEM_INPUT_OK))
             {
-                strcpy(viewMessage, "No se pudo iniciar modem");
+                strncpy(viewMessage, "No se pudo iniciar modem", sizeof(viewMessage)-1);
+                viewMessage[sizeof(viewMessage)-1] = '\0';
             }
             else
             {
 				modem->SetSpeakerLevel(g_cfg->MODEM_SPEAKER);
-                strcpy(viewMessage, "Activado");
+                strncpy(viewMessage, "Activado", sizeof(viewMessage)-1);
+                viewMessage[sizeof(viewMessage)-1] = '\0';
                 active = TRUE;
             }
         }
@@ -734,7 +797,8 @@ BOOL MODEM_DEVICE::activate()
 
 BOOL MODEM_DEVICE::deactivate()
 {
-    strcpy(viewMessage, "Desactivando ...");
+    strncpy(viewMessage, "Desactivando ...", sizeof(viewMessage)-1);
+    viewMessage[sizeof(viewMessage)-1] = '\0';
     notifyEvent(UE_VIEW);
     if (modem)
     {
@@ -762,27 +826,32 @@ BOOL MODEM_DEVICE::deactivate()
         sio = NULL;
     }
     active = FALSE;
-    strcpy(viewMessage, "Desactivado");
+    strncpy(viewMessage, "Desactivado", sizeof(viewMessage)-1);
+    viewMessage[sizeof(viewMessage)-1] = '\0';
     notifyEvent(UE_VIEW);
     return TRUE;
 }
 
 BOOL MODEM_DEVICE::connect(PHONE phone)
 {
-    strcpy(viewMessage, "Marcando ...");
+    strncpy(viewMessage, "Marcando ...", sizeof(viewMessage)-1);
+    viewMessage[sizeof(viewMessage)-1] = '\0';
     notifyEvent(UE_VIEW);
     connected = FALSE;
 	modem->DialMode(g_cfg->MODEM_DIAL);
     modem->Dial(phone);
-    strcpy(viewMessage, "Conectando...");
+    strncpy(viewMessage, "Conectando...", sizeof(viewMessage)-1);
+    viewMessage[sizeof(viewMessage)-1] = '\0';
     notifyEvent(UE_VIEW);
     if (!waitFor(MODEM_INPUT_CONNECT))
     {
-        strcpy(viewMessage, "No se pudo conectar");
+        strncpy(viewMessage, "No se pudo conectar", sizeof(viewMessage)-1);
+        viewMessage[sizeof(viewMessage)-1] = '\0';
     }
     else
     {
-        strcpy(viewMessage, "Conectado");
+        strncpy(viewMessage, "Conectado", sizeof(viewMessage)-1);
+        viewMessage[sizeof(viewMessage)-1] = '\0';
         connected = TRUE;
     }
     notifyEvent(UE_VIEW);
@@ -791,12 +860,14 @@ BOOL MODEM_DEVICE::connect(PHONE phone)
 
 BOOL MODEM_DEVICE::disconnect()
 {
-    strcpy(viewMessage, "Desconectando ...");
+    strncpy(viewMessage, "Desconectando ...", sizeof(viewMessage)-1);
+    viewMessage[sizeof(viewMessage)-1] = '\0';
     notifyEvent(UE_VIEW);
     if (modem)
         modem->HangUp();
     connected = FALSE;
-    strcpy(viewMessage, "Desconectado");
+    strncpy(viewMessage, "Desconectado", sizeof(viewMessage)-1);
+    viewMessage[sizeof(viewMessage)-1] = '\0';
     notifyEvent(UE_VIEW);
     return TRUE;
 }
@@ -833,7 +904,8 @@ BOOL MODEM_DEVICE::isOnLine(void)
     {
         if (lineStatus->Carrier() == GCPP_OFF)
         {
-            strcpy(viewMessage, "Conectado");
+            strncpy(viewMessage, "Conectado", sizeof(viewMessage)-1);
+            viewMessage[sizeof(viewMessage)-1] = '\0';
             connected = FALSE;
         }
     }
@@ -885,9 +957,12 @@ int MODEM_DEVICE::receiveMessage(void)
 
 BOOL MODEM_DEVICE::setFile(const char *clientPath, const char *serverPath, const char *filename)
 {
-    strcpy(this->clientPath, clientPath);
-    strcpy(this->serverPath, serverPath);
-    strcpy(this->filename, filename);
+    strncpy(this->clientPath, clientPath, sizeof(this->clientPath)-1);
+    this->clientPath[sizeof(this->clientPath)-1] = '\0';
+    strncpy(this->serverPath, serverPath, sizeof(this->serverPath)-1);
+    this->serverPath[sizeof(this->serverPath)-1] = '\0';
+    strncpy(this->filename, filename, sizeof(this->filename)-1);
+    this->filename[sizeof(this->filename)-1] = '\0';
     //
     sendStatus = IDLE_FILE_PROCESS_STAT;
     return TRUE;

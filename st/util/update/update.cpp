@@ -8,6 +8,7 @@
 #ifdef DOSX286
 #include <phapi.h>
 #endif
+#include "../util_cfg.h"
 
 extern unsigned _stklen = 0x4000; // ~%^%&$#@!&*, _stklen GRRR ...
 
@@ -27,8 +28,8 @@ int main(int argc, char *argv[])
 		<< "UPDATE 1.01 (" << APP_VER_NAME << ')' << endl
 		<< APP_COPYRIGHT << endl
 		<< "  update [/c|/a]" << endl
-		<< "    /c crear actualizaci¢n"   << endl
-		<< "    /a aplicar actualizaci¢n" << endl
+		<< "    /c crear actualizaciï¿½n"   << endl
+		<< "    /a aplicar actualizaciï¿½n" << endl
 		<< endl
 	;
 
@@ -55,43 +56,9 @@ int main(int argc, char *argv[])
 			break;
 		}
 
-		WORD status = g_cfg->Load(); // load CFG
+		if (!util_cfgLoad(g_cfg)) { delete g_cfg; return 1; }
 
-		if (status != CFG::OK)
-		{
-			char *msg = " tiene una falla general.";
-			switch (status)
-			{
-			case CFG::NO_CFG_FILE :
-				msg = "no existe."    ;
-				break;
-			case CFG::BAD_CFG_FILE:
-				msg = "est  corrupto.";
-				break;
-			}
-
-			cerr << "El archivo de configuraci¢n " << msg << endl;
-			break;
-		}
-
-		if (!TraceInfo::s_bTest)
-		{
-			STR32 password;
-			cout << "Presione Esc para abortar operaci¢n." << endl;
-			cout << "C¢digo de acceso: ";
-			_ReadPassword(password, sizeof(CFG::PASSWORD)-1);
-			if (!strlen(password))
-			{
-				nRet = 0;
-				break;
-			}
-
-			if (!g_cfg->isUtilPassword(password))
-			{
-				cerr << "Lo siento, acceso negado." << endl;
-				break;
-			}
-		}
+		if (!util_authenticate(g_cfg)) { delete g_cfg; return 1; }
 
 		PH_ENGINE* phEngine;
 		phEngine = new PH_ENGINE;
@@ -102,19 +69,19 @@ int main(int argc, char *argv[])
 		{
 			if (creating)
 			{
-				cout << "  Creando actualizaci¢n ..." << endl;
+				cout << "  Creando actualizaciï¿½n ..." << endl;
 				if (!phEngine->CreatePatch())
 				{
-					cerr << "  Fall¢ la extracci¢n de la actualizaci¢n." << endl;
+					cerr << "  Fallï¿½ la extracciï¿½n de la actualizaciï¿½n." << endl;
 					break;
 				}
 			}
 			else
 			{
-				cout << "  Aplicando actualizaci¢n ..." << endl;
+				cout << "  Aplicando actualizaciï¿½n ..." << endl;
 				if (!phEngine->ApplyPatch())
 				{
-					cerr << "  Fallo la aplicaci¢n de la actualizaci¢n." << endl;
+					cerr << "  Fallo la aplicaciï¿½n de la actualizaciï¿½n." << endl;
 					break;
 				}
 			}

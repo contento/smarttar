@@ -54,17 +54,17 @@ int main(int argc, char *argv[])
 				msg = "no existe."    ;
 				break;
 			case CFG::BAD_CFG_FILE:
-				msg = "est  corrupto.";
+				msg = "estï¿½ corrupto.";
 				break;
 			}
-			cerr << "El archivo de configuraci¢n " << msg << endl;
+			cerr << "El archivo de configuraciï¿½n " << msg << endl;
 			break;
 		}
 
 		CommandOptions cmdOptions;
 		if (!parseCommandLine(argc, argv, cmdOptions))
 		{
-			cerr << "Opci¢n o combinaci¢n de opciones inv lida.  Use STL /h" << endl;
+			cerr << "Opciï¿½n o combinaciï¿½n de opciones invï¿½lida.  Use STL /h" << endl;
 			break;
 		}
 
@@ -75,12 +75,11 @@ int main(int argc, char *argv[])
 			break;
 		}
 
-		// strcpy(cmdOptions.password, "Util"); // TEST
 		if (strlen(cmdOptions.password) == 0)
 		{
 			cout << "\"stl /h\" muestra ayudas." << endl;
-			cout << "Presione Esc para abortar operaci¢n." << endl;
-			cout << "C¢digo de acceso: ";
+			cout << "Presione Esc para abortar operaciï¿½n." << endl;
+			cout << "Cï¿½digo de acceso: ";
 			_ReadPassword(cmdOptions.password, sizeof(CFG::PASSWORD)-1);
 		}
 
@@ -108,11 +107,10 @@ int main(int argc, char *argv[])
 			ok = dongle.isThere();
 		}
 
-		// ok = TRUE; // TEST
 
 		if (!ok)
 		{
-			cerr << "Lo siento, acceso negado, aplicaci¢n no autorizada." << endl;
+			cerr << "Lo siento, acceso negado, aplicaciï¿½n no autorizada." << endl;
 			break;
 		}
 
@@ -151,19 +149,19 @@ void showHelp(void)
     << "  /a Adicionar recibos al final del archivo .PRN existente." << endl
     << "  /c Ordenado por cabinas." << endl
     << "  /h Ayudas." << endl
-    << "  /iID Identificaci¢n serial de cuatro digitos." << endl
+    << "  /iID Identificaciï¿½n serial de cuatro digitos." << endl
     << "  /lDIR Directorio para los archivos .LST y .PRN. Por defecto la del archivo." << endl
-    << "  /n S¢lo recibos no cobrados." << endl
-	<< "  /pCLAVE Clave de usuario. Por defecto la solicitar  al ejecutarse." << endl
+    << "  /n Sï¿½lo recibos no cobrados." << endl
+	<< "  /pCLAVE Clave de usuario. Por defecto la solicitarï¿½ al ejecutarse." << endl
     << "  /rRX Nombre del archivo RX. Por defecto turno actual." << endl
-    << "  /s S¢lo recibos de servicios especiales." << endl
-    << "  /t S¢lo recibos de telefon¡a autom tica." << endl
-    << "  /v S¢lo recibos de pago revertido." << endl
+    << "  /s Sï¿½lo recibos de servicios especiales." << endl
+    << "  /t Sï¿½lo recibos de telefonï¿½a automï¿½tica." << endl
+    << "  /v Sï¿½lo recibos de pago revertido." << endl
     << "Ejemplos:" << endl
     << "  STL" << endl
     << "    Genera archivo RXDAT.LST en el directorio actual." << endl
     << "  STL /r1999\\06\\RX08_01 /t /n" << endl
-    << "    Recibos no cobrados de telefon¡a autom tica del turno 1 de junio 8 de 1999." << endl
+    << "    Recibos no cobrados de telefonï¿½a automï¿½tica del turno 1 de junio 8 de 1999." << endl
     << "    Genera archivos RX08_01D.LST, RX08_01S.LST, RX08_01D.PRN y RX08_01S.PRN " << endl
     << "    dentro del directorio 1999\\06." << endl
     ;

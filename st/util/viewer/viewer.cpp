@@ -8,6 +8,7 @@
 #include <cfg.h>
 #include <db_view.h>
 #include <iostream.h>
+#include "../util_cfg.h"
 
 DB_ENGINE 	*g_dbEngine;
 CFG   		*g_cfg;
@@ -15,23 +16,7 @@ CFG   		*g_cfg;
 int UI_APPLICATION::Main(void)
 {
 	g_cfg = new CFG;
-	WORD status = g_cfg->Load(); // load CFG
-    if (status != CFG::OK)
-    {
-        char *msg = " tiene una falla general.";
-        switch (status)
-        {
-        case CFG::NO_CFG_FILE :
-            msg = "no existe."    ;
-            break;
-        case CFG::BAD_CFG_FILE:
-            msg = "est  corrupto.";
-            break;
-        }
-        cerr << "El archivo de configuraci¢n " << msg << endl;
-		delete g_cfg;
-        return 1;
-    }
+	if (!util_cfgLoad(g_cfg)) { delete g_cfg; return 1; }
 	g_dbEngine = new DB_ENGINE;
 	//
 	UI_APPLICATION::LinkMain();

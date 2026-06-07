@@ -1,6 +1,10 @@
 //
-// [ FDUMP.CPP ]
+// [ F2STM2.CPP ]
 //
+// Transfers a binary file into STM2 NVRAM bank, replacing its contents.
+// Usage: f2stm2 <filename> — reads the file in 1KB chunks and writes
+// each chunk to STM2 via STM2::replace(), covering the full bank size.
+// The file must exist; if it cannot be opened, the tool exits with an error.
 #include "stdst.h"
 
 #include <info.h>

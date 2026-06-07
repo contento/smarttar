@@ -109,9 +109,12 @@ EVENT_TYPE CLIENT::Event(const UI_EVENT &event)
                 {
                     FILE_NAME name;
                     FILE_NAME remotePath, localPath;
-                    strcpy( localPath, ((UIW_STRING *) Get(SID_LOCAL))->DataGet());
-                    strcpy(remotePath, ((UIW_STRING *) Get(SID_REMOTE))->DataGet());
-                    strcpy(name, iterator->current());
+                    strncpy( localPath, ((UIW_STRING *) Get(SID_LOCAL))->DataGet(), sizeof(localPath)-1);
+                    localPath[sizeof(localPath)-1] = '\0';
+                    strncpy(remotePath, ((UIW_STRING *) Get(SID_REMOTE))->DataGet(), sizeof(remotePath)-1);
+                    remotePath[sizeof(remotePath)-1] = '\0';
+                    strncpy(name, iterator->current(), sizeof(name)-1);
+                    name[sizeof(name)-1] = '\0';
                     STC::modemDevice->setFile(localPath, remotePath, name);
                     (*iterator)++;
                 }
@@ -196,7 +199,7 @@ EVENT_TYPE CLIENT::Event(const UI_EVENT &event)
             UI_WINDOW_OBJECT::errorSystem->ReportError(
                 UI_WINDOW_OBJECT::windowManager,
                 WOS_NO_STATUS,
-                "La comunicación fue suspendida."
+                "La comunicaciï¿½n fue suspendida."
             );
             // disconnect
             eventManager->Put(UI_EVENT(UE_DISCONNECT, 0));
@@ -231,11 +234,13 @@ BOOL CLIENT::createList(void)
     {
         if (FlagSet(wFile->woStatus, WOS_SELECTED))
         {
-            strcpy(name, wFile->DataGet());
+            strncpy(name, wFile->DataGet(), sizeof(name)-1);
+            name[sizeof(name)-1] = '\0';
             filenames->addAtTail(String(name));
         }
     }
-    strcpy(name, ((UIW_STRING *)Get("ANOTHER"))->DataGet());
+    strncpy(name, ((UIW_STRING *)Get("ANOTHER"))->DataGet(), sizeof(name)-1);
+    name[sizeof(name)-1] = '\0';
     if (strlen(name))
         filenames->addAtTail(String(name));
     // prepare iterator
