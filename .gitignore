@@ -67,6 +67,10 @@ st/_bin-*/
 # Release builds directory
 _releases/
 
+
+# Generated .docx manuals — wiki build outputs (build-docs.sh), not tracked.
+# Regenerate from wiki/ vault; originals (help.doc, STC.doc, STC.rtf) stay tracked.
+st/docs/archive/*.docx
 # help.hpp is emitted by genhelp alongside help.dat (into st/include/).
 st/include/help.hpp
 
@@ -81,11 +85,6 @@ st/build.log
 st/BUILD.LOG
 run*.log
 RUN*.LOG
-
-# ==============================================================================
-# graphify knowledge graph (regenerated from source via `graphify update .`)
-# ==============================================================================
-graphify-out/
 
 # ==============================================================================
 # DOSBox-X capture directory (screenshots / AVI / WAV, configured via

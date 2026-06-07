@@ -15,7 +15,7 @@ Real-time telephone tariff management system for public telephone booths
 
 Developed by [MicroDiseño Ltda.](https://microdiseno.com) · Copyright © 1993–2003 · Version 2.60.0 (resurrected 2026)
 
-![SmartTar](st/docs/SmartTar.jpg)
+![SmartTar](st/docs/archive/SmartTar.jpg)
 
 ---
 
@@ -348,8 +348,8 @@ SmartTar is a single-process protected-mode application. The main subsystems are
 
 | Version | Screenshot |
 | --- | --- |
-| 2.33 | ![SmartTar 2.33](st/docs/SmartTar%202.33.gif) |
-| 2.32.1 | ![SmartTar 2.32.1](st/docs/SmartTar%202.32.1.gif) |
+| 2.33 | ![SmartTar 2.33](st/docs/archive/SmartTar%202.33.gif) |
+| 2.32.1 | ![SmartTar 2.32.1](st/docs/archive/SmartTar%202.32.1.gif) |
 
 ---
 

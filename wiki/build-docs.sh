@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 # Regenerate the SmartTar documentation OUTPUTS from the Obsidian vault.
 #
-# The vault (es/, en/, *.md) is the single source of truth. This script
-# produces, into _build/:
+# The vault (es/, en/, *.md) is the single source of truth for user-facing
+# documentation. This script produces, into _build/:
 #   * the four .docx manuals + the STC doc   (pandoc, Markdown -> docx)
-#   * help.txt                               (md2help.py, Markdown -> Zinc/Latin-1)
 #
-# Outputs land in _build/ rather than overwriting st/docs/ so you can diff
-# against the originals before promoting them. To compile help.dat, copy the
-# generated help.txt over st/docs/help.txt and build with HELP=1.
+# NOTE: st/res/help.txt is a source asset for the app (consumed by genhelp),
+# NOT a wiki output. It lives in st/res/ and is edited directly.
 #
-# Requires: pandoc, python3. Run from anywhere.
+# Outputs land in _build/ rather than overwriting tracked files so you can
+# diff before promoting.
+#
+# Requires: pandoc. Run from anywhere.
 set -euo pipefail
 shopt -s nullglob
 
@@ -53,14 +54,5 @@ for x in json.load(open(sys.argv[1]))["manuals"]:
                      x["subtitle"], x["vendor"], x["copyright"]]))
 PY
 )
-
-echo "==> Building in-app help (Markdown -> help.txt, Latin-1)"
-read -r HELP_SRC HELP_OUT HELP_LE < <(python3 -c '
-import json,sys
-h=json.load(open(sys.argv[1]))["help"]
-print(h["src_dir"], h["output"], h.get("line_ending","lf"))' "$MANIFEST")
-CRLF=""
-[ "$HELP_LE" = "crlf" ] && CRLF="--crlf"
-python3 "$WIKI_DIR/tools/md2help.py" "$WIKI_DIR/$HELP_SRC" "$OUT_DIR/$HELP_OUT" $CRLF
 
 echo "==> Done. Outputs in $OUT_DIR"
