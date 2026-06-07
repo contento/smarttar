@@ -52,8 +52,25 @@ Working list of milestones and tasks. Detailed findings live in
 
 ## Milestone: Fix Zinc 3.5 UI bugs
 
-- [ ] **Zinc Grid issue** — *(describe symptoms, reproduction, suspected
-      cause)*
+- [x] **Zinc Grid geometry (row tear + thick separators + bottom)**
+      (branch `fix/zinc-grid-geometry`) — *Cause:* stock Zinc 3.5
+      `RegionConvert` (`Z_WIN2.CPP:390-395`) floors each cell's pixel
+      top/left *independently* of its size, so minicell layouts drift.
+      With the runtime ratios (Y: `8*24/10 = 19.2 px/row`; X: `0.7 px/
+      minicell`) the fraction accumulates to a whole pixel periodically:
+      rows jumped 19->20 px every 5th booth (tear at 5/6, 10/11, 15/16),
+      and the column 1-minicell overlaps opened 1 px gaps at Tel|Loc and
+      Tar|Val (double = thick separators). Zinc fixed this in v4; we stay
+      on 3.5. *Fix (app-side, pixel-space, no Zinc rebuild):*
+      `UIW_VIEW::NormalizeRowPitch()` snaps rows to the uniform integer
+      pitch from the driftless first gap and pulls the table's bottom
+      border to the last row; `NormalizeColumnBorders()` closes the column
+      gaps so every separator is one shared line. Both run from
+      `UIW_VIEW::Event` on `S_CREATE`/`S_SIZE` -- *before* the first paint,
+      so the natural redraw is correct (an earlier post-paint repaint left
+      white notches at the Est|Are boundary). *Verified:* geometry dump
+      shows uniform 19 px pitch, all column overlaps 0, table bottom flush;
+      confirmed visually in DOSBox-X (`wiki/assets/zinc-gui-bug-03.png`).
 - [ ] *(add other UI bugs as they surface)*
 
 ## Milestone: UI improvements (new edition) — v4.0

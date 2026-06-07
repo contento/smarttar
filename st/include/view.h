@@ -98,6 +98,9 @@ private:
 	void initPos       (REGION *groupRegions);
 	void addTitleGroups(REGION *groupRegions);
 	void addTable      (REGION *groupRegions);
+	BOOL NormalizeRowPitch(void);      // Zinc 3.5 minicell rounding: row-tear fix
+	BOOL NormalizeColumnBorders(void); // Zinc 3.5 minicell rounding: thick-line fix
+	UI_WINDOW_OBJECT *colCell(int c, int b, int k); // booth cell by column index
 	//
 	static EVENT_TYPE processBooth(UI_WINDOW_OBJECT *object, UI_EVENT &, EVENT_TYPE ccode);
 };
