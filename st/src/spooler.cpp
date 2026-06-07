@@ -20,9 +20,6 @@ extern CFG 	*g_cfg;
 #define BIOS_PRINT_ERROR     0x08
 #define BIOS_PRINT_PAPER_OUT 0x20
 
-CIRCULAR_QUEUE<char> *SPOOLER::Buffers[MAX_SPOOL_CHANNELS];
-char *SPOOLER::PrintfBuffer = NULL;
-
 SPOOLER::SPOOLER(BYTE numOfChannels)
 	: UI_DEVICE(E_SPOOLER, D_ON),
 	Serial(NULL)

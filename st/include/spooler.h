@@ -44,8 +44,8 @@ public:
 
 private:
 
-	static CIRCULAR_QUEUE<char> *Buffers[MAX_SPOOL_CHANNELS];
-    static char *PrintfBuffer; // useful for Printf
+	CIRCULAR_QUEUE<char> *Buffers[MAX_SPOOL_CHANNELS];
+    char *PrintfBuffer; // useful for Printf
     SERIAL *Serial;
     BYTE   NumOfChannels;
     //
