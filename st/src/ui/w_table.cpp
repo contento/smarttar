@@ -524,20 +524,20 @@ clientArea = clipList.First()->region;
         clientArea.right += display->isText ? 1 : vScroll->true.right - vScroll->true.left;
         clientArea.bottom += display->isText ? 1 : hScroll->true.bottom - hScroll->true.top;
         *this - corner - vScroll - hScroll;
-        delete corner;
-        delete vScroll;
-        delete hScroll;
+        delete corner;  corner  = NULL;
+        delete vScroll; vScroll = NULL;
+        delete hScroll; hScroll = NULL;
         reCreate = TRUE;
     }
     else if (vScroll && getvMax <= clientArea.bottom - clientArea.top && !vPosition)
     {
         clientArea.right += display->isText ? 1 : vScroll->true.right - vScroll->true.left;
         *this - vScroll;
-        delete vScroll;
+        delete vScroll; vScroll = NULL;
         if (hScroll && corner)
         {
             *this - corner;
-            delete corner;
+            delete corner; corner = NULL;
         }
         reCreate = TRUE;
     }
@@ -545,11 +545,11 @@ clientArea = clipList.First()->region;
     {
         clientArea.bottom += display->isText ? 1 : hScroll->true.bottom - hScroll->true.top;
         *this - hScroll;
-        delete hScroll;
+        delete hScroll; hScroll = NULL;
         if (vScroll && corner)
         {
             *this - corner;
-            delete corner;
+            delete corner; corner = NULL;
         }
         reCreate = TRUE;
     }

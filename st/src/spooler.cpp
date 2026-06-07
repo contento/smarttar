@@ -51,7 +51,7 @@ BOOL SPOOLER::Print(BYTE channel, const char *s, BOOL with0xFF)
 	if (channel >= NumOfChannels)
 		return FALSE;
 
-	int numOfChars = strlen(s);
+	int numOfChars;
 	int i = 0;
 	//
 	// this function is useful to Print strings terminated in 0xFF
@@ -69,6 +69,8 @@ BOOL SPOOLER::Print(BYTE channel, const char *s, BOOL with0xFF)
 		}
 		numOfChars = i;
 	}
+	else
+		numOfChars = strlen(s); // safe only when NUL-terminated (not 0xFF case)
 	if (!Buffers[channel]->HasSpaceFor(numOfChars))
 	{
 		return FALSE;
