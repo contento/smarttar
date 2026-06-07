@@ -535,6 +535,16 @@ BOOL _exceptionIsOn = FALSE;
 
 void interrupt far CONTROLLER::NewGPFHandler(EXCEP_FRAME eFrame)
 {
+	// Restore the original handler FIRST: the teardown below calls delete,
+	// which re-enters the heap/PHAPI -- if that faults (the GPF may itself be
+	// heap corruption) we must NOT recurse back into this half-torn-down
+	// handler. The flag is a second guard in case the old handler chains here.
+	static BOOL inTeardown = FALSE;
+	DosSetExceptionHandler(0x0D, OldGPFHandler, NULL);
+	if (inTeardown)
+		exit(1); // already faulting mid-cleanup -- bail without re-deleting
+	inTeardown = TRUE;
+
 	_exceptionIsOn = TRUE;
 
 	if (!g_cfg->IsDemoMode() && TraceInfo::s_bTest)
@@ -551,7 +561,6 @@ void interrupt far CONTROLLER::NewGPFHandler(EXCEP_FRAME eFrame)
 	delete Receipts;
 	delete PRNReceipts;
 	//
-	DosSetExceptionHandler(0x0D, OldGPFHandler, NULL);
 	cout.setf(ios::uppercase|ios::hex);
 	cout
 		<< "EXCEPCION ATRAPADA" << endl
@@ -709,6 +718,7 @@ void CONTROLLER::NewHandler(void)
                 WOS_NO_STATUS, "No hay memoria disponible!\r\n""De salida hacia DOS.");
     }
 	delete RTEngine;
+    delete g_dbEngine; // flush/close the DB cleanly, as NewGPFHandler does
     UI_DISPLAY *display = UI_WINDOW_OBJECT::display;
     delete UI_WINDOW_OBJECT::windowManager;
     delete display;
