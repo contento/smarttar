@@ -47,10 +47,20 @@ Parser::Parser(const char *line, Tokens& tokens)
             // pop objects
 #if (__BORLANDC__ > 0x410) // > borland C++ 3.1
             while (!stack.IsEmpty())
-                tmpLine[iChar++] = stack.Pop();
+            {
+                if (iChar < (WORD)sizeof(tmpLine)-1)
+                    tmpLine[iChar++] = stack.Pop();
+                else
+                    stack.Pop(); // overflow guard: drain without storing
+            }
 #else
             while (!stack.isEmpty())
-                tmpLine[iChar++] = stack.pop();
+            {
+                if (iChar < (WORD)sizeof(tmpLine)-1)
+                    tmpLine[iChar++] = stack.pop();
+                else
+                    stack.pop(); // overflow guard: drain without storing
+            }
 #endif
             // store objects in stack
             if (iChar)
