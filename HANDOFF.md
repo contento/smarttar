@@ -1,9 +1,9 @@
 # SmartTar — Handoff
 
 Status snapshot for resuming on another machine.
-Branch: `main` — in sync with `origin/main` except the latest stability
-commit (`038f489`) + this doc/audit update, which are **unpushed pending
-GCC's confirmation**. Push is gated on GCC's confirmation.
+Branch: `main` — at `351eda4` (zinc bug screenshot commit). Ahead of
+`origin/main` by: stability audit close (`40b00ff`), HIGH/MEDIUM fixes
+(`038f489`), and the Zinc bug screenshot (`351eda4`). **Unpushed.**
 
 ---
 
@@ -81,3 +81,57 @@ anything — engine selection is already runtime.
   port write) runs before base `~ENGINE` (ISR uninstall), so the ISR fires for
   a few ticks with `GP_CASH` already cleared. Harmless in practice; flag if
   anything misbehaves at shutdown.
+---
+
+## Fixed: Zinc Grid row-tear (branch `fix/zinc-grid-geometry`)
+
+The Zinc 3.5 grid bug (screenshot `wiki/assets/zinc-gui-bug.png`,
+commit `351eda4`) is **diagnosed and fixed** on `fix/zinc-grid-geometry`.
+
+- **Root cause (measured, not theorized):** stock Zinc 3.5
+  `RegionConvert` (`vendor/zinc/SOURCE/Z_WIN2.CPP:390-395`) floors each
+  booth row's pixel top *independently* of the row height. With the
+  runtime stride `GBUTTON_HEIGHT(8) * miniNY(1) * cellHeight(24) /
+  miniDY(10) = 19.2 px`, the 0.2 px/row fraction accumulates to a whole
+  pixel every 5 rows, so the pitch jumps 19->20 at booths 6/11/16 and the
+  grid tears there (the screenshot's 5/6 boundary). Confirmed byte-for-byte
+  that this geometry code was *never* patched (`source` == `osource`); the
+  only historical Zinc patches were `D_BUTTON.CPP` + Spanish localization.
+  Zinc fixed it in v4 (different geometry engine) — out of reach on 3.5.
+- **Same drift on the X axis + bottom border.** Columns are positioned with
+  a 1-minicell overlap to share borders, but the same independent floor
+  (0.7 px/minicell) opened 1 px gaps at Tel|Loc and Tar|Val -> two adjacent
+  border lines = thick separators. And removing the Y drift shortened the
+  grid, detaching the table's bottom border from the last row.
+- **Fix (app-side, pixel-space, no Zinc rebuild).** In `st/src/ui/view_ev.cpp`
+  / `st/include/view.h`:
+  - `NormalizeRowPitch()` snaps rows to the uniform integer pitch from the
+    driftless first gap (preserving each cell's height) and pulls the table
+    bottom up to the last row.
+  - `NormalizeColumnBorders()` extends the left column's right edge at any
+    gapped boundary so every separator is one shared line.
+  - Both run from `UIW_VIEW::Event` on `S_CREATE`/`S_SIZE` -- *before* the
+    first paint. (An earlier approach ran them post-paint via
+    `CONTROLLER::RefreshView` + `S_REDISPLAY`, which left white repaint
+    notches at the Est|Are boundary; fixing geometry before the first paint
+    removed those.)
+- **Verified:** a temporary `GEO_DEBUG` region-dump probe (now removed)
+  measured pixel geometry at each step -- post-fix every booth sits at
+  `122 + 19*n` (uniform 19 px), all column overlaps are 0, and the table
+  bottom is flush. Confirmed visually in DOSBox-X
+  (`wiki/assets/zinc-gui-bug-03.png`); screenshots `-00`..`-03` document the
+  before/after progression.
+
+**Next step:** decide on merge to `main` (branch is unpushed).
+
+## Other open items (from TODO.md)
+
+- **DEMO_ENGINE Phase 3** (partially done):
+  - Graceful stop (drain, not freeze) — `[~]` in TODO
+  - Graceful drain on exit — `[~]` in TODO
+  - Total simulation time limit — `[~]` in TODO
+- **Documentation wiki** — substantially built at `wiki/`; remaining:
+  - Vault layout decision
+  - `.docx` manual conversion
+  - README simplification
+- **Toolchain portability** — not started (Investigate Open Watcom / DJGPP)

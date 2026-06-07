@@ -235,6 +235,17 @@ EVENT_TYPE UIW_VIEW::Event(const UI_EVENT &event)
         WActivateExt->woFlags  &= ~WOF_NON_SELECTABLE;
         WExtMenu->Event(UI_EVENT(S_REDISPLAY, 0));
         break;
+    case S_CREATE:
+    case S_SIZE:
+        // Zinc 3.5 minicell-rounding fixes: re-snap the booth grid to a
+        // uniform row pitch and consistent column borders once the children
+        // have been resolved to pixels (here, before the first paint), so the
+        // natural redraw is already correct -- no separate, artifact-prone
+        // repaint pass (which left white notches at the Est|Are boundary).
+        ccode = UIW_WINDOW::Event(event);
+        NormalizeRowPitch();
+        NormalizeColumnBorders();
+        break;
         //
         //
         //
@@ -247,6 +258,120 @@ EVENT_TYPE UIW_VIEW::Event(const UI_EVENT &event)
         break;
     }
     return ccode;
+}
+
+//
+// Workaround for the Zinc 3.5 minicell rounding tear.  Each booth row's
+// pixel top is an INDEPENDENT floor() of boothCount * rowStride, where the
+// runtime stride is GBUTTON_HEIGHT * miniNY * cellHeight / miniDY (8 * 24/10
+// = 19.2 px here).  The fractional 0.2 px accumulates to a whole pixel every
+// 5 rows, so the row pitch jumps 19->20 at booths 6/11/16 and the grid tears
+// at those boundaries (Zinc fixed this in v4; we stay on 3.5).
+//
+// Snap every row to the uniform integer pitch set by the first (driftless)
+// row gap, preserving each cell's own height.  Returns TRUE if any row had
+// to move, so the caller can repaint.
+//
+BOOL UIW_VIEW::NormalizeRowPitch(void)
+{
+	int base  = WBoothNumbers[0][0]->relative.top;
+	int pitch = WBoothNumbers[0][1]->relative.top - base; // row 0->1 never drifts
+	if (pitch <= 0)
+		return FALSE;
+
+	BOOL changed = FALSE;
+	for (int cNum = 0; cNum < NumOfClusters; cNum++)
+		for (int bNum = 0; bNum < CLUSTER_SIZE; bNum++)
+		{
+			int n = cNum * CLUSTER_SIZE + bNum;
+			int delta = (base + n * pitch) - WBoothNumbers[cNum][bNum]->relative.top;
+			if (!delta)
+				continue;
+			changed = TRUE;
+
+			UI_WINDOW_OBJECT *col[9];
+			col[0] = WBoothNumbers[cNum][bNum];
+			col[1] = WStates[cNum][bNum];
+			col[2] = WAreas[cNum][bNum];
+			col[3] = WPhones[cNum][bNum];
+			col[4] = WCities[cNum][bNum];
+			col[5] = WElapsedTimes[cNum][bNum];
+			col[6] = WTariffs[cNum][bNum];
+			col[7] = WValues[cNum][bNum];
+			col[8] = WNumOfCalls[cNum][bNum];
+			for (int k = 0; k < 9; k++)
+			{
+				col[k]->relative.top    += delta;
+				col[k]->relative.bottom += delta;
+				col[k]->true.top        += delta;
+				col[k]->true.bottom     += delta;
+			}
+		}
+
+	// Removing the cumulative drift shortens the grid, so the table's bottom
+	// border no longer meets the last row.  Pull it up to sit just under it.
+	UI_WINDOW_OBJECT *tbl = WBoothNumbers[0][0]->parent;
+	if (tbl)
+	{
+		int lastBottom = WBoothNumbers[NumOfClusters-1][CLUSTER_SIZE-1]->true.bottom;
+		int d = (lastBottom + 1) - tbl->true.bottom;
+		if (d)
+		{
+			tbl->true.bottom     += d;
+			tbl->relative.bottom += d;
+			changed = TRUE;
+		}
+	}
+	return changed;
+}
+
+//
+// Returns the booth cell at (cluster c, booth b) in column k (0..8), unifying
+// the nine differently-typed per-column widget arrays for geometry passes.
+//
+UI_WINDOW_OBJECT *UIW_VIEW::colCell(int c, int b, int k)
+{
+	switch (k)
+	{
+	case 0:  return WBoothNumbers[c][b];
+	case 1:  return WStates[c][b];
+	case 2:  return WAreas[c][b];
+	case 3:  return WPhones[c][b];
+	case 4:  return WCities[c][b];
+	case 5:  return WElapsedTimes[c][b];
+	case 6:  return WTariffs[c][b];
+	case 7:  return WValues[c][b];
+	default: return WNumOfCalls[c][b];
+	}
+}
+
+//
+// Companion to NormalizeRowPitch for the X axis.  Columns are positioned with
+// a 1-minicell overlap to share borders, but the same independent floor()
+// (0.7 px/minicell here) opens a 1 px gap at some boundaries -- two adjacent
+// border lines render as one thick separator (here Tel|Loc and Tar|Val).
+// Where a boundary has a gap, extend the left column's right edge to meet the
+// next column, restoring the single shared border the other columns have.
+// Columns share X across all rows, so booth 0 detects the gaps.
+//
+BOOL UIW_VIEW::NormalizeColumnBorders(void)
+{
+	BOOL changed = FALSE;
+	for (int k = 1; k < 9; k++)
+	{
+		int delta = colCell(0,0,k)->true.left - colCell(0,0,k-1)->true.right;
+		if (delta <= 0)
+			continue; // already shares the border pixel -- good boundary
+		changed = TRUE;
+		for (int c = 0; c < NumOfClusters; c++)
+			for (int b = 0; b < CLUSTER_SIZE; b++)
+			{
+				UI_WINDOW_OBJECT *w = colCell(c, b, k-1);
+				w->relative.right += delta;
+				w->true.right     += delta;
+			}
+	}
+	return changed;
 }
 
 EVENT_TYPE UIW_VIEW::processBooth(UI_WINDOW_OBJECT *object, UI_EVENT &, EVENT_TYPE ccode)
