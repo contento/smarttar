@@ -105,6 +105,13 @@ run.sh       Host-side launcher (bash) for st.exe inside DOSBox-X.
              forwarded to st.exe like st\run.bat does.
 run.ps1      PowerShell equivalent. Same -KeepOpen switch; args
              after `--` forward to st.exe.
+wiki/        Obsidian documentation vault (EN + ES) -- single source of
+             truth for end-user docs. build-docs.sh (self-locating)
+             regenerates the .docx manuals and in-app help into
+             wiki/_build/ (gitignored); those outputs are promoted to
+             st/docs/ (.docx) and st/docs/help.txt (-> bin/help.dat).
+             Moved here from st/docs/wiki so the project-wide vault is
+             not buried under the app-source tree.
 st/          Application source
   src/    .cpp / .c source files, organized into subsystem subdirectories:
     ph/      Telephony engine, tariff, place lookup, query, utilities, parser
@@ -126,7 +133,9 @@ st/          Application source
   res/       Zinc UI binary resource (RES.DAT) — tracked source, edited
              via Zinc Designer (vendor/zinc/BIN/DESIGN.EXE). MAKEFILE copies it
              into bin/ during build.
-  docs/      Screenshots and user/reference documentation (Word, images)
+  docs/      Screenshots + generated user/reference docs (.docx, help.txt,
+             help.doc) -- the .docx/help.txt are build outputs of the root
+             `wiki/` vault, promoted here; edit the Markdown in wiki/, not these.
   test/      Per-module development test programs (ph_eng, db_eng, cfg, rt_eng, etc.)
   util/      Build and maintenance utilities:
     inf2dat/   Canonical source for telephony .inf files (ddi.inf, ddn.inf,
