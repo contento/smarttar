@@ -426,18 +426,24 @@ full context and severity rationale.
       -- the `\0x0A` is `\0` then literal `x0A`.  Cash-drawer command
       sequence is malformed (9 bytes, not 6).
 
-**Remaining batches (drain into the four lists above as scheduled):**
+**Milestone CLOSED -- substantially complete (2026-06-07, audit § 8).**
 
 - [x] Address remaining CRITICAL findings (audit § 3 C5-C22) -- **ALL DONE.**
       C5–C9 (`58e68d5`), C11–C22 (`f497445`), C19 (`d4bbd49`),
       C14/C15 (`d7d24ca`). C10 verified-defended (no code change).
-- [~] Address HIGH findings (audit § 3) -- 3 mechanical fixes done
-      (`aeb1372`: cfg `memmove`, control `delete[]`, spooler null-order).
-      Remainder triaged in the audit: bounds/IO (Bucket B) and
-      ISR/concurrency (Bucket C, needs load testing) -- both open.
-- [ ] Address MEDIUM / LOW findings (audit § 3) -- opportunistically.
-- [ ] Verification pass per audit § 6 once the spot-verified set is
-      cleared.
+- [x] Address HIGH findings (audit § 3) -- mechanical batch (`aeb1372`),
+      DB/telephony (`ad15670`, `082c188`), UI/controller (`fd0e188`), and
+      the final Bucket-B batch (`038f489`: spooler `strlen`, st.cpp OOM
+      guard, mutex invariant doc). Several closed DEFENDED/WONTFIX with
+      rationale recorded inline in the audit.
+- [x] Address MEDIUM / LOW findings (audit § 3) -- clear wins done
+      (`038f489`: eeprom off-by-one, w_table use-after-free); bdisplay
+      STR16 closed DEFENDED (value range).
+- [~] **Tier 3 deferred (ISR / real-time concurrency)** -- needs a
+      DOSBox-X build + load-test loop (ideally real hardware). Parked in
+      [ISR_VOLATILE_NOTES.md](wiki/dev/ISR_VOLATILE_NOTES.md). **Guard-rail
+      in force:** do not enable compiler optimization without first doing the
+      `volatile`/atomicity audit in that note.
 
 ## Milestone: Repo layout -- vendor consolidation [DONE]
 

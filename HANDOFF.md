@@ -1,33 +1,40 @@
 # SmartTar — Handoff
 
 Status snapshot for resuming on another machine.
-Branch: `main` — **4 commits ahead of `origin/main`, unpushed** (the two
-stability batches below). Push is gated on GCC's confirmation.
+Branch: `main` — in sync with `origin/main` except the latest stability
+commit (`038f489`) + this doc/audit update, which are **unpushed pending
+GCC's confirmation**. Push is gated on GCC's confirmation.
 
 ---
 
-## Active thread: Stability audit
+## Closed: Stability audit (substantially complete)
 
-Working through the CRITICALs in [STABILITY_AUDIT.md](STABILITY_AUDIT.md)
-on `main`, one small verified-then-fixed batch at a time. That doc is the
-source of truth for per-finding status; summary here:
+The stability milestone is **CLOSED — substantially complete** (audit § 8).
+[STABILITY_AUDIT.md](STABILITY_AUDIT.md) is now a historical record.
 
-- **All CRITICALs (C1–C22) resolved.** Fixed across `58e68d5` (C5–C9),
-  `f497445` (C11–C22 batch), `d4bbd49` (C19), `d7d24ca` (C14/C15), plus the
-  C1–C4 quick wins. **C10** is verified-*defended* (both writes already
-  checked in `Add()`; the non-atomic data-vs-index window is a design
-  limitation, no code change).
-- Two crash-path caveats worth remembering:
-  - **C14** bounds the GPF-handler heap re-entry (restore old handler before
-    teardown + `inTeardown` backstop) rather than eliminating it; fully
-    avoiding `delete` from a fault context needs an `ENGINE` redesign
-    (uninstall ISRs without `delete`) — deferred, out of scope.
+- **All CRITICALs (C1–C22) resolved.** `58e68d5` (C5–C9), `f497445` (C11–C22),
+  `d4bbd49` (C19), `d7d24ca` (C14/C15), plus C1–C4 quick wins. **C10** is
+  verified-*defended* (non-atomic data-vs-index window is a design limitation).
+- **HIGH / MEDIUM (hardware-independent) done.** Final batch `038f489`:
+  spooler `strlen` deferral, st.cpp OOM NULL-guard, eeprom off-by-one,
+  w_table use-after-free (NULL after delete), mutex invariant doc. Plus the
+  earlier `aeb1372` / `ad15670` / `082c188` / `fd0e188` batches. Several
+  findings closed DEFENDED/WONTFIX with rationale recorded inline in the audit.
+- **Tier 3 deferred (ISR / real-time concurrency).** Parked in
+  [ISR_VOLATILE_NOTES.md](wiki/dev/ISR_VOLATILE_NOTES.md) — needs a DOSBox-X
+  build + load-test loop (ideally real hardware). **Guard-rail in force:** do
+  NOT enable compiler optimization (`-O`/`-Z`/`-G`/`-Or`) without first doing
+  the `volatile`/atomicity audit in that note (the code relies on the
+  no-optimization compiler reloading `Clusters[]` from memory).
+- Crash-path caveats still worth remembering:
+  - **C14** bounds the GPF-handler heap re-entry rather than eliminating it;
+    fully avoiding `delete` from a fault context needs an `ENGINE` redesign —
+    deferred, out of scope.
   - **C16** left `States[i].Bitmap` unfreed on purpose — `States` is `static`,
-    one app-lifetime allocation; freeing it in an instance dtor would break if
-    a second view ever existed.
+    one app-lifetime allocation.
 
-**Next step: the HIGH findings** (audit § "HIGH"). Verify each cited
-file:line before touching it (audit § 7 step 2).
+**Next step: none for stability.** Resume Tier 3 only from ISR_VOLATILE_NOTES
+when a load-test environment is available.
 
 ---
 
