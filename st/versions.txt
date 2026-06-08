@@ -1,3 +1,21 @@
+[ 2.70.0 ]
+ - Jun 07 2026: Fix Zinc 3.5 booth-grid rendering (minicell rounding).
+                Stock Zinc 3.5 RegionConvert floors each cell's pixel
+                origin independently of its size, so WOF_MINICELL layouts
+                drift a pixel periodically. On the booth grid this caused
+                three visible defects, now fixed app-side (no Zinc rebuild):
+                  * Row tear: the row pitch jumped 19->20 px every 5th
+                    booth (tear at 5/6, 10/11, 15/16). NormalizeRowPitch
+                    snaps rows to a uniform integer pitch.
+                  * Thick separators: the 1-minicell column overlap opened
+                    a 1 px gap at Tel|Loc and Tar|Val (double border).
+                    NormalizeColumnBorders restores a single shared line.
+                  * Detached bottom border: the table bottom now sits flush
+                    against the last booth row.
+                Both passes run from UIW_VIEW::Event on S_CREATE/S_SIZE,
+                before the first paint, so the natural redraw is correct.
+                Zinc fixed this class of bug only in v4; we stay on 3.5.
+
 [ 2.60.0 ]
  - May 29 2026: New call simulator (DEMO_ENGINE). A software-only traffic
                 generator that replaces the cabin/PBX/EEPROM hardware for
