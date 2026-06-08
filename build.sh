@@ -87,6 +87,10 @@ tail -F "$log" 2>/dev/null &
 TAIL_PID=$!
 trap 'kill $TAIL_PID 2>/dev/null; wait $TAIL_PID 2>/dev/null' EXIT
 
+# Build output dirs are gitignored and absent on a fresh checkout. C: is the
+# repo mount, so creating them host-side makes them visible inside DOSBox-X.
+mkdir -p st/build st/bin st/util/ini2cfg/obj st/util/inf2dat/obj
+
 "$DOSBOX_X" -conf dosbox-x.conf -fastlaunch \
   -c "echo === SmartTar build starting (variant ${variant}) ===" \
   -c "echo === log: ${dos_log} (silent until exit) ===" \
