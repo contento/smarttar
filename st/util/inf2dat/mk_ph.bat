@@ -6,15 +6,20 @@ REM errorlevel from .bat-internal commands and deletes the
 REM (just-created) target.  The bat works correctly when invoked
 REM directly from DOSBox-X (i.e., the way build.sh does it).
 set STTEST=1
-if not exist util\inf2dat\inf2dat.exe goto noexe
+if not exist util\inf2dat\inf2dat.exe goto build
+:run
 util\inf2dat\inf2dat
 if errorlevel 1 goto inf2dat_failed
 if not exist util\inf2dat\PH_INFO.DAT goto missing_output
 copy util\inf2dat\PH_INFO.DAT bin\PH_INFO.DAT > NUL
 goto end
-:noexe
-echo MK_PH: util\inf2dat\inf2dat.exe not found -- build it first:
-echo        cd util\inf2dat ^&^& make ^&^& cd ..\..
+:build
+echo MK_PH: util\inf2dat\inf2dat.exe not found -- building it...
+cd util\inf2dat
+make -DRUN
+cd ..\..
+if exist util\inf2dat\inf2dat.exe goto run
+echo MK_PH: failed to build util\inf2dat\inf2dat.exe
 goto end
 :inf2dat_failed
 echo MK_PH: inf2dat exited with error

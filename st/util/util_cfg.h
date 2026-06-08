@@ -60,7 +60,7 @@ inline BOOL util_authenticate(CFG *g_cfg)
 	{
 		STR32 password;
 		cout << "Presione Esc para abortar operaci\xE2n." << endl;
-		cout   << "C\xF3digo de acceso: ";
+		cout   << "C\xF3" "digo de acceso: ";
 		_ReadPassword(password, sizeof(CFG::PASSWORD)-1);
 		if (!strlen(password))
 			return FALSE;

@@ -100,6 +100,11 @@ Write-Host "build: building variant '$Variant'$bannerSuffix (log: $log) ..."
 Write-Host 'build: streaming compile output below.'
 Write-Host ('-' * 70)
 
+# Build output dirs are gitignored and absent on a fresh checkout. C: is the
+# repo mount, so creating them host-side makes them visible inside DOSBox-X.
+New-Item -ItemType Directory -Force -Path `
+    st/build, st/bin, st/util/ini2cfg/obj, st/util/inf2dat/obj | Out-Null
+
 # Truncate or create the log. Remove-Item fails when a previous run's
 # FileStream (FileShare::ReadWrite, no FileShare::Delete) is still open.
 [IO.File]::WriteAllText((Join-Path (Get-Location) $log), '')
