@@ -1,56 +1,26 @@
 # SmartTar — Handoff
 
 Status snapshot for resuming on another machine.
-Branch: `main` — at `b405280`, **pushed** to `origin/main`. Latest work is
-the **v2.70.0** release (Zinc booth-grid geometry fix). Tag `v2.70.0` is
-pushed but the **GitHub release did not publish** — the CI EXE build is
-blocked (see "BLOCKED" below).
+Branch: `main` — at HEAD. v2.70.0 release CI no longer blocked.
 
 ---
 
-## BLOCKED: v2.70.0 release-artifact CI (DOSBox-X crash)
+## v2.70.0 CI status
 
-The v2.70.0 **code is fully released in git** (merged to `main`, tag
-`v2.70.0` → `b405280`). What is **not** done is the downloadable `.exe`
-artifact: `.github/workflows/release.yml` fails on every run.
+**Previously blocked:** DOSBox-X `2026.05.02` (mingw64) crashed mid-compile
+on the `windows-latest` runner after ~40 s. **Fix applied:** upgraded DOSBox-X
+to `2026.06.02` (the version that builds locally). Also added `st/lib` to
+the output directory creation in `build.ps1` (required by the DLL `.lib`
+move rule).
 
-**Root issue (diagnosed, not fixed):** DOSBox-X crashes ~40-50 s into the
-build on the `windows-latest` runner, mid-compile. It is **not** a timeout
-(15-min limit, dies at ~41 s) and **not** a source/script bug — the
-identical build runs to completion on macOS DOSBox-X and produces
-`bin/st.exe`. Same DOSBox-X version (`2026.05.02`) / runner / timeout as the
-last *successful* release (v2.50.0, ~1m35s), so DOSBox-X *can* run for
-minutes here. The current build is the first CI attempt since the
-demo-engine era (v2.60.0 was never released); the new element is **running
-the Pharlap-286 helper apps** (`ini2cfg`, `inf2dat`) before the main
-compile — the leading theory is that running those destabilizes DOSBox-X,
-which then crashes a few operations into `make`.
+Tag `v2.70.0` currently points to `5b12bd9` (pre-fix). To re-trigger CI on the
+fixed code: `git tag -f -a v2.70.0 -m "v2.70.0" && git push --force origin v2.70.0`.
+The `v[0-9]+.[0-9]+.[0-9]+` tag pattern fires `release.yml`.
 
-**Progress made (each fix peeled back a layer; all pushed):**
-- `5b12bd9` — helper-build bootstrap in `mk_cfg.bat`/`mk_ph.bat`; fixed a
-  latent compile bug where `"C\xF3digo"` parsed `\xF3d` as one hex escape
-  (0xF3D → "Numeric constant too large"), split via `"C\xF3" "digo"` in
-  `util_cfg.h` + `defpwd.cpp`; host-side creation of `build/`, `bin/`,
-  `util/*/obj/` (gitignored, absent on fresh checkout) in `build.sh`/`.ps1`.
-- `1b6f326` / `b405280` — committed the prebuilt Pharlap-bound helper exes
-  (`INI2CFG.EXE`, `INF2DAT.EXE`, with `.gitignore` negations under their
-  real 8.3 uppercase names). CI now **runs** the helpers successfully
-  (`Listo.`) and reaches the main `make` — then DOSBox-X crashes.
-
-**Next steps (need the Windows env — not reproducible on macOS):**
-1. Run `.\build.ps1 demo` locally on Windows — does DOSBox-X crash ~40 s in?
-   Confirms it's DOSBox-X, not CI.
-2. Read DOSBox-X stderr for the crash cause: the workflow already sets
-   `MAKE_HEADLESS_DEBUG=1` (tees to `dosbox-x-build.log`) and uploads a
-   `build-failure-<run_id>` artifact.
-3. Try splitting the build into separate DOSBox-X launches per phase
-   (`mk_cfg` / `mk_ph` / `make`) so a crash in one phase doesn't kill the
-   run. (The long `make` alone may still exceed the crash window.)
-4. Fallback: run the helpers once and also commit their outputs
-   (`st.cfg`, `ph_info.dat`) so CI's DOSBox-X only does the main compile.
-
-To re-trigger CI after a fix: commit, then `git tag -f -a v2.70.0 ...` and
-`git push --force origin v2.70.0` (plain `vX.Y.Z` tags fire `release.yml`).
+If `2026.06.02` also crashes, fallback tactics:
+1. Split the build into separate DOSBox-X launches per phase (`mk_cfg` /
+   `mk_ph` / `make`).
+2. Commit `st.cfg` and `ph_info.dat` so DOSBox-X only does the main compile.
 
 ---
 
@@ -85,17 +55,21 @@ when a load-test environment is available.
 
 ---
 
-## Completed & merged: DEMO_ENGINE milestone
+## Completed & merged: DEMO_ENGINE milestone (all phases)
 
 The runtime engine-selection arc is **complete and merged into `main`**; the
 `demo-engine` branch no longer exists. What shipped:
 
-- Template-Method `ENGINE` base with `RT_ENGINE` / `DEMO_ENGINE` subclasses
-  and a `MakeEngine` factory driven by `g_cfg->ENGINE_KIND` (`st.ini`).
-- `DEMO_ENGINE` Poisson call generator + real-number `phones.csv` dataset, so
-  demo booths resolve to named destinations instead of "-- No Incluida --".
+- **Phases 1--2:** Template-Method `ENGINE` base with `RT_ENGINE` /
+  `DEMO_ENGINE` subclasses; `MakeEngine` factory; Poisson call generator +
+  real-number `phones.csv` dataset.
+- **Phase 3 — operator controls, graceful drain, time limit:**
+  - `TogglePaused()` with graceful drain (`_draining`/`DrainTick`) — stops new
+    arrivals, drives active calls to settlement, latches `_paused` when idle.
+  - `ForceStoreActiveCalls()` enqueues receipts for TALK calls before exit.
+  - `total_minutes` cap in `demo.ini` (0 = unlimited); triggers the same drain.
 - Build pipeline repair (`inf2dat`/`ini2cfg` sub-makefiles bootstrap), scripts
-  renamed `make-headless`→`build` and `run-headless`→`run` (`.sh` + `.ps1`).
+  renamed `make-headless` → `build` and `run-headless` → `run` (`.sh` + `.ps1`).
 - Demo quit-confirmation (`st.cpp::Exit()`) and operator start/stop menu.
 
 Architecture lives in the code (`st/src/rt/engine.cpp`, `rt_eng.cpp`,
@@ -103,16 +77,12 @@ Architecture lives in the code (`st/src/rt/engine.cpp`, `rt_eng.cpp`,
 `GRAPH_REPORT.md`. `pre-simula-trash` tag at `e64284a` is the rollback point
 if the whole arc ever needs discarding.
 
-### Deferred remnant: the last `__DEMO__` gates
+### Remnant: the last `__DEMO__` gates
 
-Down from 58 references to **5 functional gates**: `st.cpp` lines 16 / 116 /
-158 / 192, plus the `cfg.cpp` default-selector (a build-time hint for
-`makedemo`, intended to stay). The st.cpp four interleave the `__NO_DONGLE__`
-build flag with `DONGLE` class scope around the dongle/STM2/EEPROM init
-tangle. To finish: hoist `DONGLE dongle;` out of the `if/else` so both the
-initial check and the event-loop re-check can reach it, then convert the
-outer `__DEMO__` to a runtime `g_cfg->IsDemoMode()` check. Not blocking
-anything — engine selection is already runtime.
+Down from 58 references to **5 functional gates**: `st.cpp` lines 16 / 117 /
+159 / 193, plus the `cfg.cpp` default-selector (intentional). Interleave
+`__NO_DONGLE__` with `DONGLE` class scope. Not blocking — engine selection is
+already runtime.
 
 ---
 
@@ -128,6 +98,7 @@ anything — engine selection is already runtime.
   port write) runs before base `~ENGINE` (ISR uninstall), so the ISR fires for
   a few ticks with `GP_CASH` already cleared. Harmless in practice; flag if
   anything misbehaves at shutdown.
+
 ---
 
 ## Fixed: Zinc Grid row-tear (branch `fix/zinc-grid-geometry`)
@@ -171,14 +142,14 @@ commit `351eda4`) is **diagnosed and fixed** on `fix/zinc-grid-geometry`.
 
 **Next step:** decide on merge to `main` (branch is unpushed).
 
+---
+
 ## Other open items (from TODO.md)
 
-- **DEMO_ENGINE Phase 3** (partially done):
-  - Graceful stop (drain, not freeze) — `[~]` in TODO
-  - Graceful drain on exit — `[~]` in TODO
-  - Total simulation time limit — `[~]` in TODO
 - **Documentation wiki** — substantially built at `wiki/`; remaining:
   - Vault layout decision
   - `.docx` manual conversion
   - README simplification
 - **Toolchain portability** — not started (Investigate Open Watcom / DJGPP)
+- **SVGA display** — Zinc 3.5 supports higher modes via BGI; investigate
+  `machine = svga_s3` + font rework for 800×600+.

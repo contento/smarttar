@@ -89,7 +89,7 @@ Working list of milestones and tasks. Detailed findings live in
   wiring); dropped as a product decision. Do not revive without
   reopening the topic explicitly.
 
-## Milestone: `DEMO_ENGINE` — pluggable engine for demo mode [Phases 1-2 DONE, merged to main]
+## Milestone: `DEMO_ENGINE` — pluggable engine for demo mode [ALL PHASES DONE, merged to main]
 
 New capability. **Not related to the abandoned SIMULA work** (`UIW_SIMULA`
 F2 window in `mb_simul.cpp`, `RT_ENGINE::SIMULA` state, `Simula[]` /
@@ -266,25 +266,16 @@ max_duration_secs = 1800
   existing `ENGINE` dtor chain (no extra cleanup needed).  Added
   `virtual BOOL ENGINE::IsDemo() { return FALSE; }` overridden to
   TRUE in `DEMO_ENGINE`, plus `CONTROLLER::RTEngineIsDemo()` shim.
-- [~] **Graceful stop (drain, not freeze).** Stopping the simulation
-  must hang up in-progress calls cleanly instead of freezing them
-  mid-FSM. `TogglePaused()` now enters a *draining* state: `OnTimerTick`
-  stops new arrivals and drives every active booth to hang up (clear
-  `OOD`), so connected (TALK) calls run the normal `TALK -> STORE ->
-  StoreReceipt` settlement (receipt + RX.DAT) and pre-answer dial
-  attempts abort with no record; once all booths are idle it sets
-  `_paused`. The FSM (`EvalToneState` in the ISR) keeps ticking while
-  paused, so the forced hang-ups settle even after the pause latches.
-- [~] **Graceful drain on exit.** `~CONTROLLER` flushes the receipt
-  *queue* but active TALK calls were never enqueued, so they were lost
-  on quit. New public `ENGINE::ForceStoreActiveCalls()` enqueues a
-  receipt for every booth still in TALK (past `T_TALK`); called before
-  the existing flush loop so those calls are printed/stored on exit.
-- [~] **Total simulation time limit (default 60 min).** New
-  `total_minutes` key in `demo.ini [GLOBAL]` (0 = unlimited). The demo
-  engine counts run-ticks (100 Hz -> 6000/min) and, when the cap is
-  reached, triggers the same graceful drain as a manual stop. A manual
-  resume resets the elapsed counter (fresh budget).
+- [x] **Graceful stop (drain, not freeze).** Draining state (`_draining`,
+  `DrainTick`) hangs up active calls instead of freezing them mid-FSM;
+  pre-answer attempts abort with no record; once all booths idle it
+  latches `_paused`.
+- [x] **Graceful drain on exit.** `ENGINE::ForceStoreActiveCalls()` enqueues
+  a receipt for every booth still in TALK before the existing flush loop,
+  so connected calls bill instead of dropping.
+- [x] **Total simulation time limit (default 60 min).** `total_minutes` in
+  `demo.ini [GLOBAL]` (0 = unlimited). Engine counts run-ticks and triggers
+  the same graceful drain as a manual stop; resume resets the budget.
 
 ## Milestone: Toolchain portability — v4.0
 

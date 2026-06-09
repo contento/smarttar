@@ -28,7 +28,7 @@ jobs:
     env:
       # Bump when DOSBox-X cuts a new release worth tracking.
       # https://github.com/joncampbell123/dosbox-x/releases
-      DOSBOX_X_VERSION: '2026.05.02'
+      DOSBOX_X_VERSION: '2026.06.02'
       # Build variant. Defaults to 'demo' for both tag pushes (no dongle
       # required at runtime) and workflow_dispatch (overridable via the
       # 'variant' input).
