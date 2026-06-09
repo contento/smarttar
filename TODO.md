@@ -473,9 +473,10 @@ updated together, so partial commits would be broken intermediate states.
       eol=crlf` but Borland Turbo C Project files are binary, so the
       filter was inflating them with spurious CRs on checkout. Fixed
       by reclassifying `*.prj` as binary.
-- [~] Document the Zinc Designer workflow for `RES.DAT` edits. Draft at
-      [wiki/dev/zinc-designer-workflow.md](wiki/dev/zinc-designer-workflow.md);
-      `FIXME` markers tag the parts Gonzalo still needs to verify.
+- [x] **Document the Zinc Designer workflow for `RES.DAT` edits.** Documented
+      at [wiki/dev/zinc-designer-workflow.md](wiki/dev/zinc-designer-workflow.md);
+      verified by Gonzalo 2026-06-09. One encoding unknown remains inline
+      (needs testing in the Designer).
 
 ---
 
