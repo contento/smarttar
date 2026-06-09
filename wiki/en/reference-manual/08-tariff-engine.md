@@ -32,3 +32,13 @@ At call termination, cost is computed in the following steps:
 5.  **Subtotal.** Billed minutes × per-minute rate.
 6.  **Tax.** TAX_PERCENT (or DDN_TAX / DDI_TAX) applied to subtotal.
 7.  **Rounding.** Final total rounded to nearest M_ROUND unit.
+
+---
+
+## Related help topics
+
+The following in-app help topics (Spanish, compiled into `help.dat`) cover related functionality:
+
+- [[es/ayuda/H_NAL_TAR|H_NAL_TAR]]
+- [[es/ayuda/H_INTER_TAR|H_INTER_TAR]]
+- [[es/ayuda/H_TIMES|H_TIMES]]

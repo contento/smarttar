@@ -148,3 +148,23 @@ Todos los valores marcados (ms) están en milisegundos.
 | DISPLAY_COM | Entero | Puerto COM conectado a la unidad de pantalla. |
 | DISPLAY_BAUDS | Entero | Velocidad en baudios para comunicación con la pantalla. |
 | DISPLAY_DEFAULT_MESSAGE | Cadena (64) | Mensaje mostrado cuando no hay ninguna llamada en curso. |
+
+---
+
+## Temas de ayuda relacionados
+
+Los siguientes temas de ayuda interna (compilados en `help.dat`) cubren funcionalidad relacionada:
+
+- [[es/ayuda/H_CONFIG_MENU|H_CONFIG_MENU]]
+- [[es/ayuda/H_GENERAL|H_GENERAL]]
+- [[es/ayuda/H_TIME_DATE|H_TIME_DATE]]
+- [[es/ayuda/H_ALARM|H_ALARM]]
+- [[es/ayuda/H_LOCK|H_LOCK]]
+- [[es/ayuda/H_LOCK_NUM|H_LOCK_NUM]]
+- [[es/ayuda/H_ROUND|H_ROUND]]
+- [[es/ayuda/H_SPY|H_SPY]]
+- [[es/ayuda/H_FOOTER|H_FOOTER]]
+- [[es/ayuda/H_ALIAS|H_ALIAS]]
+- [[es/ayuda/H_OP_ID|H_OP_ID]]
+- [[es/ayuda/H_SP_SERV|H_SP_SERV]]
+- [[es/ayuda/H_FORMS|H_FORMS]]

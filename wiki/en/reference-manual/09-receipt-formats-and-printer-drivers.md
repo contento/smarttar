@@ -29,3 +29,20 @@ Each receipt includes:
 - **Call detail:** booth identifier/name, call type, destination, duration, per-minute rate.
 - **Financial block:** subtotal, tax name and amount, total, rounding adjustment.
 - **Footer:** configurable P_FOOTER lines.
+
+---
+
+## Related help topics
+
+The following in-app help topics (Spanish, compiled into `help.dat`) cover related functionality:
+
+- [[es/ayuda/H_RECEIPT|H_RECEIPT]]
+- [[es/ayuda/H_ZPRINT|H_ZPRINT]]
+- [[es/ayuda/H_IPRINT|H_IPRINT]]
+- [[es/ayuda/H_P_PORT|H_P_PORT]]
+- [[es/ayuda/H_S_PORT|H_S_PORT]]
+- [[es/ayuda/H_PPORT|H_PPORT]]
+- [[es/ayuda/H_CASH|H_CASH]]
+- [[es/ayuda/H_ADM_REC|H_ADM_REC]]
+- [[es/ayuda/H_OPERATION|H_OPERATION]]
+- [[es/ayuda/H_PRINT_MENU|H_PRINT_MENU]]

@@ -18,3 +18,11 @@ order: 13
 - **“El sistema está procesando información”.** Se muestra en el diálogo de salida cuando el motor en tiempo real tiene llamadas activas. Espere a que todas las cabinas queden libres antes de salir.
 - **Sin memoria.** Se invoca el manejador new_handler cuando falla la asignación de memoria. El sistema intenta liberar la reserva de emergencia (2 KB) y mostrar un mensaje.
 - **GPF (Fallo de Protección General).** Los GPF no manejados en modo protegido 286 son capturados por un manejador de excepciones personalizado (NewGPFHandler). El manejador registra el fallo e intenta una salida controlada.
+
+---
+
+## Temas de ayuda relacionados
+
+Los siguientes temas de ayuda interna (compilados en `help.dat`) cubren funcionalidad relacionada:
+
+- [[es/ayuda/H_SETUP|H_SETUP]]

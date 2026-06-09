@@ -32,3 +32,13 @@ Al terminar la llamada (cuelgue), el costo se calcula en los siguientes pasos:
 5.  **Subtotal.** Minutos facturados × tarifa por minuto.
 6.  **Impuesto.** Se aplica TAX_PERCENT (o DDN_TAX / DDI_TAX) al subtotal.
 7.  **Redondeo.** El total final se redondea a la unidad M_ROUND más cercana.
+
+---
+
+## Temas de ayuda relacionados
+
+Los siguientes temas de ayuda interna (compilados en `help.dat`) cubren funcionalidad relacionada:
+
+- [[es/ayuda/H_NAL_TAR|H_NAL_TAR]]
+- [[es/ayuda/H_INTER_TAR|H_INTER_TAR]]
+- [[es/ayuda/H_TIMES|H_TIMES]]

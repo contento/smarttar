@@ -346,20 +346,17 @@ there — the README just stopped duplicating it.
       Images extracted to `wiki/en/` and `wiki/es/` asset dirs.
 - [x] Split converted manuals into Obsidian-sized pages — one file per
       chapter, with wikilinks in each `index.md`.
-- [x] Port README sections into wiki pages — README now links wiki instead
-      of duplicating content. Configuration / Architecture / Runtime Data
-      Files were already covered in the reference manual.
 - [x] Mirror the EN vault into the ES vault — translations sourced from the
-      Spanish `.docx` manuals.
-- [x] Add `wiki/README.md` — exists, 84 lines, explains layout, build
-      pipeline, encoding rules.
-- [ ] `.gitattributes`: confirm `wiki/**/*.md` follows host-side LF policy
-      (Obsidian writes LF). Add an `*.canvas` rule if we use Obsidian Canvas
-      files. (`*.md text eol=lf` already covers wiki files — check if any
-      `.obsidian/` config needs special handling.)
-- [ ] Cross-link wiki pages to `help.txt` sections — each reference manual
-      page should mention the matching `H_*` help anchor. Not urgent; the
-      help topics are well-organized under `es/ayuda/`.
+      Spanish `.docx` manuals; structure is parallel.
+- [x] `.gitattributes`: confirm `wiki/**/*.md` follows host-side LF policy
+      — already covered by the existing `*.md text eol=lf` rule. No
+      `.obsidian/` or `.canvas` files need special handling; `.obsidian/`
+      added to `.gitignore` so auto-created user config stays out of git.
+- [x] Cross-link wiki pages to `help.txt` sections — 24 reference manual
+      pages (12 EN + 12 ES) now carry a "Related help topics" / "Temas de
+      ayuda relacionados" footer with Obsidian wikilinks to the matching
+      `es/ayuda/H_*` topic pages. Chapters 1 and 3 (overview, architecture)
+      have no direct help topics and are intentionally left without footers.
 
 Out-of-scope follow-ups: hosted docs site, search index, automated
 docx -> md regeneration on push (manuals change rarely).

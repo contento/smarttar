@@ -18,3 +18,12 @@ order: 11
 **Códigos por omisión.** Una instalación nueva -- o una restaurada con la utilidad DEFPWD -- usa los códigos de la tabla. **Distinguen mayúsculas de minúsculas** y admiten hasta 8 caracteres. Para **activar el menú de Configuración** sirve cualquier código válido *excepto* `Util`; `Super` otorga acceso completo, los demás un acceso restringido. Existe además un código maestro de recuperación reservado al proveedor (no publicado). Cambie estos códigos por omisión en cualquier instalación de producción mediante *Configuración > Cambiar código de acceso*.
 
 Las contraseñas tienen un máximo de 8 caracteres y se almacenan cifradas en ST.CFG. La EEPROM STM2 valida el estado de sesión iniciada; si se detecta un cierre anormal, el sistema solicita confirmación de recuperación antes de continuar.
+
+---
+
+## Temas de ayuda relacionados
+
+Los siguientes temas de ayuda interna (compilados en `help.dat`) cubren funcionalidad relacionada:
+
+- [[es/ayuda/H_PASSWORD|H_PASSWORD]]
+- [[es/ayuda/H_CHANGE_PASSWD|H_CHANGE_PASSWD]]

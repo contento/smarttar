@@ -21,3 +21,12 @@ order: 12
 | STM2IGNORERECOVER | El operador omitió la recuperación tras cierre anormal. |
 
 Las entradas del registro incluyen fecha, hora y el código del evento correspondiente. El archivo de registro es de solo lectura cuando no está siendo escrito.
+
+---
+
+## Temas de ayuda relacionados
+
+Los siguientes temas de ayuda interna (compilados en `help.dat`) cubren funcionalidad relacionada:
+
+- [[es/ayuda/H_SYS_INFO|H_SYS_INFO]]
+- [[es/ayuda/H_ALARM|H_ALARM]]

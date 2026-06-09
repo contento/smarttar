@@ -30,3 +30,13 @@ Si los errores de comunicación (N_COM_ERR \> MAX_COM_ERR) o de marcación (N_DI
 
 - **Receipts (MAX_RECEIPTS = 256).** Contiene recibos de llamadas completadas y no cobradas. Usada por la ventana de liquidación manual.
 - **PRNReceipts (MAX_PRN_RECEIPTS = 64).** Contiene recibos en cola para reimpresión o copia adicional.
+
+---
+
+## Temas de ayuda relacionados
+
+Los siguientes temas de ayuda interna (compilados en `help.dat`) cubren funcionalidad relacionada:
+
+- [[es/ayuda/H_OPERATION|H_OPERATION]]
+- [[es/ayuda/H_SIGNAL|H_SIGNAL]]
+- [[es/ayuda/H_MANUAL|H_MANUAL]]

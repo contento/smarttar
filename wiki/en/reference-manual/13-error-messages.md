@@ -18,3 +18,11 @@ order: 13
 - **“El sistema está procesando información” (System is processing).** Displayed in the exit dialog when the real-time engine has active calls. Wait for all booths to go idle before exiting.
 - **Out of memory.** The new_handler is invoked when heap allocation fails. The system attempts to release the emergency memory reserve (2 KB) and display a message.
 - **GPF (General Protection Fault).** Unhandled GPFs in 286 protected mode are caught by a custom exception handler (NewGPFHandler). The handler records the fault and attempts a controlled exit.
+
+---
+
+## Related help topics
+
+The following in-app help topics (Spanish, compiled into `help.dat`) cover related functionality:
+
+- [[es/ayuda/H_SETUP|H_SETUP]]

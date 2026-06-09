@@ -18,3 +18,12 @@ order: 2
 | Hardware telephone interface | STB-x cluster board (1–4 clusters of 8 booths each) |
 | Copy protection | Parallel-port EEPROM dongle (production builds) |
 | Modem (optional) | Hayes-compatible; any baud rate supported by COM port |
+
+---
+
+## Related help topics
+
+The following in-app help topics (Spanish, compiled into `help.dat`) cover related functionality:
+
+- [[es/ayuda/H_INSTALL|H_INSTALL]]
+- [[es/ayuda/H_SETUP|H_SETUP]]

@@ -104,3 +104,6 @@ capture/
 /page*.PNG
 # Generated documentation outputs (build-docs.sh / build-docs.ps1)
 st/docs/build/
+
+# Obsidian vault (auto-created on first open, user-specific)
+.obsidian/

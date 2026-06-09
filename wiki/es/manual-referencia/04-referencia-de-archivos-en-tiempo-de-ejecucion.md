@@ -24,3 +24,11 @@ order: 4
 | RXX.IDX | Índice de llamadas de extensiones (solo SmartTar Pro). |
 | ST.LOG | Registro de eventos del sistema (texto, modo agregar). |
 | PR\_\*.DLL | DLLs de controladores de impresora (librerías dinámicas Pharlap). |
+
+---
+
+## Temas de ayuda relacionados
+
+Los siguientes temas de ayuda interna (compilados en `help.dat`) cubren funcionalidad relacionada:
+
+- [[es/ayuda/H_SYS_INFO|H_SYS_INFO]]
