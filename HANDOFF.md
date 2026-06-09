@@ -1,9 +1,56 @@
 # SmartTar — Handoff
 
 Status snapshot for resuming on another machine.
-Branch: `main` — at `351eda4` (zinc bug screenshot commit). Ahead of
-`origin/main` by: stability audit close (`40b00ff`), HIGH/MEDIUM fixes
-(`038f489`), and the Zinc bug screenshot (`351eda4`). **Unpushed.**
+Branch: `main` — at `b405280`, **pushed** to `origin/main`. Latest work is
+the **v2.70.0** release (Zinc booth-grid geometry fix). Tag `v2.70.0` is
+pushed but the **GitHub release did not publish** — the CI EXE build is
+blocked (see "BLOCKED" below).
+
+---
+
+## BLOCKED: v2.70.0 release-artifact CI (DOSBox-X crash)
+
+The v2.70.0 **code is fully released in git** (merged to `main`, tag
+`v2.70.0` → `b405280`). What is **not** done is the downloadable `.exe`
+artifact: `.github/workflows/release.yml` fails on every run.
+
+**Root issue (diagnosed, not fixed):** DOSBox-X crashes ~40-50 s into the
+build on the `windows-latest` runner, mid-compile. It is **not** a timeout
+(15-min limit, dies at ~41 s) and **not** a source/script bug — the
+identical build runs to completion on macOS DOSBox-X and produces
+`bin/st.exe`. Same DOSBox-X version (`2026.05.02`) / runner / timeout as the
+last *successful* release (v2.50.0, ~1m35s), so DOSBox-X *can* run for
+minutes here. The current build is the first CI attempt since the
+demo-engine era (v2.60.0 was never released); the new element is **running
+the Pharlap-286 helper apps** (`ini2cfg`, `inf2dat`) before the main
+compile — the leading theory is that running those destabilizes DOSBox-X,
+which then crashes a few operations into `make`.
+
+**Progress made (each fix peeled back a layer; all pushed):**
+- `5b12bd9` — helper-build bootstrap in `mk_cfg.bat`/`mk_ph.bat`; fixed a
+  latent compile bug where `"C\xF3digo"` parsed `\xF3d` as one hex escape
+  (0xF3D → "Numeric constant too large"), split via `"C\xF3" "digo"` in
+  `util_cfg.h` + `defpwd.cpp`; host-side creation of `build/`, `bin/`,
+  `util/*/obj/` (gitignored, absent on fresh checkout) in `build.sh`/`.ps1`.
+- `1b6f326` / `b405280` — committed the prebuilt Pharlap-bound helper exes
+  (`INI2CFG.EXE`, `INF2DAT.EXE`, with `.gitignore` negations under their
+  real 8.3 uppercase names). CI now **runs** the helpers successfully
+  (`Listo.`) and reaches the main `make` — then DOSBox-X crashes.
+
+**Next steps (need the Windows env — not reproducible on macOS):**
+1. Run `.\build.ps1 demo` locally on Windows — does DOSBox-X crash ~40 s in?
+   Confirms it's DOSBox-X, not CI.
+2. Read DOSBox-X stderr for the crash cause: the workflow already sets
+   `MAKE_HEADLESS_DEBUG=1` (tees to `dosbox-x-build.log`) and uploads a
+   `build-failure-<run_id>` artifact.
+3. Try splitting the build into separate DOSBox-X launches per phase
+   (`mk_cfg` / `mk_ph` / `make`) so a crash in one phase doesn't kill the
+   run. (The long `make` alone may still exceed the crash window.)
+4. Fallback: run the helpers once and also commit their outputs
+   (`st.cfg`, `ph_info.dat`) so CI's DOSBox-X only does the main compile.
+
+To re-trigger CI after a fix: commit, then `git tag -f -a v2.70.0 ...` and
+`git push --force origin v2.70.0` (plain `vX.Y.Z` tags fire `release.yml`).
 
 ---
 
