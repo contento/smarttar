@@ -111,12 +111,11 @@ eval "\"$DOSBOX_X\" -conf dosbox-x.conf -fastlaunch \
   -c \"echo === Build finished ===\" \
   -c \"exit\" ${dx_redir}" || true
 
-# Stop streaming and give tail a beat to flush the last lines
-kill $TAIL_PID 2>/dev/null
-wait $TAIL_PID 2>/dev/null
+# Stop streaming. Ignore errors — the tail process may already have exited
+# or been killed when DOSBox-X closed its last command.
+kill $TAIL_PID 2>/dev/null || true
+wait $TAIL_PID 2>/dev/null || true
 trap - EXIT
-echo "----------------------------------------------------------------------"
-
 if [[ ! -f "$log" ]]; then
   echo "build $variant: NO LOG — DOSBox-X did not write to the mount" >&2
   exit 1
