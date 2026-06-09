@@ -89,18 +89,27 @@ trap 'kill $TAIL_PID 2>/dev/null; wait $TAIL_PID 2>/dev/null' EXIT
 
 # Build output dirs are gitignored and absent on a fresh checkout. C: is the
 # repo mount, so creating them host-side makes them visible inside DOSBox-X.
-mkdir -p st/build st/bin st/util/ini2cfg/obj st/util/inf2dat/obj
+mkdir -p st/build st/bin st/lib st/util/ini2cfg/obj st/util/inf2dat/obj
 
-"$DOSBOX_X" -conf dosbox-x.conf -fastlaunch \
-  -c "echo === SmartTar build starting (variant ${variant}) ===" \
-  -c "echo === log: ${dos_log} (silent until exit) ===" \
-  -c "echo ." \
-  -c "command /c util\ini2cfg\mk_cfg.bat >> ${dos_log}" \
-  -c "command /c util\inf2dat\mk_ph.bat >> ${dos_log}" \
-  -c "command /c make${variant}.bat $make_args >> ${dos_log}" \
-  -c "echo ." \
-  -c "echo === Build finished ===" \
-  -c "exit" >/dev/null 2>&1 || true
+# Capture DOSBox-X's own stderr (crash traces, protection faults) when
+# MAKE_HEADLESS_DEBUG is set. CI sets this for failure diagnostics.
+dx_redir=">/dev/null 2>&1"
+dx_log="$PWD/dosbox-x-build.log"
+if [ -n "${MAKE_HEADLESS_DEBUG:-}" ]; then
+  dx_redir=">>'$dx_log' 2>&1"
+  echo "build ${variant}: DOSBox-X debug output -> $dx_log"
+fi
+
+eval "\"$DOSBOX_X\" -conf dosbox-x.conf -fastlaunch \
+  -c \"echo === SmartTar build starting (variant ${variant}) ===\" \
+  -c \"echo === log: ${dos_log} (silent until exit) ===\" \
+  -c \"echo .\" \
+  -c \"command /c util\\\\ini2cfg\\\\mk_cfg.bat >> ${dos_log}\" \
+  -c \"command /c util\\\\inf2dat\\\\mk_ph.bat >> ${dos_log}\" \
+  -c \"command /c make${variant}.bat $make_args >> ${dos_log}\" \
+  -c \"echo .\" \
+  -c \"echo === Build finished ===\" \
+  -c \"exit\" ${dx_redir}" || true
 
 # Stop streaming and give tail a beat to flush the last lines
 kill $TAIL_PID 2>/dev/null

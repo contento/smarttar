@@ -138,8 +138,20 @@ $tailPS.Runspace = $runspace
 }).AddArgument($logAbs)
 $tailHandle = $tailPS.BeginInvoke()
 
-# Run DOSBox-X in this thread -- & uses PS's native arg-passing (correct quoting).
-try { & $dosboxX @dosboxArgs *> $null } catch {}
+# DOSBox-X's own stdout/stderr (crash traces, protection faults, startup errors)
+# goes here when MAKE_HEADLESS_DEBUG is set. CI sets this for failure diagnostics.
+$dxLog = $null
+if ($env:MAKE_HEADLESS_DEBUG) { $dxLog = "$PWD\dosbox-x-build.log" }
+
+# Run DOSBox-X in this thread. Redirect its own output (not the DOS >> build.log
+# inside -c commands) so crash/protection-fault messages are captured.
+try {
+    if ($dxLog) {
+        & $dosboxX @dosboxArgs *>> $dxLog
+    } else {
+        & $dosboxX @dosboxArgs *> $null
+    }
+} catch {}
 
 # Poll the log for the final marker (DOSBox-X may flush the last lines slightly
 # after process exit). Up to 10 s; 200 ms intervals.
