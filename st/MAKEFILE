@@ -38,7 +38,7 @@ UTIL_DIR=util
 # declarations further down (the '$(OBJ_DIR)\foo.obj: $(SOURCE_DIR)\…'
 # block under the suffix rules).
 .PATH.c  =$(SOURCE_DIR)\pr
-.PATH.cpp=$(SOURCE_DIR);$(SOURCE_DIR)\ph;$(SOURCE_DIR)\rt;$(SOURCE_DIR)\db;$(SOURCE_DIR)\pr;$(SOURCE_DIR)\ui;$(SOURCE_DIR)\mb;$(SOURCE_DIR)\tb;$(SOURCE_DIR)\ct;$(SOURCE_DIR)\ctrl
+.PATH.cpp=$(SOURCE_DIR);$(SOURCE_DIR)\core;$(SOURCE_DIR)\demo_dos;$(SOURCE_DIR)\real_dos;$(SOURCE_DIR)\ph;$(SOURCE_DIR)\db;$(SOURCE_DIR)\pr;$(SOURCE_DIR)\ui;$(SOURCE_DIR)\mb;$(SOURCE_DIR)\tb;$(SOURCE_DIR)\ct;$(SOURCE_DIR)\ctrl
 .PATH.asm=$(SOURCE_DIR)
 .PATH.obj=$(OBJ_DIR)
 .PATH.dll=$(BIN_DIR)
@@ -288,7 +288,7 @@ $(OBJ_DIR)\db_eng.obj:   $(SOURCE_DIR)\db\db_eng.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\db_view.obj:  $(SOURCE_DIR)\db\db_view.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\dongle.obj:   $(SOURCE_DIR)\dongle.cpp
+$(OBJ_DIR)\dongle.obj:   $(SOURCE_DIR)\real_dos\dongle.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\dstatist.obj: $(SOURCE_DIR)\db\dstatist.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
@@ -296,7 +296,7 @@ $(OBJ_DIR)\dstorage.obj: $(SOURCE_DIR)\db\dstorage.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\d_ext_st.obj: $(SOURCE_DIR)\db\d_ext_st.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\eeprom.obj:   $(SOURCE_DIR)\eeprom.cpp
+$(OBJ_DIR)\eeprom.obj:   $(SOURCE_DIR)\real_dos\eeprom.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\filehdr.obj:  $(SOURCE_DIR)\db\filehdr.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
@@ -338,23 +338,23 @@ $(OBJ_DIR)\prn_fmt.obj:  $(SOURCE_DIR)\pr\prn_fmt.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\res.obj:      $(SOURCE_DIR)\res.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\engine.obj:   $(SOURCE_DIR)\rt\engine.cpp
+$(OBJ_DIR)\engine.obj:   $(SOURCE_DIR)\core\engine.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\rt_eng.obj:   $(SOURCE_DIR)\rt\rt_eng.cpp
+$(OBJ_DIR)\rt_eng.obj:   $(SOURCE_DIR)\real_dos\rt_eng.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\demo_eng.obj: $(SOURCE_DIR)\rt\demo_eng.cpp
+$(OBJ_DIR)\demo_eng.obj: $(SOURCE_DIR)\demo_dos\demo_eng.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\eng_fact.obj: $(SOURCE_DIR)\rt\eng_fact.cpp
+$(OBJ_DIR)\eng_fact.obj: $(SOURCE_DIR)\core\eng_fact.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\rt_do.obj:    $(SOURCE_DIR)\rt\rt_do.cpp
+$(OBJ_DIR)\rt_do.obj:    $(SOURCE_DIR)\real_dos\rt_do.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\rt_util.obj:  $(SOURCE_DIR)\rt\rt_util.cpp
+$(OBJ_DIR)\rt_util.obj:  $(SOURCE_DIR)\real_dos\rt_util.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\rt_isr.obj:   $(SOURCE_DIR)\rt\rt_isr.cpp
+$(OBJ_DIR)\rt_isr.obj:   $(SOURCE_DIR)\real_dos\rt_isr.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\rt_store.obj: $(SOURCE_DIR)\rt\rt_store.cpp
+$(OBJ_DIR)\rt_store.obj: $(SOURCE_DIR)\real_dos\rt_store.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\serial.obj:   $(SOURCE_DIR)\rt\serial.cpp
+$(OBJ_DIR)\serial.obj:   $(SOURCE_DIR)\real_dos\serial.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\sid.obj:      $(SOURCE_DIR)\sid.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
@@ -362,7 +362,7 @@ $(OBJ_DIR)\spooler.obj:  $(SOURCE_DIR)\spooler.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\ssaver.obj:   $(SOURCE_DIR)\ssaver.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\stm2.obj:     $(SOURCE_DIR)\stm2.cpp
+$(OBJ_DIR)\stm2.obj:     $(SOURCE_DIR)\real_dos\stm2.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\st_util.obj:  $(SOURCE_DIR)\st_util.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
