@@ -177,9 +177,6 @@ DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 # Adding a new tool here is all that is needed to wire it in.
 CFG_DESTS=\
 	$(BIN_DIR)\st.cfg \
-	$(UTIL_DIR)\defpwd\st.cfg \
-	$(UTIL_DIR)\chkrx\st.cfg \
-	$(UTIL_DIR)\setup\st.cfg \
 	$(UTIL_DIR)\inf2dat\st.cfg
 
 .c.dll:
@@ -222,12 +219,6 @@ $(BIN_DIR)\$(RES_FILE): $(RES_DIR)\$(RES_FILE)
 # (see HANDOFF / TODO).  Same story for PH_INFO.DAT regen via mk_ph.bat.
 $(BIN_DIR)\st.cfg: $(INI2CFG_DIR)\st.cfg
 	@copy $(INI2CFG_DIR)\st.cfg $(BIN_DIR)\st.cfg > NUL
-$(UTIL_DIR)\defpwd\st.cfg: $(INI2CFG_DIR)\st.cfg
-	@copy $(INI2CFG_DIR)\st.cfg $(UTIL_DIR)\defpwd\st.cfg > NUL
-$(UTIL_DIR)\chkrx\st.cfg: $(INI2CFG_DIR)\st.cfg
-	@copy $(INI2CFG_DIR)\st.cfg $(UTIL_DIR)\chkrx\st.cfg > NUL
-$(UTIL_DIR)\setup\st.cfg: $(INI2CFG_DIR)\st.cfg
-	@copy $(INI2CFG_DIR)\st.cfg $(UTIL_DIR)\setup\st.cfg > NUL
 $(UTIL_DIR)\inf2dat\st.cfg: $(INI2CFG_DIR)\st.cfg
 	@copy $(INI2CFG_DIR)\st.cfg $(UTIL_DIR)\inf2dat\st.cfg > NUL
 $(BIN_DIR)\st.ini: $(INI2CFG_DIR)\st.ini
