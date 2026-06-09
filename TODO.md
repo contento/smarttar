@@ -280,19 +280,20 @@ max_duration_secs = 1800
 
 ## Milestone: Toolchain portability — v4.0
 
-- [ ] **Build with open-source toolchains** — investigate whether
-      SmartTar can build with Open Watcom (closest historical
-      replacement for Borland C++ + Pharlap), DJGPP / GCC, or a more
-      modern C++ targeting 32-bit DOS. Two flavors:
-  - *Drop-in*: keep Zinc 3.5 + Pharlap, change only the compiler.
-    Risk: Zinc has BCC-specific calling conventions and PCH usage.
-  - *Full replacement*: swap Zinc for an open UI lib (Turbo Vision?
-    custom BGI? FOX?) and/or replace Pharlap with HX-DOS / CWSDPMI /
-    DOS/4GW. Bigger surgery; loses some Zinc behavior we may want to
-    preserve.
-  Document risk/reward per layer (compiler, DOS extender, UI lib)
-  before committing to a path.
-
+- [ ] **Build with open-source toolchains** — see
+      [MIGRATION_PLAN_OWZ.md](MIGRATION_PLAN_OWZ.md) for the full risk
+      assessment. Three independent layers:
+  - **Extender swap** (Low risk): Phar Lap 286 → DOS/4GW via Open Watcom
+    `wlink system dos4g`. PHAPI → DPMI calls are mechanical. First step.
+  - **Compiler swap** (High risk): Borland C++ 3.1 → Open Watcom v2
+    (`wcc386`). 16-bit→32-bit model, `far`/`near`/`huge`, inline asm,
+    pre-compiled headers all need work. Per-file incremental migration.
+  - **UI library swap** (High risk): Zinc 3.5 → OpenZinc. Differences PDF
+    lists API changes; `RES.DAT` format may differ. Optional — only after
+    compiler + extender swap produces a working EXE.
+  **Recommended first step:** Install Open Watcom v2 inside DOSBox-X and try
+  compiling `cstr.cpp` (no external dependencies) with `wcc386`. This alone
+  reveals whether the path is viable.
 ## Milestone: Documentation -- Obsidian wiki (EN + ES)
 
 **Status (2026-06-09): wiki complete.** All 119 pages are in place,
