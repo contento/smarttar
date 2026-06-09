@@ -294,17 +294,11 @@ max_duration_secs = 1800
 
 ## Milestone: Documentation -- Obsidian wiki (EN + ES)
 
-**Status (2026-06-07): substantially built, living at root [wiki/](wiki/)**
-(moved there from `st/docs/wiki` -- matches the structure draft below). The
-EN + ES User's Guide, Reference Manual, and in-app help pages exist, with a
-self-locating `build-docs.sh` + `manifest.json` pandoc / `md2help.py` pipeline
-that regenerates the `.docx` manuals and `help.txt` into `wiki/_build/`
-(promoted to `st/docs/`). The shipped layout diverged from the draft below
-(organized as users-guide / reference-manual / help, not the
-Build&Run/Architecture/Operations vault sketched here). **Remaining:** fold in
-the dev/maintenance docs listed below, and reconcile the checklist with what
-actually shipped. The checkboxes below describe the *original plan*, not
-current state.
+**Status (2026-06-09): wiki complete.** All 119 pages are in place,
+organized as `users-guide/` + `reference-manual/` + `help/` (per language),
+not the Build&Run/Architecture/Operations sketch below. The READMEs have been
+shrunk to intro + build + wiki pointer. Remaining:
+`.gitattributes` confirmation and `help.txt` cross-linking.
 
 Bring the scattered docs ([README.md](README.md), [README.es.md](README.es.md),
 the four `.docx` manuals in [st/docs/archive/](st/docs/archive/), the in-app `help.txt` in [st/res/](st/res/),
@@ -312,101 +306,60 @@ the four `.docx` manuals in [st/docs/archive/](st/docs/archive/), the in-app `he
 [RELEASING.md](RELEASING.md), [CLAUDE.md](CLAUDE.md),
 [dosbox-x-smarttar-setup.md](dosbox-x-smarttar-setup.md),
 [ISR_VOLATILE_NOTES.md](ISR_VOLATILE_NOTES.md)) into a single
-browsable wiki built on Obsidian. Obsidian was picked because: (1) it
-treats a folder of plain Markdown as a vault -- no proprietary format,
-no server, git-friendly; (2) it has native bilingual support via
-separate vaults; (3) wikilinks, backlinks, and the graph view make
-cross-references between the tariff engine, dial plan, and printer DLLs
-discoverable; (4) it works offline, which matches the project's
-"single machine in a DOS booth" deployment story.
+browsable wiki built on Obsidian.
 
-**Structure.** Two parallel vaults to match the existing
-README.md / README.es.md split:
-
+The **shipped layout** (actual, checked in):
 ```text
 wiki/
-  en/                      Obsidian vault -- English
-    .obsidian/             Obsidian config (theme, plugins, hotkeys)
-    Home.md                Landing page, mirrors README structure
-    Build & Run/           DOSBox-X setup, build variants, make flags
-    Configuration/         st.ini, ph_info.dat, demo.ini schemas
-    Architecture/          Subsystem map, call lifecycle, ISR contract
-    Reference Manual/      Imported from SmartTar_Reference_Manual_EN.docx
-    User Guide/            Imported from SmartTar_Users_Guide_EN.docx
-    Operations/            Receipts, statistics, dongle, modem, EEPROM
-    Troubleshooting/       Common errors, log diagnosis, recovery
-    History/               1993-2003 era, MicroDiseno Ltda., dial plan
-  es/                      Obsidian vault -- Espanol (mirror of en/)
-    .obsidian/
-    Inicio.md
-    Compilacion y ejecucion/
-    Configuracion/
-    Arquitectura/
-    Manual de Referencia/  Imported from SmartTar_Manual_de_Referencia_ES.docx
-    Guia del Usuario/      Imported from SmartTar_Guia_del_Usuario_ES.docx
-    Operaciones/
-    Solucion de problemas/
-    Historia/
+  en/                         English vault
+    index.md                  Landing page
+    users-guide/              14 chapter files
+    reference-manual/         14 chapter files
+    help/                     Reserved for English help (app ships in Spanish)
+  es/                         Spanish vault
+    index.md
+    manual-usuario/           14 chapter files
+    manual-referencia/        14 chapter files
+    ayuda/                    48 help topic files (compiled into help.dat)
+    stc/                      SmartTar Communicator doc
+  dev/                        Developer docs
+  assets/                     Screenshots
+  tools/                      Conversion scripts
+  manifest.json               Build pipeline manifest
+  build-docs.sh / .ps1        Generator scripts
+  CONVENTIONS.md              Authoring rules
 ```
 
-**README simplification.** Once the wiki holds the depth, the
-top-level README.md / README.es.md shrink to: project tagline,
-screenshot, 5-line "what it is", one paragraph "how to build", and a
-prominent "Full documentation -> [wiki/en/](wiki/en/Home.md)" /
-"Documentacion completa -> [wiki/es/](wiki/es/Inicio.md)" pointer.
-Everything currently in the "Configuration" / "Architecture" /
-"Runtime Data Files" sections moves into wiki pages; the README keeps
-only what a first-time visitor needs in the first 30 seconds.
+**README simplification (done 2026-06-09).** README.md / README.es.md now
+fit in ~30 seconds: title, tagline, screenshot, 5-line "what it is", one
+paragraph "how to build", variant table, and a prominent pointer to the wiki.
+Everything in the "Configuration" / "Architecture" / "Runtime Data Files"
+sections moved into the reference manual in the wiki the content was already
+there — the README just stopped duplicating it.
 
-**Manual ingestion.** The four `.docx` manuals in `st/docs/archive/` are the
-authoritative content but locked in a Word-era format. Conversion path:
-
-  1. Bulk-convert `.docx` -> `.md` with `pandoc -t gfm-raw_html`
-     (clean Markdown, no inline HTML).
-  2. Manual cleanup pass: chapter -> file split (Obsidian prefers
-     one topic per note), wikilink conversion (`[chapter X]` ->
-     `[[Chapter X]]`), image relinking (the `.docx` embedded images
-     need to be extracted to `attachments/` and re-referenced).
-  3. The original `.docx` files stay in [st/docs/archive/](st/docs/archive/) as the
-     historical record but are no longer the working copy. Add a
-     "Source: st/docs/archive/SmartTar_Reference_Manual_EN.docx" footer to
-     each imported page.
-     each imported page.
-
-**`help.txt` cross-reference.** The in-app help text
-([st/res/help.txt](st/res/help.txt)) drives `bin/help.dat` via
-`genhelp`. It overlaps the Reference Manual but is keyboard-focused.
-Cross-link each wiki page to its matching help.txt section so editors
-know to update both when behavior changes.
-
-**Out of scope.** Not building a docs site (no Jekyll / Hugo /
-mdBook). The wiki ships as a git-tracked Obsidian vault; viewers
-either open it in Obsidian or read the raw Markdown on GitHub. If a
-hosted site is wanted later, point a static-site generator at the
-same Markdown.
-
-- [ ] Decide vault layout (`wiki/en/` + `wiki/es/` per draft above,
-      or single bilingual vault with `lang::` frontmatter). Locks in
-      naming conventions for the rest of the tasks.
-- [ ] Convert the four `.docx` manuals to clean Markdown via
-      pandoc; extract embedded images to `wiki/<lang>/attachments/`.
-- [ ] Split converted manuals into Obsidian-sized pages (one topic
-      per file) and add wikilinks between related sections.
-- [ ] Port `README.md` "Configuration" / "Architecture" / "Runtime
-      Data Files" sections into wiki pages; replace those sections
-      in the README with a short pointer.
-- [ ] Mirror the EN vault into the ES vault, with translations
-      sourced from `SmartTar_Manual_de_Referencia_ES.docx` and
-      `SmartTar_Guia_del_Usuario_ES.docx` where they cover the
-      same material.
-- [ ] Add a `wiki/README.md` (LF, host-side) explaining the vault
-      layout, how to open it in Obsidian, and which plugins (if
-      any) the vault depends on.
-- [ ] `.gitattributes`: confirm `wiki/**/*.md` follows host-side
-      LF policy (Obsidian writes LF). Add an `*.canvas` rule if
-      we use Obsidian Canvas files.
-- [ ] Cross-link wiki pages to `help.txt` sections so future help
-      edits stay in sync.
+- [x] Decide vault layout — `wiki/en/` + `wiki/es/` parallel vaults,
+      users-guide/reference-manual/help structure (shipped, diverges from
+      the Build&Run/Architecture/Operations sketch). No `.obsidian/` config
+      committed — Obsidian auto-creates it on first open.
+- [x] Convert the four `.docx` manuals to clean Markdown — done via pandoc +
+      `split_manual.py`. 14 chapters per manual × 2 languages × 2 manuals.
+      Images extracted to `wiki/en/` and `wiki/es/` asset dirs.
+- [x] Split converted manuals into Obsidian-sized pages — one file per
+      chapter, with wikilinks in each `index.md`.
+- [x] Port README sections into wiki pages — README now links wiki instead
+      of duplicating content. Configuration / Architecture / Runtime Data
+      Files were already covered in the reference manual.
+- [x] Mirror the EN vault into the ES vault — translations sourced from the
+      Spanish `.docx` manuals.
+- [x] Add `wiki/README.md` — exists, 84 lines, explains layout, build
+      pipeline, encoding rules.
+- [ ] `.gitattributes`: confirm `wiki/**/*.md` follows host-side LF policy
+      (Obsidian writes LF). Add an `*.canvas` rule if we use Obsidian Canvas
+      files. (`*.md text eol=lf` already covers wiki files — check if any
+      `.obsidian/` config needs special handling.)
+- [ ] Cross-link wiki pages to `help.txt` sections — each reference manual
+      page should mention the matching `H_*` help anchor. Not urgent; the
+      help topics are well-organized under `es/ayuda/`.
 
 Out-of-scope follow-ups: hosted docs site, search index, automated
 docx -> md regeneration on push (manuals change rarely).
