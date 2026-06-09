@@ -17,8 +17,8 @@
 
 #define ST_VERSION_MAJOR 2
 #define ST_VERSION_MINOR 70
-#define ST_VERSION_PATCH 0
-#define ST_VERSION       "2.70.0"
+#define ST_VERSION_PATCH 1
+#define ST_VERSION       "2.70.1"
 
 /* Stringify helpers — used by callers that need "X.Y" form built from
  * the numeric MAJOR/MINOR defines (e.g. APP_VER in st_defs.h).

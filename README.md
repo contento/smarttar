@@ -10,7 +10,7 @@
 
 
 *Leer en [Español](README.es.md).*
-
+Developed by [MicroDiseño Ltda.](https://microdiseno.com) · Copyright © 1993–2003 · Version 2.70.1
 Real-time telephone tariff management system for public telephone booths
 
 Developed by [MicroDiseño Ltda.](https://microdiseno.com) · Copyright © 1993–2003 · Version 2.70.0
