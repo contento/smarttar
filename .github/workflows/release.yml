@@ -121,7 +121,7 @@ jobs:
             if [ ! -f "$p" ]; then echo "Missing: $p"; exit 1; fi
             echo "OK  $p"
           done
-          dlls=$(find st/bin -name 'pr_*.dll' | wc -l)
+          dlls=$(find st/bin -iname 'pr_*.dll' | wc -l)
           if [ "$dlls" -eq 0 ]; then echo "No pr_*.dll built"; exit 1; fi
           echo "OK  $dlls printer DLL(s)"
 
@@ -153,7 +153,9 @@ jobs:
           stage="out/$name"
           mkdir -p "$stage"
           cp st/bin/st.exe      "$stage/"
-          cp st/bin/pr_*.dll    "$stage/"
+          # Printer driver DLLs (DOS names are uppercase, macOS APFS may or
+          # may not be case-sensitive; use both globs to be safe).
+          cp st/bin/pr_*.{DLL,dll} "$stage/" 2>/dev/null || true
           cp st/bin/help.dat    "$stage/"
           cp st/bin/RES.DAT     "$stage/"
           cp st/bin/*.inf       "$stage/" 2>/dev/null || true
