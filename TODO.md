@@ -75,11 +75,13 @@ Working list of milestones and tasks. Detailed findings live in
 
 ## Milestone: UI improvements (new edition) — v4.0
 
-- [ ] **Higher-resolution display via Zinc** — Zinc 3.5 supports SVGA
-      modes through its BGI backend; the project currently runs at the
-      default VGA 640×480. Investigate switching `machine = svga_s3` +
-      a higher Zinc display mode, the cost in font rework, and how
-      `st.cfg`'s `-D__BTN__` defines interact with resolution.
+- [x] **Higher-resolution display via Zinc** — Investigated (Jun 2026):
+      `IdentifySuperVGA()` + `SetSuperVGAMode()` can switch to VESA
+      800×600×256 through Zinc's GFX library, but not a quick win:
+      bitmapped fonts don't scale (text gets smaller); RES.DAT layouts
+      are position-specific and need Zinc Designer rework. Full findings:
+      [wiki/dev/svga-investigation.md](wiki/dev/svga-investigation.md).
+      **Verdict:** doable as v4.0 feature, needs font + layout work.
 - ~~**Theme switching** — Zinc 3.5 has a built-in palette / "scheme"
   mechanism. Expose it as a runtime toggle (config option +
   menu-bar entry) so the operator can switch between palettes
