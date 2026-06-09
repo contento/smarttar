@@ -24,3 +24,11 @@ order: 4
 | RXX.IDX | Extension call index (SmartTar Pro only). |
 | ST.LOG | System event log (text, appended). |
 | PR\_\*.DLL | Printer driver DLLs (Pharlap dynamic libraries). |
+
+---
+
+## Related help topics
+
+The following in-app help topics (Spanish, compiled into `help.dat`) cover related functionality:
+
+- [[es/ayuda/H_SYS_INFO|H_SYS_INFO]]

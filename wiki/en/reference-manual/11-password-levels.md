@@ -18,3 +18,12 @@ order: 11
 **Default codes.** A fresh installation -- or one reset with the DEFPWD utility -- uses the codes in the table. They are **case-sensitive** and accept up to 8 characters. **Activating the Configuration menu** accepts any valid code *except* `Util`; `Super` grants full access, the others a restricted access. A vendor-reserved master recovery code also exists (not published). Change these default codes on any production installation via *Configuración > Cambiar código de acceso*.
 
 Passwords are 8 characters maximum and are stored encrypted in ST.CFG. The STM2 EEPROM validates the logged-in state; if a bad shutdown is detected, the system prompts for recovery confirmation before proceeding.
+
+---
+
+## Related help topics
+
+The following in-app help topics (Spanish, compiled into `help.dat`) cover related functionality:
+
+- [[es/ayuda/H_PASSWORD|H_PASSWORD]]
+- [[es/ayuda/H_CHANGE_PASSWD|H_CHANGE_PASSWD]]

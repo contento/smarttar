@@ -22,3 +22,13 @@ Una pantalla LED opcional visible al cliente puede conectarse a un puerto serial
 
 
 *Manual de Referencia SmartTar — Versión 2.34* *MicroDiseño Ltda. — Copyright © 1993–2003. Todos los derechos reservados.* *Gonzalo Contento Castañ*
+
+---
+
+## Temas de ayuda relacionados
+
+Los siguientes temas de ayuda interna (compilados en `help.dat`) cubren funcionalidad relacionada:
+
+- [[es/ayuda/H_INSTALL|H_INSTALL]]
+- [[es/ayuda/H_P_PORT|H_P_PORT]]
+- [[es/ayuda/H_S_PORT|H_S_PORT]]

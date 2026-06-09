@@ -148,3 +148,23 @@ All timing values marked (ms) are in milliseconds.
 | DISPLAY_COM | Integer | COM port connected to the display unit. |
 | DISPLAY_BAUDS | Integer | Baud rate for display communication. |
 | DISPLAY_DEFAULT_MESSAGE | String (64) | Message shown when no call is in progress. |
+
+---
+
+## Related help topics
+
+The following in-app help topics (Spanish, compiled into `help.dat`) cover related functionality:
+
+- [[es/ayuda/H_CONFIG_MENU|H_CONFIG_MENU]]
+- [[es/ayuda/H_GENERAL|H_GENERAL]]
+- [[es/ayuda/H_TIME_DATE|H_TIME_DATE]]
+- [[es/ayuda/H_ALARM|H_ALARM]]
+- [[es/ayuda/H_LOCK|H_LOCK]]
+- [[es/ayuda/H_LOCK_NUM|H_LOCK_NUM]]
+- [[es/ayuda/H_ROUND|H_ROUND]]
+- [[es/ayuda/H_SPY|H_SPY]]
+- [[es/ayuda/H_FOOTER|H_FOOTER]]
+- [[es/ayuda/H_ALIAS|H_ALIAS]]
+- [[es/ayuda/H_OP_ID|H_OP_ID]]
+- [[es/ayuda/H_SP_SERV|H_SP_SERV]]
+- [[es/ayuda/H_FORMS|H_FORMS]]

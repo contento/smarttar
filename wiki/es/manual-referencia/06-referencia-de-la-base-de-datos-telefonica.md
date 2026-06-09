@@ -25,3 +25,15 @@ La base de datos telefónica se compila a partir de tres archivos fuente por la 
 ## Números Bloqueados
 
 PH_INFO.DAT también almacena una lista de números telefónicos bloqueados. Las llamadas a números bloqueados son interceptadas antes de que la marcación se complete. Se usa para bloquear destinos de tarifa premium o no autorizados.
+
+---
+
+## Temas de ayuda relacionados
+
+Los siguientes temas de ayuda interna (compilados en `help.dat`) cubren funcionalidad relacionada:
+
+- [[es/ayuda/H_INTER|H_INTER]]
+- [[es/ayuda/H_NEW_CITY|H_NEW_CITY]]
+- [[es/ayuda/H_NEW_COUNTRY|H_NEW_COUNTRY]]
+- [[es/ayuda/H_NAL_TAR|H_NAL_TAR]]
+- [[es/ayuda/H_INTER_TAR|H_INTER_TAR]]

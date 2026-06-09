@@ -23,3 +23,15 @@ Each receipt record stored in RX.DAT includes:
 ## Statistics
 
 DB_STATISTICS accumulates running totals from all records. Summaries are available at daily, weekly, monthly, and annual granularities. The TURN system supports multiple work shifts per day, each with its own statistics snapshot.
+
+---
+
+## Related help topics
+
+The following in-app help topics (Spanish, compiled into `help.dat`) cover related functionality:
+
+- [[es/ayuda/H_RECEIPT|H_RECEIPT]]
+- [[es/ayuda/H_ACCUM|H_ACCUM]]
+- [[es/ayuda/H_SACCUM|H_SACCUM]]
+- [[es/ayuda/H_SDAYS|H_SDAYS]]
+- [[es/ayuda/H_VIEWER|H_VIEWER]]

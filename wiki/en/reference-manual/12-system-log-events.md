@@ -21,3 +21,12 @@ order: 12
 | STM2IGNORERECOVER | Operator bypassed recovery after bad shutdown. |
 
 Log entries include date, time, and the relevant event code. The log file is read-only when not being written; the application temporarily sets it read-write before appending.
+
+---
+
+## Related help topics
+
+The following in-app help topics (Spanish, compiled into `help.dat`) cover related functionality:
+
+- [[es/ayuda/H_SYS_INFO|H_SYS_INFO]]
+- [[es/ayuda/H_ALARM|H_ALARM]]

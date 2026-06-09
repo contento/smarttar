@@ -18,3 +18,12 @@ order: 2
 | Interfaz hardware telefónica | Placa cluster STB-x (1–4 clusters de 8 cabinas cada uno) |
 | Protección de copia | Llave EEPROM en puerto paralelo (versiones de producción) |
 | Módem (opcional) | Compatible Hayes; cualquier velocidad soportada por el puerto COM |
+
+---
+
+## Temas de ayuda relacionados
+
+Los siguientes temas de ayuda interna (compilados en `help.dat`) cubren funcionalidad relacionada:
+
+- [[es/ayuda/H_INSTALL|H_INSTALL]]
+- [[es/ayuda/H_SETUP|H_SETUP]]

@@ -29,3 +29,20 @@ Cada recibo incluye:
 - **Detalle de la llamada:** identificador/nombre de la cabina, tipo de llamada, destino, duración, tarifa por minuto.
 - **Bloque financiero:** subtotal, nombre e importe del impuesto, total, ajuste de redondeo.
 - **Pie de página:** líneas P_FOOTER configurables.
+
+---
+
+## Temas de ayuda relacionados
+
+Los siguientes temas de ayuda interna (compilados en `help.dat`) cubren funcionalidad relacionada:
+
+- [[es/ayuda/H_RECEIPT|H_RECEIPT]]
+- [[es/ayuda/H_ZPRINT|H_ZPRINT]]
+- [[es/ayuda/H_IPRINT|H_IPRINT]]
+- [[es/ayuda/H_P_PORT|H_P_PORT]]
+- [[es/ayuda/H_S_PORT|H_S_PORT]]
+- [[es/ayuda/H_PPORT|H_PPORT]]
+- [[es/ayuda/H_CASH|H_CASH]]
+- [[es/ayuda/H_ADM_REC|H_ADM_REC]]
+- [[es/ayuda/H_OPERATION|H_OPERATION]]
+- [[es/ayuda/H_PRINT_MENU|H_PRINT_MENU]]

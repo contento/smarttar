@@ -25,3 +25,15 @@ The telephony database is compiled from three source files by the SETUP utility 
 ## Locked Numbers
 
 PH_INFO.DAT also stores a list of locked (blocked) telephone numbers. Calls to locked numbers are intercepted before dialing completes. This is used to block premium-rate or unauthorized destinations.
+
+---
+
+## Related help topics
+
+The following in-app help topics (Spanish, compiled into `help.dat`) cover related functionality:
+
+- [[es/ayuda/H_INTER|H_INTER]]
+- [[es/ayuda/H_NEW_CITY|H_NEW_CITY]]
+- [[es/ayuda/H_NEW_COUNTRY|H_NEW_COUNTRY]]
+- [[es/ayuda/H_NAL_TAR|H_NAL_TAR]]
+- [[es/ayuda/H_INTER_TAR|H_INTER_TAR]]

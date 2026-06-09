@@ -30,3 +30,13 @@ If communication errors (N_COM_ERR \> MAX_COM_ERR) or dialing errors (N_DIAL_ERR
 
 - **Receipts (MAX_RECEIPTS = 256).** Holds completed, unpaid receipts. Used by the manual settlement window.
 - **PRNReceipts (MAX_PRN_RECEIPTS = 64).** Holds receipts queued for reprinting or second-copy printing.
+
+---
+
+## Related help topics
+
+The following in-app help topics (Spanish, compiled into `help.dat`) cover related functionality:
+
+- [[es/ayuda/H_OPERATION|H_OPERATION]]
+- [[es/ayuda/H_SIGNAL|H_SIGNAL]]
+- [[es/ayuda/H_MANUAL|H_MANUAL]]

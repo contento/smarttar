@@ -22,3 +22,13 @@ An optional customer-facing LED display can be connected to a serial port (DISPL
 
 
 *SmartTar Reference Manual — Version 2.34* *MicroDiseño Ltda. — Copyright © 1993–2003. All rights reserved.* *Gonzalo Contento Castañ*
+
+---
+
+## Related help topics
+
+The following in-app help topics (Spanish, compiled into `help.dat`) cover related functionality:
+
+- [[es/ayuda/H_INSTALL|H_INSTALL]]
+- [[es/ayuda/H_P_PORT|H_P_PORT]]
+- [[es/ayuda/H_S_PORT|H_S_PORT]]
