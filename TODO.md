@@ -71,7 +71,6 @@ Working list of milestones and tasks. Detailed findings live in
       white notches at the Est|Are boundary). *Verified:* geometry dump
       shows uniform 19 px pitch, all column overlaps 0, table bottom flush;
       confirmed visually in DOSBox-X (`wiki/assets/zinc-gui-bug-03.png`).
-- [ ] *(add other UI bugs as they surface)*
 
 ## Milestone: UI improvements (new edition) — v4.0
 
