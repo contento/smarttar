@@ -21,8 +21,8 @@ st/**/*.exe
 # ...except the build-helper compilers: building them in CI is fragile under
 # Windows DOSBox-X, and the MAKEFILE assumes they already exist. Track the
 # Pharlap-bound binaries so a fresh checkout (incl. CI) can run them directly.
-!st/util/ini2cfg/ini2cfg.exe
-!st/util/inf2dat/inf2dat.exe
+!st/util/ini2cfg/INI2CFG.EXE
+!st/util/inf2dat/INF2DAT.EXE
 
 # Linker map / debug symbols
 st/**/*.map
