@@ -21,84 +21,76 @@ permissions:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
-    # Linux runner — DOSBox-X's Windows mingw64 build crashes mid-compile
-    # on the windows-latest runner (both 2026.05.02 and 2026.06.02), but
-    # the Linux and macOS builds work reliably. The build inside DOSBox-X
-    # is cross-platform; the output st.exe runs on any DOS/Windows host.
+    runs-on: windows-latest
+    # Windows runner. The mingw64 DOSBox-X build (2026.05.02 and 2026.06.02)
+    # crashes mid-compile; the VS Build (vsbuild-win64) uses a different
+    # toolchain and is not affected.
 
     env:
       # Bump when DOSBox-X cuts a new release worth tracking.
       # https://github.com/joncampbell123/dosbox-x/releases
       DOSBOX_X_VERSION: '2026.06.02'
-      # Build variant. Defaults to 'demo' for both tag pushes (no dongle
-      # required at runtime) and workflow_dispatch (overridable via the
-      # 'variant' input).
       BUILD_VARIANT: ${{ inputs.variant || 'demo' }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install DOSBox-X (static tarball)
-        shell: bash
+      - name: Install DOSBox-X (VS Build portable zip)
+        shell: pwsh
         run: |
-          version="$DOSBOX_X_VERSION"
-          url="https://github.com/joncampbell123/dosbox-x/releases/download/dosbox-x-v$version/dosbox-x-linux-x86_64-$version-static.tar.gz"
-          echo "Downloading $url"
-          curl -fsSL "$url" -o dosbox-x.tar.gz
-          mkdir -p dosbox-x-install
-          tar -xzf dosbox-x.tar.gz -C dosbox-x-install
-          exe=$(find dosbox-x-install -name 'dosbox-x' -type f | head -1)
-          if [ -z "$exe" ]; then echo "dosbox-x binary not found"; exit 1; fi
-          chmod +x "$exe"
-          echo "DOSBOX_X=$exe" >> "$GITHUB_ENV"
-          echo "Using: $exe"
+          $version = $env:DOSBOX_X_VERSION
+          $url = "https://github.com/joncampbell123/dosbox-x/releases/download/dosbox-x-v$version/dosbox-x-vsbuild-win64-$version-portable.zip"
+          Write-Host "Downloading $url"
+          Invoke-WebRequest -Uri $url -OutFile dosbox-x.zip
+          Expand-Archive dosbox-x.zip -DestinationPath dosbox-x-install -Force
+          $exe = Get-ChildItem dosbox-x-install -Recurse -Filter dosbox-x.exe | Select-Object -First 1
+          if (-not $exe) { Write-Error "dosbox-x.exe not found after extraction"; exit 1 }
+          "DOSBOX_X=$($exe.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append
+          Write-Host "Using: $($exe.FullName)"
 
       - name: Point dosbox-x.conf mount at the CI workspace
-        shell: bash
+        shell: pwsh
         run: |
-          sed -i "s|^mount c \".*\"|mount c \"${{ github.workspace }}\"|" dosbox-x.conf
-          echo "Active mount line:"
-          grep '^mount c ' dosbox-x.conf
+          $workspace = $env:GITHUB_WORKSPACE -replace '\\', '/'
+          $conf = Get-Content dosbox-x.conf
+          $conf = $conf | ForEach-Object {
+            if ($_ -match '^mount c ') { "mount c `"$workspace`"" } else { $_ }
+          }
+          $conf | Set-Content dosbox-x.conf
+          Write-Host "Active mount line:"
+          Select-String '^mount c ' dosbox-x.conf
 
       - name: Build (${{ env.BUILD_VARIANT }} variant)
         timeout-minutes: 15
-        shell: bash
+        shell: pwsh
         run: |
-          # SDL needs a display for video; use the dummy driver so DOSBox-X
-          # can run headless on the runner.
-          export SDL_VIDEODRIVER=dummy
-          export MAKE_HEADLESS_DEBUG=1
-          ./build.sh "$BUILD_VARIANT"
-          rc=$?
-          echo "build.sh exit code: $rc"
+          $env:MAKE_HEADLESS_DEBUG = '1'
+          .\build.ps1 $env:BUILD_VARIANT
+          $rc = $LASTEXITCODE
+          Write-Host "build.ps1 exit code: $rc"
           exit $rc
 
       - name: Diagnostics on build failure
         if: failure()
-        shell: bash
+        shell: pwsh
         run: |
-          echo '=== build.log (full, if present) ==='
-          if [ -f build.log ]; then
-            echo "size: $(wc -c < build.log) bytes"
-            cat build.log
-          else
-            echo '(missing)'
-          fi
-          echo ''
-          echo '=== dosbox-x stderr/stdout (if captured) ==='
-          if [ -f dosbox-x-build.log ]; then
-            cat dosbox-x-build.log
-          else
-            echo '(missing)'
-          fi
-          echo ''
-          echo '=== dosbox-x.conf (post-mount-rewrite) ==='
-          cat dosbox-x.conf
-          echo ''
-          echo '=== workspace contents ==='
-          ls -la
+          Write-Host '=== build.log (full, if present) ==='
+          if (Test-Path build.log) {
+            Write-Host "size: $((Get-Item build.log).Length) bytes"
+            Get-Content build.log
+          } else { Write-Host '(missing)' }
+          Write-Host ''
+          Write-Host '=== dosbox-x stderr/stdout (if captured) ==='
+          if (Test-Path dosbox-x-build.log) {
+            Get-Content dosbox-x-build.log
+          } else { Write-Host '(missing)' }
+          Write-Host ''
+          Write-Host '=== dosbox-x.conf (post-mount-rewrite) ==='
+          Get-Content dosbox-x.conf
+          Write-Host ''
+          Write-Host '=== workspace contents ==='
+          Get-ChildItem -Force | Select-Object Mode,LastWriteTime,Length,Name
 
       - name: Upload failure artifacts
         if: failure()
@@ -113,53 +105,60 @@ jobs:
           retention-days: 7
 
       - name: Verify essential build artifacts
-        shell: bash
+        shell: pwsh
         run: |
-          required=(st/bin/st.exe st/bin/help.dat st/bin/RES.DAT)
-          for p in "${required[@]}"; do
-            if [ ! -f "$p" ]; then echo "Missing: $p"; exit 1; fi
-            echo "OK  $p"
-          done
-          dlls=$(find st/bin -name 'pr_*.dll' | wc -l)
-          if [ "$dlls" -eq 0 ]; then echo "No pr_*.dll built"; exit 1; fi
-          echo "OK  $dlls printer DLL(s)"
+          $required = @(
+            'st\bin\st.exe',
+            'st\bin\help.dat',
+            'st\bin\RES.DAT'
+          )
+          foreach ($p in $required) {
+            if (-not (Test-Path $p)) { Write-Error "Missing: $p"; exit 1 }
+            Write-Host "OK  $p"
+          }
+          $dlls = Get-ChildItem st\bin -Filter 'pr_*.dll'
+          if ($dlls.Count -eq 0) { Write-Error "No pr_*.dll built"; exit 1 }
+          Write-Host "OK  $($dlls.Count) printer DLL(s)"
 
-      - name: Read version from st/include/version.h
+      - name: Read version from st\include\version.h
         id: ver
-        shell: bash
+        shell: pwsh
         run: |
-          v=$(grep '#define  *ST_VERSION  *"' st/include/version.h | sed 's/.*"\([0-9]*\.[0-9]*\.[0-9]*\)".*/\1/')
-          if [ -z "$v" ]; then echo "Could not read ST_VERSION"; exit 1; fi
-          echo "Version: $v"
-          echo "version=$v" >> "$GITHUB_OUTPUT"
+          $h = Get-Content st\include\version.h -Raw
+          if ($h -notmatch '#define\s+ST_VERSION\s+"(\d+)\.(\d+)\.(\d+)"') {
+            Write-Error 'Could not read ST_VERSION from st\include\version.h'
+            exit 1
+          }
+          $v = "$($Matches[1]).$($Matches[2]).$($Matches[3])"
+          Write-Host "Version: $v"
+          "version=$v" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
       - name: Sanity-check tag matches version.h
         if: startsWith(github.ref, 'refs/tags/v')
-        shell: bash
+        shell: pwsh
         run: |
-          tag="${GITHUB_REF_NAME#v}"
-          headerVer="${{ steps.ver.outputs.version }}"
-          if [ "$tag" != "$headerVer" ]; then
-            echo "Tag '$GITHUB_REF_NAME' does not match version.h ('$headerVer'). Did you forget bump-version.sh / .ps1?"
+          $tag = $env:GITHUB_REF_NAME.TrimStart('v')
+          $headerVer = '${{ steps.ver.outputs.version }}'
+          if ($tag -ne $headerVer) {
+            Write-Error "Tag '$env:GITHUB_REF_NAME' does not match version.h ('$headerVer'). Did you forget bump-version.sh / .ps1?"
             exit 1
-          fi
-          echo "Tag and version.h agree: $tag"
+          }
+          Write-Host "Tag and version.h agree: $tag"
 
       - name: Package release ZIP
-        shell: bash
+        shell: pwsh
         run: |
-          name="smarttar-${{ steps.ver.outputs.version }}"
-          stage="out/$name"
-          mkdir -p "$stage"
-          cp st/bin/st.exe      "$stage/"
-          cp st/bin/pr_*.dll    "$stage/"
-          cp st/bin/help.dat    "$stage/"
-          cp st/bin/RES.DAT     "$stage/"
-          cp st/bin/*.inf       "$stage/" 2>/dev/null || true
-          # Pharlap runtime DLLs the BIND step binds against at runtime.
-          cp vendor/pharlap/BIN/*.DLL "$stage/"
-          cd out && zip -r "${name}.zip" "$name/"
-          ls -la
+          $name = "smarttar-${{ steps.ver.outputs.version }}"
+          $stage = "out\$name"
+          New-Item -ItemType Directory -Force -Path $stage | Out-Null
+          Copy-Item st\bin\st.exe        $stage\
+          Copy-Item st\bin\pr_*.dll      $stage\
+          Copy-Item st\bin\help.dat      $stage\
+          Copy-Item st\bin\RES.DAT       $stage\
+          Copy-Item st\bin\*.inf         $stage\
+          Copy-Item vendor\pharlap\BIN\*.DLL    $stage\
+          Compress-Archive -Path $stage -DestinationPath "out\$name.zip"
+          Get-ChildItem out\
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
