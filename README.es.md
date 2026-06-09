@@ -3,8 +3,7 @@
 *Read in [English](README.md).*
 
 Sistema de gestión de tarifas telefónicas en tiempo real para cabinas telefónicas públicas
-
-Desarrollado por [MicroDiseño Ltda.](https://microdiseno.com) · Derechos reservados © 1993–2003 · Versión 2.70.0
+Desarrollado por [MicroDiseño Ltda.](https://microdiseno.com) · Derechos reservados © 1993–2003 · Versión 2.70.1
 
 ![SmartTar](st/docs/archive/SmartTar.jpg)
 
