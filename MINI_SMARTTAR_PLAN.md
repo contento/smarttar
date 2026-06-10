@@ -372,11 +372,13 @@ The strip-down + seams above are precisely what make this feasible:
 | - | ---------- | ----------- | ------ |
 | P0 | Baseline tagged (`pre-mini-smarttar`) | demo green (st.exe 1090948) | DONE |
 | 1.1 | 15 utils removed (kept inf2dat, ini2cfg) | demo green | DONE |
+| 1.1+ | inf2dat + ini2cfg also removed (1.4/1.4b) | demo green | DONE |
 | 1.2 | core/demo_dos/real_dos split (move only) | demo green (st.exe identical) | DONE |
 | 1.2fix | rt_do/isr/store/util+serial are core, not real_dos | demo green | DONE |
 | 1.3a | demo drops rt_eng/dongle/eeprom (factory guard + LINK_OBJS) | st.exe 1087668 | DONE |
 | 1.3b | STM2 abstracted (NullStm2 demo / BankStm2 real) | st.exe 1086724; demo links 0 real_dos | DONE (build-verified; runtime smoke-test pending) |
 | 1.4 | config from ST.INI, ini2cfg gone | demo green | DONE |
+| 1.4b | inf2dat gone, PH_ENGINE loads .inf direct | demo green | DONE |
 | 1.5 | two variants; real_dos #errors; drop eda/prod | demo green / real_dos errors | TODO |
 | 2.1a | BinStorage extracted behind backend iface | demo green (binary) |
 | 2.1b | CsvStorage added, default flipped to csv | demo green (csv) |

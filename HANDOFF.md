@@ -1,7 +1,7 @@
 # SmartTar — Handoff
 
 Status snapshot for resuming on another machine.
-Branch: `main` — at HEAD. v2.70.0 release CI no longer blocked.
+Branch: `mini-smarttar` — active development. `main` has v2.70.0 release.
 
 ---
 
@@ -68,8 +68,8 @@ The runtime engine-selection arc is **complete and merged into `main`**; the
     arrivals, drives active calls to settlement, latches `_paused` when idle.
   - `ForceStoreActiveCalls()` enqueues receipts for TALK calls before exit.
   - `total_minutes` cap in `demo.ini` (0 = unlimited); triggers the same drain.
-- Build pipeline repair (`inf2dat`/`ini2cfg` sub-makefiles bootstrap), scripts
-  renamed `make-headless` → `build` and `run-headless` → `run` (`.sh` + `.ps1`).
+- Build pipeline repair (scripts renamed `make-headless` → `build` and
+  `run-headless` → `run` (`.sh` + `.ps1`)).
 - Demo quit-confirmation (`st.cpp::Exit()`) and operator start/stop menu.
 
 Architecture lives in the code (`st/src/rt/engine.cpp`, `rt_eng.cpp`,
@@ -77,12 +77,46 @@ Architecture lives in the code (`st/src/rt/engine.cpp`, `rt_eng.cpp`,
 `GRAPH_REPORT.md`. `pre-simula-trash` tag at `e64284a` is the rollback point
 if the whole arc ever needs discarding.
 
-### Remnant: the last `__DEMO__` gates
+### Resolved: `__DEMO__` gates (eliminated in mini-smarttar)
 
-Down from 58 references to **5 functional gates**: `st.cpp` lines 16 / 117 /
-159 / 193, plus the `cfg.cpp` default-selector (intentional). Interleave
-`__NO_DONGLE__` with `DONGLE` class scope. Not blocking — engine selection is
-already runtime.
+All `__DEMO__` / `__NO_DONGLE__` gates in `st.cpp` have been removed.
+`cfg.cpp` ENGINE_KIND default always sets `"demo"` (no `#ifdef` needed).
+Engine selection is fully runtime via `MakeEngine()` factory.
+
+---
+
+## Active: mini-smarttar (branch `mini-smarttar`)
+
+The strip-down and portability plan is in progress. See
+[`MINI_SMARTTAR_PLAN.md`](MINI_SMARTTAR_PLAN.md) for full details.
+
+**Completed phases:**
+- P0 — baseline tagged (`pre-mini-smarttar`)
+- 1.1 — 15 utils removed (kept inf2dat, ini2cfg)
+- 1.2 — `core/demo_dos/real_dos` directory split (move only)
+- 1.2fix — `rt_do/isr/store/util+serial` moved to `core/`
+- 1.3a — demo drops `rt_eng/dongle/eeprom` (factory guard + `LINK_OBJS`)
+- 1.3b — STM2 abstracted (`NullStm2` demo / `BankStm2` real)
+- 1.4 — config from `ST.INI`, `ini2cfg` dropped, binary `ST.CFG` eliminated
+- 1.4b — `inf2dat` dropped, `PH_ENGINE::Load()` falls back to `.inf` files
+
+**What changed:**
+- `CFG::Load()` reads `ST.INI` directly; `CFG::Save()` writes INI only
+- `st.cpp` free of `__DEMO__` / `__NO_DONGLE__` gates
+- `PH_ENGINE::Load()` reads `.inf` files when `PH_INFO.DAT` is absent
+- Entire `util/` directory removed (inf2dat, ini2cfg, util_cfg.h)
+- `ENGINE_KIND` defaults to `"demo"` (no `#ifdef` needed)
+- All hardware behind `I*` base classes; only `Null*` linked in demo
+
+**Next phases (TODO):**
+- 1.5 — two variants (`demo_dos` / `real_dos`); `real_dos` `#error`s
+- 2.1a — `BinStorage` extracted behind `DB_STORAGE_BACKEND` interface
+- 2.1b — `CsvStorage` added, default flipped to CSV
+- 2.2 — `PORTABILITY.md` seam catalogue
+
+**Research notes (in plan § 8):**
+- PDF pseudo-device: intercept spooler → render text to PDF (~200 LOC)
+- RES.DAT decompiler: study Zinc `UI_STORAGE` format → text representation
 
 ---
 
@@ -144,12 +178,14 @@ commit `351eda4`) is **diagnosed and fixed** on `fix/zinc-grid-geometry`.
 
 ---
 
-## Other open items (from TODO.md)
+## Other open items
 
 - **Documentation wiki** — substantially built at `wiki/`; remaining:
   - Vault layout decision
   - `.docx` manual conversion
   - README simplification
-- **Toolchain portability** — not started (Investigate Open Watcom / DJGPP)
+- **Toolchain portability** — covered by mini-smarttar plan (Phase 2+)
 - **SVGA display** — Zinc 3.5 supports higher modes via BGI; investigate
   `machine = svga_s3` + font rework for 800×600+.
+- **PDF pseudo-device** — see plan § 8 research; candidate for Phase 2
+- **RES.DAT decompiler** — see plan § 8 research; candidate for Phase 2
