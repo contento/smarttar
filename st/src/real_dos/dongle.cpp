@@ -1,3 +1,9 @@
+// real engine deactivated in mini-smarttar (real_dos).  Building this
+// TU needs an explicit opt-in; the default demo_dos build excludes it.
+#if !defined(REAL_DOS_ENABLED)
+#error "real_dos engine is deactivated -- build demo_dos (define REAL_DOS_ENABLED to compile real hardware code)."
+#endif
+
 //
 // [ DONGLE.CPP ]
 //
