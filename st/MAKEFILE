@@ -54,6 +54,9 @@ RTK_DIR=..\vendor\pharlap\bin
 DONGLE=
 !if $d(DEMO)
 DEMO=__DEMO__			  # demo version
+IS_DEMO=1			  # marker: set ONLY in the demo branch.  Do not
+				  # test $d(DEMO) past this point -- DEMO is always
+				  # defined below (to __DEMO__ or empty); use IS_DEMO.
 !if $d(NODONGLE)
 DONGLE=__NO_DONGLE__
 !endif
@@ -108,11 +111,9 @@ OBJS=$(OBJ_DIR)\$(APP).$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\ctrl_rf.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\db_eng.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\db_view.$(OBJ_EXT)	   \
-	 $(OBJ_DIR)\dongle.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\dstatist.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\dstorage.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\d_ext_st.$(OBJ_EXT)    \
-	 $(OBJ_DIR)\eeprom.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\filehdr.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\mb_ext.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\info.$(OBJ_EXT) 	   \
@@ -134,7 +135,6 @@ OBJS=$(OBJ_DIR)\$(APP).$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\prn_fmt.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\res.$(OBJ_EXT)		   \
 	 $(OBJ_DIR)\engine.$(OBJ_EXT)	   \
-	 $(OBJ_DIR)\rt_eng.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\rt_do.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\rt_util.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\rt_isr.$(OBJ_EXT)	   \
@@ -161,6 +161,23 @@ OBJS=$(OBJ_DIR)\$(APP).$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\w_sgroup.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\w_statbr.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\w_table.$(OBJ_EXT)
+
+# --- [ OBJS_REAL ] ----------------------------------------------------------
+# Real-hardware-only objects (real_dos\).  These are linked ONLY into the
+# non-demo build.  The demo_dos build excludes them entirely -- the real
+# engine, dongle and EEPROM are deactivated (see MINI_SMARTTAR_PLAN P1.3).
+# rt_eng is referenced only by MakeEngine()'s !__DEMO__ branch; dongle and
+# eeprom only by st.cpp's !__DEMO__ / !__NO_DONGLE__ paths.
+OBJS_REAL=$(OBJ_DIR)\rt_eng.$(OBJ_EXT)	\
+	 $(OBJ_DIR)\dongle.$(OBJ_EXT)	\
+	 $(OBJ_DIR)\eeprom.$(OBJ_EXT)
+
+# LINK_OBJS = the object set actually linked for this variant.
+!if $d(IS_DEMO)
+LINK_OBJS=$(OBJS)
+!else
+LINK_OBJS=$(OBJS) $(OBJS_REAL)
+!endif
 
 DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 	$(BIN_DIR)\pr_dr80.$(DLL_EXT)  \
@@ -191,9 +208,9 @@ CFG_DESTS=\
 .asm.obj:
 	$(ASM) $(ASM_OPTS) $<, $@
 
-$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(CFG_DESTS) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\phones.csv $(OBJS) $(DLLS)
+$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(CFG_DESTS) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\phones.csv $(LINK_OBJS) $(DLLS)
 	$(LINK) $(LINK_OPTS) @&&!
-$(STARTUP_OBJS) $(OBJS)
+$(STARTUP_OBJS) $(LINK_OBJS)
 $*, ,$(LIBS), $(DEF_FILE)
 !
 !if $d(RUN)
