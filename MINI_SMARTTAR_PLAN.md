@@ -316,6 +316,12 @@ The strip-down + seams above are precisely what make this feasible:
   complements the demo-mode story — users can generate printable output without
   hardware. Candidate for Phase 2 portability seam work (portable PDF
   generation is language-neutral).
+- **RES.DAT decompiler**: `res.dat` is a Zinc 3.5 binary resource file
+  (edited via DESIGN.EXE).  Since we have the Zinc source code, a tool can
+  be written to decompile `res.dat` into a human-readable / editable format
+  (text or structured data).  This would break the last hard dependency on
+  the Zinc Designer tool and make the UI resources portable.  Candidate for
+  Phase 2 portability seam work.
 
 ---
 
