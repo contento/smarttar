@@ -146,6 +146,8 @@ OBJS=$(OBJ_DIR)\$(APP).$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\spooler.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\ssaver.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\stm2.$(OBJ_EXT) 	   \
+	 $(OBJ_DIR)\nullstm2.$(OBJ_EXT)    \
+	 $(OBJ_DIR)\stm2fact.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\st_util.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\tb_conf.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\tb_man.$(OBJ_EXT)	   \
@@ -170,7 +172,8 @@ OBJS=$(OBJ_DIR)\$(APP).$(OBJ_EXT)	   \
 # eeprom only by st.cpp's !__DEMO__ / !__NO_DONGLE__ paths.
 OBJS_REAL=$(OBJ_DIR)\rt_eng.$(OBJ_EXT)	\
 	 $(OBJ_DIR)\dongle.$(OBJ_EXT)	\
-	 $(OBJ_DIR)\eeprom.$(OBJ_EXT)
+	 $(OBJ_DIR)\eeprom.$(OBJ_EXT)	\
+	 $(OBJ_DIR)\bankstm2.$(OBJ_EXT)
 
 # LINK_OBJS = the object set actually linked for this variant.
 !if $d(IS_DEMO)
@@ -379,7 +382,13 @@ $(OBJ_DIR)\spooler.obj:  $(SOURCE_DIR)\spooler.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\ssaver.obj:   $(SOURCE_DIR)\ssaver.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\stm2.obj:     $(SOURCE_DIR)\real_dos\stm2.cpp
+$(OBJ_DIR)\stm2.obj:     $(SOURCE_DIR)\core\stm2.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\nullstm2.obj: $(SOURCE_DIR)\demo_dos\nullstm2.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\stm2fact.obj: $(SOURCE_DIR)\core\stm2fact.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\bankstm2.obj: $(SOURCE_DIR)\real_dos\bankstm2.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\st_util.obj:  $(SOURCE_DIR)\st_util.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**

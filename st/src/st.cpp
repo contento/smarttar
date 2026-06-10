@@ -36,6 +36,7 @@ APP_INFO g_appInfo;
 
 #if !defined(__TEST__)
 #include <stm2.h>
+#include <stm2fact.h>
 STM2 *g_STM2  = NULL;
 #endif
 
@@ -54,7 +55,7 @@ main(int , char *argv[])
 		log.put(Log::NORMALSTART);
 	}
 #if !defined(__TEST__)
-	g_STM2 = new STM2;
+	g_STM2 = MakeStm2();
 	g_STM2->login();
 #endif
 	//

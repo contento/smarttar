@@ -25,11 +25,21 @@ const WORD STM2_BANKSIZE       = 0x8000;
 const WORD STM2_MAXRECEIPTS    = RT_MAXRECEIPTS*3;
 const WORD STM2_EXITSTRINGSIZE = 0x10;
 
+//
+// STM2: abstract base for the session / booth NVRAM store.  All the
+// generic record logic (login, get/put, prepare, the receipt circular
+// queue, ...) lives here and is built on the virtual read/write/check
+// seam.  The concrete backend is chosen by MakeStm2() (stm2fact.h):
+//   BankStm2 (real_dos)  -- battery-backed NVRAM via port I/O
+//   NullStm2 (demo_dos)  -- RAM-backed, no hardware (mini-smarttar demo)
+// Callers hold an STM2* (g_STM2) and never see the concrete.  Do not
+// instantiate STM2 directly -- it is abstract; use MakeStm2().
+//
 class STM2
 {
 public:
-    STM2 (void);
-    ~STM2(void);
+    STM2 (void) {}
+    virtual ~STM2(void) {}
 
 	void GetDumpData(WORD offset, void *buffer, WORD bufSize)
 	{
@@ -49,7 +59,6 @@ public:
 	{
 		return status;
 	}
-	WORD fill     (char c);
 	void dump     (WORD offset, void *buffer, WORD bufSize);
 	void replace  (WORD offset, void *buffer, WORD bufSize);
 
@@ -86,16 +95,17 @@ public:
 		RECEIPTS
 	};
 
-private:
+protected:
 	enum {INPUT, OUTPUT};
-	void check    (void);
 	void setSerial(void);
 	void setExit  (const char *str);
 	BOOL prepare  (WORD id, WORD& offset, WORD& bufSize, WORD direction);
-	WORD write    (WORD offset, const void *buffer, WORD bufSize);
-	WORD read     (WORD offset,       void *buffer, WORD bufSize);
-	void out      (WORD address, WORD offset, WORD dataPort, const unsigned char byte);
-	BYTE in       (WORD addressPort, WORD offset, WORD dataPort);
+	//
+	// Hardware seam -- implemented by the concrete backend.  check() runs
+	// from the derived ctor (NOT here) so the right override is in place.
+	virtual void check(void)                                          = 0;
+	virtual WORD write(WORD offset, const void *buffer, WORD bufSize) = 0;
+	virtual WORD read (WORD offset,       void *buffer, WORD bufSize) = 0;
 	//
 	WORD banks;
 	WORD status;
