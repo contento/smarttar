@@ -311,17 +311,58 @@ The strip-down + seams above are precisely what make this feasible:
 - **8.3 + encoding discipline** applies to every new file (`demo_dos`,
   `real_dos`, `core`, new headers). New `.cpp/.h` are CRLF + Latin-1/CP850 per
   the existing rules; this `.md` and host scripts stay LF/UTF-8.
-- **PDF pseudo-device**: create a `PDF` output pseudo-device (virtual printer)
-  that renders receipts to PDF files instead of a physical printer. This
-  complements the demo-mode story — users can generate printable output without
-  hardware. Candidate for Phase 2 portability seam work (portable PDF
-  generation is language-neutral).
-- **RES.DAT decompiler**: `res.dat` is a Zinc 3.5 binary resource file
-  (edited via DESIGN.EXE).  Since we have the Zinc source code, a tool can
-  be written to decompile `res.dat` into a human-readable / editable format
-  (text or structured data).  This would break the last hard dependency on
-  the Zinc Designer tool and make the UI resources portable.  Candidate for
-  Phase 2 portability seam work.
+- **PDF pseudo-device** (research):
+  SmartTar's printing pipeline is: `PrnFormatter` DLL (e.g. `PR_DR80.DLL`)
+  formats receipt text → `SPOOLER` buffers it → `SPOOLER::Flush()` sends it
+  to BIOS LPT or serial.  The spooler writes plain text (ESC/P-like control
+  codes, line feeds, tabs) to a channel.  A PDF pseudo-device would:
+  (1) intercept the spooler channel, (2) capture the formatted text per
+  receipt, (3) render to PDF using a lightweight library.  For DOS/16-bit:
+  a minimal PDF writer (~200 LOC) can emit PDF directly from text lines
+  (PDF spec §8 — text objects, no images needed for receipts).  For the
+  portable target: any language can emit PDF.  This makes demo mode fully
+  self-contained (no physical printer required).  Implementation: add
+  `SP_CHANNEL_PDF` to the spooler, configurable via `ST.INI` (e.g.
+  `P_PORT=pdf`).  The existing `P_PORT` field already dispatches to
+  different backends (`lpt`, `com`, `prn`); `pdf` would be a new one.
+  **Candidate for Phase 2** (portable, language-neutral, complements CSV
+  storage).
+
+- **RES.DAT decompiler** (research):
+  `res.dat` uses Zinc 3.5's proprietary `UI_STORAGE` format — a
+  filesystem-within-a-file with named directories and serialized objects.
+  Each object is tagged by `OBJECTID` (defined in `UI_GEN.HPP`:
+  `ID_WINDOW=1007`, `ID_STRING=13`, `ID_BUTTON=2`, etc.) followed by
+  property data and child objects.
+
+  **What we have:**
+  - Full Zinc 3.5 source in `vendor/zinc/SOURCE/` including `STORAGE/`
+    (file I/O: `G_STORE.CPP`, `Z_STORE.CPP`) and `DESIGN/` (the visual
+    editor: `Z_CONFIG.CPP`, `Z_OBJECT.CPP`, `Z_RESRC.CPP`).
+  - `BROWSE.EXE` (source: `vendor/zinc/SOURCE/STORAGE/BROWSE.CPP`) lists
+    directory structure and metadata of a `.dat` file.
+  - `ZDUMP.EXE` (source: `vendor/zinc/SOURCE/STORAGE/ZDUMP.CPP`) dumps raw
+    hex of any named object — useful for reverse-engineering the serialization.
+  - `DESIGN.EXE` and `WDESIGN.EXE` in `vendor/zinc/BIN/` for interactive
+    editing (Windows and DOS versions).
+
+  **Approach for a decompiler:**
+  1. Study `G_STORE.CPP` / `Z_STORE.CPP` to understand the binary layout
+    (header, directory entries, object serialization).
+  2. Study `Z_OBJECT.CPP` in DESIGN to see how objects are loaded/saved
+    (type tag → property list → children).
+  3. Write a tool that walks the storage tree, reads each object's type tag
+    and serialized properties, and emits a human-readable representation
+    (JSON, YAML, or a Zinc-compatible `.znc` text format — `P_DESIGN.ZNC`
+    in `vendor/zinc/BIN/` may already be such a format).
+  4. The reverse path (text → `res.dat`) would re-implement the DESIGN
+    serialization, making the resource file fully portable.
+
+  **Why this matters:** `res.dat` is the *last* hard dependency on the Zinc
+  toolchain.  Once decompilable, UI resources become editable by any text
+  editor or code generator, enabling the Phase 3 language-exit strategy.
+  **Candidate for Phase 2** portability seam work (highest ROI among the
+  unaddressed seams).
 
 ---
 
