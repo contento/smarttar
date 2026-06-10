@@ -1,0 +1,494 @@
+MAKE Version 3.6  Copyright (c) 1992 Borland International
+
+Available memory 31840720 bytes
+
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\st.obj src\st.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\st.cpp:
+
+	Available memory 3086796
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\bdisplay.obj src\ui\bdisplay.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ui\bdisplay.cpp:
+
+	Available memory 3792948
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\calc.obj src\calc.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\calc.cpp:
+
+	Available memory 3498168
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\calendar.obj src\calendar.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\calendar.cpp:
+
+	Available memory 3384796
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\cfg.obj src\cfg.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\cfg.cpp:
+
+	Available memory 3496692
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\control.obj src\ctrl\control.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ctrl\control.cpp:
+
+	Available memory 2937260
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\cstr.obj src\cstr.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\cstr.cpp:
+
+	Available memory 4092116
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\csv_stor.obj src\db\csv_stor.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\db\csv_stor.cpp:
+
+	Available memory 3772584
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\ctrl_ev.obj src\ctrl\ctrl_ev.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ctrl\ctrl_ev.cpp:
+
+	Available memory 2827864
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\ctrl_pr.obj src\ctrl\ctrl_pr.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ctrl\ctrl_pr.cpp:
+
+	Available memory 3066632
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\ct_pr_nr.obj src\ct\ct_pr_nr.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ct\ct_pr_nr.cpp:
+
+	Available memory 3058812
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\ct_pr_sr.obj src\ct\ct_pr_sr.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ct\ct_pr_sr.cpp:
+
+	Available memory 3027060
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\ct_pr_st.obj src\ct\ct_pr_st.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ct\ct_pr_st.cpp:
+
+	Available memory 3022956
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\ct_util.obj src\ct\ct_util.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ct\ct_util.cpp:
+
+	Available memory 3066632
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\ctrl_rf.obj src\ctrl\ctrl_rf.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ctrl\ctrl_rf.cpp:
+
+	Available memory 3104108
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\db_eng.obj src\db\db_eng.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\db\db_eng.cpp:
+
+	Available memory 2805356
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\db_view.obj src\db\db_view.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\db\db_view.cpp:
+
+	Available memory 3113952
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\dstatist.obj src\db\dstatist.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\db\dstatist.cpp:
+
+	Available memory 3542324
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\dstorage.obj src\db\dstorage.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\db\dstorage.cpp:
+
+	Available memory 3732856
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\d_ext_st.obj src\db\d_ext_st.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\db\d_ext_st.cpp:
+
+	Available memory 3738888
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\filehdr.obj src\db\filehdr.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\db\filehdr.cpp:
+
+	Available memory 3807968
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\mb_ext.obj src\mb\mb_ext.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\mb\mb_ext.cpp:
+
+	Available memory 2949292
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\info.obj src\info.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\info.cpp:
+
+	Available memory 3808960
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\log.obj src\log.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\log.cpp:
+
+	Available memory 3799388
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -H- -obuild\mb_conf.obj src\mb\mb_conf.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\mb\mb_conf.cpp:
+
+	Available memory 2890260
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\mb_simul.obj src\mb\mb_simul.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\mb\mb_simul.cpp:
+
+	Available memory 3018732
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\mb_file.obj src\mb\mb_file.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\mb\mb_file.cpp:
+
+	Available memory 4099356
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\mb_help.obj src\mb\mb_help.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\mb\mb_help.cpp:
+
+	Available memory 3178876
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\mb_inf.obj src\mb\mb_inf.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\mb\mb_inf.cpp:
+
+	Available memory 3060740
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\mb_print.obj src\mb\mb_print.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\mb\mb_print.cpp:
+
+	Available memory 3114836
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\mutex.obj src\mutex.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\mutex.cpp:
+
+	Available memory 3810064
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\parser.obj src\ph\parser.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ph\parser.cpp:
+
+	Available memory 3685096
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\ph_eng.obj src\ph\ph_eng.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ph\ph_eng.cpp:
+
+	Available memory 3631972
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\ph_place.obj src\ph\ph_place.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ph\ph_place.cpp:
+
+	Available memory 3554320
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\ph_util.obj src\ph\ph_util.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ph\ph_util.cpp:
+
+	Available memory 3626008
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\ph_tar.obj src\ph\ph_tar.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ph\ph_tar.cpp:
+
+	Available memory 3647224
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\ph_query.obj src\ph\ph_query.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ph\ph_query.cpp:
+
+	Available memory 3157648
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\plain_pr.obj src\pr\plain_pr.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\pr\plain_pr.cpp:
+
+	Available memory 3316932
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\prn_fmt.obj src\pr\prn_fmt.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\pr\prn_fmt.cpp:
+
+	Available memory 3769904
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\res.obj src\res.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\res.cpp:
+
+	Available memory 3699612
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\engine.obj src\core\engine.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\core\engine.cpp:
+
+	Available memory 3695528
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\rt_do.obj src\core\rt_do.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\core\rt_do.cpp:
+
+	Available memory 3692376
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\rt_util.obj src\core\rt_util.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\core\rt_util.cpp:
+
+	Available memory 3530524
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\rt_isr.obj src\core\rt_isr.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\core\rt_isr.cpp:
+
+	Available memory 3720880
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\rt_store.obj src\core\rt_store.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\core\rt_store.cpp:
+
+	Available memory 3512048
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\demo_eng.obj src\demo_dos\demo_eng.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\demo_dos\demo_eng.cpp:
+
+	Available memory 3677052
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\eng_fact.obj src\core\eng_fact.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\core\eng_fact.cpp:
+
+	Available memory 3725088
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\serial.obj src\core\serial.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\core\serial.cpp:
+
+	Available memory 3790708
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\sid.obj src\sid.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\sid.cpp:
+
+	Available memory 4072148
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\spooler.obj src\spooler.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\spooler.cpp:
+
+	Available memory 3574996
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\ssaver.obj src\ssaver.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ssaver.cpp:
+
+	Available memory 3436444
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\stm2.obj src\core\stm2.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\core\stm2.cpp:
+
+	Available memory 3747804
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\nullstm2.obj src\demo_dos\nullstm2.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\demo_dos\nullstm2.cpp:
+
+	Available memory 3747804
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\stm2fact.obj src\core\stm2fact.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\core\stm2fact.cpp:
+
+	Available memory 3747804
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\st_util.obj src\st_util.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\st_util.cpp:
+
+	Available memory 3748120
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\tb_conf.obj src\tb\tb_conf.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\tb\tb_conf.cpp:
+
+	Available memory 3276748
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\tb_man.obj src\tb\tb_man.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\tb\tb_man.cpp:
+
+	Available memory 2970952
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\tb_print.obj src\tb\tb_print.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\tb\tb_print.cpp:
+
+	Available memory 3260460
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\tb_sp.obj src\tb\tb_sp.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\tb\tb_sp.cpp:
+
+	Available memory 3073864
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\tb_tools.obj src\tb\tb_tools.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\tb\tb_tools.cpp:
+
+	Available memory 3039500
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\tb_util.obj src\tb\tb_util.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\tb\tb_util.cpp:
+
+	Available memory 3254632
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\traceinf.obj src\traceinf.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\traceinf.cpp:
+
+	Available memory 3809120
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\view.obj src\ui\view.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ui\view.cpp:
+
+	Available memory 3033376
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\view_ev.obj src\ui\view_ev.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ui\view_ev.cpp:
+
+	Available memory 2965116
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\view_hb.obj src\ui\view_hb.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ui\view_hb.cpp:
+
+	Available memory 3271752
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\w_phone.obj src\ui\w_phone.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ui\w_phone.cpp:
+
+	Available memory 3452420
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\w_sgroup.obj src\ui\w_sgroup.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ui\w_sgroup.cpp:
+
+	Available memory 3463748
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\w_statbr.obj src\ui\w_statbr.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ui\w_statbr.cpp:
+
+	Available memory 3390480
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+	bcc286 -c +st.cfg -DDEMO_DOS -DNDEBUG -obuild\w_table.obj src\ui\w_table.cpp 
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\ui\w_table.cpp:
+
+	Available memory 3631344
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+src\pr\pr_sr80.c:
+
+	Available memory 4080784
+BCC286: 3.0 -- Copyright (C) 1986-93 Phar Lap Software, Inc.
+Serial Number W1-15218
+BCC286: Cannot locate C0PLDLL.OBJ on PATH or from LIB= variable

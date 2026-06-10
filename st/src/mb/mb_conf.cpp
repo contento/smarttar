@@ -4,13 +4,14 @@
 
 #include "stdst.h"
 
+#include <ui_win.hpp>
+#include <db_eng.h>
+#include <spooler.h>
 #include <menubar.h>
 #include <events.h>
 #include <sid.h>
-#include <spooler.h>
 #include <control.h>
 #include <ph_eng.h>
-#include <db_eng.h>
 
 #ifndef USE_HELP_CONTEXTS
 #define USE_HELP_CONTEXTS

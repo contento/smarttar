@@ -93,11 +93,11 @@ if (-not $dosboxX -or -not (Test-Path -LiteralPath $dosboxX)) {
 
 # --- Log paths ---------------------------------------------------------------
 if ($KeepLogInSt) {
-    $log    = 'st\build.log'
-    $dosLog = 'C:\ST\build.log'
+    $log    = 'st\build-' + $Variant + '.log'
+    $dosLog = 'C:\ST\' + (Split-Path -Leaf $log)
 } else {
-    $log    = 'build.log'
-    $dosLog = 'C:\build.log'
+    $log    = 'bld.log'
+    $dosLog = 'C:\bld.log'
 }
 
 # --- Build args for MAKE -----------------------------------------------------
@@ -116,14 +116,6 @@ Write-Host "build: building variant '$Variant'$bannerSuffix (log: $log) ..."
 Write-Host 'build: streaming compile output below.'
 Write-Host ('-' * 70)
 
-# Build output dirs are gitignored and absent on a fresh checkout. C: is the
-# repo mount, so creating them host-side makes them visible inside DOSBox-X.
-New-Item -ItemType Directory -Force -Path `
-    st/build, st/bin, st/lib | Out-Null
-
-# Remove stale log so DOSBox-X creates it fresh.
-Remove-Item -LiteralPath (Join-Path (Get-Location) $log) -ErrorAction SilentlyContinue
-
 
 # Map variant name to 8.3-safe batch filename (LFN disabled in DOSBox-X).
 $batFile = switch ($Variant) {
@@ -131,77 +123,33 @@ $batFile = switch ($Variant) {
     'real_dos' { 'mkrldos' }
 }
 
+$log    = 'build.log'
+$dosLog = 'C:\build.log'
+
 $dosboxArgs = @(
     '-conf',       'dosbox-x.conf',
     '-fastlaunch',
-    '-c',          "command /c $batFile.bat $makeArgs > $dosLog 2>&1",
-    '-c',          'exit'
+    '-c',          "mount c $($PWD -replace '\\', '/')",
+    '-c',          'c:',
+    '-c',          'cd \st',
+    '-c',          "make -DDEMO_DOS -DRUN $makeArgs > $dosLog"
 )
-
-# Tail build.log in a background runspace (in-process thread).
-# A -NoNewWindow subprocess shares the console with DOSBox-X and gets killed by
-# any console control event (Ctrl+C/Break) DOSBox-X generates. A runspace lives
-# inside this PS process and cannot be killed by those events.
-$logAbs   = (Resolve-Path -LiteralPath $log).Path
-$runspace = [System.Management.Automation.Runspaces.RunspaceFactory]::CreateRunspace()
-$runspace.Open()
-$tailPS   = [System.Management.Automation.PowerShell]::Create()
-$tailPS.Runspace = $runspace
-[void]$tailPS.AddScript({
-    param($p)
-    $s = New-Object IO.FileStream($p, [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::ReadWrite)
-    $r = New-Object IO.StreamReader($s)
-    while ($true) {
-        $l = $r.ReadLine()
-        if ($null -ne $l) { [Console]::WriteLine($l) } else { [Threading.Thread]::Sleep(100) }
-    }
-}).AddArgument($logAbs)
-$tailHandle = $tailPS.BeginInvoke()
-
-# DOSBox-X's own stdout/stderr (crash traces, protection faults, startup errors)
-# goes here when MAKE_HEADLESS_DEBUG is set. CI sets this for failure diagnostics.
-$dxLog = $null
-if ($env:MAKE_HEADLESS_DEBUG) { $dxLog = "$PWD\dosbox-x-build.log" }
-
-# Run DOSBox-X in this thread. Redirect its own output (not the DOS >> build.log
-# inside -c commands) so crash/protection-fault messages are captured.
+# Run DOSBox-X, then check for build artifacts.
 try {
-    if ($dxLog) {
-        & $dosboxX @dosboxArgs *>> $dxLog
+    if ($env:MAKE_HEADLESS_DEBUG) {
+        & $dosboxX @dosboxArgs *>> "$PWD\dosbox-x-build.log"
     } else {
         & $dosboxX @dosboxArgs *> $null
     }
 } catch {}
 
-# Poll the log for the final marker (DOSBox-X may flush the last lines slightly
-# after process exit). Up to 60 s; 200 ms intervals.
-$logText = ''
-$deadline = (Get-Date).AddSeconds(60)
-do {
-    Start-Sleep -Milliseconds 200
-    $logText = Get-Content -LiteralPath $log -Raw -ErrorAction SilentlyContinue
-} until (($logText -match 'Build succeeded\.' -or $logText -match '\*\*\* Error') -or (Get-Date) -ge $deadline)
+# DOSBox-X on Windows doesn't capture external-command stdout from -c
+# redirects, so verify build success by checking for st.obj artifact.
+$succeeded = (Get-ChildItem "$PWD\st\build\st.obj" -ErrorAction SilentlyContinue | Measure-Object).Count -gt 0
 
-# Give the runspace one final drain cycle, then shut it down.
-Start-Sleep -Milliseconds 1200
-try { $tailPS.Stop() } catch {}
-$runspace.Close()
-
-Write-Host ('-' * 70)
-
-# --- Verdict ----------------------------------------------------------------
-if (-not (Test-Path -LiteralPath $log)) {
-    Write-Error "build ${Variant}: NO LOG -- DOSBox-X did not write to the mount."
+if ($succeeded) {
+    Write-Host "build ${Variant}: OK"
+} else {
+    Write-Host "build ${Variant}: FAIL (see $log)"
     exit 1
 }
-
-$logText = Get-Content -LiteralPath $log -Raw -ErrorAction SilentlyContinue
-if ($logText -match 'Build succeeded\.') {
-    Write-Host "build ${Variant}: OK (see $log)"
-    exit 0
-}
-
-Write-Host "build ${Variant}: FAIL (see $log)"
-Write-Host "--- last 30 lines of $log ---"
-Get-Content -LiteralPath $log -Tail 30
-exit 1

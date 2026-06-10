@@ -57,14 +57,11 @@ IS_DEMO=1
 !endif
 
 # Pass the variant define (-DDEMO_DOS or -DREAL_DOS) through to the compiler
-# so #if defined(DEMO_DOS) / #if defined(REAL_DOS) gates work in source.
 VARIANT_DEF=
 !if $d(DEMO_DOS)
 VARIANT_DEF=-DDEMO_DOS
-!else
-!if $d(REAL_DOS)
+!elif $d(REAL_DOS)
 VARIANT_DEF=-DREAL_DOS
-!endif
 !endif
 
 
@@ -89,6 +86,7 @@ ASM_OPTS=/mx
 # Lives in pharlap/LIB/ — full path needed because TLINK's /L only
 # applies to .lib files, not .obj files.
 STARTUP_OBJS=..\vendor\pharlap\lib\c0pl.obj
+
 LIBS=phapi d16_zil d16_gfx bc_16gfx emu286 emu mathl bcl286 ptclassl pbidsl
 DEF_FILE=$(APP).def
 
@@ -129,6 +127,7 @@ OBJS=$(OBJ_DIR)\$(APP).$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\ph_place.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\ph_util.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\ph_tar.$(OBJ_EXT)	   \
+	 $(OBJ_DIR)\ph_query.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\plain_pr.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\prn_fmt.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\res.$(OBJ_EXT)		   \
@@ -262,12 +261,9 @@ $(BIN_DIR)\ddi.inf: ddi.inf
 # ============================================================================
 
 # --- OBJs (cpp -> obj) ---
-# Each rule carries its own body because Borland MAKE 3.6's .cpp.obj
-# suffix rule does not fire for path-prefixed targets (e.g. build\foo.obj).
-# DLL targets DO work with the .c.dll suffix rule alone, but .cpp/.obj
-# requires the explicit body to actually compile.
 $(OBJ_DIR)\st.obj:       $(SOURCE_DIR)\st.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+# DLL targets DO work with the .c.dll suffix rule alone, but .cpp/.obj
 $(OBJ_DIR)\bdisplay.obj: $(SOURCE_DIR)\ui\bdisplay.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\calc.obj:     $(SOURCE_DIR)\calc.cpp
@@ -318,8 +314,10 @@ $(OBJ_DIR)\info.obj:     $(SOURCE_DIR)\info.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\log.obj:      $(SOURCE_DIR)\log.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+# mb_conf uses a unique include chain that conflicts with the PCH generated
+# by other translation units, so compile it without auto-PCH.
 $(OBJ_DIR)\mb_conf.obj:  $(SOURCE_DIR)\mb\mb_conf.cpp
-	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+	$(CC) -c +$(APP).cfg $(VARIANT_DEF) -DNDEBUG -H- -o$@ $**
 $(OBJ_DIR)\mb_simul.obj: $(SOURCE_DIR)\mb\mb_simul.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\mb_file.obj:  $(SOURCE_DIR)\mb\mb_file.cpp
