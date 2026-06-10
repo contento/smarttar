@@ -113,16 +113,10 @@ ostream& PH_ENGINE::PLACE_INFO::SetInfHeader(ostream& os)
 {
 	return os
 		   << "; *******************************************" << endl
-		   << ";   Arbol de Numeraci¢n"                       << endl
+		   << ";   Arbol de Numeraciï¿½n"                       << endl
 		   << "; "                                            << endl
 		   << ";     Entradas: " << Count                     << endl
 		   << "; "                                            << endl
-/* $$$230
-		   << ";   Formato: "								  << endl
-		   << ";     lugar : tarifa, minutos, porcentaje = numeraci¢n"  << endl
-		   << "; "                                            << endl
-*/
-		   << ";   Utilice SETUP para producir PH_INFO.DAT"   << endl
 		   << "; *******************************************" << endl
 		   << "  "                                            << endl
 		   ;

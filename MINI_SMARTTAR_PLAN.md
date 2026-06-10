@@ -305,8 +305,9 @@ The strip-down + seams above are precisely what make this feasible:
 - **Zinc resource (`res.dat`)** still binds the UI to DOS Zinc; untouched here.
   It is the biggest *unaddressed* portability cost — flagged for Phase 2 catalogue
   only.
-- **`inf2dat` retention**: kept for now; decide in Phase 2 whether to go
-  `.inf`-direct (reuses existing `parser.cpp`).
+- **`inf2dat` eliminated**: `PH_ENGINE::Load()` now falls back to reading
+  `.inf` files directly when `PH_INFO.DAT` is absent; tariffs/schedules
+  use constructor defaults.  The entire `util/` directory is removed.
 - **8.3 + encoding discipline** applies to every new file (`demo_dos`,
   `real_dos`, `core`, new headers). New `.cpp/.h` are CRLF + Latin-1/CP850 per
   the existing rules; this `.md` and host scripts stay LF/UTF-8.

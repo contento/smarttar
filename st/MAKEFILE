@@ -26,8 +26,6 @@ BIN_DIR=bin
 LIB_DIR=lib
 INCLUDE_DIR=include
 RES_DIR=res
-INF2DAT_DIR=util\inf2dat
-UTIL_DIR=util
 
 # NOTE: Borland MAKE 3.6 (bundled with BC 3.1) does NOT support the
 # .PATH.x directive — it was added in MAKE 4.0+. The lines below are
@@ -199,7 +197,7 @@ DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 .asm.obj:
 	$(ASM) $(ASM_OPTS) $<, $@
 
-$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\phones.csv $(LINK_OBJS) $(DLLS)
+$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\phones.csv $(BIN_DIR)\local.inf $(BIN_DIR)\ddn.inf $(BIN_DIR)\ddi.inf $(LINK_OBJS) $(DLLS)
 	$(LINK) $(LINK_OPTS) @&&!
 $(STARTUP_OBJS) $(LINK_OBJS)
 $*, ,$(LIBS), $(DEF_FILE)
@@ -220,25 +218,26 @@ $(BIN_DIR)\$(HELP_FILE): $(RES_DIR)\help.txt
 $(BIN_DIR)\$(RES_FILE): $(RES_DIR)\$(RES_FILE)
 	@copy $(RES_DIR)\$(RES_FILE) $(BIN_DIR)\$(RES_FILE) > NUL
 
-# Application config -- ST.INI is the single, human-readable config source
-# (mini-smarttar: ini2cfg dropped, binary ST.CFG eliminated).  ST.INI and
-# demo.ini are copied to bin/ so the runtime app finds them in the working
-# directory.  PH_INFO.DAT regen via mk_ph.bat is done OUT-OF-BAND by
-# build.sh / build.ps1 before make runs (see HANDOFF / TODO).
+# Application config & telephony data -- ST.INI is the single config source;
+# .inf files are the canonical telephony place databases (mini-smarttar:
+# inf2dat dropped, binary PH_INFO.DAT eliminated).  PH_ENGINE::Load()
+# falls back to reading .inf files directly when PH_INFO.DAT is absent.
 $(BIN_DIR)\st.ini: st.ini
 	@copy st.ini $(BIN_DIR)\st.ini > NUL
 $(BIN_DIR)\demo.ini: demo.ini
 	@copy demo.ini $(BIN_DIR)\demo.ini > NUL
-# Real-number dataset for DEMO_ENGINE -- canonical source in util/inf2dat;
-# DEMO_ENGINE::ParsePhones reads it from bin/ at startup.
-$(BIN_DIR)\phones.csv: $(INF2DAT_DIR)\phones.csv
-	@copy $(INF2DAT_DIR)\phones.csv $(BIN_DIR)\phones.csv > NUL
-# Telephony binary database (bin\PH_INFO.DAT) is produced OUT-OF-BAND by
-# build.sh / build.ps1 before make runs.  MAKE rules used to invoke mk_ph.bat /
-# mk_cfg.bat directly, but Borland MAKE 3.6 misreports errorlevel from
-# .bat-internal commands and deletes the (just-created) target.  The
-# bats work correctly when invoked from DOSBox-X directly, so build.sh
-# does that.
+# Real-number dataset for DEMO_ENGINE -- DEMO_ENGINE::ParsePhones
+# reads it from bin/ at startup.
+$(BIN_DIR)\phones.csv: phones.csv
+	@copy phones.csv $(BIN_DIR)\phones.csv > NUL
+# Telephony place databases -- PH_ENGINE::Load() reads these from
+# bin/ when PH_INFO.DAT is absent (falls back to .inf direct load).
+$(BIN_DIR)\local.inf: local.inf
+	@copy local.inf $(BIN_DIR)\local.inf > NUL
+$(BIN_DIR)\ddn.inf: ddn.inf
+	@copy ddn.inf $(BIN_DIR)\ddn.inf > NUL
+$(BIN_DIR)\ddi.inf: ddi.inf
+	@copy ddi.inf $(BIN_DIR)\ddi.inf > NUL
 
 # ============================================================================
 # Explicit per-file source-path mapping

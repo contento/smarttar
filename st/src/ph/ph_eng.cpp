@@ -255,6 +255,7 @@ BOOL PH_ENGINE::Load(void)
     BOOL ok = FALSE;
     if (file)
     {
+        // Load from binary PH_INFO.DAT (legacy path).
         if (ok = LoadHeader(file))
 		{
             if (ok = LoadLockedNumbers(file))
@@ -273,8 +274,6 @@ BOOL PH_ENGINE::Load(void)
                                     {
                                         if (ok = DDIPlaces->Load(file))
                                         {}
-
-
                                     }
 								}
                             }
@@ -283,6 +282,21 @@ BOOL PH_ENGINE::Load(void)
                 }
             }
         }
+    }
+    else
+    {
+        // PH_INFO.DAT missing -- load places directly from .inf files.
+        // Tariffs, schedules and locked numbers use the defaults set
+        // in the constructor (SetDefault*).
+        FILE_NAME path;
+        _GetAppPath(path);
+        FILE_NAME fnLocal, fnDDN, fnDDI;
+        strcat(strcpy(fnLocal, path), LOCAL_INF_FILENAME);
+        strcat(strcpy(fnDDN, path),   DDN_INF_FILENAME);
+        strcat(strcpy(fnDDI, path),   DDI_INF_FILENAME);
+        ok = LocalPlaces->LoadFromInf(fnLocal)
+          && DDNPlaces->LoadFromInf(fnDDN)
+          && DDIPlaces->LoadFromInf(fnDDI);
     }
     return ok;
 #pragma warn +pia
@@ -428,7 +442,7 @@ BOOL PH_ENGINE::Search(PHONE const &phone, PLACE_ENTRY& entry, CALL_PARAMETERS& 
 		// begin 2.22 build 25
 		if (parameters.Attr & NOT_INCLUDED_CALL_MASK)
 		{
-			strcpy(entry.Place, "--- No Incluída ---");
+			strcpy(entry.Place, "--- No Incluï¿½da ---");
 			if (!(parameters.Attr & INTERNATIONAL_CALL_MASK))
 			{ // only for DDN
 				if (!(parameters.Attr & LOCAL_DIAL_MASK))
@@ -460,7 +474,7 @@ BOOL PH_ENGINE::Search(PHONE const &phone, PLACE_ENTRY& entry, CALL_PARAMETERS& 
 			if (!found)
 			{
 				parameters.Attr |= NOT_INCLUDED_CALL_MASK;
-				strcpy(entry.Place, "--- No Incluída ---");
+				strcpy(entry.Place, "--- No Incluï¿½da ---");
 				if (!(parameters.Attr & INTERNATIONAL_CALL_MASK))
 				{ // only for DDN
 					if (!(parameters.Attr & LOCAL_DIAL_MASK))

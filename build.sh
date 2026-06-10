@@ -101,7 +101,7 @@ trap 'kill $TAIL_PID 2>/dev/null; wait $TAIL_PID 2>/dev/null' EXIT
 
 # Build output dirs are gitignored and absent on a fresh checkout. C: is the
 # repo mount, so creating them host-side makes them visible inside DOSBox-X.
-mkdir -p st/build st/bin st/lib st/util/inf2dat/obj
+mkdir -p st/build st/bin st/lib
 
 # Capture DOSBox-X's own stderr (crash traces, protection faults) when
 # MAKE_HEADLESS_DEBUG is set. CI sets this for failure diagnostics.
@@ -116,7 +116,6 @@ eval "\"$DOSBOX_X\" -conf dosbox-x.conf -fastlaunch \
   -c \"echo === SmartTar build starting (variant ${variant}) ===\" \
   -c \"echo === log: ${dos_log} (silent until exit) ===\" \
   -c \"echo .\" \
-  -c \"command /c util\\\\inf2dat\\\\mk_ph.bat >> ${dos_log}\" \
   -c \"command /c make${variant}.bat $make_args >> ${dos_log}\" \
   -c \"echo .\" \
   -c \"echo === Build finished ===\" \
