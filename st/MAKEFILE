@@ -56,19 +56,31 @@ IS_DEMO=
 IS_DEMO=1
 !endif
 
+# Pass the variant define (-DDEMO_DOS or -DREAL_DOS) through to the compiler
+# so #if defined(DEMO_DOS) / #if defined(REAL_DOS) gates work in source.
+VARIANT_DEF=
+!if $d(DEMO_DOS)
+VARIANT_DEF=-DDEMO_DOS
+!else
+!if $d(REAL_DOS)
+VARIANT_DEF=-DREAL_DOS
+!endif
+!endif
+
+
 # TLINK library search path. The -L in st.cfg is BCC286's (forwarded to
 # TLINK only when BCC286 invokes the linker). We call TLINK directly, so
 # we must pass the lib path here too.
 LINK_LIBPATH=/L..\vendor\bc\lib;..\vendor\pharlap\lib;..\vendor\zinc\lib;lib
 
 !if $d(DEBUG)
-OBJ_CC_OPTIONS= -c +$(APP).cfg -v
-DLL_CC_OPTIONS= -dll +$(APP).cfg -DNDEBUG -v
+OBJ_CC_OPTIONS= -c +$(APP).cfg $(VARIANT_DEF) -v
+DLL_CC_OPTIONS= -dll +$(APP).cfg $(VARIANT_DEF) -DNDEBUG -v
 LINK_OPTS=/c /C /x /v $(LINK_LIBPATH)
 ASM_OPTS=/mx /zi
 !else
-OBJ_CC_OPTIONS= -c +$(APP).cfg -DNDEBUG
-DLL_CC_OPTIONS= -dll +$(APP).cfg -DNDEBUG
+OBJ_CC_OPTIONS= -c +$(APP).cfg $(VARIANT_DEF) -DNDEBUG
+DLL_CC_OPTIONS= -dll +$(APP).cfg $(VARIANT_DEF) -DNDEBUG
 LINK_OPTS=/c /C /s $(LINK_LIBPATH)
 ASM_OPTS=/mx
 !endif
