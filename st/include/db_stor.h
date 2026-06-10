@@ -33,6 +33,9 @@ public:
     virtual BOOL Add(const Receipt& receipt) = 0;
     virtual BOOL Update(const Receipt& receipt) = 0;
     virtual BOOL Delete(long number, int boothNumber = -1) = 0;
+
+    // Validate a receipt record (checks MagicNumber, bounds, etc.).
+    virtual BOOL IsValid(Receipt const &receipt) = 0;
     virtual void EnumReceipts(CallbackFnPtr callback) = 0;
 
     // --- Metadata -----------------------------------------------------------

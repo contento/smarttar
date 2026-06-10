@@ -193,6 +193,12 @@ void CsvStorage::EnumReceipts(CallbackFnPtr callback)
 	}
 }
 
+BOOL CsvStorage::IsValid(Receipt const &receipt)
+{
+	return receipt.Number > 0L && receipt.Number <= MAX_RECEIPTS;
+}
+
+
 // ---------------------------------------------------------------------------
 // Metadata
 // ---------------------------------------------------------------------------
@@ -215,19 +221,19 @@ void CsvStorage::RebuildMeta()
 			m_higherNumber = n;
 	}
 	// first and last are the min/max by sequence order
-	for (long i = 0; i < m_count; i++)
+	for (long j = 0; j < m_count; j++)
 	{
-		if (!m_entries[i].deleted)
+		if (!m_entries[j].deleted)
 		{
-			m_firstNumber = m_entries[i].receipt.Number;
+			m_firstNumber = m_entries[j].receipt.Number;
 			break;
 		}
 	}
-	for (long i = m_count - 1; i >= 0; i--)
+	for (long k = m_count - 1; k >= 0; k--)
 	{
-		if (!m_entries[i].deleted)
+		if (!m_entries[k].deleted)
 		{
-			m_lastNumber = m_entries[i].receipt.Number;
+			m_lastNumber = m_entries[k].receipt.Number;
 			break;
 		}
 	}

@@ -99,7 +99,7 @@ public:
     }
     BOOL RepairDBStatistics(void)
     {
-        return DBStatistics->Repair(DBStorage);
+        return DBStatistics->Repair((BinStorage *)DBStorage);
     }
     void SetErrors(WORD dialErrors, WORD commErrors)
     {

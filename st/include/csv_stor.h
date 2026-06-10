@@ -38,6 +38,8 @@ public:
 	BOOL Delete(long number, int boothNumber = -1);
 	void EnumReceipts(CallbackFnPtr callback);
 
+	BOOL IsValid(Receipt const &receipt);
+
 	long GetEntries()      const;
 	long GetLowerNumber()  const;
 	long GetHigherNumber() const;

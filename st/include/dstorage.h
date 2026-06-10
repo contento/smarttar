@@ -26,7 +26,11 @@ class BinStorage : public DB_STORAGE_BACKEND
 	class 	Iterator;
 	friend 	Iterator;
 
+
 public:
+	// Binary file format magic number (Receipt::MagicNumber).
+	static const UINT MAGIC_NUMBER;
+
 	BinStorage(const char *path, const char *filename, int readOnly = TRUE);
 	~BinStorage();
 	//

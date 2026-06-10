@@ -59,16 +59,13 @@ DB_ENGINE::DB_ENGINE(void)
 	}
 #endif
 #endif
-    }
-#endif
-#endif
 	// another turn
-    ArcDBStorage    = NULL;
-    ArcDBStatistics = NULL;
+	ArcDBStorage    = NULL;
+	ArcDBStatistics = NULL;
 #if !defined(__TEST__)
 #if !defined(__NOSTM2__)
 	if (g_STM2->getStatus() == STM2::BAD_SHUTDOWN)
-        Recover();
+		Recover();
 	g_STM2->put(STM2::STATISTICSENTRIES, (*DBStatistics)[0]);
 	g_STM2->put(STM2::STATISTICSDOUBLEPRNENTRIES, DBStatistics->GetDoublePrnEntry(0));
 	g_STM2->put(STM2::STATISTICSCELLULARENTRIES, DBStatistics->GetCellularEntry(0));
@@ -117,7 +114,7 @@ void DB_ENGINE::Flush(void)
 BOOL DB_ENGINE::Repair(void)
 {
 	DBStorage->Repair();
-	DBStatistics->Repair(DBStorage);
+	DBStatistics->Repair((BinStorage *)DBStorage);
 #if !defined(__TEST__)
 #if !defined(__NOSTM2__)
 	g_STM2->put(STM2::STATISTICSENTRIES, (*DBStatistics)[0]);
@@ -182,7 +179,7 @@ BOOL DB_ENGINE::ExtRepair(void)
 	if (!g_superAppInfo.Attr.STPro)
         return FALSE;
     DBExtStorage->Repair();
-	DBExtStatistics->Repair(DBExtStorage);
+	DBExtStatistics->Repair((BinStorage *)DBExtStorage);
 #endif
 #if !defined(__NOSTM2__)
 	g_STM2->put(STM2::EXTENSIONCRITICALSTATISTICS, DBExtStatistics->GetCritical());

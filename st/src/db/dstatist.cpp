@@ -212,7 +212,7 @@ BOOL DB_STATISTICS::Add(Receipt& receipt, BOOL newReceipt)
         {
             // lower bound
             if (Entries[TURN].From.Number > receipt.Number &&
-                    Entries[TURN].From.Number < DB_STORAGE::MAX_RECEIPTS-1000
+                    Entries[TURN].From.Number < BinStorage::MAX_RECEIPTS-1000
                )
             {
                 Entries[TURN].From.Number = receipt.Number;
@@ -221,7 +221,7 @@ BOOL DB_STATISTICS::Add(Receipt& receipt, BOOL newReceipt)
 			}
             // upper bound
             if (Entries[TURN].To.Number < receipt.Number ||
-                    (Entries[TURN].To.Number > DB_STORAGE::MAX_RECEIPTS-32 && receipt.Number < 32)
+                    (Entries[TURN].To.Number > BinStorage::MAX_RECEIPTS-32 && receipt.Number < 32)
                )
             {
                 Entries[TURN].To.Number = receipt.Number;

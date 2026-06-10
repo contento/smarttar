@@ -121,9 +121,9 @@ Write-Host ('-' * 70)
 New-Item -ItemType Directory -Force -Path `
     st/build, st/bin, st/lib | Out-Null
 
-# Truncate or create the log. Remove-Item fails when a previous run's
-# FileStream (FileShare::ReadWrite, no FileShare::Delete) is still open.
-[IO.File]::WriteAllText((Join-Path (Get-Location) $log), '')
+# Remove stale log so DOSBox-X creates it fresh.
+Remove-Item -LiteralPath (Join-Path (Get-Location) $log) -ErrorAction SilentlyContinue
+
 
 # Map variant name to 8.3-safe batch filename (LFN disabled in DOSBox-X).
 $batFile = switch ($Variant) {
@@ -134,7 +134,7 @@ $batFile = switch ($Variant) {
 $dosboxArgs = @(
     '-conf',       'dosbox-x.conf',
     '-fastlaunch',
-    '-c',          "command /c $batFile.bat $makeArgs >> $dosLog",
+    '-c',          "command /c $batFile.bat $makeArgs > $dosLog 2>&1",
     '-c',          'exit'
 )
 
@@ -174,9 +174,9 @@ try {
 } catch {}
 
 # Poll the log for the final marker (DOSBox-X may flush the last lines slightly
-# after process exit). Up to 10 s; 200 ms intervals.
+# after process exit). Up to 60 s; 200 ms intervals.
 $logText = ''
-$deadline = (Get-Date).AddSeconds(10)
+$deadline = (Get-Date).AddSeconds(60)
 do {
     Start-Sleep -Milliseconds 200
     $logText = Get-Content -LiteralPath $log -Raw -ErrorAction SilentlyContinue
