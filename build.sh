@@ -95,7 +95,7 @@ if (( debug )); then
 fi
 
 echo "build: building variant '$variant'$banner_suffix (log: $log) ..."
-echo "build: streaming compile output below; window stays silent."
+echo "build: streaming compile output below."
 echo "----------------------------------------------------------------------"
 
 # Touch the log so tail has something to follow even before DOSBox-X starts
@@ -110,28 +110,12 @@ trap 'kill $TAIL_PID 2>/dev/null; wait $TAIL_PID 2>/dev/null' EXIT
 # repo mount, so creating them host-side makes them visible inside DOSBox-X.
 mkdir -p st/build st/bin st/lib
 
-# Capture DOSBox-X's own stderr (crash traces, protection faults) when
-# MAKE_HEADLESS_DEBUG is set. CI sets this for failure diagnostics.
-dx_redir=">/dev/null 2>&1"
-dx_log="$PWD/dosbox-x-build.log"
-if [ -n "${MAKE_HEADLESS_DEBUG:-}" ]; then
-  dx_redir=">>'$dx_log' 2>&1"
-  echo "build ${variant}: DOSBox-X debug output -> $dx_log"
-fi
-eval "\"$DOSBOX_X\" -conf dosbox-x.conf -fastlaunch \
-  -c \"echo === SmartTar build starting (variant ${variant}) ===\" \
-  -c \"echo === log: ${dos_log} (silent until exit) ===\" \
-  -c \"echo .\" \
-  -c \"${batfile}.bat $make_args > ${dos_log} 2>&1\" \
-  -c \"echo .\" \
-  -c \"echo === Build finished ===\" \
-  -c \"exit\" ${dx_redir}" || true
-
-# Stop streaming. Ignore errors — the tail process may already have exited
-# or been killed when DOSBox-X closed its last command.
-kill $TAIL_PID 2>/dev/null || true
-wait $TAIL_PID 2>/dev/null || true
-trap - EXIT
+# Run the .bat directly (NOT through command /c — that creates a new shell
+# environment that breaks build paths). The bat writes build status to
+# C:\build.log internally. Make output is visible in the DOSBox-X window.
+cmd=("$DOSBOX_X" -conf dosbox-x.conf -fastlaunch -exit)
+cmd+=(-c "${batfile}.bat $make_args")
+"${cmd[@]}" >/dev/null 2>&1 || true
 if [[ ! -f "$log" ]]; then
   echo "build $variant: NO LOG — DOSBox-X did not write to the mount" >&2
   exit 1

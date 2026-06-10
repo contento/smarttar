@@ -62,20 +62,22 @@ if [[ ! -f st/bin/st.exe ]]; then
   exit 1
 fi
 
-# DOSBox-X autoexec (dosbox-x.conf) already mounts C: and cd's into ST.
-# Queue: cd into bin -> run st with forwarded args -> exit (skipped if
-# --keep-open is set, leaving the DOS prompt in the foreground).
-dos_cmds=(
-  -c "cd bin"
-  -c "st $st_args"
-)
-if (( ! keep_open )); then
-  dos_cmds+=( -c "exit" )
+# DOSBox-X autoexec (dosbox-x.conf) handles mount, cd to st, PATH setup.
+# Queue: cd into bin -> run st with forwarded args -> then exit (unless
+# --keep-open, which leaves the DOS prompt up).
+cmd=("$DOSBOX_X" -conf dosbox-x.conf -fastlaunch)
+cmd+=(-c "cd bin")
+cmd+=(-c "st $st_args")
+if (( keep_open )); then
+  cmd+=(-c "echo.")
+  cmd+=(-c "echo st.exe exited. Type 'exit' to close DOSBox-X.")
+else
+  cmd+=(-c "exit")
 fi
 
 if [[ -n "$log_file" ]]; then
   echo "Logging to: $log_file" >&2
-  "$DOSBOX_X" -conf dosbox-x.conf -fastlaunch "${dos_cmds[@]}" 2>&1 | tee "$log_file"
+  "${cmd[@]}" 2>&1 | tee "$log_file"
 else
-  exec "$DOSBOX_X" -conf dosbox-x.conf -fastlaunch "${dos_cmds[@]}"
+  exec "${cmd[@]}"
 fi

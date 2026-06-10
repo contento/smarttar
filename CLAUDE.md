@@ -221,6 +221,45 @@ After linking, `BIND286` embeds the Pharlap run-time stub; `CFIG286` tunes it:
 
 **Day-to-day dev variant: `demo`.** The current dev environment has no real telephony hardware (booths / PBX / EEPROM) or copy-protection dongle, so the working default is `./build.sh` -- `demo` is the default variant when none is given, so the bare command and `./build.sh demo` are equivalent (both set `-DDEMO -DRUN -DNODONGLE`). Engine selection is now **runtime** (`g_cfg->ENGINE_KIND` in `st.ini`); `__DEMO__` still acts as a build-time hint that flips the default `ENGINE_KIND` value to `"demo"` in `cfg.cpp::SetDefault`, but the per-call-site gates are gone -- non-engine code paths (dongle, STM2 persist, EEPROM, `Dump()`) check `g_cfg->IsDemoMode()` at runtime instead.  Four `__DEMO__` gates remain in `st.cpp` around the dongle/STM2/EEPROM init tangle (lines 16 / 116 / 192) -- deferred because they interleave with the `__NO_DONGLE__` build flag and `DONGLE` class scope.  Only switch to `prod` / `eda` when explicitly working on something that must exercise those paths, or when comparing against the CI release build (which runs `prod`).
 
+
+
+### macOS vs Windows: DOSBox-X behavioral differences
+
+The build/run scripts (`build.sh`, `run.sh`) work on both platforms, but DOSBox-X
+behaves differently on macOS (ARM) vs Windows (x86):
+
+- **Mount path format**: `dosbox-x.conf` must use the host-native path format.
+  On macOS: `mount c "/Users/.../smarttar"` (Unix absolute path). On Windows:
+  `mount c "c:\Users\...\smarttar"` (DOS-style path). The Windows `C:/` prefix
+  format does NOT work on macOS.
+
+- **`-exit` flag vs `-c "exit"`**: On macOS, `-exit` causes DOSBox-X to exit
+  immediately after `AUTOEXEC.BAT`, potentially before `-c` commands run.
+  Use `-c "exit"` instead of the `-exit` flag on macOS. On Windows, `-exit`
+  works as expected.
+
+- **Stdout redirect from Phar Lap executables**: DOS-level `>`/`>>` redirects
+  **cannot capture** output from Phar Lap bound executables (like `bcc286`,
+  `bind286`, `cfig286`) in DOSBox-X on macOS ARM. Output from these programs
+  goes only to the DOSBox-X window, not to the redirected file handle.
+  Regular DOS programs (Borland `MAKE`, `echo`, `dir`) redirect normally.
+  On Windows x86 this limitation does not apply.
+
+  **Workaround**: The `.bat` build script writes build status to `C:\build.log`
+  directly (`echo Build succeeded. > C:\build.log`). Compile progress is
+  visible in the DOSBox-X window. Use `--keep-open` with `run.sh` to inspect
+  the DOS console after the build.
+
+- **`command /c` with `-noautoexec`**: With `-noautoexec`, `COMMAND.COM` is
+  not loaded on the PATH. Include `z:\` in the PATH (`path z:\;c:\vendor\...`)
+  to make `command` available.
+
+- **`.bat` output redirect via `-c`**: DOSBox-X on macOS ARM cannot redirect
+  the output of a `.bat` file when running it via a `-c` command
+  (`-c "script.bat > file"` writes nothing). Internal `echo > file` within
+  the `.bat` works. The bat must write its own status to disk; the outer
+  redirect is unreliable.
+
 Example debug build:
 
 ```sh
