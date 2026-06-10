@@ -41,7 +41,7 @@ inline BOOL util_cfgLoad(CFG *g_cfg)
 			msg = "est\xE0 corrupto.";
 			break;
 		}
-		cerr << "El archivo de configuraci\xE2n " << msg << endl;
+		cerr << "El archivo ST.INI " << msg << endl;
 		return FALSE;
 	}
 	return TRUE;

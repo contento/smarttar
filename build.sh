@@ -1,15 +1,21 @@
 #!/usr/bin/env bash
 # Run a SmartTar build inside DOSBox-X non-interactively.
 #
-# Usage:   ./build.sh [--force] [--keep-log-in-st]
-#                              [demo|dbg|eda|prod]
-# Default: demo, log at repo root (build.log)
+# Usage:   ./build.sh [--force] [--debug] [--keep-log-in-st]
+#                              [demo_dos|real_dos]
+# Default: demo_dos, log at repo root (build.log)
+#
+# Variants (mini-smarttar): demo_dos is the buildable variant; real_dos is
+# DEACTIVATED and fails by design (real_dos/ trips a #error unless
+# REAL_DOS_ENABLED). See MINI_SMARTTAR_PLAN.
 #
 # Only one instance can run at a time (DOSBox-X locks its config / display).
 #
 # Flags:
 #   --force            Pass -B to Borland MAKE (force rebuild of all targets,
 #                      ignoring timestamps). Alias: --rebuild.
+#   --debug            Add -DDEBUG (Borland -v symbols). Modifier on the
+#                      variant; there is no separate debug variant.
 #   --keep-log-in-st   Write the log inside st/ (st/build.log) instead of the
 #                      repo root. Useful when you want the log next to the
 #                      object files / binaries it describes.
@@ -27,14 +33,16 @@ cd "$(dirname "$0")"
 
 keep_in_st=0
 force=0
+debug=0
 variant=""
-usage="usage: $(basename "$0") [--force] [--keep-log-in-st] [demo|dbg|eda|prod]"
+usage="usage: $(basename "$0") [--force] [--debug] [--keep-log-in-st] [demo_dos|real_dos]"
 
 for arg in "$@"; do
   case "$arg" in
     --keep-log-in-st) keep_in_st=1 ;;
     --force|--rebuild) force=1 ;;
-    demo|dbg|eda|prod)
+    --debug) debug=1 ;;
+    demo_dos|real_dos)
       if [[ -n "$variant" ]]; then
         echo "$usage" >&2
         exit 2
@@ -42,7 +50,7 @@ for arg in "$@"; do
       variant="$arg"
       ;;
     -h|--help)
-      sed -n '2,24p' "$0" | sed 's/^# \{0,1\}//'
+      sed -n '2,30p' "$0" | sed 's/^# \{0,1\}//'
       exit 0
       ;;
     *)
@@ -51,7 +59,7 @@ for arg in "$@"; do
       ;;
   esac
 done
-variant="${variant:-demo}"
+variant="${variant:-demo_dos}"
 
 : "${DOSBOX_X:=dosbox-x}"
 if ! command -v "$DOSBOX_X" >/dev/null 2>&1; then
@@ -74,6 +82,10 @@ if (( force )); then
   make_args="-B"
   banner_suffix=" (force rebuild)"
 fi
+if (( debug )); then
+  make_args="${make_args:+$make_args }-DDEBUG"
+  banner_suffix="$banner_suffix (debug)"
+fi
 
 echo "build: building variant '$variant'$banner_suffix (log: $log) ..."
 echo "build: streaming compile output below; window stays silent."
@@ -89,7 +101,7 @@ trap 'kill $TAIL_PID 2>/dev/null; wait $TAIL_PID 2>/dev/null' EXIT
 
 # Build output dirs are gitignored and absent on a fresh checkout. C: is the
 # repo mount, so creating them host-side makes them visible inside DOSBox-X.
-mkdir -p st/build st/bin st/lib st/util/ini2cfg/obj st/util/inf2dat/obj
+mkdir -p st/build st/bin st/lib st/util/inf2dat/obj
 
 # Capture DOSBox-X's own stderr (crash traces, protection faults) when
 # MAKE_HEADLESS_DEBUG is set. CI sets this for failure diagnostics.
@@ -104,7 +116,6 @@ eval "\"$DOSBOX_X\" -conf dosbox-x.conf -fastlaunch \
   -c \"echo === SmartTar build starting (variant ${variant}) ===\" \
   -c \"echo === log: ${dos_log} (silent until exit) ===\" \
   -c \"echo .\" \
-  -c \"command /c util\\\\ini2cfg\\\\mk_cfg.bat >> ${dos_log}\" \
   -c \"command /c util\\\\inf2dat\\\\mk_ph.bat >> ${dos_log}\" \
   -c \"command /c make${variant}.bat $make_args >> ${dos_log}\" \
   -c \"echo .\" \

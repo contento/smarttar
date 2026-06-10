@@ -13,7 +13,7 @@ extern CFG *g_cfg;
 // 								CALENDAR
 // ---------------------------------------------------------------------------
 
-static const char *CAL_TITLE_FMT = "Días Festivos [%s %d]";
+static const char *CAL_TITLE_FMT = "Dï¿½as Festivos [%s %d]";
 
 const OBJECTID ID_CALENDAR = 3504;
 
@@ -48,7 +48,7 @@ CALENDAR::CALENDAR(WORD left, WORD top, WORD width, WORD height)
     ;
     *this
     + &(* new UIW_TOOL_BAR(0, 0, width, 1)
-        + new UIW_PROMPT(0, 0, 5, " &Día ")
+        + new UIW_PROMPT(0, 0, 5, " &Dï¿½a ")
         + (WDay = new UIW_INTEGER(0, 0, 4, (int *)&Day))
         + new UIW_BUTTON(0, 0, 10, "Ad&icionar", BTF_NO_TOGGLE | BTF_AUTO_SIZE | BTF_SEND_MESSAGE, WOF_JUSTIFY_CENTER, NULL, UE_ADD_SDAY)
         + new UIW_BUTTON(0, 0, 10, "&Eliminar", BTF_NO_TOGGLE | BTF_AUTO_SIZE | BTF_SEND_MESSAGE, WOF_JUSTIFY_CENTER, NULL, UE_DEL_SDAY)
@@ -78,7 +78,7 @@ EVENT_TYPE CALENDAR::Event(const UI_EVENT &event)
     case UE_ACCEPT:
         // accept table as valid
 		memcpy(g_cfg->Hollydays, Hollydays, sizeof(CALENDAR_ENTRY)*MAX_HOLLY_YEARS);
-		g_cfg->Save(NULL, FALSE);
+		g_cfg->Save();
         eventManager->Put(UI_EVENT(S_CLOSE,0));
         //
         UI_EVENT tmpEvent;

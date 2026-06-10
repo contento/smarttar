@@ -30,8 +30,8 @@ public:
 	//
 	enum STATUS_TAG { OK, NO_CFG_FILE, BAD_CFG_FILE };
 	//
-	WORD Load(const char *path = NULL, BOOL fromIni = FALSE);
-	WORD Save(const char *path = NULL, BOOL saveIni = TRUE);
+	WORD Load(const char *path = NULL);
+	WORD Save(const char *path = NULL);
 	WORD GetStatus(void); // load status
 	//
 	void setDefaultPasswords(void);
@@ -189,7 +189,7 @@ public:
 	WORD T_COM;              // tiempo de inicio de comunicacion
 	WORD T_LOCK;           	 // tiempo de bloqueo real para colgar el telefono
 	WORD T_INTER_RING;       // tiempo entre rings maximo, despues se asume como on-hook
-	char SIGNAL[0x0F];   	// Se¤al de contestacion extern (.INI)
+	char SIGNAL[0x0F];   	// Seï¿½al de contestacion extern (.INI)
     WORD ASIGNAL;           // to quick access
     //
     GROUP DialingGroup;

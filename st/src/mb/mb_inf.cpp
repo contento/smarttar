@@ -130,11 +130,11 @@ EVENT_TYPE UIW_SYS_INFO::Event(const UI_EVENT &event)
 UIW_OP_ID::UIW_OP_ID(void) : UIW_WINDOW("W_OP_ID", defaultStorage)
 {
     UIW_BUTTON *tWButton;
-	if (!strcmp(g_cfg->OP_TITLE, "Señor"))
+	if (!strcmp(g_cfg->OP_TITLE, "Seï¿½or"))
     {
         tWButton = (UIW_BUTTON *) Get("W_MR");
     }
-	else if (!strcmp(g_cfg->OP_TITLE, "Señora"))
+	else if (!strcmp(g_cfg->OP_TITLE, "Seï¿½ora"))
     {
         tWButton = (UIW_BUTTON *) Get("W_MRS");
     }
@@ -159,18 +159,18 @@ EVENT_TYPE UIW_OP_ID::Event(const UI_EVENT &event)
         UIW_BUTTON *tWButton;
         tWButton = (UIW_BUTTON *) Get("W_MR");
         if (FlagSet(tWButton->woStatus, WOS_SELECTED))
-			strcpy(g_cfg->OP_TITLE, "Señor");
+			strcpy(g_cfg->OP_TITLE, "Seï¿½or");
         else
         {
             tWButton = (UIW_BUTTON *) Get("W_MRS");
             if (FlagSet(tWButton->woStatus, WOS_SELECTED))
-				strcpy(g_cfg->OP_TITLE, "Señora");
+				strcpy(g_cfg->OP_TITLE, "Seï¿½ora");
             else
-				strcpy(g_cfg->OP_TITLE, "Señorita");
+				strcpy(g_cfg->OP_TITLE, "Seï¿½orita");
         }
         UIW_STRING *wString = (UIW_STRING *) Get("W_NAME");
 		strcpy(g_cfg->OP_NAME, wString->DataGet());
-		g_cfg->Save(NULL, FALSE);
+		g_cfg->Save();
         eventManager->Put(UI_EVENT(S_CLOSE,0));
         break;
     case UE_CANCEL:
@@ -253,7 +253,7 @@ EVENT_TYPE UIW_PASSWORD::Event(const UI_EVENT &event)
         {
         	errorSystem->ReportError(
 				windowManager, WOS_NO_STATUS,
-				"Por favor entre un código de acceso\n");
+				"Por favor entre un cï¿½digo de acceso\n");
         }
         else
 		{
@@ -273,7 +273,7 @@ EVENT_TYPE UIW_PASSWORD::Event(const UI_EVENT &event)
                     eventManager->Event(tmpEvent, E_CONTROLLER);
                 }
                 else
-                    errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Código de acceso inválido\n");
+                    errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Cï¿½digo de acceso invï¿½lido\n");
             }
             else
             {
@@ -294,7 +294,7 @@ EVENT_TYPE UIW_PASSWORD::Event(const UI_EVENT &event)
                     eventManager->Event(tmpEvent, E_CONTROLLER);
                 }
                 else
-                    errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Código de acceso inválido\n");
+                    errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Cï¿½digo de acceso invï¿½lido\n");
             }
         }
 

@@ -8,8 +8,12 @@
   Tested on PowerShell Core 7+ on Windows 11; should also work on
   Windows PowerShell 5.1 and on pwsh on macOS/Linux.
 
-  Usage:   .\build.ps1 [-Force] [-KeepLogInSt] [demo|dbg|eda|prod]
-  Default: demo, log at repo root (build.log)
+  Usage:   .\build.ps1 [-Force] [-DebugBuild] [-KeepLogInSt] [demo_dos|real_dos]
+  Default: demo_dos, log at repo root (build.log)
+
+  Variants (mini-smarttar): demo_dos is the buildable variant; real_dos is
+  DEACTIVATED and fails by design (real_dos\ trips a #error unless
+  REAL_DOS_ENABLED). See MINI_SMARTTAR_PLAN.
 
   Only one instance can run at a time (DOSBox-X locks its config / display).
 
@@ -22,11 +26,17 @@
   terminates DOSBox-X).
 
 .PARAMETER Variant
-  Build variant: demo (default) | dbg | eda | prod.
+  Build variant: demo_dos (default, buildable) | real_dos (deactivated, fails
+  by design).
 
 .PARAMETER Force
   Pass -B to Borland MAKE (force rebuild of all targets, ignoring
   timestamps). Alias: -Rebuild.
+
+.PARAMETER DebugBuild
+  Add -DDEBUG (Borland -v symbols). Modifier on the variant; there is no
+  separate debug variant. (Named DebugBuild because -Debug is a reserved
+  PowerShell common parameter.)
 
 .PARAMETER KeepLogInSt
   Write the log inside st\ (st\build.log) instead of the repo root.
@@ -36,21 +46,23 @@
 
 .EXAMPLE
   .\build.ps1
-  Demo build, log at .\build.log.
+  demo_dos build, log at .\build.log.
 
 .EXAMPLE
-  .\build.ps1 prod -Force
-  Force-rebuild the production variant.
+  .\build.ps1 demo_dos -Force -DebugBuild
+  Force-rebuild the demo_dos variant with debug symbols.
 #>
 
 [CmdletBinding()]
 param(
     [Parameter(Position=0)]
-    [ValidateSet('demo','dbg','eda','prod')]
-    [string]$Variant = 'demo',
+    [ValidateSet('demo_dos','real_dos')]
+    [string]$Variant = 'demo_dos',
 
     [Alias('Rebuild')]
     [switch]$Force,
+
+    [switch]$DebugBuild,
 
     [switch]$KeepLogInSt
 )
@@ -95,6 +107,10 @@ if ($Force) {
     $makeArgs    += ' -B'
     $bannerSuffix = ' (force rebuild)'
 }
+if ($DebugBuild) {
+    $makeArgs    += ' -DDEBUG'
+    $bannerSuffix += ' (debug)'
+}
 
 Write-Host "build: building variant '$Variant'$bannerSuffix (log: $log) ..."
 Write-Host 'build: streaming compile output below.'
@@ -103,7 +119,7 @@ Write-Host ('-' * 70)
 # Build output dirs are gitignored and absent on a fresh checkout. C: is the
 # repo mount, so creating them host-side makes them visible inside DOSBox-X.
 New-Item -ItemType Directory -Force -Path `
-    st/build, st/bin, st/lib, st/util/ini2cfg/obj, st/util/inf2dat/obj | Out-Null
+    st/build, st/bin, st/lib, st/util/inf2dat/obj | Out-Null
 
 # Truncate or create the log. Remove-Item fails when a previous run's
 # FileStream (FileShare::ReadWrite, no FileShare::Delete) is still open.
@@ -112,7 +128,6 @@ New-Item -ItemType Directory -Force -Path `
 $dosboxArgs = @(
     '-conf',       'dosbox-x.conf',
     '-fastlaunch',
-    '-c',          "command /c util\ini2cfg\mk_cfg.bat >> $dosLog",
     '-c',          "command /c util\inf2dat\mk_ph.bat >> $dosLog",
     '-c',          "command /c make$Variant.bat $makeArgs >> $dosLog",
     '-c',          'exit'

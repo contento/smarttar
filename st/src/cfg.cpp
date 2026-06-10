@@ -15,7 +15,6 @@ char *_COM_FMT     = "%u %u %u %s %u";
 //
 // local variables
 //
-static const char *CFG_FILENAME = "ST.CFG";
 static const char *INI_FILENAME = "ST.INI";
 
 static const WORD MAX_ID_VALUES = 0x100; // !!!
@@ -30,7 +29,7 @@ static char *forms[] = {
 	"18 col. doble rollo",
 	"28 col. rollo simple",
 	"80 col. EMETEL",
-    "80 col. media página",
+    "80 col. media pï¿½gina",
 };
 
 static char *_MCARD_PRINT_FMT  = "%.1lf,%.1lf,%.1lf,%.1lf";
@@ -42,59 +41,28 @@ static char *_MCARD_SCAN_FMT   = "%lf,%lf,%lf,%lf";
 
 static WORD status = CFG::NO_CFG_FILE;
 
-WORD CFG::Load(const char *path, BOOL fromIni)
+WORD CFG::Load(const char *path)
 {
     FILE_NAME filename;
-    if (!fromIni)
-    { // load from .CFG
-        SetDefault(TRUE);
-        if (path)
-            strcpy(filename, path);
-        else
-            _GetAppPath(filename); // NULL implies .EXE path
-        strcat(filename, CFG_FILENAME);
-        ifstream file(filename, ios::in|ios::binary);
-        if (!file)
-            return (status = NO_CFG_FILE);
-        FILE_HEADER header;
-        file.read((char *)&header, sizeof(FILE_HEADER));
-        if (file.gcount() != sizeof(FILE_HEADER) || !header.IsValid())
-            return (status = BAD_CFG_FILE);
-        file.read((char *)this, sizeof(*this));
-        if (header.GetAttr() & FILE_HEADER::CRYPTED)
-            _Decrypt(this, file.gcount());
-        if (file.gcount() != sizeof(*this))
-            return (status = BAD_CFG_FILE);
-#if !defined(__TEST__) && !defined(__UTIL__)
-        // check to see if they tried to change the clusters from INI
-		CLUSTERS = (CLUSTERS==0)?1:CLUSTERS;
-		extern APP_INFO g_appInfo;
-		CLUSTERS = (CLUSTERS>g_appInfo.MaxClusters)?g_appInfo.MaxClusters:CLUSTERS;
-#endif
-		// begin 2.30
-		ACTIVE_CLUSTERS = CLUSTERS;
-		// end 2.30
 
-		AdjustHeader();
-    }
+    // Load from ST.INI (the single, human-editable config source).
+    SetDefault(); // only change the parameters
+    if (path)
+        strcpy(filename, path);
     else
-    { // load from .INI
-        SetDefault(); // only change the parameters
-        if (path)
-            strcpy(filename, path);
-        else
-            _GetAppPath(filename); // NULL implies .EXE path
-        strcat(filename, INI_FILENAME);
-        ifstream file(filename, ios::in);
-        ENTRY *table = new ENTRY[MAX_ID_VALUES];
-        memset(table, 0, sizeof(ENTRY)*MAX_ID_VALUES);
-        FillCfgTable(table);
-        STR512 line;
-        while (file.getline(line, sizeof(STR512)))
-            Line2Entry(table, line);
-        Adjust();
-        delete [] table;
-    }
+        _GetAppPath(filename); // NULL implies .EXE path
+    strcat(filename, INI_FILENAME);
+    ifstream file(filename, ios::in);
+    if (!file)
+        return (status = NO_CFG_FILE);
+    ENTRY *table = new ENTRY[MAX_ID_VALUES];
+    memset(table, 0, sizeof(ENTRY)*MAX_ID_VALUES);
+    FillCfgTable(table);
+    STR512 line;
+    while (file.getline(line, sizeof(STR512)))
+        Line2Entry(table, line);
+    Adjust();
+    delete [] table;
 
     // Date related fields
     // adjust turn day 2.20.7f || 2.20.9 Build 4
@@ -113,51 +81,29 @@ WORD CFG::GetStatus(void)
     return status;
 }
 
-WORD CFG::Save(const char *path, BOOL saveIni)
+WORD CFG::Save(const char *path)
 {
     FILE_NAME filename;
     if (path)
         strcpy(filename, path);
     else
         _GetAppPath(filename); // NULL implies .EXE path
-    strcat(filename, CFG_FILENAME);
+    strcat(filename, INI_FILENAME);
     if (access(filename, 0x06) != 0)
         chmod(filename, S_IREAD|S_IWRITE);
-    ofstream file(filename, ios::out|ios::binary);
-    FILE_HEADER header;
-    header.SetAttr(FILE_HEADER::CRYPTED);
-    file.write((char *)&header, sizeof(FILE_HEADER));
-    // use a temporal buffer to avoid interferences with RTEngine. JEAM/gcc.
-    char *tmpConfig = new char[sizeof(*this)];
-    memcpy(tmpConfig, (char *)this, sizeof(*this));
-    _Encrypt(tmpConfig, sizeof(*this));
-    file.write(tmpConfig, sizeof(*this));
-    delete [] tmpConfig;
-    file.close();
-    //
-    if (saveIni)
-    {
-        if (path)
-            strcpy(filename, path);
-        else
-            _GetAppPath(filename); // NULL implies .EXE path
-        strcat(filename, INI_FILENAME);
-        if (access(filename, 0x06) != 0)
-            chmod(filename, S_IREAD|S_IWRITE);
-        file.open(filename);
-        ENTRY *table = new ENTRY[MAX_ID_VALUES];
-        memset(table, 0, sizeof(ENTRY)*MAX_ID_VALUES);
-        FillCfgTable(table);
-        char strDate[0x10];
-        char strTime[0x10];
-        file << ";\n; Configuraci¢n [" << _GetSysDate(strDate) << ' ' << _GetSysTime(strTime) << "]\n";
-        file << ";\n; Utilice SETUP para producir ST.CFG" << "\n;\n\n";
-        STR512 line;
-        for (WORD offset=0; table[offset].Id; offset++)
-            if (Entry2Line(table, offset, line))
-                file << line << '\n';
-        delete [] table;
-    }
+    ofstream file(filename, ios::out);
+    ENTRY *table = new ENTRY[MAX_ID_VALUES];
+    memset(table, 0, sizeof(ENTRY)*MAX_ID_VALUES);
+    FillCfgTable(table);
+    char strDate[0x10];
+    char strTime[0x10];
+    file << ";\n; Configuraciï¿½n [" << _GetSysDate(strDate) << ' ' << _GetSysTime(strTime) << "]\n";
+    file << ";\n\n";
+    STR512 line;
+    for (WORD offset=0; table[offset].Id; offset++)
+        if (Entry2Line(table, offset, line))
+            file << line << '\n';
+    delete [] table;
     return OK;
 }
 
@@ -838,11 +784,11 @@ void CFG::SetDefault(BOOL setAll)
     strcpy(SysGroup, ";\n; [ Sistema ]\n;");
     strcpy(COUNTRY, "Colombia");
     strcpy(CURRENCY, "$");
-    strcpy(CITY    , "Medellín");
+    strcpy(CITY    , "Medellï¿½n");
     strcpy(COMPANY , "TELECOM");
     strcpy(ID      , ""); // clear ID.  JEAM/GCC
     strcpy(OPERATOR_NAME, "TELECOM"); // v2.16
-    DEALER         = 0; // MicroDise¤o Ltda.
+    DEALER         = 0; // MicroDiseï¿½o Ltda.
 	CLUSTERS       = 2;
 	ACTIVE_CLUSTERS = CLUSTERS; // 2.30
 	VIEW_REFRESH_TIME = 500;
@@ -852,7 +798,7 @@ void CFG::SetDefault(BOOL setAll)
 	TAX_PERCENT    = 16;
 	DDN_TAX        = 16;
 	DDI_TAX        = 16;
-    strcpy(OP_TITLE, "Señora");
+    strcpy(OP_TITLE, "Seï¿½ora");
     strcpy(OP_NAME , "Adriana Giraldo");
     SS_ID          = 0;
     SS_TIME        = 0;
@@ -896,7 +842,7 @@ void CFG::SetDefault(BOOL setAll)
 	CORRECTION_TIME          = 0; // miliseconds
 	TURN_DAY				 = 1;
     TURN_NUMBER              = 1;
-    strcpy(HEADER_LINE1, "Recibo de pago de servicios públicos");
+    strcpy(HEADER_LINE1, "Recibo de pago de servicios pï¿½blicos");
     strcpy(HEADER_LINE2, "");
     strcpy(HEADER_LINE3, "");
     strcpy(HEADER_LINE4, "Somos agente retenedor del");
@@ -918,11 +864,7 @@ void CFG::SetDefault(BOOL setAll)
 	INTERNET_ROUND	= 15.0; // minutos
 	INTERNET_TARIFF = 800.0; // pesos
 	CELLULAR_TAX	= 20.0; // 2.33
-#if defined(__DEMO__)
-	strcpy(ENGINE_KIND, "demo"); // 2.50 -- dev / demo / training
-#else
-	strcpy(ENGINE_KIND, "real"); // 2.50 -- production hardware
-#endif
+	strcpy(ENGINE_KIND, "demo"); // mini-smarttar: always default to demo
 	N_RECEIPT    = 0L;
 	N_DIAL_ERR   = 0;
 	N_COM_ERR    = 0;
@@ -1015,7 +957,7 @@ void CFG::SetDefault(BOOL setAll)
     //
     // [ Critical ]
     //
-    strcpy(CriticalGroup, ";\n; [ Valores Cr¡ticos ]\n;");
+    strcpy(CriticalGroup, ";\n; [ Valores Crï¿½ticos ]\n;");
     CHECK_PAUSE_KEY     = TRUE;
 	IGNORE_EXTRA_DIGITS = FALSE;
     EXCLUSIVE_SPY       = TRUE;

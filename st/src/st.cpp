@@ -13,18 +13,13 @@
 #include <control.h>
 #include <info.h>
 
-#if defined(__DEMO__)
-#include <dongle.h>
-#endif
-
-#include <eeprom.h>
 
 #define USE_HELP_CONTEXTS
 #include <res.hpp>
 #include <help.hpp>
 
 char  *g_SHORT_APP_ENG  = "GCC";
-char  *g_LONG_APP_ENG   = "Gonzalo Contento Casta¤o";
+char  *g_LONG_APP_ENG   = "Gonzalo Contento Castaï¿½o";
 
 extern CFG  *g_cfg;
 
@@ -115,49 +110,6 @@ main(int , char *argv[])
 
 	UI_WINDOW_OBJECT::helpSystem = new UI_HELP_SYSTEM("help.dat", windowManager, H_GENERAL);
 
-#if !defined(__DEMO__)
-	if (g_STM2->getStatus() == STM2::NONE)
-	{
-		UI_WINDOW_OBJECT::errorSystem->ReportError(windowManager,
-				WOS_NO_STATUS, "\n\n      Acceso Negado\n");
-		Log log(Log::OUT|Log::CREATE);
-		log.put(Log::STM2BADTRY);
-		// Clean up.
-		clean(display, eventManager, windowManager);
-		return (2);
-	}
-	// Activate EEPROM.  version 2.19b
-	extern SUPER_APP_INFO g_superAppInfo;
-	if (!g_superAppInfo.Attr.NoEEPROM)
-	{
-		EEPROM eeprom;
-		if (!eeprom.isValidVersion())
-		{
-			UI_WINDOW_OBJECT::errorSystem->ReportError(windowManager,
-					WOS_NO_STATUS, "\n\n      Versión no válida\n");
-			// Clean up.
-			Log log(Log::OUT|Log::CREATE);
-			log.put(Log::EEPROMBADTRY);
-			clean(display, eventManager, windowManager);
-			return (2);
-		}
-	}
-#else
-#if !defined(__NO_DONGLE__)
-DONGLE dongle;
-	if (!dongle.isThere())
-	{
-		UI_WINDOW_OBJECT::errorSystem->ReportError(windowManager,
-                WOS_NO_STATUS, "\n\n      Acceso Negado\n"
-                                                  );
-        Log log(Log::OUT|Log::CREATE);
-		log.put(Log::DONGLEBADTRY);
-        // Clean up.
-        clean(display, eventManager, windowManager);
-        return (2);
-    }
-#endif
-#endif // __DEMO__
     // attach the new devices ...
 	CONTROLLER *controller = NULL;
 	*eventManager
@@ -167,8 +119,8 @@ DONGLE dongle;
     {
         UI_WINDOW_OBJECT::errorSystem->ReportError(windowManager, WOS_NO_STATUS,
                 "\n\n""      Acceso Negado\n"
-                "Configuración no disponible.\n"
-                " Deberá instalar el sistema."
+                "Configuraciï¿½n no disponible.\n"
+                " Deberï¿½ instalar el sistema."
                                                   );
 		Log log(Log::OUT|Log::CREATE);
         log.put(Log::CFGBADTRY);
@@ -190,29 +142,7 @@ DONGLE dongle;
         else
         {
 			controller->RefreshView();
-            controller->RefreshBoothDisplay();
-#if defined(__DEMO__)
-#if !defined(__NO_DONGLE__)
-            static UI_TIME __ULastTime, __UCurTime;
-            static int __CurHour, __CurMin, __CurSec;
-            static int __LastHour, __LastMin, __LastSec;
-            __UCurTime.Import();
-            __UCurTime.Export(&__CurHour, &__CurMin, &__CurSec);
-            __ULastTime.Export(&__LastHour, &__LastMin, &__LastSec);
-            if (__CurMin != __LastMin)
-            {
-                __ULastTime.Import();
-                if (!dongle.isThere())
-                {
-                    UI_WINDOW_OBJECT::errorSystem->ReportError(windowManager,
-                            WOS_NO_STATUS, "\n\n      Acceso Negado\n");
-                    // Clean up.
-                    clean(display, eventManager, windowManager);
-                    return (2);
-				}
-            }
-#endif
-#endif
+			         controller->RefreshBoothDisplay();
         }
     }
     while (ccode != L_EXIT && ccode != S_NO_OBJECT);
@@ -269,7 +199,7 @@ EVENT_TYPE Exit(UI_DISPLAY *display, UI_EVENT_MANAGER *, UI_WINDOW_MANAGER *wind
 	{
 		*window
 		+ new UIW_BUTTON( 3, 3, 9, "", BTF_NO_3D|BTF_AUTO_SIZE|BTF_STATIC_BITMAPARRAY, WOF_NON_SELECTABLE, NULL, 0, "ST")
-		+ new UIW_PROMPT(15, 1, "El sistema está procesando información.")
+		+ new UIW_PROMPT(15, 1, "El sistema estï¿½ procesando informaciï¿½n.")
 		+ new UIW_PROMPT(15, 2, "Por favor verifique todas las cabinas.")
 		+ new UIW_BUTTON(19, 5, 15, "~Aceptar", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, S_CLOSE)
 		;
@@ -278,7 +208,7 @@ EVENT_TYPE Exit(UI_DISPLAY *display, UI_EVENT_MANAGER *, UI_WINDOW_MANAGER *wind
 	{
 		*window
 		+ new UIW_BUTTON( 3, 3, 9, "", BTF_NO_3D|BTF_AUTO_SIZE|BTF_STATIC_BITMAPARRAY, WOF_NON_SELECTABLE, NULL, 0, "ST")
-		+ new UIW_PROMPT(15, 2, "Detener la simulación y salir ?")
+		+ new UIW_PROMPT(15, 2, "Detener la simulaciï¿½n y salir ?")
 		+ new UIW_BUTTON(14, 5, 11, "~Si", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, L_EXIT)
 		+ ( wNoButton =
 				new UIW_BUTTON(31, 5, 11, "~No", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, S_CLOSE)
@@ -290,7 +220,7 @@ EVENT_TYPE Exit(UI_DISPLAY *display, UI_EVENT_MANAGER *, UI_WINDOW_MANAGER *wind
 	{
 		*window
 		+ new UIW_BUTTON( 3, 3, 9, "", BTF_NO_3D|BTF_AUTO_SIZE|BTF_STATIC_BITMAPARRAY, WOF_NON_SELECTABLE, NULL, 0, "ST")
-		+ new UIW_PROMPT(15, 2, "Terminar la sesión de trabajo ?")
+		+ new UIW_PROMPT(15, 2, "Terminar la sesiï¿½n de trabajo ?")
 		+ new UIW_BUTTON(14, 5, 11, "~Si", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, L_EXIT)
 		+ ( wNoButton =
 				new UIW_BUTTON(31, 5, 11, "~No", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, S_CLOSE)

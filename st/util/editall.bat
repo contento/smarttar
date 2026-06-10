@@ -1,2 +1,2 @@
 @echo off
-call q inf2dat\build ini2cfg\build
+call q inf2dat\build

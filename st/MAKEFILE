@@ -1,4 +1,4 @@
-#
+p#
 # MAKEFILE
 #
 
@@ -27,7 +27,6 @@ LIB_DIR=lib
 INCLUDE_DIR=include
 RES_DIR=res
 INF2DAT_DIR=util\inf2dat
-INI2CFG_DIR=util\ini2cfg
 UTIL_DIR=util
 
 # NOTE: Borland MAKE 3.6 (bundled with BC 3.1) does NOT support the
@@ -64,25 +63,19 @@ DONGLE=__NO_DONGLE__
 DEMO=
 !endif
 
-!if $d(EDA)
-EDA=__EDA__ 			# it's for EDA !
-!else
-EDA=
-!endif
-
 # TLINK library search path. The -L in st.cfg is BCC286's (forwarded to
 # TLINK only when BCC286 invokes the linker). We call TLINK directly, so
 # we must pass the lib path here too.
 LINK_LIBPATH=/L..\vendor\bc\lib;..\vendor\pharlap\lib;..\vendor\zinc\lib;lib
 
 !if $d(DEBUG)
-OBJ_CC_OPTIONS= -c +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA) -v
-DLL_CC_OPTIONS= -dll +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);NDEBUG -v
+OBJ_CC_OPTIONS= -c +$(APP).cfg -D$(DEMO);$(DONGLE) -v
+DLL_CC_OPTIONS= -dll +$(APP).cfg -D$(DEMO);$(DONGLE);NDEBUG -v
 LINK_OPTS=/c /C /x /v $(LINK_LIBPATH)
 ASM_OPTS=/mx /zi
 !else
-OBJ_CC_OPTIONS= -c +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);NDEBUG
-DLL_CC_OPTIONS= -dll +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);NDEBUG
+OBJ_CC_OPTIONS= -c +$(APP).cfg -D$(DEMO);$(DONGLE);NDEBUG
+DLL_CC_OPTIONS= -dll +$(APP).cfg -D$(DEMO);$(DONGLE);NDEBUG
 LINK_OPTS=/c /C /s $(LINK_LIBPATH)
 ASM_OPTS=/mx
 !endif
@@ -193,11 +186,6 @@ DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 	$(BIN_DIR)\pr_dreme.$(DLL_EXT) \
 	$(BIN_DIR)\pr_drhal.$(DLL_EXT)
 
-# All locations that receive a copy of the ini2cfg-generated st.cfg.
-# Adding a new tool here is all that is needed to wire it in.
-CFG_DESTS=\
-	$(BIN_DIR)\st.cfg \
-	$(UTIL_DIR)\inf2dat\st.cfg
 
 .c.dll:
 	$(CC) $(DLL_CC_OPTIONS) {$< }
@@ -211,7 +199,7 @@ CFG_DESTS=\
 .asm.obj:
 	$(ASM) $(ASM_OPTS) $<, $@
 
-$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(CFG_DESTS) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\phones.csv $(LINK_OBJS) $(DLLS)
+$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\phones.csv $(LINK_OBJS) $(DLLS)
 	$(LINK) $(LINK_OPTS) @&&!
 $(STARTUP_OBJS) $(LINK_OBJS)
 $*, ,$(LIBS), $(DEF_FILE)
@@ -232,26 +220,21 @@ $(BIN_DIR)\$(HELP_FILE): $(RES_DIR)\help.txt
 $(BIN_DIR)\$(RES_FILE): $(RES_DIR)\$(RES_FILE)
 	@copy $(RES_DIR)\$(RES_FILE) $(BIN_DIR)\$(RES_FILE) > NUL
 
-# Application config -- ini2cfg generates st.cfg from st.ini, then each
-# tool's copy rule distributes it.  The ini2cfg invocation itself is
-# done OUT-OF-BAND by build.sh / build.ps1 before make runs, because
-# Borland MAKE 3.6 mis-propagates errorlevel from .bat-internal rules
-# (see HANDOFF / TODO).  Same story for PH_INFO.DAT regen via mk_ph.bat.
-$(BIN_DIR)\st.cfg: $(INI2CFG_DIR)\st.cfg
-	@copy $(INI2CFG_DIR)\st.cfg $(BIN_DIR)\st.cfg > NUL
-$(UTIL_DIR)\inf2dat\st.cfg: $(INI2CFG_DIR)\st.cfg
-	@copy $(INI2CFG_DIR)\st.cfg $(UTIL_DIR)\inf2dat\st.cfg > NUL
-$(BIN_DIR)\st.ini: $(INI2CFG_DIR)\st.ini
-	@copy $(INI2CFG_DIR)\st.ini $(BIN_DIR)\st.ini > NUL
-$(BIN_DIR)\demo.ini: $(INI2CFG_DIR)\demo.ini
-	@copy $(INI2CFG_DIR)\demo.ini $(BIN_DIR)\demo.ini > NUL
+# Application config -- ST.INI is the single, human-readable config source
+# (mini-smarttar: ini2cfg dropped, binary ST.CFG eliminated).  ST.INI and
+# demo.ini are copied to bin/ so the runtime app finds them in the working
+# directory.  PH_INFO.DAT regen via mk_ph.bat is done OUT-OF-BAND by
+# build.sh / build.ps1 before make runs (see HANDOFF / TODO).
+$(BIN_DIR)\st.ini: st.ini
+	@copy st.ini $(BIN_DIR)\st.ini > NUL
+$(BIN_DIR)\demo.ini: demo.ini
+	@copy demo.ini $(BIN_DIR)\demo.ini > NUL
 # Real-number dataset for DEMO_ENGINE -- canonical source in util/inf2dat;
 # DEMO_ENGINE::ParsePhones reads it from bin/ at startup.
 $(BIN_DIR)\phones.csv: $(INF2DAT_DIR)\phones.csv
 	@copy $(INF2DAT_DIR)\phones.csv $(BIN_DIR)\phones.csv > NUL
-# Telephony binary database (bin\PH_INFO.DAT) and ini2cfg-generated
-# st.cfg (util\ini2cfg\st.cfg) are produced OUT-OF-BAND by build.sh /
-# build.ps1 before make runs.  MAKE rules used to invoke mk_ph.bat /
+# Telephony binary database (bin\PH_INFO.DAT) is produced OUT-OF-BAND by
+# build.sh / build.ps1 before make runs.  MAKE rules used to invoke mk_ph.bat /
 # mk_cfg.bat directly, but Borland MAKE 3.6 misreports errorlevel from
 # .bat-internal commands and deletes the (just-created) target.  The
 # bats work correctly when invoked from DOSBox-X directly, so build.sh

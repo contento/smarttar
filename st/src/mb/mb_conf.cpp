@@ -1,4 +1,4 @@
-//
+l//
 // [ MB_CONF.CPP ]
 //
 
@@ -210,7 +210,7 @@ EVENT_TYPE UIW_SIGNAL::Event(const UI_EVENT &event)
         LastEvent = ccode;
         WSignalGroup->Destroy();
         UIW_BUTTON *tW150;
-        WSignalGroup->Information(SET_TEXT, "Por inversión");
+        WSignalGroup->Information(SET_TEXT, "Por inversiï¿½n");
         *WSignalGroup
         + (WSteadyButton = new UIW_BUTTON(1, 1, 20, "Permanente", BTF_RADIO_BUTTON))
         + (tW150         = new UIW_BUTTON(1, 2, 20, "Durante 150 ms", BTF_RADIO_BUTTON));
@@ -823,7 +823,7 @@ EVENT_TYPE UIW_ALIAS::Event(const UI_EVENT &event)
     case UE_ACCEPT:
         for (i = 0; i < MAX_BOOTH; i++)
 			strcpy(g_cfg->BoothInfo[i].Name, WNames[i]->DataGet());
-		g_cfg->Save(NULL, FALSE);
+		g_cfg->Save();
         eventManager->Put(UI_EVENT(S_CLOSE,0));
         break;
     case UE_CANCEL:
@@ -1358,10 +1358,10 @@ EVENT_TYPE UIW_CHANGE_PASSWD::Event(const UI_EVENT &event)
         wString = (UIW_STRING *)Get("S_NEW_PASSWD");
         char *newString = wString->DataGet();
 		if (!g_cfg->ChangePassword(oldString, newString))
-            errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Código de acceso inválido\n");
+            errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Cï¿½digo de acceso invï¿½lido\n");
         else
         {
-            g_cfg->Save(NULL, FALSE);
+            g_cfg->Save();
             eventManager->Put(UI_EVENT(S_CLOSE,0));
         }
         break;

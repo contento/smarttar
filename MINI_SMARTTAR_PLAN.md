@@ -310,6 +310,11 @@ The strip-down + seams above are precisely what make this feasible:
 - **8.3 + encoding discipline** applies to every new file (`demo_dos`,
   `real_dos`, `core`, new headers). New `.cpp/.h` are CRLF + Latin-1/CP850 per
   the existing rules; this `.md` and host scripts stay LF/UTF-8.
+- **PDF pseudo-device**: create a `PDF` output pseudo-device (virtual printer)
+  that renders receipts to PDF files instead of a physical printer. This
+  complements the demo-mode story — users can generate printable output without
+  hardware. Candidate for Phase 2 portability seam work (portable PDF
+  generation is language-neutral).
 
 ---
 
@@ -323,7 +328,7 @@ The strip-down + seams above are precisely what make this feasible:
 | 1.2fix | rt_do/isr/store/util+serial are core, not real_dos | demo green | DONE |
 | 1.3a | demo drops rt_eng/dongle/eeprom (factory guard + LINK_OBJS) | st.exe 1087668 | DONE |
 | 1.3b | STM2 abstracted (NullStm2 demo / BankStm2 real) | st.exe 1086724; demo links 0 real_dos | DONE (build-verified; runtime smoke-test pending) |
-| 1.4 | config from ST.INI, ini2cfg gone | demo green | TODO |
+| 1.4 | config from ST.INI, ini2cfg gone | demo green | DONE |
 | 1.5 | two variants; real_dos #errors; drop eda/prod | demo green / real_dos errors | TODO |
 | 2.1a | BinStorage extracted behind backend iface | demo green (binary) |
 | 2.1b | CsvStorage added, default flipped to csv | demo green (csv) |
