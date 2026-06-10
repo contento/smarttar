@@ -6,6 +6,8 @@
 
 #include <control.h>
 #include <db_eng.h>
+#include <csv_stor.h>
+
 
 #if !defined(__TEST__)
 #include <stm2.h>
@@ -37,16 +39,26 @@ extern STM2 *g_STM2;
 
 DB_ENGINE::DB_ENGINE(void)
 {
+	// Choose storage backend from config: "csv" (default) or "bin".
+	BOOL useCsv = (g_cfg->STORAGE[0] == 'c' || g_cfg->STORAGE[0] == 'C');
+
 	// current turn
-	DBStorage       = new DB_STORAGE(NULL, DB_NAME, FALSE);
-    DBStatistics    = new DB_STATISTICS(NULL, DB_NAME, FALSE);
-    //
+	DBStorage       = useCsv
+		? (DB_STORAGE_BACKEND *)new CsvStorage(NULL, DB_NAME, FALSE)
+		: (DB_STORAGE_BACKEND *)new BinStorage(NULL, DB_NAME, FALSE);
+	DBStatistics    = new DB_STATISTICS(NULL, DB_NAME, FALSE);
+	//
 #if !defined(__TEST__)
 #if !defined(__NOAPPINFO__)
 	if (g_superAppInfo.Attr.STPro)
-    {
-        DBExtStorage    = new DB_STORAGE(NULL, DB_EXT_NAME, FALSE);
-        DBExtStatistics = new DB_EXT_STATISTICS(NULL, DB_EXT_NAME, FALSE);
+	{
+		DBExtStorage = useCsv
+			? (DB_STORAGE_BACKEND *)new CsvStorage(NULL, DB_EXT_NAME, FALSE)
+			: (DB_STORAGE_BACKEND *)new BinStorage(NULL, DB_EXT_NAME, FALSE);
+		DBExtStatistics = new DB_EXT_STATISTICS(NULL, DB_EXT_NAME, FALSE);
+	}
+#endif
+#endif
     }
 #endif
 #endif
@@ -223,7 +235,7 @@ void DB_ENGINE::Recover(void)
 
 	// Collect manual mode receipts
 
-	DB_STORAGE::Iterator it(GetDBStorage());
+	BinStorage::Iterator it(GetDBStorage());
 	it.Restart();
 
 	long number;
@@ -483,8 +495,8 @@ BOOL DB_ENGINE::LoadArcDB(WORD date, WORD turn)
 	FILE_NAME arcName;
 	sprintf(arcName, "%s%02d_%02d", DB_NAME, day, turn); // v.219d
 	//
-	ArcDBStorage = new DB_STORAGE(arcPath, arcName);
-	if (ArcDBStorage->GetStatus() != DB_STORAGE::OK)
+	ArcDBStorage = new BinStorage(arcPath, arcName);
+	if (ArcDBStorage->GetStatus() != BinStorage::OK)
 	{
 		delete ArcDBStorage;
 		ArcDBStorage = NULL;

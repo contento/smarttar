@@ -324,6 +324,10 @@ public:
 	// 2.50 -- engine concrete: "real" (RT_ENGINE, hardware) or "demo"
 	// (DEMO_ENGINE, fake).  See eng_fact.cpp.
 	char ENGINE_KIND[8];
+	// 2.71 -- storage backend: "csv" (CsvStorage, default) or "bin"
+	// (BinStorage).  See MINI_SMARTTAR_PLAN § 2.1.
+	char STORAGE[8];
+
 
 	//
 	// To adjust some members

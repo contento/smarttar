@@ -31,14 +31,10 @@ LINK=tlink
 BIND=bind286
 RTK_DIR=..\..\..\vendor\pharlap\bin
 
-DONGLE=
-!if $d(DEMO)
-DEMO=__DEMO__             # demo version
-!if $d(NODONGLE)
-DONGLE=__NO_DONGLE__
-!endif
-!else
-DEMO=
+# DEMO_DOS passed via make invocation (see makedemo_dos.bat).
+IS_DEMO=
+!if $d(DEMO_DOS)
+IS_DEMO=1
 !endif
 
 !if $d(AUTO)
@@ -54,11 +50,11 @@ EDA=
 !endif
 
 !if $d(DEBUG)
-CC_OPTS= +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);$(AUTO) -v
+CC_OPTS= +$(APP).cfg -D$(EDA);$(AUTO) -v
 LINK_OPTS=/c /C /x /v
 ASM_OPTS=/mx /zi
 !else
-CC_OPTS= +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);$(AUTO)
+CC_OPTS= +$(APP).cfg -D$(EDA);$(AUTO)
 LINK_OPTS=/c /C /x
 ASM_OPTS=/mx
 !endif

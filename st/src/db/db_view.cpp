@@ -201,17 +201,17 @@ EVENT_TYPE DBView::ProcessNumber(UI_WINDOW_OBJECT *object, UI_EVENT &, EVENT_TYP
 	long fromNumber;
 	pwThis->m_pwNumber->DataGet()->Export(&fromNumber);
 
-	DB_STORAGE::Iterator *pit = NULL;
+	BinStorage::Iterator *pit = NULL;
 
 	if (pwThis->m_bFromTurn)
 	{
-		pit = new DB_STORAGE::Iterator(g_dbEngine->GetDBStorage());
+		pit = new BinStorage::Iterator(g_dbEngine->GetDBStorage());
 	}
 	else
 	{
 		if (pwThis->m_bArchive)
 		{
-			pit = new DB_STORAGE::Iterator(g_dbEngine->GetArcDBStorage());
+			pit = new BinStorage::Iterator(g_dbEngine->GetArcDBStorage());
 		}
 	}
 	if (!pit)
@@ -307,30 +307,30 @@ void DBView::ShowRecord(long nNumber)
 		{
 		case Receipt::TEL:
 			{
-				serv = "Telefonía";
+				serv = "Telefonï¿½a";
 				boothPrompt = "  Cabina";
 				booth = g_cfg->BoothInfo[receipt.BoothNumber].Name;
-				phonePrompt = "Teléfono";
+				phonePrompt = "Telï¿½fono";
 				phone = receipt.Phone;
-				amountPrompt = "Duración";
+				amountPrompt = "Duraciï¿½n";
 				amount.Import(g_Milisec2Time(receipt.ElapsedTime, g_cfg->CORRECTION_TIME));
 				break;
 			}
 		case Receipt::SPECIAL_TEL:
 			{
-				serv = "Telefonía Esp.";
+				serv = "Telefonï¿½a Esp.";
 				boothPrompt = "  Cabina";
 				booth = g_cfg->BoothInfo[receipt.BoothNumber].Name;
-				phonePrompt = "Teléfono";
+				phonePrompt = "Telï¿½fono";
 				phone = receipt.Phone;
-				amountPrompt = "Duración";
+				amountPrompt = "Duraciï¿½n";
 				amount.Import(g_Milisec2Time(receipt.ElapsedTime, g_cfg->CORRECTION_TIME));
 				break;
 			}
 		case Receipt::FAX:
 			{
 				serv = "Fax";
-				phonePrompt = "Teléfono";
+				phonePrompt = "Telï¿½fono";
 				phone = receipt.Phone;
 				break;
 			}

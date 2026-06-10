@@ -125,10 +125,16 @@ New-Item -ItemType Directory -Force -Path `
 # FileStream (FileShare::ReadWrite, no FileShare::Delete) is still open.
 [IO.File]::WriteAllText((Join-Path (Get-Location) $log), '')
 
+# Map variant name to 8.3-safe batch filename (LFN disabled in DOSBox-X).
+$batFile = switch ($Variant) {
+    'demo_dos' { 'mkdemos' }
+    'real_dos' { 'mkrldos' }
+}
+
 $dosboxArgs = @(
     '-conf',       'dosbox-x.conf',
     '-fastlaunch',
-    '-c',          "command /c make$Variant.bat $makeArgs >> $dosLog",
+    '-c',          "command /c $batFile.bat $makeArgs >> $dosLog",
     '-c',          'exit'
 )
 

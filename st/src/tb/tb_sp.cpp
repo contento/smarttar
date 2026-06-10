@@ -83,10 +83,10 @@ EVENT_TYPE UIW_SP_SERV::Event(const UI_EVENT &event)
             s[0] = NULL;
 
 			WService->Destroy();
-			WService->Information(SET_TEXT, (ccode == UE_S_N_TEL)?"Telefonía Nacional":"Telefonía Internacional");
+			WService->Information(SET_TEXT, (ccode == UE_S_N_TEL)?"Telefonï¿½a Nacional":"Telefonï¿½a Internacional");
 			*WService
 				+ new UIW_PROMPT(1, 1, "   Cabina")
-				+ new UIW_PROMPT(1, 2, " Teléfono")
+				+ new UIW_PROMPT(1, 2, " Telï¿½fono")
 				+ new UIW_PROMPT(1, 3, " Localidad")
 				+ new UIW_PROMPT(1, 4, "   Tiempo")
 				+ new UIW_PROMPT(1, 5, "   Tarifa")
@@ -143,9 +143,9 @@ EVENT_TYPE UIW_SP_SERV::Event(const UI_EVENT &event)
             WService->Destroy();
             WService->Information(SET_TEXT, (ccode == UE_S_N_FAX)?"Fax Nacional":"Fax Internacional");
             *WService
-            + new UIW_PROMPT(1, 1, "Teléfono")
+            + new UIW_PROMPT(1, 1, "Telï¿½fono")
             + new UIW_PROMPT(1, 2, "Localidad")
-            + new UIW_PROMPT(1, 3, " Páginas")
+            + new UIW_PROMPT(1, 3, " Pï¿½ginas")
             + new UIW_PROMPT(1, 4, "  Tarifa")
             + new UIW_PROMPT(1, 5, "   Total")
             //
@@ -208,7 +208,7 @@ EVENT_TYPE UIW_SP_SERV::Event(const UI_EVENT &event)
             char s[0x10];
             s[0] = NULL;
 			WService->Destroy();
-            WService->Information(SET_TEXT, "Tarjetas Magnéticas");
+            WService->Information(SET_TEXT, "Tarjetas Magnï¿½ticas");
             integer = 3;
             for (int i=0; i<MAX_MAGNETIC_CARDS; i++)
             {
@@ -269,7 +269,7 @@ EVENT_TYPE UIW_SP_SERV::Event(const UI_EVENT &event)
 		// typical buttons ...
 	case UE_PRINT:
 		// lookout with the number of receipts !!!
-		g_cfg->N_RECEIPT = (g_cfg->N_RECEIPT+1)%DB_STORAGE::MAX_RECEIPTS;
+		g_cfg->N_RECEIPT = (g_cfg->N_RECEIPT+1)%BinStorage::MAX_RECEIPTS;
 		if (!g_cfg->N_RECEIPT)
 			g_cfg->N_RECEIPT++;
 		if (!g_cfg->IsDemoMode())
@@ -280,7 +280,7 @@ EVENT_TYPE UIW_SP_SERV::Event(const UI_EVENT &event)
 		//
 		date.Export(&s_dynReceipt.m_r.Date);
 		time.Export(&s_dynReceipt.m_r.Time);
-		s_dynReceipt.m_r.MagicNumber   = DB_STORAGE::MAGIC_NUMBER;
+		s_dynReceipt.m_r.MagicNumber   = BinStorage::MAGIC_NUMBER;
 		s_dynReceipt.m_r.Number        = g_cfg->N_RECEIPT;
 		s_dynReceipt.m_r.Stat.Cooked   = TRUE;
 		s_dynReceipt.m_r.Stat.Printed  = FALSE;
@@ -366,7 +366,7 @@ EVENT_TYPE UIW_SP_SERV::processTel(UI_WINDOW_OBJECT *object, UI_EVENT &, EVENT_T
 					s_dynReceipt.m_r.Stat.CallAttr = parameters.Attr;
 				else
 				{
-					errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Número no válido");
+					errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Nï¿½mero no vï¿½lido");
 					return -1;
 				}
 			}
@@ -376,14 +376,14 @@ EVENT_TYPE UIW_SP_SERV::processTel(UI_WINDOW_OBJECT *object, UI_EVENT &, EVENT_T
 					s_dynReceipt.m_r.Stat.CallAttr = parameters.Attr;
 				else
 				{
-					errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Número no válido");
+					errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Nï¿½mero no vï¿½lido");
 					return -1;
 				}
 			}
 		}
 		else if (strlen(phone))
 		{
-			errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Número no válido");
+			errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Nï¿½mero no vï¿½lido");
 			return -1;
 		}
 	}
@@ -526,7 +526,7 @@ EVENT_TYPE UIW_SP_SERV::processFax(UI_WINDOW_OBJECT *object, UI_EVENT &, EVENT_T
 					s_dynReceipt.m_r.Stat.CallAttr = parameters.Attr;
 				else
 				{
-					errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Número no válido");
+					errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Nï¿½mero no vï¿½lido");
 					return -1;
 				}
 			}
@@ -536,14 +536,14 @@ EVENT_TYPE UIW_SP_SERV::processFax(UI_WINDOW_OBJECT *object, UI_EVENT &, EVENT_T
 					s_dynReceipt.m_r.Stat.CallAttr = parameters.Attr;
 				else
 				{
-					errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Número no válido");
+					errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Nï¿½mero no vï¿½lido");
 					return -1;
 				}
 			}
 		}
 		else if (strlen(phone))
 		{
-			errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Número no válido");
+			errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Nï¿½mero no vï¿½lido");
 			return -1;
 		}
 	}

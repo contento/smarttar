@@ -38,7 +38,7 @@ public:
     //
     void Flush(void);
 	BOOL Archive(void);
-	BOOL Repair(DB_STORAGE *dBStorage, BOOL all = FALSE);
+	BOOL Repair(BinStorage *dBStorage, BOOL all = FALSE);
 	DS_ENTRY *operator [](WORD type)
 	{
 		return &Entries[type];

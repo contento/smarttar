@@ -13,7 +13,7 @@
 #include <stm2fact.h>
 #include <nullstm2.h>
 
-#if !defined(__DEMO__)
+#if !defined(DEMO_DOS)
 #include <bankstm2.h>
 #include <cfg.h>
 extern CFG *g_cfg;
@@ -21,7 +21,7 @@ extern CFG *g_cfg;
 
 STM2 *MakeStm2(void)
 {
-#if defined(__DEMO__)
+#if defined(DEMO_DOS)
 	return new NullStm2;
 #else
 	if (g_cfg->IsDemoMode())

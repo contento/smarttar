@@ -383,7 +383,7 @@ EVENT_TYPE CONTROLLER::Event(const UI_EVENT &event)
 						wReceipts->WList->Destroy();
 
 						// begin 2.21.8 build 9
-						DB_STORAGE::Iterator it(g_dbEngine->GetDBStorage());
+						BinStorage::Iterator it(g_dbEngine->GetDBStorage());
 						it.Restart(wReceipts->Number);
 
 						long number;
@@ -435,7 +435,7 @@ EVENT_TYPE CONTROLLER::Event(const UI_EVENT &event)
 						wReceipts->WList->Destroy();
 
 						// begin 2.21.8 build 9
-						DB_STORAGE::Iterator it(g_dbEngine->GetDBStorage());
+						BinStorage::Iterator it(g_dbEngine->GetDBStorage());
 						it.Restart();
 
 						long number;
@@ -481,7 +481,7 @@ EVENT_TYPE CONTROLLER::Event(const UI_EVENT &event)
 
 
 						// begin 2.21.8 build 9
-						DB_STORAGE::Iterator it(g_dbEngine->GetDBStorage());
+						BinStorage::Iterator it(g_dbEngine->GetDBStorage());
 						it.Restart();
 
 						long number;

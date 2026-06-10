@@ -125,7 +125,7 @@ void DB_STATISTICS::Flush(void)
     close(dupFile);
 }
 
-BOOL DB_STATISTICS::Repair(DB_STORAGE *dBStorage, BOOL all)
+BOOL DB_STATISTICS::Repair(BinStorage *dBStorage, BOOL all)
 {
     dBStorage->Flush(); // to be sure
 
@@ -165,7 +165,7 @@ BOOL DB_STATISTICS::Repair(DB_STORAGE *dBStorage, BOOL all)
 #endif
 #endif
 
-	DB_STORAGE::Iterator it(*dBStorage);
+	BinStorage::Iterator it(*dBStorage);
 	it.Restart();
 	while (it)
 	{

@@ -9,6 +9,10 @@
 #include <dstorage.h>
 #endif
 
+#if !defined(__DB_STOR_H)
+#include <db_stor.h>
+#endif
+
 #if !defined(__DRECEIPT_H)
 #include <dreceipt.h>
 #endif
@@ -35,7 +39,7 @@ public:
     //
     // --- Current Turn ---
     //
-    void EnumReceipts(DB_STORAGE::CallbackFnPtr callback)
+    void EnumReceipts(DB_STORAGE_BACKEND::CallbackFnPtr callback)
     {
     	DBStorage->EnumReceipts(callback); // low level
     }
@@ -45,9 +49,9 @@ public:
 
 	// DBStorage
 
-	DB_STORAGE const & GetDBStorage()
+	BinStorage const & GetDBStorage()
 	{
-		return *DBStorage;
+		return *(BinStorage const *)DBStorage;
 	}
 
     BOOL RepairDBStorage(void)
@@ -116,9 +120,9 @@ public:
     //
     // --- Another Turn (archived) ---
     //
-	DB_STORAGE const & GetArcDBStorage()
+	BinStorage const & GetArcDBStorage()
 	{
-		return *ArcDBStorage;
+		return *(BinStorage const *)ArcDBStorage;
 	}
 
 	BOOL LoadArcDB(WORD date, WORD turn);
@@ -164,9 +168,9 @@ public:
 	//
 	// Extensions
 	//
-	DB_STORAGE const & ExtGetDBStorage()
+	BinStorage const & ExtGetDBStorage()
 	{
-		return *DBExtStorage;
+		return *(BinStorage const *)DBExtStorage;
 	}
 
 	DXS_NON_CRITICAL_ENTRY *ExtGetNonCriticalEntry(WORD extNum = 0)
@@ -222,15 +226,15 @@ public:
     }
 private:
     // --- current turn
-    DB_STORAGE        *DBStorage;
+    DB_STORAGE_BACKEND *DBStorage;
     DB_STATISTICS     *DBStatistics;
     // extensions
-    DB_STORAGE        *DBExtStorage;
+    DB_STORAGE_BACKEND *DBExtStorage;
     DB_EXT_STATISTICS *DBExtStatistics;
     //
     void Recover(void); // after an abnormal shutdown
     // --- another turn
-    DB_STORAGE        *ArcDBStorage;
+    DB_STORAGE_BACKEND *ArcDBStorage;
     DB_STATISTICS     *ArcDBStatistics;
 };
 

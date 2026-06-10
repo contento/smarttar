@@ -399,6 +399,8 @@ void CFG::FillCfgTable(ENTRY *table)
 	// 2.33
 	Entry(CELLULAR_TAX, ENTRY::DOUBLE);
 	Entry(ENGINE_KIND, ENTRY::STRING|ENTRY::LOWER|ENTRY::NO_SPACES);
+	Entry(STORAGE, ENTRY::STRING|ENTRY::LOWER|ENTRY::NO_SPACES);
+
 	//
 	Entry(USA            , ENTRY::STRING);
     // [ Aplicacion ]
@@ -865,6 +867,7 @@ void CFG::SetDefault(BOOL setAll)
 	INTERNET_TARIFF = 800.0; // pesos
 	CELLULAR_TAX	= 20.0; // 2.33
 	strcpy(ENGINE_KIND, "demo"); // mini-smarttar: always default to demo
+	strcpy(STORAGE, "csv");  // mini-smarttar: default to CSV
 	N_RECEIPT    = 0L;
 	N_DIAL_ERR   = 0;
 	N_COM_ERR    = 0;

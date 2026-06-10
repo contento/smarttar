@@ -16,15 +16,19 @@
 #if !defined(__RECEIPT_H)
 #include <receipt.h>
 #endif
+#if !defined(__DB_STOR_H)
+#include <db_stor.h>
+#endif
 
-class DB_STORAGE
+
+class BinStorage : public DB_STORAGE_BACKEND
 {
 	class 	Iterator;
 	friend 	Iterator;
 
 public:
-	DB_STORAGE(const char *path, const char *filename, int readOnly = TRUE);
-	~DB_STORAGE();
+	BinStorage(const char *path, const char *filename, int readOnly = TRUE);
+	~BinStorage();
 	//
 	typedef BOOL (*CallbackFnPtr)(Receipt const &receipt);
 	void EnumReceipts(CallbackFnPtr callback);
@@ -67,7 +71,7 @@ public:
 	class Iterator // 2.21.8 Build 6
 	{
 	public:
-		Iterator(DB_STORAGE const & dbStorage);
+		Iterator(BinStorage const & dbStorage);
 
 		long Current();
 		long Restart(long nNumber = 0L);
@@ -78,7 +82,7 @@ public:
 
 	private:
 
-		DB_STORAGE const & m_dbStorage;
+		BinStorage const & m_dbStorage;
 		long m_number;
 		long m_firstNumber;
 		BOOL m_bLast;
@@ -97,8 +101,6 @@ public:
 		NEW_INDEX_FILE = 0x2040
 	};
 
-	static const long MAX_RECEIPTS;
-	static const UINT MAGIC_NUMBER;
 
 private:
 
@@ -178,7 +180,7 @@ private:
 	class IndexCache
 	{
 	public:
-		IndexCache(DB_STORAGE &dbStorage, WORD size);
+		IndexCache(BinStorage &dbStorage, WORD size);
 		~IndexCache();
 
 		long Current();
@@ -199,7 +201,7 @@ private:
 		BOOL CacheFind(long number); // inside actual cache
 		BOOL Load();
 
-		DB_STORAGE& m_dbStorage;
+		BinStorage& m_dbStorage;
 
 		WORD  		m_size;
 		WORD  		m_actualSize;
@@ -226,54 +228,54 @@ private:
 	IndexCache* 	m_pIndexCache;
 };
 
-inline int  DB_STORAGE::GetStatus(void)
+inline int  BinStorage::GetStatus(void)
 {
 	return Status;
 }
-inline BOOL DB_STORAGE::IsReadOnly(void)
+inline BOOL BinStorage::IsReadOnly(void)
 {
 	return ReadOnly;
 }
 
-inline BOOL DB_STORAGE::Exist(long number, int boothNumber) const
+inline BOOL BinStorage::Exist(long number, int boothNumber) const
 {
 	long seekPos;
 	return m_pIndexCache->Find(number, boothNumber, seekPos);
 }
 
-inline long DB_STORAGE::GetEntries() const
+inline long BinStorage::GetEntries() const
 {
 	return m_indexHeader.NumOfEntries;
 }
 
-inline long DB_STORAGE::GetLowerNumber() const
+inline long BinStorage::GetLowerNumber() const
 {
 	// not necessarily the first one !!!
 	return m_pIndexCache->FindLowerNumber();
 }
 
-inline long DB_STORAGE::GetHigherNumber() const
+inline long BinStorage::GetHigherNumber() const
 {
 	// not necessarily the last one !!!
 	return m_pIndexCache->FindHigherNumber();
 }
 
-inline long DB_STORAGE::GetFirstNumber() const
+inline long BinStorage::GetFirstNumber() const
 {
 	return m_pIndexCache->FindFirstNumber();
 }
 
-inline long DB_STORAGE::GetLastNumber() const
+inline long BinStorage::GetLastNumber() const
 {
 	return m_pIndexCache->FindLastNumber();
 }
 
-inline long DB_STORAGE::GetNextNumber() const
+inline long BinStorage::GetNextNumber() const
 {
 	return m_pIndexCache->FindNextNumber();
 }
 
-inline BOOL DB_STORAGE::Repair()
+inline BOOL BinStorage::Repair()
 {
 	return
 	(
@@ -283,10 +285,10 @@ inline BOOL DB_STORAGE::Repair()
 }
 
 /////////////////////////////////////////////////////////////////////
-// DB_STORAGE::Iterator
+//// BinStorage::Iterator
 /////////////////////////////////////////////////////////////////////
 
-inline DB_STORAGE::Iterator::Iterator(DB_STORAGE const & dbStorage)
+inline BinStorage::Iterator::Iterator(BinStorage const & dbStorage)
 	:
 	m_dbStorage(dbStorage),
 	m_number(0L),
@@ -296,12 +298,12 @@ inline DB_STORAGE::Iterator::Iterator(DB_STORAGE const & dbStorage)
 	Restart();
 }
 
-inline long DB_STORAGE::Iterator::Current()
+inline long BinStorage::Iterator::Current()
 {
 	return m_number;
 }
 
-inline long DB_STORAGE::Iterator::Restart(long nNumber)
+inline long BinStorage::Iterator::Restart(long nNumber)
 {
 	m_firstNumber = m_dbStorage.GetFirstNumber();;
 
@@ -321,12 +323,12 @@ inline long DB_STORAGE::Iterator::Restart(long nNumber)
 	return m_number;
 }
 
-inline DB_STORAGE::Iterator::operator int()
+inline BinStorage::Iterator::operator int()
 {
 	return !m_bLast;
 }
 
-inline long DB_STORAGE::Iterator::operator ++()
+inline long BinStorage::Iterator::operator ++()
 {
 	m_number = m_dbStorage.GetNextNumber();
 
@@ -335,7 +337,7 @@ inline long DB_STORAGE::Iterator::operator ++()
 	return m_number;
 }
 
-inline long DB_STORAGE::Iterator::operator ++(int)
+inline long BinStorage::Iterator::operator ++(int)
 {
 	long number = m_number;
 	m_number = m_dbStorage.GetNextNumber();

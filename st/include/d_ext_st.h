@@ -35,7 +35,7 @@ public:
     //
     void Flush(void);
     BOOL Archive(void);
-    BOOL Repair(DB_STORAGE *dBStorage, BOOL all = FALSE);
+    BOOL Repair(BinStorage *dBStorage, BOOL all = FALSE);
 	BOOL Add(Receipt& receipt);
 	BOOL Subtract(Receipt& receipt);
     WORD GetStatus(void)

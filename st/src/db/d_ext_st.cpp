@@ -176,7 +176,7 @@ BOOL DB_EXT_STATISTICS::Archive(void)
     return TRUE;
 }
 
-BOOL DB_EXT_STATISTICS::Repair(DB_STORAGE *dBStorage, BOOL all)
+BOOL DB_EXT_STATISTICS::Repair(BinStorage *dBStorage, BOOL all)
 {
     dBStorage->Flush(); // to be sure
     if (all)
@@ -193,12 +193,12 @@ BOOL DB_EXT_STATISTICS::Repair(DB_STORAGE *dBStorage, BOOL all)
 	//
 #if defined(__TEST__)
 #if !defined(__UTIL__)
- //	cprintf("\n\r- Extensi¢n Statistics file, Record: ");
+ //	cprintf("\n\r- Extensiï¿½n Statistics file, Record: ");
  //	short x = wherex(), y = wherey(); // 2.21.8 Build 6
 #endif
 #endif
 
-	DB_STORAGE::Iterator it(*dBStorage);
+	BinStorage::Iterator it(*dBStorage);
 	it.Restart();
 	while (it)
 	{

@@ -19,17 +19,17 @@
 static const char *DATAFILE_EXT  = ".DAT";
 static const char *INDEXFILE_EXT = ".IDX";
 
-const UINT DB_STORAGE::MAGIC_NUMBER = 0x6719U;
-const long DB_STORAGE::MAX_RECEIPTS = 100000000L; // 1000000L;. v.219a
+const UINT BinStorage::MAGIC_NUMBER = 0x6719U;
+const long DB_STORAGE_BACKEND::MAX_RECEIPTS = 100000000L; // 1000000L;. v.219a
 
-BOOL DB_STORAGE::IsValid(Receipt const & receipt)
+BOOL BinStorage::IsValid(Receipt const & receipt)
 {
-	return receipt.MagicNumber == DB_STORAGE::MAGIC_NUMBER;
+	return receipt.MagicNumber == BinStorage::MAGIC_NUMBER;
 }
 
 extern CFG *g_cfg;
 
-DB_STORAGE::DB_STORAGE(const char *path, const char *name, int readOnly) :
+BinStorage::BinStorage(const char *path, const char *name, int readOnly) :
 	ReadOnly(readOnly),
 	Status(OK)
 {
@@ -109,7 +109,7 @@ DB_STORAGE::DB_STORAGE(const char *path, const char *name, int readOnly) :
 	m_pIndexCache = new IndexCache(*this, g_cfg->CACHE_SIZE);
 }
 
-DB_STORAGE::~DB_STORAGE()
+BinStorage::~BinStorage()
 {
     if (!ReadOnly)
         Flush();
@@ -124,7 +124,7 @@ DB_STORAGE::~DB_STORAGE()
 		close(IndexFile);
 }
 
-void DB_STORAGE::Flush(void)
+void BinStorage::Flush(void)
 {
 	// force to dump
 	int dupFile;
@@ -134,7 +134,7 @@ void DB_STORAGE::Flush(void)
 	close(dupFile);
 }
 
-BOOL DB_STORAGE::Archive(void)
+BOOL BinStorage::Archive(void)
 {
 	if (ReadOnly)
 		return FALSE;
@@ -174,7 +174,7 @@ BOOL DB_STORAGE::Archive(void)
 	return TRUE;
 }
 
-void DB_STORAGE::EnumReceipts(CallbackFnPtr callback)
+void BinStorage::EnumReceipts(CallbackFnPtr callback)
 {
 	Flush(); // to be sure
 
@@ -200,7 +200,7 @@ void DB_STORAGE::EnumReceipts(CallbackFnPtr callback)
 	}
 }
 
-BOOL DB_STORAGE::RepairDataFile(void)
+BOOL BinStorage::RepairDataFile(void)
 {
 	Flush(); // to be sure
 
@@ -300,7 +300,7 @@ BOOL DB_STORAGE::RepairDataFile(void)
 	return TRUE;
 }
 
-BOOL DB_STORAGE::RepairIndexFile(void)
+BOOL BinStorage::RepairIndexFile(void)
 {
 	Flush(); // to be sure
 	// assume that index file is bad
@@ -380,7 +380,7 @@ BOOL DB_STORAGE::RepairIndexFile(void)
 	return TRUE;
 }
 
-BOOL DB_STORAGE::Get(Receipt& receipt, long number, int boothNumber)
+BOOL BinStorage::Get(Receipt& receipt, long number, int boothNumber)
 {
 	long seekPos;
 	if (!m_pIndexCache->Find(number, boothNumber, seekPos))
@@ -389,7 +389,7 @@ BOOL DB_STORAGE::Get(Receipt& receipt, long number, int boothNumber)
 	return Read(receipt, seekPos);
 }
 
-BOOL DB_STORAGE::Add(const Receipt& receipt)
+BOOL BinStorage::Add(const Receipt& receipt)
 {
 	if (g_cfg->CHECK_DUPS)
 	{
@@ -460,7 +460,7 @@ BOOL DB_STORAGE::Add(const Receipt& receipt)
 	return TRUE;
 }
 
-BOOL DB_STORAGE::Delete(long number, int boothNumber)
+BOOL BinStorage::Delete(long number, int boothNumber)
 {
     long seekPos;
 	if (!m_pIndexCache->Find(number, boothNumber, seekPos))
@@ -475,7 +475,7 @@ BOOL DB_STORAGE::Delete(long number, int boothNumber)
 	return Write(receipt, seekPos);
 }
 
-BOOL DB_STORAGE::Update(const Receipt& receipt)
+BOOL BinStorage::Update(const Receipt& receipt)
 {
 	long seekPos;
 	if (!m_pIndexCache->Find(receipt.Number, receipt.BoothNumber, seekPos))
@@ -484,7 +484,7 @@ BOOL DB_STORAGE::Update(const Receipt& receipt)
 	return Write(receipt, seekPos);
 }
 
-BOOL DB_STORAGE::IsCorrectNumber(long number)
+BOOL BinStorage::IsCorrectNumber(long number)
 {
 	// check range, remember the wrap around efect !!!
 	if (number > 0 && number <= MAX_RECEIPTS)
@@ -501,7 +501,7 @@ BOOL DB_STORAGE::IsCorrectNumber(long number)
 	return FALSE;
 }
 
-BOOL DB_STORAGE::ReadDataHeader(DataHeader & header)
+BOOL BinStorage::ReadDataHeader(DataHeader & header)
 {
 	if (lseek(DataFile, 0L, SEEK_SET) == -1)
 		return FALSE;
@@ -514,7 +514,7 @@ BOOL DB_STORAGE::ReadDataHeader(DataHeader & header)
 	);
 }
 
-BOOL DB_STORAGE::WriteDataHeader(DataHeader const & header)
+BOOL BinStorage::WriteDataHeader(DataHeader const & header)
 {
 	if (lseek(DataFile, 0L, SEEK_SET) == -1)
 		return FALSE;
@@ -523,7 +523,7 @@ BOOL DB_STORAGE::WriteDataHeader(DataHeader const & header)
 	return (nWritten == sizeof(DataHeader));
 }
 
-BOOL DB_STORAGE::Read(Receipt& receipt, long seekPos)
+BOOL BinStorage::Read(Receipt& receipt, long seekPos)
 {
 	if (lseek(DataFile, seekPos, SEEK_SET) == -1)
 		return FALSE;
@@ -537,7 +537,7 @@ BOOL DB_STORAGE::Read(Receipt& receipt, long seekPos)
 	);
 }
 
-BOOL DB_STORAGE::Write(Receipt const& receipt, long seekPos)
+BOOL BinStorage::Write(Receipt const& receipt, long seekPos)
 {
 	if (lseek(DataFile, seekPos, SEEK_SET) == -1)
 		return FALSE;
@@ -548,7 +548,7 @@ BOOL DB_STORAGE::Write(Receipt const& receipt, long seekPos)
 	return (nWritten == sizeof(Receipt));
 }
 
-BOOL DB_STORAGE::ReadIndexHeader(IndexHeader & header)
+BOOL BinStorage::ReadIndexHeader(IndexHeader & header)
 {
 	if (lseek(IndexFile, 0L, SEEK_SET) == -1)
 		return FALSE;
@@ -561,7 +561,7 @@ BOOL DB_STORAGE::ReadIndexHeader(IndexHeader & header)
 	);
 }
 
-BOOL DB_STORAGE::WriteIndexHeader(IndexHeader const & header)
+BOOL BinStorage::WriteIndexHeader(IndexHeader const & header)
 {
 	if (lseek(IndexFile, 0L, SEEK_SET) == -1)
 		return FALSE;
@@ -574,7 +574,7 @@ BOOL DB_STORAGE::WriteIndexHeader(IndexHeader const & header)
 // DATA HEADER
 /////////////////////////////////////////////////////////////////////
 
-DB_STORAGE::DataHeader::DataHeader(void)
+BinStorage::DataHeader::DataHeader(void)
 {
 	taxPercent 	= g_cfg->TAX_PERCENT;
 	ddnPercent 	= g_cfg->DDN_TAX;
@@ -592,7 +592,7 @@ DB_STORAGE::DataHeader::DataHeader(void)
 // 	IndexCache
 /////////////////////////////////////////////////////////////////////
 
-DB_STORAGE::IndexCache::IndexCache(DB_STORAGE &dbStorage, WORD size)
+BinStorage::IndexCache::IndexCache(BinStorage &dbStorage, WORD size)
 	:
 	m_dbStorage(dbStorage),
 	m_size(size),
@@ -603,12 +603,12 @@ DB_STORAGE::IndexCache::IndexCache(DB_STORAGE &dbStorage, WORD size)
 	m_pEntries = new IndexEntry[m_size];
 }
 
-DB_STORAGE::IndexCache::~IndexCache()
+BinStorage::IndexCache::~IndexCache()
 {
 	delete [] m_pEntries;
 }
 
-BOOL DB_STORAGE::IndexCache::Clear()
+BOOL BinStorage::IndexCache::Clear()
 {
 	m_actualSize = 0;
 	m_curPos 	 = 0;
@@ -620,17 +620,17 @@ BOOL DB_STORAGE::IndexCache::Clear()
 	return TRUE;
 }
 
-long DB_STORAGE::IndexCache::Current()
+long BinStorage::IndexCache::Current()
 {
 	return m_pEntries[m_curPos].Number;
 }
 
-long DB_STORAGE::IndexCache::ActualSize()
+long BinStorage::IndexCache::ActualSize()
 {
 	return m_actualSize;
 }
 
-BOOL DB_STORAGE::IndexCache::Find(long number, int boothNumber, long& seekPos)
+BOOL BinStorage::IndexCache::Find(long number, int boothNumber, long& seekPos)
 {
 	// begin 2.21.8
 	/////////////////////////////////////////////////////////////////
@@ -681,7 +681,7 @@ BOOL DB_STORAGE::IndexCache::Find(long number, int boothNumber, long& seekPos)
 	// end 2.21.8
 }
 
-BOOL DB_STORAGE::IndexCache::CacheFind(long number)
+BOOL BinStorage::IndexCache::CacheFind(long number)
 {
 	// find inside cache. Returns pos in cache
 	m_curPos = 0;
@@ -698,7 +698,7 @@ BOOL DB_STORAGE::IndexCache::CacheFind(long number)
 	return FALSE;
 }
 
-long DB_STORAGE::IndexCache::FindLowerNumber()
+long BinStorage::IndexCache::FindLowerNumber()
 {
 	// begin 2.21.8 build 6
 
@@ -727,7 +727,7 @@ long DB_STORAGE::IndexCache::FindLowerNumber()
 	return lower;
 }
 
-long DB_STORAGE::IndexCache::FindHigherNumber()
+long BinStorage::IndexCache::FindHigherNumber()
 {
 	// begin 2.21.8 build 6
 
@@ -756,7 +756,7 @@ long DB_STORAGE::IndexCache::FindHigherNumber()
 	return higher;
 }
 
-long DB_STORAGE::IndexCache::FindFirstNumber()
+long BinStorage::IndexCache::FindFirstNumber()
 {
 	Clear(); // start from the beginning
 
@@ -765,7 +765,7 @@ long DB_STORAGE::IndexCache::FindFirstNumber()
 	return m_pEntries[0].Number;
 }
 
-long DB_STORAGE::IndexCache::FindLastNumber()
+long BinStorage::IndexCache::FindLastNumber()
 {
 	// begin 2.21.8 build 6
 
@@ -792,7 +792,7 @@ long DB_STORAGE::IndexCache::FindLastNumber()
 	return last;
 }
 
-long DB_STORAGE::IndexCache::FindNextNumber()
+long BinStorage::IndexCache::FindNextNumber()
 {
 	/////////////////////////////////////////////////////////////////
 	// cache
@@ -812,7 +812,7 @@ long DB_STORAGE::IndexCache::FindNextNumber()
 	return m_pEntries[0].Number;
 }
 
-BOOL DB_STORAGE::IndexCache::Load()
+BOOL BinStorage::IndexCache::Load()
 {
 	m_curPos     = 0;
 	m_actualSize = 0;

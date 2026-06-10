@@ -24,13 +24,13 @@ void ENGINE::StoreReceipt(WORD cNum, WORD bNum)
 		{
 			if (isExtension)
 			{
-				g_cfg->E_N_RECEIPT = (g_cfg->E_N_RECEIPT+1)%DB_STORAGE::MAX_RECEIPTS;
+				g_cfg->E_N_RECEIPT = (g_cfg->E_N_RECEIPT+1)%BinStorage::MAX_RECEIPTS;
 				if (!g_cfg->E_N_RECEIPT)
 					g_cfg->E_N_RECEIPT++;
 			}
 			else
 			{
-				g_cfg->N_RECEIPT = (g_cfg->N_RECEIPT+1)%DB_STORAGE::MAX_RECEIPTS;
+				g_cfg->N_RECEIPT = (g_cfg->N_RECEIPT+1)%BinStorage::MAX_RECEIPTS;
 				if (!g_cfg->N_RECEIPT)
 					g_cfg->N_RECEIPT++;
 			}
@@ -48,7 +48,7 @@ void ENGINE::StoreReceipt(WORD cNum, WORD bNum)
 
 		s_boothCount = cNum * CLUSTER_SIZE + bNum;
 		// generate and store the receipt data
-		s_dynReceipt.m_r.MagicNumber   = DB_STORAGE::MAGIC_NUMBER;
+		s_dynReceipt.m_r.MagicNumber   = BinStorage::MAGIC_NUMBER;
 		s_dynReceipt.m_r.Stat.Printed  = Clusters[cNum].NoReceipt[bNum];
 		s_dynReceipt.m_r.Stat.Archived = Clusters[cNum].NoStatistics[bNum];
 		s_dynReceipt.m_r.Stat.Paid     = PAID_CALL;

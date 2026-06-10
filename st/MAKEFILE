@@ -48,17 +48,12 @@ LINK=tlink
 BIND=bind286
 RTK_DIR=..\vendor\pharlap\bin
 
-DONGLE=
-!if $d(DEMO)
-DEMO=__DEMO__			  # demo version
-IS_DEMO=1			  # marker: set ONLY in the demo branch.  Do not
-				  # test $d(DEMO) past this point -- DEMO is always
-				  # defined below (to __DEMO__ or empty); use IS_DEMO.
-!if $d(NODONGLE)
-DONGLE=__NO_DONGLE__
-!endif
-!else
-DEMO=
+# DEMO_DOS / REAL_DOS are passed via the bat file (makedemo_dos.bat passes
+# -DDEMO_DOS; makereal_dos.bat passes -DREAL_DOS).  We detect which variant
+# we are building to select the link-object set.
+IS_DEMO=
+!if $d(DEMO_DOS)
+IS_DEMO=1
 !endif
 
 # TLINK library search path. The -L in st.cfg is BCC286's (forwarded to
@@ -67,13 +62,13 @@ DEMO=
 LINK_LIBPATH=/L..\vendor\bc\lib;..\vendor\pharlap\lib;..\vendor\zinc\lib;lib
 
 !if $d(DEBUG)
-OBJ_CC_OPTIONS= -c +$(APP).cfg -D$(DEMO);$(DONGLE) -v
-DLL_CC_OPTIONS= -dll +$(APP).cfg -D$(DEMO);$(DONGLE);NDEBUG -v
+OBJ_CC_OPTIONS= -c +$(APP).cfg -v
+DLL_CC_OPTIONS= -dll +$(APP).cfg -DNDEBUG -v
 LINK_OPTS=/c /C /x /v $(LINK_LIBPATH)
 ASM_OPTS=/mx /zi
 !else
-OBJ_CC_OPTIONS= -c +$(APP).cfg -D$(DEMO);$(DONGLE);NDEBUG
-DLL_CC_OPTIONS= -dll +$(APP).cfg -D$(DEMO);$(DONGLE);NDEBUG
+OBJ_CC_OPTIONS= -c +$(APP).cfg -DNDEBUG
+DLL_CC_OPTIONS= -dll +$(APP).cfg -DNDEBUG
 LINK_OPTS=/c /C /s $(LINK_LIBPATH)
 ASM_OPTS=/mx
 !endif
@@ -93,6 +88,7 @@ OBJS=$(OBJ_DIR)\$(APP).$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\cfg.$(OBJ_EXT)		   \
 	 $(OBJ_DIR)\control.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\cstr.$(OBJ_EXT) 	   \
+	 $(OBJ_DIR)\csv_stor.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\ctrl_ev.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\ctrl_pr.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\ct_pr_nr.$(OBJ_EXT)    \
@@ -157,10 +153,11 @@ OBJS=$(OBJ_DIR)\$(APP).$(OBJ_EXT)	   \
 
 # --- [ OBJS_REAL ] ----------------------------------------------------------
 # Real-hardware-only objects (real_dos\).  These are linked ONLY into the
-# non-demo build.  The demo_dos build excludes them entirely -- the real
-# engine, dongle and EEPROM are deactivated (see MINI_SMARTTAR_PLAN P1.3).
-# rt_eng is referenced only by MakeEngine()'s !__DEMO__ branch; dongle and
-# eeprom only by st.cpp's !__DEMO__ / !__NO_DONGLE__ paths.
+# non-demo (REAL_DOS) build.  The demo_dos build excludes them entirely --
+# the real engine, dongle and EEPROM are deactivated
+# (see MINI_SMARTTAR_PLAN P1.3).
+# rt_eng is referenced only by MakeEngine()'s DEMO_DOS-gated branch; dongle
+# and eeprom are referenced by st.cpp's DEMO_DOS-gated paths.
 OBJS_REAL=$(OBJ_DIR)\rt_eng.$(OBJ_EXT)	\
 	 $(OBJ_DIR)\dongle.$(OBJ_EXT)	\
 	 $(OBJ_DIR)\eeprom.$(OBJ_EXT)	\
@@ -271,6 +268,8 @@ $(OBJ_DIR)\cfg.obj:      $(SOURCE_DIR)\cfg.cpp
 $(OBJ_DIR)\control.obj:  $(SOURCE_DIR)\ctrl\control.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\cstr.obj:     $(SOURCE_DIR)\cstr.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\csv_stor.obj:  $(SOURCE_DIR)\db\csv_stor.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\ctrl_ev.obj:  $(SOURCE_DIR)\ctrl\ctrl_ev.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**

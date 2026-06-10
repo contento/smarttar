@@ -60,6 +60,13 @@ for arg in "$@"; do
   esac
 done
 variant="${variant:-demo_dos}"
+# Map variant to 8.3-safe batch filename (LFN disabled in DOSBox-X).
+batfile=""
+case "$variant" in
+  demo_dos) batfile="mkdemos" ;;
+  real_dos) batfile="mkrldos" ;;
+esac
+
 
 : "${DOSBOX_X:=dosbox-x}"
 if ! command -v "$DOSBOX_X" >/dev/null 2>&1; then
@@ -111,12 +118,11 @@ if [ -n "${MAKE_HEADLESS_DEBUG:-}" ]; then
   dx_redir=">>'$dx_log' 2>&1"
   echo "build ${variant}: DOSBox-X debug output -> $dx_log"
 fi
-
 eval "\"$DOSBOX_X\" -conf dosbox-x.conf -fastlaunch \
   -c \"echo === SmartTar build starting (variant ${variant}) ===\" \
   -c \"echo === log: ${dos_log} (silent until exit) ===\" \
   -c \"echo .\" \
-  -c \"command /c make${variant}.bat $make_args >> ${dos_log}\" \
+  -c \"${batfile}.bat $make_args > ${dos_log} 2>&1\" \
   -c \"echo .\" \
   -c \"echo === Build finished ===\" \
   -c \"exit\" ${dx_redir}" || true
