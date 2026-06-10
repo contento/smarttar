@@ -127,7 +127,6 @@ OBJS=$(OBJ_DIR)\$(APP).$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\parser.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\ph_eng.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\ph_place.$(OBJ_EXT)    \
-	 $(OBJ_DIR)\ph_query.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\ph_util.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\ph_tar.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\plain_pr.$(OBJ_EXT)    \
