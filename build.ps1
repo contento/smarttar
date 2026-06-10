@@ -123,8 +123,7 @@ $batFile = switch ($Variant) {
     'real_dos' { 'mkrldos' }
 }
 
-$log    = 'build.log'
-$dosLog = 'C:\build.log'
+
 
 $dosboxArgs = @(
     '-conf',       'dosbox-x.conf',
@@ -132,6 +131,7 @@ $dosboxArgs = @(
     '-c',          "mount c $($PWD -replace '\\', '/')",
     '-c',          'c:',
     '-c',          'cd \st',
+    '-c',          'mkdir build > NUL',
     '-c',          "make -DDEMO_DOS -DRUN $makeArgs > $dosLog"
 )
 # Run DOSBox-X, then check for build artifacts.
