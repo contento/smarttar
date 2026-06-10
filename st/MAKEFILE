@@ -346,15 +346,15 @@ $(OBJ_DIR)\demo_eng.obj: $(SOURCE_DIR)\demo_dos\demo_eng.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\eng_fact.obj: $(SOURCE_DIR)\core\eng_fact.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\rt_do.obj:    $(SOURCE_DIR)\real_dos\rt_do.cpp
+$(OBJ_DIR)\rt_do.obj:    $(SOURCE_DIR)\core\rt_do.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\rt_util.obj:  $(SOURCE_DIR)\real_dos\rt_util.cpp
+$(OBJ_DIR)\rt_util.obj:  $(SOURCE_DIR)\core\rt_util.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\rt_isr.obj:   $(SOURCE_DIR)\real_dos\rt_isr.cpp
+$(OBJ_DIR)\rt_isr.obj:   $(SOURCE_DIR)\core\rt_isr.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\rt_store.obj: $(SOURCE_DIR)\real_dos\rt_store.cpp
+$(OBJ_DIR)\rt_store.obj: $(SOURCE_DIR)\core\rt_store.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\serial.obj:   $(SOURCE_DIR)\real_dos\serial.cpp
+$(OBJ_DIR)\serial.obj:   $(SOURCE_DIR)\core\serial.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\sid.obj:      $(SOURCE_DIR)\sid.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
