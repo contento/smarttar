@@ -90,6 +90,11 @@ CONTROLLER::CONTROLLER(UI_EVENT_MANAGER *eventManager, UI_WINDOW_MANAGER *window
 
 	// RTEngine
 	RTEngine   = MakeEngine(g_cfg->CLUSTERS);
+	// mini-smarttar: respect AUTO_SIMULATE (default TRUE) — when FALSE,
+	// start the simulation engine in paused state.
+	if (!g_cfg->AUTO_SIMULATE)
+		RTEngine->TogglePaused();
+
 
 	UI_DATE date;
 	int intDate;

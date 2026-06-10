@@ -327,6 +327,9 @@ public:
 	// 2.71 -- storage backend: "csv" (CsvStorage, default) or "bin"
 	// (BinStorage).  See MINI_SMARTTAR_PLAN § 2.1.
 	char STORAGE[8];
+	// mini-smarttar: auto-start the demo simulation on launch (default TRUE).
+	BOOL AUTO_SIMULATE;
+
 
 
 	//
