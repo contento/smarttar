@@ -1,6 +1,0 @@
-MAKE Version 3.6  Copyright (c) 1992 Borland International
-Error makefile 274: Redefinition of target 'build\st.obj'
-
-Available memory 31840720 bytes
-
-*** 1 errors during make ***
