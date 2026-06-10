@@ -107,3 +107,4 @@ st/docs/build/
 
 # Obsidian vault (auto-created on first open, user-specific)
 .obsidian/
+st/st.cfg
