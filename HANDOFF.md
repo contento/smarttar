@@ -1,191 +1,64 @@
-# SmartTar — Handoff
+# Mini-SmartTar — Session Handoff
 
-Status snapshot for resuming on another machine.
-Branch: `mini-smarttar` — active development. `main` has v2.70.0 release.
+Pushed to `origin/mini-smarttar` (`decaade`).
 
----
+## Current State
 
-## v2.70.0 CI status
+The build produces `st/bin/st.exe` (1.1 MB, demo_dos variant). `./build.sh --force` completes in ~28s. `./run.sh` launches SmartTar inside DOSBox-X.
 
-**Previously blocked:** DOSBox-X `2026.05.02` (mingw64) crashed mid-compile
-on the `windows-latest` runner after ~40 s. **Fix applied:** upgraded DOSBox-X
-to `2026.06.02` (the version that builds locally). Also added `st/lib` to
-the output directory creation in `build.ps1` (required by the DLL `.lib`
-move rule).
+## The Problem: UI Regression
 
-Tag `v2.70.0` currently points to `5b12bd9` (pre-fix). To re-trigger CI on the
-fixed code: `git tag -f -a v2.70.0 -m "v2.70.0" && git push --force origin v2.70.0`.
-The `v[0-9]+.[0-9]+.[0-9]+` tag pattern fires `release.yml`.
+The toolbar is misplaced and grid geometry is wrong on mini-smarttar. **Main branch works fine.**
 
-If `2026.06.02` also crashes, fallback tactics:
-1. Split the build into separate DOSBox-X launches per phase (`mk_cfg` /
-   `mk_ph` / `make`).
-2. Commit `st.cfg` and `ph_info.dat` so DOSBox-X only does the main compile.
+Every Zinc-related source file is identical between branches. RES.DAT, Zinc libraries, UI link order — all the same. The 10 KB larger binary (new objects: `csv_stor`, `nullstm2`, `stm2fact`) is the only structural difference.
 
----
+**Hypothesis**: the MAKEFILE define changes (`-DDEMO_DOS` replacing `-D__DEMO__;-D__NO_DONGLE__`) and cfg.cpp refactoring (zero config init the first time → no ST.CFG → reads ST.INI, but `STORAGE`/`AUTO_SIMULATE` fields grew the struct) introduced subtle behavioral differences. A stale `ST.CFG` from main with the old struct layout corrupts runtime config when loaded.
 
-## Closed: Stability audit (substantially complete)
+**What was tried:**
+- Deleting stale `st/bin/ST.CFG` — didn't fix it
+- Comparing every source diff — all Zinc files untouched
+- Comparing MAP files — 15-line difference, minor segment changes
+- Comparing build options — same libraries, same link order
 
-The stability milestone is **CLOSED — substantially complete** (audit § 8).
-[STABILITY_AUDIT.md](STABILITY_AUDIT.md) is now a historical record.
+## Infrastructure Changes Made
 
-- **All CRITICALs (C1–C22) resolved.** `58e68d5` (C5–C9), `f497445` (C11–C22),
-  `d4bbd49` (C19), `d7d24ca` (C14/C15), plus C1–C4 quick wins. **C10** is
-  verified-*defended* (non-atomic data-vs-index window is a design limitation).
-- **HIGH / MEDIUM (hardware-independent) done.** Final batch `038f489`:
-  spooler `strlen` deferral, st.cpp OOM NULL-guard, eeprom off-by-one,
-  w_table use-after-free (NULL after delete), mutex invariant doc. Plus the
-  earlier `aeb1372` / `ad15670` / `082c188` / `fd0e188` batches. Several
-  findings closed DEFENDED/WONTFIX with rationale recorded inline in the audit.
-- **Tier 3 deferred (ISR / real-time concurrency).** Parked in
-  [ISR_VOLATILE_NOTES.md](wiki/dev/ISR_VOLATILE_NOTES.md) — needs a DOSBox-X
-  build + load-test loop (ideally real hardware). **Guard-rail in force:** do
-  NOT enable compiler optimization (`-O`/`-Z`/`-G`/`-Or`) without first doing
-  the `volatile`/atomicity audit in that note (the code relies on the
-  no-optimization compiler reloading `Clusters[]` from memory).
-- Crash-path caveats still worth remembering:
-  - **C14** bounds the GPF-handler heap re-entry rather than eliminating it;
-    fully avoiding `delete` from a fault context needs an `ENGINE` redesign —
-    deferred, out of scope.
-  - **C16** left `States[i].Bitmap` unfreed on purpose — `States` is `static`,
-    one app-lifetime allocation.
+| File | Change |
+|------|--------|
+| `dosbox-x.conf` | Mount path: removed `C:/` prefix (invalid on macOS) |
+| `build.sh` | Replaced `eval` quoting hell with `cmd+=()` array; uses conf autoexec; bat writes status to `C:\build.log` directly |
+| `run.sh` | Simplified to use conf autoexec |
+| `st/mkdemos.bat` | New build bat for demo_dos variant; writes status to `C:\build.log` |
+| `CLAUDE.md` | Added macOS vs Windows DOSBox-X behavioral differences section |
 
-**Next step: none for stability.** Resume Tier 3 only from ISR_VOLATILE_NOTES
-when a load-test environment is available.
+## macOS DOSBox-X Quirks (documented in CLAUDE.md)
 
----
+1. **Mount path**: macOS needs `/Users/...`, not `C:/Users/...`
+2. **`-exit` flag**: can skip `-c` commands; use `-c "exit"` instead
+3. **Phar Lap stdout redirect**: `>`/`>>` cannot capture output from Phar Lap bound EXEs (bcc286, bind286, cfig286) on macOS ARM. Output only goes to the DOSBox-X window.
+4. **`.bat` output redirect**: `-c "script.bat > file"` writes nothing. The bat must `echo > file` internally.
+5. **`command /c`**: needs `z:\` in PATH (with `-noautoexec`), but `command /c` creates a new shell that breaks build path resolution on mini-smarttar.
 
-## Completed & merged: DEMO_ENGINE milestone (all phases)
+## New Approach for Next Session: Do → Validate GUI → Repeat
 
-The runtime engine-selection arc is **complete and merged into `main`**; the
-`demo-engine` branch no longer exists. What shipped:
+The failure mode was making multiple changes without verifying the UI between them. Next time:
 
-- **Phases 1--2:** Template-Method `ENGINE` base with `RT_ENGINE` /
-  `DEMO_ENGINE` subclasses; `MakeEngine` factory; Poisson call generator +
-  real-number `phones.csv` dataset.
-- **Phase 3 — operator controls, graceful drain, time limit:**
-  - `TogglePaused()` with graceful drain (`_draining`/`DrainTick`) — stops new
-    arrivals, drives active calls to settlement, latches `_paused` when idle.
-  - `ForceStoreActiveCalls()` enqueues receipts for TALK calls before exit.
-  - `total_minutes` cap in `demo.ini` (0 = unlimited); triggers the same drain.
-- Build pipeline repair (scripts renamed `make-headless` → `build` and
-  `run-headless` → `run` (`.sh` + `.ps1`)).
-- Demo quit-confirmation (`st.cpp::Exit()`) and operator start/stop menu.
+1. **Make ONE change** (add a feature, refactor a file, change a define)
+2. **Build** (`./build.sh --force`)
+3. **Launch and validate the GUI** (`./run.sh`)
+4. Only then make the next change
 
-Architecture lives in the code (`st/src/rt/engine.cpp`, `rt_eng.cpp`,
-`demo_eng.cpp`, `eng_fact.cpp`) and is summarized in `README` /
-`GRAPH_REPORT.md`. `pre-simula-trash` tag at `e64284a` is the rollback point
-if the whole arc ever needs discarding.
+Tiny, verifiable steps. If GUI breaks, you know exactly which step caused it.
 
-### Resolved: `__DEMO__` gates (eliminated in mini-smarttar)
+## Priorities
 
-All `__DEMO__` / `__NO_DONGLE__` gates in `st.cpp` have been removed.
-`cfg.cpp` ENGINE_KIND default always sets `"demo"` (no `#ifdef` needed).
-Engine selection is fully runtime via `MakeEngine()` factory.
+1. **Fix the UI regression first** — identify what define/struct/config change on mini-smarttar breaks Zinc layout. Hypothesis: cfg.cpp changes or missing `__DEMO__` define.
+2. **Then continue with Phase 1.5/2.1a/2.1b/2.2** — the remaining mini-smarttar features.
 
----
+## Useful Commands
 
-## Active: mini-smarttar (branch `mini-smarttar`)
-
-The strip-down and portability plan is in progress. See
-[`MINI_SMARTTAR_PLAN.md`](MINI_SMARTTAR_PLAN.md) for full details.
-
-**Completed phases:**
-- P0 — baseline tagged (`pre-mini-smarttar`)
-- 1.1 — 15 utils removed (kept inf2dat, ini2cfg)
-- 1.2 — `core/demo_dos/real_dos` directory split (move only)
-- 1.2fix — `rt_do/isr/store/util+serial` moved to `core/`
-- 1.3a — demo drops `rt_eng/dongle/eeprom` (factory guard + `LINK_OBJS`)
-- 1.3b — STM2 abstracted (`NullStm2` demo / `BankStm2` real)
-- 1.4 — config from `ST.INI`, `ini2cfg` dropped, binary `ST.CFG` eliminated
-- 1.4b — `inf2dat` dropped, `PH_ENGINE::Load()` falls back to `.inf` files
-
-**What changed:**
-- `CFG::Load()` reads `ST.INI` directly; `CFG::Save()` writes INI only
-- `st.cpp` free of `__DEMO__` / `__NO_DONGLE__` gates
-- `PH_ENGINE::Load()` reads `.inf` files when `PH_INFO.DAT` is absent
-- Entire `util/` directory removed (inf2dat, ini2cfg, util_cfg.h)
-- `ENGINE_KIND` defaults to `"demo"` (no `#ifdef` needed)
-- All hardware behind `I*` base classes; only `Null*` linked in demo
-
-**Next phases (TODO):**
-- 1.5 — two variants (`demo_dos` / `real_dos`); `real_dos` `#error`s
-- 2.1a — `BinStorage` extracted behind `DB_STORAGE_BACKEND` interface
-- 2.1b — `CsvStorage` added, default flipped to CSV
-- 2.2 — `PORTABILITY.md` seam catalogue
-
-**Research notes (in plan § 8):**
-- PDF pseudo-device: intercept spooler → render text to PDF (~200 LOC)
-- RES.DAT decompiler: study Zinc `UI_STORAGE` format → text representation
-
----
-
-## Notes / known issues (still apply)
-
-- **Latin-1 file editing**: UTF-8-native editors (incl. the `Edit` tool)
-  re-encode Latin-1/CP850 `.cpp`/`.h` files to UTF-8 on save, corrupting every
-  high-bit char. After any such edit, verify with `file <path>` — it must
-  report `ISO-8859` or `Non-ISO extended-ASCII`, never `UTF-8`. Repair
-  byte-level (see CLAUDE.md). Host-side files like this one are LF/UTF-8 and
-  safe.
-- **Engine dtor ordering**: derived `~DEMO_ENGINE`/`~RT_ENGINE` (relay-off
-  port write) runs before base `~ENGINE` (ISR uninstall), so the ISR fires for
-  a few ticks with `GP_CASH` already cleared. Harmless in practice; flag if
-  anything misbehaves at shutdown.
-
----
-
-## Fixed: Zinc Grid row-tear (branch `fix/zinc-grid-geometry`)
-
-The Zinc 3.5 grid bug (screenshot `wiki/assets/zinc-gui-bug.png`,
-commit `351eda4`) is **diagnosed and fixed** on `fix/zinc-grid-geometry`.
-
-- **Root cause (measured, not theorized):** stock Zinc 3.5
-  `RegionConvert` (`vendor/zinc/SOURCE/Z_WIN2.CPP:390-395`) floors each
-  booth row's pixel top *independently* of the row height. With the
-  runtime stride `GBUTTON_HEIGHT(8) * miniNY(1) * cellHeight(24) /
-  miniDY(10) = 19.2 px`, the 0.2 px/row fraction accumulates to a whole
-  pixel every 5 rows, so the pitch jumps 19->20 at booths 6/11/16 and the
-  grid tears there (the screenshot's 5/6 boundary). Confirmed byte-for-byte
-  that this geometry code was *never* patched (`source` == `osource`); the
-  only historical Zinc patches were `D_BUTTON.CPP` + Spanish localization.
-  Zinc fixed it in v4 (different geometry engine) — out of reach on 3.5.
-- **Same drift on the X axis + bottom border.** Columns are positioned with
-  a 1-minicell overlap to share borders, but the same independent floor
-  (0.7 px/minicell) opened 1 px gaps at Tel|Loc and Tar|Val -> two adjacent
-  border lines = thick separators. And removing the Y drift shortened the
-  grid, detaching the table's bottom border from the last row.
-- **Fix (app-side, pixel-space, no Zinc rebuild).** In `st/src/ui/view_ev.cpp`
-  / `st/include/view.h`:
-  - `NormalizeRowPitch()` snaps rows to the uniform integer pitch from the
-    driftless first gap (preserving each cell's height) and pulls the table
-    bottom up to the last row.
-  - `NormalizeColumnBorders()` extends the left column's right edge at any
-    gapped boundary so every separator is one shared line.
-  - Both run from `UIW_VIEW::Event` on `S_CREATE`/`S_SIZE` -- *before* the
-    first paint. (An earlier approach ran them post-paint via
-    `CONTROLLER::RefreshView` + `S_REDISPLAY`, which left white repaint
-    notches at the Est|Are boundary; fixing geometry before the first paint
-    removed those.)
-- **Verified:** a temporary `GEO_DEBUG` region-dump probe (now removed)
-  measured pixel geometry at each step -- post-fix every booth sits at
-  `122 + 19*n` (uniform 19 px), all column overlaps are 0, and the table
-  bottom is flush. Confirmed visually in DOSBox-X
-  (`wiki/assets/zinc-gui-bug-03.png`); screenshots `-00`..`-03` document the
-  before/after progression.
-
-**Next step:** decide on merge to `main` (branch is unpushed).
-
----
-
-## Other open items
-
-- **Documentation wiki** — substantially built at `wiki/`; remaining:
-  - Vault layout decision
-  - `.docx` manual conversion
-  - README simplification
-- **Toolchain portability** — covered by mini-smarttar plan (Phase 2+)
-- **SVGA display** — Zinc 3.5 supports higher modes via BGI; investigate
-  `machine = svga_s3` + font rework for 800×600+.
-- **PDF pseudo-device** — see plan § 8 research; candidate for Phase 2
-- **RES.DAT decompiler** — see plan § 8 research; candidate for Phase 2
+```sh
+./build.sh --force         # full rebuild (28s)
+./run.sh                   # launch SmartTar
+./run.sh --keep-open       # launch, keep DOS prompt after exit
+git diff main..HEAD        # all changes on this branch
+```
