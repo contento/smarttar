@@ -1,6 +1,6 @@
 # MINI SMARTTAR — Reduction & Portability Plan
 
-> **Status: LIVE — phases 1.1–1.4b complete, 1.5 in progress.**
+> **Status: LIVE — phases 1.1–2.1b complete, 2.2 in progress.**
 > Created 2026-06-09. Branch: `mini-smarttar`.
 > Scope: relocate real/hw code to `real_dos/`; load `.ini` directly (drop
 > `ini2cfg`); introduce `DB_STORAGE_BACKEND` base class with CSV as the demo
@@ -368,12 +368,12 @@ The strip-down + seams above are precisely what make this feasible:
 | 1.4 | config from ST.INI, ini2cfg gone | demo green | DONE |
 | 1.4b | inf2dat gone, PH_ENGINE loads .inf direct | demo green | DONE |
 | fix | UI regression — missing `-D__BTN__` in st.cfg | demo green, GUI correct | DONE (`29e59ab`) |
-| 1.5 | two variants; real_dos #errors; drop eda/prod | demo green / real_dos errors | **NEXT** |
-| 2.1a | BinStorage extracted behind backend iface | demo green (binary) | TODO |
-| 2.1b | CsvStorage added, default flipped to csv | demo green (csv) | TODO |
-| 2.2 | PORTABILITY.md seam catalogue | doc | TODO |
+| 1.5 | two variants; real_dos #errors; drop eda/prod | demo green / real_dos errors | DONE |
+| 2.1a | BinStorage extracted behind backend iface | demo green (binary) | DONE |
+| 2.1b | CsvStorage added, default flipped to csv | demo green (csv) | DONE |
+| 2.2 | PORTABILITY.md seam catalogue | doc | **NEXT** |
 | 3 | C++-exit plan | doc (separate) | TODO |
 
 ---
 
-*Last updated: 2026-06-10. Phases 1.1–1.4b complete. 1.5 is next.*
+- *Last updated: 2026-06-10. Phases 1.1–2.1b complete. 2.2 (PORTABILITY.md) is next.*
