@@ -1,11 +1,14 @@
 # MINI SMARTTAR — Reduction & Portability Plan
 
-> Status: **PLAN ONLY — not executed.** Created 2026-06-09.
-> Author handoff: Gonzalo (GCC) + Claude.
-> Scope decisions confirmed: relocate real/hw code to `real_dos/`; load `.ini`
-> directly (drop `ini2cfg`); introduce `DB_STORAGE_BACKEND` base class with CSV as
-> the demo default; document strip-down **and** the portability seam design.
+> **Status: LIVE — phases 1.1–1.4b complete, 1.5 in progress.**
+> Created 2026-06-09. Branch: `mini-smarttar`.
+> Scope: relocate real/hw code to `real_dos/`; load `.ini` directly (drop
+> `ini2cfg`); introduce `DB_STORAGE_BACKEND` base class with CSV as the demo
+> default; document strip-down **and** the portability seam design.
 > **No EDA** — the `eda` build variant is removed entirely.
+>
+> UI regression (toolbar/grid misplacement) fixed 2026-06-10 — root cause was
+> missing `-D__BTN__` in `st.cfg`. See `HANDOFF.md` for details.
 
 ---
 
@@ -41,11 +44,7 @@ st/
     demo_dos/    DEMO_ENGINE + Null* hardware mocks (THE buildable engine)
     real_dos/    RT_ENGINE + all hardware drivers — DEACTIVATED (#error on build)
     ui/          Zinc UI layer (unchanged for now; a future seam, see Phase 2)
-    db/          DB_ENGINE facade + DB_STORAGE_BACKEND (CSV default, binary legacy)
-    ...          (ph/, pr/, ct/, mb/, tb/, ctrl/ stay; trimmed of real-only paths)
-  util/
-    inf2dat/     KEPT (build input: PH_INFO.DAT)  — see note, may also go .inf-direct
-    (everything else removed)
+  (util/ — entirely removed; inf2dat eliminated in 1.4b)
   include/       headers, reorganized to match src/ subtrees
   MAKEFILE       two variants only: demo_dos (default), real_dos (errors)
 ```
@@ -71,24 +70,16 @@ The codebase is in better shape for this than expected:
   `IsDemo`). `rt/eng_fact.cpp::MakeEngine()` picks `DEMO_ENGINE` vs `RT_ENGINE`
   at **runtime** from `g_cfg->ENGINE_KIND`. The "mock with a base class" pattern
   the goal asks for **already exists** — we extend it, not invent it.
-- **DB has a clean facade.** `DB_ENGINE` (`include/db_eng.h`) wraps storage +
-  statistics. Callers (views, controller, ct printers) go through the facade, so
-  a storage backend swap is containable *if* we keep the facade API stable.
-- **Only 2 of 17 utils are build-essential**: `ini2cfg` and `inf2dat`. The other
-  15 are maintenance / hardware / distribution tools.
-- **`__DEMO__` gating is mostly already runtime** (`g_cfg->IsDemoMode()`); only
-  four build-time gates remain in `st.cpp` (lines ~16, ~117-159, ~193-214).
+- **Only 2 of 17 utils were build-essential**: `ini2cfg` and `inf2dat`.
+  Both are now eliminated (1.4/1.4b). The entire `util/` directory is gone.
+- **`__DEMO__` gating is now fully runtime** (`g_cfg->IsDemoMode()`).
+  Zero `#ifdef __DEMO__` remains in `st.cpp` (collapsed in 1.3).
 
-What works *against* us:
+What *was* against us (resolved):
 
-- DB storage has **no abstraction below the facade** — `Receipt` (111-byte fixed
-  struct, `include/receipt.h`) and seek-position indexing are assumed by
-  `dstorage.cpp`, statistics rebuild, and the extension (`RXX.*`) parallel store.
-- Hardware coupling is spread across `rt/` (ISR, ports), `dongle.cpp`,
-  `eeprom.cpp`, `stm2.cpp`, `serial.cpp`.
-- Config is loaded from a **binary `ST.CFG`** compiled by `ini2cfg` from
-  `ST.INI`; the whole app reads the `CFG` struct, so going `.ini`-direct means a
-  parser that populates `CFG` at startup.
+- ~~DB storage has **no abstraction below the facade**~~ — still true; addressed in Phase 2.
+- ~~Hardware coupling spread across `rt/`, `dongle.cpp`, `eeprom.cpp`, `stm2.cpp`, `serial.cpp`~~ — **resolved.** All hardware behind `I*` base classes; only `Null*` linked in demo.
+- ~~Config loaded from binary `ST.CFG` via `ini2cfg`~~ — **resolved.** `cfg.cpp` reads `ST.INI` directly; `ini2cfg` deleted.
 
 ---
 
@@ -127,8 +118,8 @@ Delete these `st/util/` subtrees and their `MAKEFILE`/`buildall.bat` references:
 | `gen`, `update`, `rxback`, `sip`, `setup` | Distribution / install / packaging wrappers. |
 | `_old/` | Already dead. |
 
-**Kept:** `inf2dat` (produces `PH_INFO.DAT`). See 1.4 for whether it survives
-long-term.
+- ~~**Kept:** `inf2dat` (produces `PH_INFO.DAT`)~~ — later removed in 1.4b;
+  `PH_ENGINE::Load()` now reads `.inf` files directly.
 
 > Note: removing `setup` removes the only GUI that wired up EEPROM/DONGLE — fine,
 > those paths are going away anyway.
@@ -136,8 +127,6 @@ long-term.
 Checkpoint: green demo build with 15 utils gone.
 
 ### 1.2 Establish the `core/` / `demo_dos/` / `real_dos/` split
-
-Create the three subtrees and **move files** (no logic change yet):
 
 - `src/demo_dos/` ← `demo_eng.*` (the `DEMO_ENGINE`), plus new `Null*` mocks
   (see 1.3).
@@ -194,10 +183,9 @@ Checkpoint: green demo build, `st.cpp` ifdef-free, all hw behind interfaces.
 - Parser must be 1995-safe: plain `fgets` + manual key=value split, Latin-1
   tolerant, no regex/STL.
 
-> `inf2dat`: same logic *could* apply to `PH_INFO.DAT` (load `.inf` directly).
-> **Deferred** — telephony `.inf` parsing is more involved (`parser.cpp` already
-> exists for it) and `inf2dat` is harmless. Revisit in Phase 2 if we want zero
-> build-time codegen. For now `inf2dat` stays as the one kept util.
+> `inf2dat`: **Done in 1.4b** — `PH_ENGINE::Load()` now reads `.inf` files
+> directly when `PH_INFO.DAT` is absent. `inf2dat` and the entire `util/`
+> directory were eliminated. No build-time codegen remains.
 
 Checkpoint: green demo build reading `ST.INI` directly; `ini2cfg` gone.
 
@@ -379,12 +367,13 @@ The strip-down + seams above are precisely what make this feasible:
 | 1.3b | STM2 abstracted (NullStm2 demo / BankStm2 real) | st.exe 1086724; demo links 0 real_dos | DONE (build-verified; runtime smoke-test pending) |
 | 1.4 | config from ST.INI, ini2cfg gone | demo green | DONE |
 | 1.4b | inf2dat gone, PH_ENGINE loads .inf direct | demo green | DONE |
-| 1.5 | two variants; real_dos #errors; drop eda/prod | demo green / real_dos errors | TODO |
-| 2.1a | BinStorage extracted behind backend iface | demo green (binary) |
-| 2.1b | CsvStorage added, default flipped to csv | demo green (csv) |
-| 2.2 | PORTABILITY.md seam catalogue | doc |
-| 3 | C++-exit plan | doc (separate) |
+| fix | UI regression — missing `-D__BTN__` in st.cfg | demo green, GUI correct | DONE (`29e59ab`) |
+| 1.5 | two variants; real_dos #errors; drop eda/prod | demo green / real_dos errors | **NEXT** |
+| 2.1a | BinStorage extracted behind backend iface | demo green (binary) | TODO |
+| 2.1b | CsvStorage added, default flipped to csv | demo green (csv) | TODO |
+| 2.2 | PORTABILITY.md seam catalogue | doc | TODO |
+| 3 | C++-exit plan | doc (separate) | TODO |
 
 ---
 
-*End of plan. Nothing in this document has been executed.*
+*Last updated: 2026-06-10. Phases 1.1–1.4b complete. 1.5 is next.*

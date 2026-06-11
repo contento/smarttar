@@ -1,6 +1,6 @@
 # Mini-SmartTar — Session Handoff
 
-Pushed to `origin/mini-smarttar` (`decaade`).
+Last pushed: `29e59ab` (UI regression fix). Branch: `mini-smarttar`.
 
 ## Current State
 
@@ -50,8 +50,10 @@ Tiny, verifiable steps. If GUI breaks, you know exactly which step caused it.
 
 ## Priorities
 
-1. **Fix the UI regression** — ✅ DONE. Missing `-D__BTN__` in `st/st.cfg`.
-2. **Continue with Phase 1.5/2.1a/2.1b/2.2** — the remaining mini-smarttar features.
+1. **Phase 1.5** — Two build variants; `real_dos` `#error`s; drop eda/prod. See `MINI_SMARTTAR_PLAN.md` §1.5.
+2. **Phase 2.1a** — BinStorage extracted behind backend interface.
+3. **Phase 2.1b** — CsvStorage added, default flipped to csv.
+4. **Phase 2.2** — `PORTABILITY.md` seam catalogue.
 
 ## Useful Commands
 
