@@ -196,7 +196,14 @@ Key flags in `st.cfg`:
 - `-ml` — large memory model (multiple code + data segments; all pointers default to `far`)
 - `-k-` — stack checking **disabled** (do not re-enable; it causes instability)
 - `-H=st.sym` — precompiled header via `stdst.h` / `#pragma hdrstop`
-- `-D__FHEADER=3;__DEBUG=0;__BTN__` — always-on defines
+- `-D__FHEADER=3;__BTN__` — always-on defines
+
+> **`__BTN__` MUST NEVER be removed from `st.cfg`.** It activates custom
+> `UIW_TBUTTON` / `UIW_GBUTTON` classes in `b_button.h` that apply a
+> height-offset trick forcing Zinc to allocate correct vertical space for
+> toolbar buttons and grid cells. Without it, the toolbar is misplaced and
+> grid geometry is broken. (This was the root cause of the mini-smarttar
+> UI regression — fixed in `29e59ab`.)
 
 ### Linker / runtime binding
 
