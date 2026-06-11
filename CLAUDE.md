@@ -31,6 +31,11 @@ SmartTar is a DOS 5.0 protected-mode point-of-sale / tariff management system. C
 
 Maintain the codebase, fix Zinc 3.5 UI bugs, and make the application maximally stable under Extended DOS. No new features — stability only.
 
+> **This build only works as a fake/demo.** The real engine (`real_dos`) requires
+> physical PC cards (telephony interface boards, EEPROM, copy-protection dongle,
+> STM2 NVRAM) that are unavailable. Only the `demo_dos` variant runs. The
+> `real_dos` build is intentionally deactivated (`#error`) — see `MINI_SMARTTAR_PLAN.md`.
+
 ## Working Style
 
 Work in small, focused steps with explicit checkpoints. Gonzalo (the original author, "GCC") knows this codebase deeply — confirm approach before making broad changes.
@@ -216,17 +221,21 @@ After linking, `BIND286` embeds the Pharlap run-time stub; `CFIG286` tunes it:
 
 ### Key MAKE targets / flags
 
+Two build variants (see `MINI_SMARTTAR_PLAN.md`):
+
 | Flag | Effect |
 | ---- | ------ |
-| (default) | Release build → `bin/st.exe` |
-| `DEBUG=1` | Includes debug symbols (`-v`), sets linker `/v` |
-| `DEMO=1` | Defines `__DEMO__` |
-| `NODONGLE=1` | Defines `__NO_DONGLE__` (requires `DEMO=1`) |
-| `EDA=1` | Defines `__EDA__` |
-| `RUN=1` | Runs `BIND286` + `CFIG286` after link (produces runnable protected-mode EXE) |
-| ~~`HELP=1`~~ | Obsolete / no-op. `bin/help.dat` is a dependency of `bin/st.exe` and is rebuilt automatically from `st/res/help.txt` whenever it changes (`genhelp` rule in MAKEFILE; requires `vendor\zinc\BIN` on PATH — already wired in `dosbox-x.conf`). No flag needed. |
+| `DEMO_DOS` | Defines `-DDEMO_DOS` — demo engine, Null* hw mocks, no dongle/EEPROM/STM2. **Default and only buildable variant.** |
+| `REAL_DOS` | Defines `-DREAL_DOS` — **fails by design** (`#error` in all `real_dos/` TUs). Requires `REAL_DOS_ENABLED` override to compile. |
+| `DEBUG=1` | Adds `-DDEBUG` (Borland `-v` symbols). Modifier on the variant, not a separate variant. |
+| `RUN=1` | Runs `BIND286` + `CFIG286` after link (produces runnable protected-mode EXE). |
 
-**Day-to-day dev variant: `demo`.** The current dev environment has no real telephony hardware (booths / PBX / EEPROM) or copy-protection dongle, so the working default is `./build.sh` -- `demo` is the default variant when none is given, so the bare command and `./build.sh demo` are equivalent (both set `-DDEMO -DRUN -DNODONGLE`). Engine selection is now **runtime** (`g_cfg->ENGINE_KIND` in `st.ini`); `__DEMO__` still acts as a build-time hint that flips the default `ENGINE_KIND` value to `"demo"` in `cfg.cpp::SetDefault`, but the per-call-site gates are gone -- non-engine code paths (dongle, STM2 persist, EEPROM, `Dump()`) check `g_cfg->IsDemoMode()` at runtime instead.  Four `__DEMO__` gates remain in `st.cpp` around the dongle/STM2/EEPROM init tangle (lines 16 / 116 / 192) -- deferred because they interleave with the `__NO_DONGLE__` build flag and `DONGLE` class scope.  Only switch to `prod` / `eda` when explicitly working on something that must exercise those paths, or when comparing against the CI release build (which runs `prod`).
+**Day-to-day dev variant: `demo_dos`.** `./build.sh` with no arguments builds
+`demo_dos`. The real engine requires physical PC cards (telephony interface
+boards, EEPROM, copy-protection dongle, STM2 NVRAM) that are unavailable —
+only the demo variant runs. Engine selection is runtime (`g_cfg->ENGINE_KIND`
+in `st.ini`); `DEMO_DOS` is a build-time define that selects the demo
+object set and Null* mocks at link time.
 
 
 
