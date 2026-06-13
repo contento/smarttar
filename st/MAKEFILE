@@ -132,6 +132,7 @@ OBJS=$(OBJ_DIR)\$(APP).$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\ph_tar.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\plain_pr.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\prn_fmt.$(OBJ_EXT)	   \
+	 $(OBJ_DIR)\pdf_wr.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\res.$(OBJ_EXT)		   \
 	 $(OBJ_DIR)\engine.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\rt_eng.$(OBJ_EXT)	   \
@@ -344,6 +345,8 @@ $(OBJ_DIR)\ph_tar.obj:   $(SOURCE_DIR)\ph\ph_tar.cpp
 $(OBJ_DIR)\plain_pr.obj: $(SOURCE_DIR)\pr\plain_pr.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\prn_fmt.obj:  $(SOURCE_DIR)\pr\prn_fmt.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\pdf_wr.obj:   $(SOURCE_DIR)\pdf_wr.c
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\res.obj:      $(SOURCE_DIR)\res.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
