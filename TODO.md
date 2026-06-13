@@ -502,6 +502,12 @@ when scoped.
   writes plain text through the PDF writer. No separate `pr_*.dll` needed —
   the interception happens at the spooler level, before printer drivers.
   `SPOOLER::Terminate()` ensures xref/trailer/%%EOF are written.
+- **Add more screenshots** — capture additional UI states and workflows
+ (e.g. tariff table, receipt printing, config screen) to enrich the
+ wiki and README visual assets.
+- **Add original manuals** — include the original SmartTar manuals
+ (scanned or typed) in the wiki `dev/` or `docs/` section as
+ historical reference material.
 
 ## Milestone: Vendor separation (private repo) — `feat/vendor-separation`
 
