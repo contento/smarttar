@@ -24,7 +24,7 @@ La configuración se almacena en dos archivos: **ST.CFG** (binario, cifrado, esc
 | DDI_TAX | Doble | Porcentaje de impuesto aplicado a llamadas internacionales. |
 | CLUSTERS | Entero | Número de clusters de hardware configurados (1–4). |
 | FORM | Enumeración | Tipo de formato de impresora. Ver Sección 9. |
-| P_PORT | Cadena | Tipo de puerto de impresora: `lpt` o `com`. |
+| P_PORT | Cadena | Tipo de puerto de impresora: `lpt`, `com` o `pdf`. Con `pdf` los recibos se escriben a un archivo PDF (`PDF\RXAAMMDD.pdf`, uno por día) en lugar de una impresora física. |
 | LPT | Entero | Número de puerto paralelo (1 o 2) cuando P_PORT=lpt. |
 | COM | Cadena | Configuración de puerto serial cuando P_PORT=com (puerto, baudios, bits, paridad, stop). |
 | DOUBLE_PRN | Booleano | Habilitar operación con doble impresora. |
@@ -38,6 +38,10 @@ La configuración se almacena en dos archivos: **ST.CFG** (binario, cifrado, esc
 | HEADER_LINE4 | Cadena (64) | Línea 4 del encabezado (puede incluir formato %s o %d). |
 | HEADER_PRINT_TAXNAME | Booleano | Imprimir nombre del impuesto en el encabezado del recibo. |
 | HEADER_PRINT_RECNO | Booleano | Imprimir número de recibo en el encabezado. |
+| RECNO_LABEL | Cadena (64) | Etiqueta del número de recibo en el recibo impreso (ej., `Recibo`). |
+| RECNO_DIGITS | Entero | Número de dígitos para visualización del número de recibo. |
+| RECNO_LEADING_ZEROS | Booleano | Rellenar número de recibo con ceros a la izquierda. |
+| SHORT_SERIAL | Cadena (32) | Número de serie por defecto en el encabezado `<serial>` del recibo cuando el EEPROM no tiene serie. Predeterminado: `AA52048`. |
 | SS_TIME | Entero | Tiempo de inactividad para el salvapantallas (minutos). |
 
 ## \[Aplicacion\] — Parámetros de Aplicación

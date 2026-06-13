@@ -492,23 +492,13 @@ when scoped.
   drop-in replacement for Borland C++ 3.1 targeting 16/32-bit DOS.
   Could replace BCC286 + Pharlap in the "Toolchain portability"
   milestone (see above).  <https://github.com/open-watcom/open-watcom-v2>
-- **Print all receipts as PDF** — new entry under the Tools menu
-  (`tb_tools.cpp` / `mb_print.cpp`) that batch-exports every receipt
-  in RX.DAT to a single PDF file (one receipt per page). DOS has no
-  native PDF library, so two paths to scope: (a) emit raw PDF
-  bytestream from C++ (small subset of PDF 1.4 -- text + simple
-  layout is feasible in pure code); (b) print to a virtual PDF
-  printer driver loaded as a new `pr_*.dll` and use the existing
-  spooler path. Path (a) is self-contained, path (b) reuses the
-  printer abstraction. Decide before scoping.
-- **PDF print driver (one PDF per day)** -- a new `pr_*.dll` that
-  plugs into the existing physical-printer path (same per-receipt
-  format/spooler flow as the real drivers in `src/pr/pr_*.c`), but
-  instead of emitting to a physical port it appends each printed
-  receipt to a daily PDF file (e.g. `RX-YYYYMMDD.pdf`, one receipt
-  per page, rolled over at the turn-of-day boundary). This is the
-  "live" counterpart to the bulk "Print all receipts as PDF" entry
-  above -- it captures receipts as they are printed rather than
-  exporting RX.DAT history after the fact, and concretely realizes
-  that entry's path (b). Reuses the same emit logic, so scope the
-  raw-PDF bytestream writer once and share it between both.
+- [x] **Print all receipts as PDF** — `P_PORT=pdf` in `st.ini` routes all
+  spooler output through `pdf_wr.c`. Receipts are written to
+  `bin/PDF/RXYYMMDD.pdf` (one file per day). Multi-receipt per page
+  supported (form feeds become blank-line separators). Done on
+  `feat/pdf-printer` branch.
+- [x] **PDF print driver (one PDF per day)** — same implementation as above.
+  `SPOOLER::Print` intercepts when `P_PORT="pdf"`, strips ESC/P codes,
+  writes plain text through the PDF writer. No separate `pr_*.dll` needed —
+  the interception happens at the spooler level, before printer drivers.
+  `SPOOLER::Terminate()` ensures xref/trailer/%%EOF are written.

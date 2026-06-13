@@ -24,7 +24,7 @@ Configuration is stored in two files: **ST.CFG** (binary, encrypted, written by 
 | DDI_TAX | Double | Tax percentage applied to international calls. |
 | CLUSTERS | Integer | Number of hardware clusters configured (1–4). |
 | FORM | Enum | Printer form type. See Section 9. |
-| P_PORT | String | Printer port type: `lpt` or `com`. |
+| P_PORT | String | Printer port type: `lpt`, `com`, or `pdf`. With `pdf`, receipts are written to a PDF file (`PDF\RXYYMMDD.pdf`, one per day) instead of a physical printer. |
 | LPT | Integer | Parallel port number (1 or 2) when P_PORT=lpt. |
 | COM | String | Serial port settings when P_PORT=com (port, baud, bits, parity, stop). |
 | DOUBLE_PRN | Boolean | Enable dual-printer operation. |
@@ -38,6 +38,10 @@ Configuration is stored in two files: **ST.CFG** (binary, encrypted, written by 
 | HEADER_LINE4 | String (64) | Receipt header line 4 (may include %s or %d format). |
 | HEADER_PRINT_TAXNAME | Boolean | Print tax name on receipt header. |
 | HEADER_PRINT_RECNO | Boolean | Print receipt number on receipt header. |
+| RECNO_LABEL | String (64) | Label prefix for receipt number on printed receipt (e.g., `Recibo`). |
+| RECNO_DIGITS | Integer | Number of digits for receipt number display. |
+| RECNO_LEADING_ZEROS | Boolean | Pad receipt number with leading zeros. |
+| SHORT_SERIAL | String (32) | Default serial number shown in receipt header `<serial>` when EEPROM serial is absent. Default: `AA52048`. |
 | SS_TIME | Integer | Screen saver timeout (minutes). |
 
 ## \[Aplicacion\] — Application Parameters

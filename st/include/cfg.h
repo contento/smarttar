@@ -189,7 +189,7 @@ public:
 	WORD T_COM;              // tiempo de inicio de comunicacion
 	WORD T_LOCK;           	 // tiempo de bloqueo real para colgar el telefono
 	WORD T_INTER_RING;       // tiempo entre rings maximo, despues se asume como on-hook
-	char SIGNAL[0x0F];   	// Se¤al de contestacion extern (.INI)
+	char SIGNAL[0x0F];   	// Seï¿½al de contestacion extern (.INI)
     WORD ASIGNAL;           // to quick access
     //
     GROUP DialingGroup;
@@ -313,6 +313,7 @@ public:
 	WORD RECNO_DIGITS;        	// numero de digitos, depende de leading zeros
 
 	STR64 RECNO_LABEL;         // version larga "Rec."
+	STR32 SHORT_SERIAL;        // serial corto para recibo (fallback si EEPROM ausente)
 
 	WORD ACTIVE_CLUSTERS; // 2.30 useful for RT_ENGINE
 	WORD VIEW_REFRESH_TIME; // 2.30 build 13 useful for CTRL_REFRESH

@@ -21,6 +21,10 @@
 #include <cqueue.h>
 #endif
 
+#if !defined(__PDF_WR_H)
+#include <pdf_wr.h>
+#endif
+
 const UINT PRINTER_BUFFER_SIZE  = 0x1000;
 const UINT PRINTER_FLUSH_SIZE   = 0x0100;
 const UINT PRINTER_MIN_SPACE    = 0x0200;
@@ -48,9 +52,11 @@ private:
     char *PrintfBuffer; // useful for Printf
     SERIAL *Serial;
     BYTE   NumOfChannels;
+    PDF_WR *pdfWriter; // PDF output (when P_PORT == "pdf")
     //
     EVENT_TYPE Event(const UI_EVENT &event);
     void       Poll(void);
+    void       pdfWriteString(const char *s, BOOL with0xFF); // strip escapes, write to PDF
     //
     inline BOOL PrintChar(BYTE channel, char byte);
 };

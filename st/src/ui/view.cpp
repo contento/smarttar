@@ -246,7 +246,7 @@ void UIW_VIEW::addMenu(void)
 	WExtMenu->woFlags |= WOF_NON_SELECTABLE;
 	if (!g_superAppInfo.Attr.STPro)
 		WActivateExt->woFlags |= WOF_NON_SELECTABLE;
-	if (TraceInfo::s_bDevelopment)
+	if (TraceInfo::s_bDevelopment || g_cfg->IsDemoMode())
     {
 		WConfigMenu->woFlags  &= ~WOF_NON_SELECTABLE;
         WExtMenu->woFlags     &= ~WOF_NON_SELECTABLE;
