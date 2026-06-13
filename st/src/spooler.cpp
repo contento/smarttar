@@ -8,6 +8,7 @@
 #include <bios.h>
 #include <events.h>
 #include <spooler.h>
+#include <pdf_wr.h>
 
 extern CFG 	*g_cfg;
 
@@ -19,10 +20,10 @@ extern CFG 	*g_cfg;
 #define BIOS_PRINT_BUSY      0x80
 #define BIOS_PRINT_ERROR     0x08
 #define BIOS_PRINT_PAPER_OUT 0x20
-
 SPOOLER::SPOOLER(BYTE numOfChannels)
 	: UI_DEVICE(E_SPOOLER, D_ON),
-	Serial(NULL)
+	Serial(NULL),
+	pdfWriter(NULL)
 {
 	NumOfChannels = (numOfChannels > MAX_SPOOL_CHANNELS) ? MAX_SPOOL_CHANNELS : numOfChannels;
 
@@ -42,11 +43,21 @@ SPOOLER::~SPOOLER()
 		delete Buffers[i];
 
 	delete [] PrintfBuffer;
-}
 
+	if (pdfWriter)
+		pdf_wr_close(pdfWriter);
+	pdfWriter = NULL;
+}
 BOOL SPOOLER::Print(BYTE channel, const char *s, BOOL with0xFF)
 {
 //	SpoolerQueueMutex mutex;
+
+	// PDF output: intercept before buffering
+	if (!strcmp(g_cfg->P_PORT, "pdf"))
+	{
+		pdfWriteString(s, with0xFF);
+		return TRUE;
+	}
 
 	if (channel >= NumOfChannels)
 		return FALSE;
@@ -290,4 +301,123 @@ BOOL SPOOLER::UninstallSerial(void)
 	Serial = NULL;
 
 	return TRUE;
+}
+
+// --- PDF output ------------------------------------------------------------
+// Strip printer escape sequences and write plain text to the PDF writer.
+// Handles: 0x1B + param sequences, \t (tab stops), \n (line break),
+// 0xFF (block terminator).  All other bytes are text characters.
+//
+void SPOOLER::pdfWriteString(const char *s, BOOL with0xFF)
+{
+	if (!pdfWriter)
+	{
+		// Build filename: PDF\RX-YYYYMMDD.pdf
+		char path[80];
+		char dateStr[16];
+		_GetSysDate(dateStr);
+		// dateStr = "YYYY-MM-DD" -> "YYYYMMDD"
+		char compact[9];
+		compact[0] = dateStr[0]; compact[1] = dateStr[1];
+		compact[2] = dateStr[3]; compact[3] = dateStr[4];
+		compact[4] = dateStr[6]; compact[5] = dateStr[7];
+		compact[6] = dateStr[8]; compact[7] = dateStr[9];
+		compact[8] = '\0';
+		sprintf(path, "PDF\\RX-%s.pdf", compact);
+		mkdir("PDF");  // ensure output dir exists; harmless if already there
+		pdfWriter = pdf_wr_open(path);
+		if (!pdfWriter)
+			return;
+	}
+	//
+	// Parse the string: strip escape sequences, interpret \t and \n
+	//
+	int end = (int)strlen(s);
+	if (with0xFF)
+	{
+		// Find the 0xFF terminator
+		int k = 0;
+		while (s[k] != '\xFF' && k < PRINTER_BUFFER_SIZE)
+			k++;
+		end = k;
+	}
+	//
+	int i = 0;
+	char lineBuf[256];
+	int lineLen = 0;
+	//
+	while (i < end)
+	{
+		unsigned char c = (unsigned char)s[i];
+		//
+		if (c == 0x1B)
+		{
+			// ESC sequence: skip it.
+			// Heuristic: cmd in 0x20-0x3F -> variable params until 0xFF;
+			// cmd in 0x40-0x7F -> 1 param byte.
+			i++; // skip ESC
+			if (i >= end) break;
+			unsigned char cmd = (unsigned char)s[i];
+			i++; // skip command byte
+			if (cmd >= 0x20 && cmd <= 0x3F)
+			{
+				while (i < end && (unsigned char)s[i] != 0xFF)
+					i++;
+				if (i < end) i++; // skip 0xFF
+			}
+			else if (cmd >= 0x40 && cmd <= 0x7F)
+			{
+				if (i < end) i++; // skip 1 param byte
+			}
+			continue;
+		}
+		//
+		if (c == '\t')
+		{
+			// Tab stop: advance to next multiple of 8 columns
+			int nextTab = ((lineLen / 8) + 1) * 8;
+			while (lineLen < nextTab && lineLen < (int)sizeof(lineBuf) - 1)
+				lineBuf[lineLen++] = ' ';
+			i++;
+			continue;
+		}
+		//
+		if (c == '\n' || c == '\r')
+		{
+			lineBuf[lineLen] = '\0';
+			pdf_wr_line(pdfWriter, lineLen > 0 ? lineBuf : "");
+			lineLen = 0;
+			i++;
+			continue;
+		}
+		//
+		if (c == 0x0C)
+		{
+			// Form feed: page break
+			if (lineLen > 0)
+			{
+				lineBuf[lineLen] = '\0';
+				pdf_wr_line(pdfWriter, lineBuf);
+				lineLen = 0;
+			}
+			pdf_wr_page_break(pdfWriter);
+			i++;
+			continue;
+		}
+		//
+		if (c == 0xFF)
+			break; // block terminator
+		//
+		// Normal text character
+		if (lineLen < (int)sizeof(lineBuf) - 1)
+			lineBuf[lineLen++] = (char)c;
+		i++;
+	}
+	//
+	// Flush any remaining partial line
+	if (lineLen > 0)
+	{
+		lineBuf[lineLen] = '\0';
+		pdf_wr_line(pdfWriter, lineBuf);
+	}
 }
