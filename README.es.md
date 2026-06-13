@@ -2,32 +2,32 @@
 
 *Read in [English](README.md).*
 
-Sistema de gestión de tarifas telefónicas en tiempo real para cabinas telefónicas públicas
-Desarrollado por [MicroDiseño Ltda.](https://microdiseno.com) · Derechos reservados © 1993?2003 · Versión 2.70.1
+Sistema de gestiï¿½n de tarifas telefï¿½nicas en tiempo real para cabinas telefï¿½nicas pï¿½blicas
+Desarrollado por [MicroDiseï¿½o Ltda.](https://microdiseno.com) ï¿½ Derechos reservados ï¿½ 1993?2003 ï¿½ Versiï¿½n 2.70.1
 
 ![SmartTar](st/docs/archive/SmartTar.jpg)
 
 ---
 
-**SmartTar** es un sistema punto de venta para DOS, diseñado para operadores de
-telecomunicaciones en Colombia que administran centros de cabinas telefónicas.
+**SmartTar** es un sistema punto de venta para DOS, diseï¿½ado para operadores de
+telecomunicaciones en Colombia que administran centros de cabinas telefï¿½nicas.
 Monitorea hasta 32 cabinas en tiempo real, clasifica las llamadas por destino,
-aplica tarifas según horario (hora del día, festivos), imprime recibos con IVA
-a través de controladores de impresora enchufables, y mantiene una base de datos
-completa de transacciones ? todo desde un único ejecutable en modo protegido.
+aplica tarifas segï¿½n horario (hora del dï¿½a, festivos), imprime recibos con IVA
+a travï¿½s de controladores de impresora enchufables, y mantiene una base de datos
+completa de transacciones ? todo desde un ï¿½nico ejecutable en modo protegido.
 
-Capacidades principales: medición de llamadas en tiempo real, clasificación
-automática contra un plan de numeración configurable, motor de tarifas con
-calendario de festivos, impresión de recibos (18/40/80 col + térmica),
-almacenamiento indexado de transacciones, soporte de tarjetas magnéticas
-prepagadas, integración con módem, displays externos de cabina, módulo de
-estadísticas.
+Capacidades principales: mediciï¿½n de llamadas en tiempo real, clasificaciï¿½n
+automï¿½tica contra un plan de numeraciï¿½n configurable, motor de tarifas con
+calendario de festivos, impresiï¿½n de recibos (18/40/80 col + tï¿½rmica),
+almacenamiento indexado de transacciones, soporte de tarjetas magnï¿½ticas
+prepagadas, integraciï¿½n con mï¿½dem, displays externos de cabina, mï¿½dulo de
+estadï¿½sticas.
 
-El nombre proviene de **Smart + Tar(*ifa*)** ? no tiene relación con Unix `tar`.
+El nombre proviene de **Smart + Tar(*ifa*)** ? no tiene relaciï¿½n con Unix `tar`.
 
 ---
 
-## Inicio rápido
+## Inicio rï¿½pido
 
 **Requisitos:** [DOSBox-X](https://dosbox-x.com/).
 ```sh
@@ -38,21 +38,21 @@ winget install joncampbell123.DOSBox-X   # Windows
 **Compilar** (dentro de DOSBox-X: `cd ST` luego `makedemo`), o desde el shell del host:
 ```sh
 ./build.sh                 # por defecto, demo (sin dongle)
-./build.sh --force prod    # variante de producción con verificación de dongle
+./build.sh --force prod    # variante de producciï¿½n con verificaciï¿½n de dongle
 ```
 
-La documentación completa está en [wiki/es/](wiki/es/).
-La documentación en inglés está en [wiki/en/](wiki/en/).
+La documentaciï¿½n completa estï¿½ en [wiki/es/](wiki/es/).
+La documentaciï¿½n en inglï¿½s estï¿½ en [wiki/en/](wiki/en/).
 
 ---
 
 ## Contenido
 
-### Español ? [wiki/es/](wiki/es/)
+### Espaï¿½ol ? [wiki/es/](wiki/es/)
 
-- [Guía del Usuario](wiki/es/manual-usuario/) ? inicio, monitoreo, informes, contraseñas
-- [Manual de Referencia](wiki/es/manual-referencia/) ? arquitectura, configuración, motor de tarifas, interfaz de hardware, recibos
-- [Ayuda](wiki/es/ayuda/) ? temas de ayuda de la aplicación (compilados en `help.dat`)
+- [Guï¿½a del Usuario](wiki/es/manual-usuario/) ? inicio, monitoreo, informes, contraseï¿½as
+- [Manual de Referencia](wiki/es/manual-referencia/) ? arquitectura, configuraciï¿½n, motor de tarifas, interfaz de hardware, recibos
+- [Ayuda](wiki/es/ayuda/) ? temas de ayuda de la aplicaciï¿½n (compilados en `help.dat`)
 
 ### English ? [wiki/en/](wiki/en/)
 
@@ -60,10 +60,10 @@ La documentación en inglés está en [wiki/en/](wiki/en/).
 - [Reference Manual](wiki/en/reference-manual/) ? architecture, config, tariff engine, hardware interface, receipts
 - [In-app Help](wiki/en/help/) ? English help topics (reference only; the application ships in Spanish)
 
-### Documentación de desarrollo ? [wiki/dev/](wiki/dev/)
+### Documentaciï¿½n de desarrollo ? [wiki/dev/](wiki/dev/)
 
-- [Configuración de DOSBox-X](wiki/dev/dosbox-x-smarttar-setup.md)
-- [Notas volátiles de ISR](wiki/dev/ISR_VOLATILE_NOTES.md)
+- [Configuraciï¿½n de DOSBox-X](wiki/dev/dosbox-x-smarttar-setup.md)
+- [Notas volï¿½tiles de ISR](wiki/dev/ISR_VOLATILE_NOTES.md)
 - [Flujo de trabajo con Zinc Designer](wiki/dev/zinc-designer-workflow.md)
 
 ---
@@ -72,33 +72,34 @@ La documentación en inglés está en [wiki/en/](wiki/en/).
 
 SmartTar se compila con Borland C++ 3.1 + Turbo Assembler para el target de
 modo protegido Pharlap 286, usando Zinc Interface Library 3.5 para la UI. No
-se necesita un compilador en el host ? la compilación se ejecuta dentro de
+se necesita un compilador en el host ? la compilaciï¿½n se ejecuta dentro de
 DOSBox-X.
 
-Los binarios propietarios de la cadena de herramientas están en un repositorio
+Los binarios propietarios de la cadena de herramientas estï¿½n en un repositorio
 privado separado
 (**[`smarttar-vendor`](https://github.com/contento/smarttar-vendor)**), y se
-clonan en `vendor/` con `./setup-vendor.sh`. No están incluidos en este
-repositorio por restricciones de copyright / redistribución. Ver
+clonan en `vendor/` con `./setup-vendor.sh`. No estï¿½n incluidos en este
+repositorio por restricciones de copyright / redistribuciï¿½n. Ver
 [VENDOR_SETUP.md](VENDOR_SETUP.md) para detalles.
 
 ---
 
-## Variantes de compilación
+## Variantes de compilaciï¿½n
 
 | Variante | Atajo | Uso |
 | -------- | ----- | --- |
-| Producción | `makeprod` | Build completo con verificación de dongle |
-| Demo | `makedemo` | Ferias, evaluación ? sin dongle |
-| EDA | `makeeda` | Operador EDA ? clasificación de llamadas distinta |
-| Depuración | `makedbg` | Desarrollo; usar con el depurador Pharlap `TDP.EXE` |
+| Producciï¿½n | `makeprod` | Build completo con verificaciï¿½n de dongle |
+| Demo | `makedemo` | Ferias, evaluaciï¿½n ? sin dongle |
+| EDA | `makeeda` | Operador EDA ? clasificaciï¿½n de llamadas distinta |
+| Depuraciï¿½n | `makedbg` | Desarrollo; usar con el depurador Pharlap `TDP.EXE` |
 
 ---
 
 ## Capturas de pantalla
 
-| Versión | Captura |
+| Versi\u00f3n | Captura |
 | ------- | ------- |
+| Simulador (mockup) | ![SmartTar Simulator](wiki/assets/demo-simulator.jpg) |
 | 2.33 | ![SmartTar 2.33](st/docs/archive/SmartTar%202.33.gif) |
 | 2.32.1 | ![SmartTar 2.32.1](st/docs/archive/SmartTar%202.32.1.gif) |
 
@@ -106,12 +107,12 @@ repositorio por restricciones de copyright / redistribución. Ver
 
 ## Historia
 
-MicroDiseño Ltda. ? la empresa que desarrolló SmartTar ? fue una firma
-colombiana de tecnología especializada en sistemas de tarificación y medición
-telefónica en el suroccidente de Colombia (Nariño, Cauca, Putumayo). SmartTar
-se desplegó en cabinas telefónicas comerciales y puntos de venta
+MicroDiseï¿½o Ltda. ? la empresa que desarrollï¿½ SmartTar ? fue una firma
+colombiana de tecnologï¿½a especializada en sistemas de tarificaciï¿½n y mediciï¿½n
+telefï¿½nica en el suroccidente de Colombia (Nariï¿½o, Cauca, Putumayo). SmartTar
+se desplegï¿½ en cabinas telefï¿½nicas comerciales y puntos de venta
 institucionales (incluyendo redes *Servicios & Transcripciones* y la
-Universidad del Norte). La empresa ya no está en operación; el código fue
+Universidad del Norte). La empresa ya no estï¿½ en operaciï¿½n; el cï¿½digo fue
 preservado y resucitado en 2026.
 
 ---
@@ -125,11 +126,11 @@ preservado y resucitado en 2026.
 - **Luis Valencia** ? Hardware
 - **Tamayo** ? Hardware
 - **Hector Mario Florez** ? Hardware
-- **Adriana Giraldo** ? Documentación
+- **Adriana Giraldo** ? Documentaciï¿½n
 - **Gonzalo Contento** ? Ingeniero de Software
 
 ---
 
 ## Licencia
 
-Derechos reservados © 1993?2003 MicroDiseño Ltda. Todos los derechos reservados.
+Derechos reservados ï¿½ 1993?2003 MicroDiseï¿½o Ltda. Todos los derechos reservados.

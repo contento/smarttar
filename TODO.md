@@ -505,6 +505,11 @@ when scoped.
 - **Add more screenshots** — capture additional UI states and workflows
  (e.g. tariff table, receipt printing, config screen) to enrich the
  wiki and README visual assets.
+- **Demo simulator GIF** — record a short animated GIF (~10–15 s) of the
+  DEMO_ENGINE running in DOSBox-X showing booths going through the call
+  lifecycle (idle → ringing → offhook → talk → onhook). ~500 KB target,
+  compress with `gifsicle -O3`. Add to README.md Screenshots section
+  and wiki/dev/ for the DEMO_ENGINE milestone documentation.
 - **Add original manuals** — include the original SmartTar manuals
  (scanned or typed) in the wiki `dev/` or `docs/` section as
  historical reference material.
