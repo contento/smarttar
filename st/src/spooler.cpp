@@ -8,6 +8,7 @@
 #include <bios.h>
 #include <events.h>
 #include <spooler.h>
+#include <pdf_wr.h>
 
 extern CFG 	*g_cfg;
 
@@ -19,10 +20,10 @@ extern CFG 	*g_cfg;
 #define BIOS_PRINT_BUSY      0x80
 #define BIOS_PRINT_ERROR     0x08
 #define BIOS_PRINT_PAPER_OUT 0x20
-
 SPOOLER::SPOOLER(BYTE numOfChannels)
 	: UI_DEVICE(E_SPOOLER, D_ON),
-	Serial(NULL)
+	Serial(NULL),
+	pdfWriter(NULL)
 {
 	NumOfChannels = (numOfChannels > MAX_SPOOL_CHANNELS) ? MAX_SPOOL_CHANNELS : numOfChannels;
 
@@ -42,11 +43,21 @@ SPOOLER::~SPOOLER()
 		delete Buffers[i];
 
 	delete [] PrintfBuffer;
-}
 
+	if (pdfWriter)
+		pdf_wr_close(pdfWriter);
+	pdfWriter = NULL;
+}
 BOOL SPOOLER::Print(BYTE channel, const char *s, BOOL with0xFF)
 {
 //	SpoolerQueueMutex mutex;
+
+	// PDF output: intercept before buffering
+	if (!strcmp(g_cfg->P_PORT, "pdf"))
+	{
+		pdfWriteString(s, with0xFF);
+		return TRUE;
+	}
 
 	if (channel >= NumOfChannels)
 		return FALSE;
@@ -111,6 +122,14 @@ void SPOOLER::Terminate(void)
 	for (int i = 0; i < NumOfChannels; i++)
 		while (Buffers[i]->Get(byte))
 			continue;  // nothing to do ...
+
+	// Close PDF writer if open (must happen before program exit
+	// to produce a valid xref/trailer/%%EOF).
+	if (pdfWriter)
+	{
+		pdf_wr_close(pdfWriter);
+		pdfWriter = NULL;
+	}
 }
 
 //
@@ -290,4 +309,143 @@ BOOL SPOOLER::UninstallSerial(void)
 	Serial = NULL;
 
 	return TRUE;
+}
+
+// --- PDF output ------------------------------------------------------------
+// Strip printer escape sequences and write plain text to the PDF writer.
+// Handles: 0x1B + param sequences, \t (tab stops), \n (line break),
+// 0xFF (block terminator).  All other bytes are text characters.
+//
+void SPOOLER::pdfWriteString(const char *s, BOOL with0xFF)
+{
+	if (!pdfWriter)
+	{
+		// Build filename PDF\RXYYMMDD.pdf -- 8.3-safe (RX + YYMMDD = 8 chars).
+		// Use the numeric date overload directly: the char* _GetSysDate
+		// returns DD/MM/YYYY, not the YYYY-MM-DD this once assumed.
+		char path[80];
+		WORD year, month, day;
+		_GetSysDate(year, month, day);
+		mkdir("PDF");  // ensure output dir exists; harmless if already there
+		sprintf(path, "PDF\\RX%02u%02u%02u.pdf",
+			(unsigned)(year % 100), (unsigned)month, (unsigned)day);
+		pdfWriter = pdf_wr_open(path);
+		if (!pdfWriter)
+			return;
+	}
+	//
+	// Parse the string: strip escape sequences, interpret \t and \n
+	//
+	int end = (int)strlen(s);
+	if (with0xFF)
+	{
+		// Find the 0xFF terminator
+		int k = 0;
+		while (s[k] != '\xFF' && k < PRINTER_BUFFER_SIZE)
+			k++;
+		end = k;
+	}
+	//
+	int i = 0;
+	char lineBuf[256];
+	int lineLen = 0;
+	//
+	while (i < end)
+	{
+		unsigned char c = (unsigned char)s[i];
+		//
+		if (c == 0x1B)
+		{
+			// ESC/P command: skip ESC + command byte + its fixed param
+			// bytes.  Param counts match the codes the printer DLLs emit
+			// (see src/pr/pr_*.c).  Unknown commands take no params.
+			i++; // skip ESC
+			if (i >= end) break;
+			unsigned char cmd = (unsigned char)s[i];
+			i++; // skip command byte
+			int params;
+			switch (cmd)
+			{
+			case 0x21: // ESC !  master print mode
+			case 0x41: // ESC A  line spacing n/72
+			case 0x43: // ESC C  page length
+			case 0x7A: // ESC z  (printer-specific)
+				params = 1;
+				break;
+			case 0x63: // ESC c 0 n  (printer-specific, 2 bytes follow)
+				params = 2;
+				break;
+			case 0x44: // ESC D  horizontal tab stops: list ended by NUL
+				while (i < end && (unsigned char)s[i] != 0x00)
+					i++;
+				if (i < end) i++; // skip the NUL terminator
+				params = 0;
+				break;
+			default:   // ESC @, ESC 0, ESC P, ESC M, ESC i, ... no params
+				params = 0;
+				break;
+			}
+			while (params-- > 0 && i < end)
+				i++;
+			continue;
+		}
+		//
+		if (c == '\t')
+		{
+			// Tab stop: advance to next multiple of 8 columns
+			int nextTab = ((lineLen / 8) + 1) * 8;
+			while (lineLen < nextTab && lineLen < (int)sizeof(lineBuf) - 1)
+				lineBuf[lineLen++] = ' ';
+			i++;
+			continue;
+		}
+		//
+		if (c == '\n' || c == '\r')
+		{
+			lineBuf[lineLen] = '\0';
+			pdf_wr_line(pdfWriter, lineLen > 0 ? lineBuf : "");
+			lineLen = 0;
+			i++;
+			continue;
+		}
+		//
+		if (c == 0x0C)
+		{
+			// Form feed: insert blank line separator instead of
+			// forced page break.  pdf_wr_line() auto-wraps when
+			// the page is full, so receipts stack naturally.
+			if (lineLen > 0)
+			{
+				lineBuf[lineLen] = '\0';
+				pdf_wr_line(pdfWriter, lineBuf);
+				lineLen = 0;
+			}
+			pdf_wr_line(pdfWriter, "");
+			i++;
+			continue;
+		}
+		//
+		if (c == 0xFF)
+			break; // block terminator
+		//
+		if (c < 0x20)
+		{
+			// Strip stray printer control bytes (SO, SI, DC4, CAN, ...)
+			// that aren't the tab/newline/form-feed handled above.
+			i++;
+			continue;
+		}
+		//
+		// Normal text character
+		if (lineLen < (int)sizeof(lineBuf) - 1)
+			lineBuf[lineLen++] = (char)c;
+		i++;
+	}
+	//
+	// Flush any remaining partial line
+	if (lineLen > 0)
+	{
+		lineBuf[lineLen] = '\0';
+		pdf_wr_line(pdfWriter, lineBuf);
+	}
 }

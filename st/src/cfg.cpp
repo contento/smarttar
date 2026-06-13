@@ -30,7 +30,7 @@ static char *forms[] = {
 	"18 col. doble rollo",
 	"28 col. rollo simple",
 	"80 col. EMETEL",
-    "80 col. media página",
+    "80 col. media pï¿½gina",
 };
 
 static char *_MCARD_PRINT_FMT  = "%.1lf,%.1lf,%.1lf,%.1lf";
@@ -150,7 +150,7 @@ WORD CFG::Save(const char *path, BOOL saveIni)
         FillCfgTable(table);
         char strDate[0x10];
         char strTime[0x10];
-        file << ";\n; Configuraci¢n [" << _GetSysDate(strDate) << ' ' << _GetSysTime(strTime) << "]\n";
+        file << ";\n; Configuraciï¿½n [" << _GetSysDate(strDate) << ' ' << _GetSysTime(strTime) << "]\n";
         file << ";\n; Utilice SETUP para producir ST.CFG" << "\n;\n\n";
         STR512 line;
         for (WORD offset=0; table[offset].Id; offset++)
@@ -501,6 +501,7 @@ void CFG::FillCfgTable(ENTRY *table)
 	Entry(RECNO_LEADING_ZEROS, ENTRY::INTEGER|ENTRY::UNSIGNED);
 	Entry(RECNO_DIGITS, ENTRY::INTEGER|ENTRY::UNSIGNED);
 	Entry(RECNO_LABEL, ENTRY::STRING);
+	Entry(SHORT_SERIAL, ENTRY::STRING);
 
 	// [ telefonia ]
     Entry(PhoneGroup, ENTRY::GROUP);
@@ -838,11 +839,11 @@ void CFG::SetDefault(BOOL setAll)
     strcpy(SysGroup, ";\n; [ Sistema ]\n;");
     strcpy(COUNTRY, "Colombia");
     strcpy(CURRENCY, "$");
-    strcpy(CITY    , "Medellín");
+    strcpy(CITY    , "Medellï¿½n");
     strcpy(COMPANY , "TELECOM");
     strcpy(ID      , ""); // clear ID.  JEAM/GCC
     strcpy(OPERATOR_NAME, "TELECOM"); // v2.16
-    DEALER         = 0; // MicroDise¤o Ltda.
+    DEALER         = 0; // MicroDiseï¿½o Ltda.
 	CLUSTERS       = 2;
 	ACTIVE_CLUSTERS = CLUSTERS; // 2.30
 	VIEW_REFRESH_TIME = 500;
@@ -852,7 +853,7 @@ void CFG::SetDefault(BOOL setAll)
 	TAX_PERCENT    = 16;
 	DDN_TAX        = 16;
 	DDI_TAX        = 16;
-    strcpy(OP_TITLE, "Señora");
+    strcpy(OP_TITLE, "Seï¿½ora");
     strcpy(OP_NAME , "Adriana Giraldo");
     SS_ID          = 0;
     SS_TIME        = 0;
@@ -865,7 +866,7 @@ void CFG::SetDefault(BOOL setAll)
     LPT	= 1;
     DOUBLE_PRN = FALSE;
     strcpy(P_PORT, "lpt");
-    FORM = DR_80;
+    FORM = LINEAL_80;
     strcpy(P_FORM, forms[FORM]);
     P_FOOTER1[0] = '\0';
     P_FOOTER2[0] = '\0';
@@ -896,7 +897,7 @@ void CFG::SetDefault(BOOL setAll)
 	CORRECTION_TIME          = 0; // miliseconds
 	TURN_DAY				 = 1;
     TURN_NUMBER              = 1;
-    strcpy(HEADER_LINE1, "Recibo de pago de servicios públicos");
+    strcpy(HEADER_LINE1, "Recibo de pago de servicios pï¿½blicos");
     strcpy(HEADER_LINE2, "");
     strcpy(HEADER_LINE3, "");
     strcpy(HEADER_LINE4, "Somos agente retenedor del");
@@ -904,8 +905,8 @@ void CFG::SetDefault(BOOL setAll)
 	HEADER_PRINT_RECNO   = 0; // use line 4
 
 	RECNO_LEADING_ZEROS = FALSE;
-	RECNO_DIGITS		= 0;
 	strcpy(RECNO_LABEL, "Recibo");
+	strcpy(SHORT_SERIAL, "AA52048");
 
 	MCARD[0] = 5000.0;
 	MCARD[1] = 10000.0;
@@ -1015,7 +1016,7 @@ void CFG::SetDefault(BOOL setAll)
     //
     // [ Critical ]
     //
-    strcpy(CriticalGroup, ";\n; [ Valores Cr¡ticos ]\n;");
+    strcpy(CriticalGroup, ";\n; [ Valores Crï¿½ticos ]\n;");
     CHECK_PAUSE_KEY     = TRUE;
 	IGNORE_EXTRA_DIGITS = FALSE;
     EXCLUSIVE_SPY       = TRUE;

@@ -24,7 +24,7 @@
 #include <help.hpp>
 
 char  *g_SHORT_APP_ENG  = "GCC";
-char  *g_LONG_APP_ENG   = "Gonzalo Contento Casta¤o";
+char  *g_LONG_APP_ENG   = "Gonzalo Contento Castaï¿½o";
 
 extern CFG  *g_cfg;
 
@@ -133,7 +133,7 @@ main(int , char *argv[])
 		if (!eeprom.isValidVersion())
 		{
 			UI_WINDOW_OBJECT::errorSystem->ReportError(windowManager,
-					WOS_NO_STATUS, "\n\n      Versión no válida\n");
+					WOS_NO_STATUS, "\n\n      Versiï¿½n no vï¿½lida\n");
 			// Clean up.
 			Log log(Log::OUT|Log::CREATE);
 			log.put(Log::EEPROMBADTRY);
@@ -166,8 +166,8 @@ DONGLE dongle;
     {
         UI_WINDOW_OBJECT::errorSystem->ReportError(windowManager, WOS_NO_STATUS,
                 "\n\n""      Acceso Negado\n"
-                "Configuración no disponible.\n"
-                " Deberá instalar el sistema."
+                "Configuraciï¿½n no disponible.\n"
+                " Deberï¿½ instalar el sistema."
                                                   );
 		Log log(Log::OUT|Log::CREATE);
         log.put(Log::CFGBADTRY);
@@ -268,7 +268,7 @@ EVENT_TYPE Exit(UI_DISPLAY *display, UI_EVENT_MANAGER *, UI_WINDOW_MANAGER *wind
 	{
 		*window
 		+ new UIW_BUTTON( 3, 3, 9, "", BTF_NO_3D|BTF_AUTO_SIZE|BTF_STATIC_BITMAPARRAY, WOF_NON_SELECTABLE, NULL, 0, "ST")
-		+ new UIW_PROMPT(15, 1, "El sistema está procesando información.")
+		+ new UIW_PROMPT(15, 1, "El sistema estï¿½ procesando informaciï¿½n.")
 		+ new UIW_PROMPT(15, 2, "Por favor verifique todas las cabinas.")
 		+ new UIW_BUTTON(19, 5, 15, "~Aceptar", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, S_CLOSE)
 		;
@@ -277,7 +277,7 @@ EVENT_TYPE Exit(UI_DISPLAY *display, UI_EVENT_MANAGER *, UI_WINDOW_MANAGER *wind
 	{
 		*window
 		+ new UIW_BUTTON( 3, 3, 9, "", BTF_NO_3D|BTF_AUTO_SIZE|BTF_STATIC_BITMAPARRAY, WOF_NON_SELECTABLE, NULL, 0, "ST")
-		+ new UIW_PROMPT(15, 2, "Detener la simulación y salir ?")
+		+ new UIW_PROMPT(15, 2, "Detener la simulaciï¿½n y salir ?")
 		+ new UIW_BUTTON(14, 5, 11, "~Si", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, L_EXIT)
 		+ ( wNoButton =
 				new UIW_BUTTON(31, 5, 11, "~No", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, S_CLOSE)
@@ -289,7 +289,7 @@ EVENT_TYPE Exit(UI_DISPLAY *display, UI_EVENT_MANAGER *, UI_WINDOW_MANAGER *wind
 	{
 		*window
 		+ new UIW_BUTTON( 3, 3, 9, "", BTF_NO_3D|BTF_AUTO_SIZE|BTF_STATIC_BITMAPARRAY, WOF_NON_SELECTABLE, NULL, 0, "ST")
-		+ new UIW_PROMPT(15, 2, "Terminar la sesión de trabajo ?")
+		+ new UIW_PROMPT(15, 2, "Terminar la sesiï¿½n de trabajo ?")
 		+ new UIW_BUTTON(14, 5, 11, "~Si", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, L_EXIT)
 		+ ( wNoButton =
 				new UIW_BUTTON(31, 5, 11, "~No", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, S_CLOSE)
@@ -311,9 +311,20 @@ void Prolog(void)
 	if (TraceInfo::s_bDevelopment)
 		g_superAppInfo.Attr.STPro = TRUE;
 	if (g_cfg->IsDemoMode())
+	{
 		g_superAppInfo.Attr.STPro = TRUE;
+		// Demo EXE is not serialized, so g_appInfo serial fields hold raw
+		// (encrypted) bytes that print as garbage in the receipt <%s> field.
+		strcpy(g_appInfo.Serial, "DEMO");
+		strcpy(g_appInfo.ShortSerial, "DEMO");
+	}
 	if (g_superAppInfo.Attr.Serialized)
 		_Decrypt(&g_appInfo, sizeof(APP_INFO));
+	// In demo mode, always use INI serial (EEPROM holds raw encrypted bytes).
+	// Otherwise, use INI only if EEPROM serial is empty.
+	if (g_cfg->IsDemoMode() || g_appInfo.ShortSerial[0] == '\0')
+		strncpy(g_appInfo.ShortSerial, g_cfg->SHORT_SERIAL,
+			sizeof(g_appInfo.ShortSerial) - 1);
 	// I love colors. GCC/gcc.
 	UI_DISPLAY::backgroundPalette->fillPattern     = PTN_SOLID_FILL;
 	UI_DISPLAY::backgroundPalette->colorBackground = GREEN;
