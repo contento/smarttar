@@ -520,5 +520,5 @@ redistribution issues in the main smarttar repo.
 - [x] Update `README.md` / `README.es.md` — vendor setup instructions in Quick Start
 - [x] Update `CLAUDE.md` — repository layout reflects vendor is external
 - [ ] Remove `vendor/` from this repo's git history (once private repo is confirmed working)
-- [ ] Update CI workflow (`.github/workflows/release.yml`) to clone vendor/ before build
-- [ ] Verify build works with vendor/ cloned from private repo (not tracked locally)
+- [x] Update CI workflow (`.github/workflows/release.yml`) to clone vendor/ before build
+- [x] Verify build works with vendor/ cloned from private repo (not tracked locally)
