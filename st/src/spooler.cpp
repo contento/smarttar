@@ -312,19 +312,15 @@ void SPOOLER::pdfWriteString(const char *s, BOOL with0xFF)
 {
 	if (!pdfWriter)
 	{
-		// Build filename: PDF\RX-YYYYMMDD.pdf
+		// Build filename PDF\RXYYMMDD.pdf -- 8.3-safe (RX + YYMMDD = 8 chars).
+		// Use the numeric date overload directly: the char* _GetSysDate
+		// returns DD/MM/YYYY, not the YYYY-MM-DD this once assumed.
 		char path[80];
-		char dateStr[16];
-		_GetSysDate(dateStr);
-		// dateStr = "YYYY-MM-DD" -> "YYYYMMDD"
-		char compact[9];
-		compact[0] = dateStr[0]; compact[1] = dateStr[1];
-		compact[2] = dateStr[3]; compact[3] = dateStr[4];
-		compact[4] = dateStr[6]; compact[5] = dateStr[7];
-		compact[6] = dateStr[8]; compact[7] = dateStr[9];
-		compact[8] = '\0';
-		sprintf(path, "PDF\\RX-%s.pdf", compact);
+		WORD year, month, day;
+		_GetSysDate(year, month, day);
 		mkdir("PDF");  // ensure output dir exists; harmless if already there
+		sprintf(path, "PDF\\RX%02u%02u%02u.pdf",
+			(unsigned)(year % 100), (unsigned)month, (unsigned)day);
 		pdfWriter = pdf_wr_open(path);
 		if (!pdfWriter)
 			return;
@@ -352,23 +348,37 @@ void SPOOLER::pdfWriteString(const char *s, BOOL with0xFF)
 		//
 		if (c == 0x1B)
 		{
-			// ESC sequence: skip it.
-			// Heuristic: cmd in 0x20-0x3F -> variable params until 0xFF;
-			// cmd in 0x40-0x7F -> 1 param byte.
+			// ESC/P command: skip ESC + command byte + its fixed param
+			// bytes.  Param counts match the codes the printer DLLs emit
+			// (see src/pr/pr_*.c).  Unknown commands take no params.
 			i++; // skip ESC
 			if (i >= end) break;
 			unsigned char cmd = (unsigned char)s[i];
 			i++; // skip command byte
-			if (cmd >= 0x20 && cmd <= 0x3F)
+			int params;
+			switch (cmd)
 			{
-				while (i < end && (unsigned char)s[i] != 0xFF)
+			case 0x21: // ESC !  master print mode
+			case 0x41: // ESC A  line spacing n/72
+			case 0x43: // ESC C  page length
+			case 0x7A: // ESC z  (printer-specific)
+				params = 1;
+				break;
+			case 0x63: // ESC c 0 n  (printer-specific, 2 bytes follow)
+				params = 2;
+				break;
+			case 0x44: // ESC D  horizontal tab stops: list ended by NUL
+				while (i < end && (unsigned char)s[i] != 0x00)
 					i++;
-				if (i < end) i++; // skip 0xFF
+				if (i < end) i++; // skip the NUL terminator
+				params = 0;
+				break;
+			default:   // ESC @, ESC 0, ESC P, ESC M, ESC i, ... no params
+				params = 0;
+				break;
 			}
-			else if (cmd >= 0x40 && cmd <= 0x7F)
-			{
-				if (i < end) i++; // skip 1 param byte
-			}
+			while (params-- > 0 && i < end)
+				i++;
 			continue;
 		}
 		//
@@ -407,6 +417,14 @@ void SPOOLER::pdfWriteString(const char *s, BOOL with0xFF)
 		//
 		if (c == 0xFF)
 			break; // block terminator
+		//
+		if (c < 0x20)
+		{
+			// Strip stray printer control bytes (SO, SI, DC4, CAN, ...)
+			// that aren't the tab/newline/form-feed handled above.
+			i++;
+			continue;
+		}
 		//
 		// Normal text character
 		if (lineLen < (int)sizeof(lineBuf) - 1)
