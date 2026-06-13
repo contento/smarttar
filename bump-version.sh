@@ -12,6 +12,7 @@
 #   - st/include/version.h ST_VERSION_MAJOR/MINOR/PATCH + ST_VERSION string
 #   - CLAUDE.md            "Current version: **X.Y.Z**"
 #   - st/versions.txt      prepends a [ X.Y.Z ] block with a TODO stub
+#   - st/**/st.ini          DISPLAY_DEFAULT_MESSAGE "SmartTar X.Y"
 #
 # version.h is the canonical source of truth at runtime; Borland MAKE's
 # .autodepend rebuilds any .cpp that includes it. CLAUDE.md is docs;
@@ -95,17 +96,25 @@ tmp=$(mktemp)
   cat st/versions.txt
 } > "$tmp"
 mv "$tmp" st/versions.txt
+# Update DISPLAY_DEFAULT_MESSAGE in all st.ini config files
+display_ver="${major}.${minor}"
+find st/ -iname 'st.ini' -exec grep -l 'DISPLAY_DEFAULT_MESSAGE=SmartTar' {} + 2>/dev/null | while read -r ini; do
+  sed -i.bak "s/DISPLAY_DEFAULT_MESSAGE=SmartTar [0-9.]*/DISPLAY_DEFAULT_MESSAGE=SmartTar ${display_ver}/" "$ini"
+  rm -f "$ini.bak"
+done
 
 cat <<EOF
 Updated:
   st/include/version.h (ST_VERSION → $new)
   CLAUDE.md            (Current version → $new)
   st/versions.txt      (new [ $new ] block at top — please edit the description)
+  st/**/st.ini          (DISPLAY_DEFAULT_MESSAGE → SmartTar ${display_ver})
 
 Next steps (per RELEASING.md):
   1. Edit st/versions.txt — replace 'TODO add description.' with the real changelog
   2. git add st/include/version.h CLAUDE.md st/versions.txt
-  3. git commit -m "Release v$new: <summary>"
-  4. git tag -a v$new -m "..."
-  5. git push origin main v$new
+  3. git add st/**/st.ini
+  4. git commit -m "Release v$new: <summary>"
+  5. git tag -a v$new -m "..."
+  6. git push origin main v$new
 EOF

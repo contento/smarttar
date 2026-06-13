@@ -10,6 +10,7 @@
     - st\include\version.h ST_VERSION_MAJOR/MINOR/PATCH + ST_VERSION string
     - CLAUDE.md            "Current version: **X.Y.Z**"
     - st\versions.txt      prepends a [ X.Y.Z ] block with a TODO stub
+    - st\**\st.ini          DISPLAY_DEFAULT_MESSAGE "SmartTar X.Y"
 
   version.h is the canonical source of truth at runtime; Borland MAKE's
   .autodepend rebuilds any .cpp that includes it.
@@ -113,16 +114,28 @@ $existing = Get-Content -LiteralPath 'st\versions.txt' -Raw
 $header   = "[ $new ]`n - $today : TODO add description.`n `n"
 Set-Content -LiteralPath 'st\versions.txt' -Value ($header + $existing) -NoNewline
 
+# --- Update DISPLAY_DEFAULT_MESSAGE in st.ini config files --------------------
+$displayVer = "$major.$minor"
+Get-ChildItem -Path 'st' -Filter 'st.ini' -Recurse -ErrorAction SilentlyContinue |
+  Where-Object { (Get-Content -LiteralPath $_.FullName -Raw) -match 'DISPLAY_DEFAULT_MESSAGE=SmartTar' } |
+  ForEach-Object {
+    $content = Get-Content -LiteralPath $_.FullName -Raw
+    $content = [regex]::Replace($content, 'DISPLAY_DEFAULT_MESSAGE=SmartTar [\d.]+', "DISPLAY_DEFAULT_MESSAGE=SmartTar $displayVer")
+    Set-Content -LiteralPath $_.FullName -Value $content -NoNewline
+  }
+
 # --- Report ------------------------------------------------------------------
 Write-Host ''
 Write-Host 'Updated:'
 Write-Host "  st\include\version.h (ST_VERSION -> $new)"
 Write-Host "  CLAUDE.md            (Current version -> $new)"
 Write-Host "  st\versions.txt      (new [ $new ] block at top -- please edit the description)"
+Write-Host "  st\**\st.ini          (DISPLAY_DEFAULT_MESSAGE -> SmartTar $displayVer)"
 Write-Host ''
 Write-Host 'Next steps (per RELEASING.md):'
 Write-Host "  1. Edit st\versions.txt -- replace 'TODO add description.' with the real changelog"
 Write-Host '  2. git add st\include\version.h CLAUDE.md st\versions.txt'
-Write-Host "  3. git commit -m `"Release v$new`: <summary>`""
-Write-Host "  4. git tag -a v$new -m `"...`""
-Write-Host "  5. git push origin main v$new"
+Write-Host '  3. git add st\**\st.ini'
+Write-Host "  4. git commit -m `"Release v$new`: <summary>`""
+Write-Host "  5. git tag -a v$new -m `"...`""
+Write-Host "  6. git push origin main v$new"

@@ -38,6 +38,10 @@ Configuration is stored in two files: **ST.CFG** (binary, encrypted, written by 
 | HEADER_LINE4 | String (64) | Receipt header line 4 (may include %s or %d format). |
 | HEADER_PRINT_TAXNAME | Boolean | Print tax name on receipt header. |
 | HEADER_PRINT_RECNO | Boolean | Print receipt number on receipt header. |
+| RECNO_LABEL | String (64) | Label prefix for receipt number on printed receipt (e.g., `Recibo`). |
+| RECNO_DIGITS | Integer | Number of digits for receipt number display. |
+| RECNO_LEADING_ZEROS | Boolean | Pad receipt number with leading zeros. |
+| SHORT_SERIAL | String (32) | Default serial number shown in receipt header `<serial>` when EEPROM serial is absent. Default: `AA52048`. |
 | SS_TIME | Integer | Screen saver timeout (minutes). |
 
 ## \[Aplicacion\] — Application Parameters
