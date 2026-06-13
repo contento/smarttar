@@ -2,12 +2,66 @@
 
 Status snapshot for resuming on another machine.
 
-- **Branch:** `feat/pdf-printer`, pushed to `origin/feat/pdf-printer`. **PDF receipt output works end-to-end** (validated: real text, valid multi-page PDF, multi-receipt per page). Not yet merged to `main`.
-- **`main`:** at `fc00e16`, pushed, clean. v2.70.0 release CI unblocked.
+- **Branch:** `feat/vendor-separation`, 4 commits ahead of `main`. Vendor separation infrastructure complete — private repo created, setup scripts, build/run checks, CI wiring, docs.
+- **`main`:** at `11ab494` (merge feat/pdf-printer), pushed, clean. v2.80.0.
 
 ---
 
-## Jun 13 — PDF receipts + config fixes (this session)
+## Jun 13 — Vendor separation + historical docs cleanup (this session)
+
+### Vendor separation
+
+Moved proprietary toolchain binaries (Borland C++ 3.1, Pharlap 286, Zinc 3.5,
+DOS utilities) to a separate **private** GitHub repository to avoid copyright /
+redistribution issues in the main smarttar repo.
+
+**Private repo:** [`contento/smarttar-vendor`](https://github.com/contento/smarttar-vendor)
+(PRIVATE, 1798 files + README)
+
+What was done:
+- Created `smarttar-vendor` private repo on GitHub via `gh` CLI
+- Pushed all `vendor/` contents (bc/, pharlap/, zinc/, util/) to the private repo
+- Added `README.md` to private repo explaining why it's private and listing components
+- Created [`setup-vendor.sh`](setup-vendor.sh) / [`setup-vendor.ps1`](setup-vendor.ps1) — clone from private repo; on failure suggest Zinc 3.5, BC 3.1, Pharlap 286
+- Created [`VENDOR_SETUP.md`](VENDOR_SETUP.md) — manual setup instructions, directory structure, SSH troubleshooting
+- Updated [`build.sh`](build.sh) / [`build.ps1`](build.ps1) / [`run.sh`](run.sh) / [`run.ps1`](run.ps1) — check for `vendor/`, exit with clear guidance if missing
+- Updated [`.gitignore`](.gitignore) — now excludes `vendor/`
+- Updated [`README.md`](README.md) / [`README.es.md`](README.es.md) — vendor setup in Quick Start section
+- Updated [`CLAUDE.md`](CLAUDE.md) — repository layout reflects vendor is external
+- Updated [`RELEASING.md`](RELEASING.md) — vendor clone step (step 2) in release process
+- Updated [`.github/workflows/release.yml`](.github/workflows/release.yml) — CI clones vendor via `VENDOR_REPO_TOKEN` secret before build
+- Verified all key files present via SSH clone from private repo
+- Removed nested `.git` from `vendor/` so it stays a plain directory
+
+### Historical docs cleanup
+
+Moved 3 planning/audit documents from repo root to [`wiki/dev/`](wiki/dev/) as historical references:
+- `MIGRATION_PLAN_OWZ.md` → `wiki/dev/MIGRATION_PLAN_OWZ.md`
+- `MINI_SMARTTAR_PLAN.md` → `wiki/dev/MINI_SMARTTAR_PLAN.md`
+- `STABILITY_AUDIT.md` → `wiki/dev/STABILITY_AUDIT.md`
+
+Updated all cross-references in [`TODO.md`](TODO.md) and [`wiki/dev/ISR_VOLATILE_NOTES.md`](wiki/dev/ISR_VOLATILE_NOTES.md).
+
+### Commits on `feat/vendor-separation`
+
+```
+4608a41 chore: mark CI workflow and vendor clone verification as done in TODO.md
+d069115 chore: mark vendor repo creation as done in TODO.md
+998f552 chore: move historical docs to wiki/dev/
+d5d74b6 feat: move vendor/ to private repo (smarttar-vendor) to avoid copyright issues
+```
+
+### Remaining vendor separation TODO items
+
+- `[ ]` Remove `vendor/` from this repo's git history — destructive operation
+  (rewrites history with `git filter-repo` or BFG). All collaborators would need
+  to re-clone. Do only after confirming the full build works with cloned vendor.
+- `[ ]` Build with open-source toolchains — long-term milestone (Open Watcom,
+  OpenZinc), not part of vendor separation.
+
+---
+
+## Jun 13 — PDF receipts + config fixes (earlier session)
 
 The PDF approach that succeeded is the one the Jun-12 lessons below pointed to:
 **no `Config` struct change, no `FORM_TAG` shift.** `P_PORT="pdf"` (a config
@@ -66,10 +120,6 @@ auto-wraps to a new page when full. At ~10 lines/receipt (LINEAL_80 format),
   `g_extAreChangeable` (supervisor password) — make it demo-editable as a
   follow-up if wanted. (`73dfcae`)
 
-> `util/ini2cfg/st.ini` carries the **skip-worktree** bit (local dev config).
-> The committed defaults above were applied by un-setting it, committing a
-> minimal diff, then re-setting it — so local runtime drift stays hidden.
-
 ### Still open / known limitations
 
 - `pdf_wr_close` (writes xref + `%%EOF`) only runs in `~SPOOLER`. A hard/abnormal
@@ -112,7 +162,7 @@ Started implementing a PDF printer driver (`PR_PDF.DLL`) with `WriteString` expo
 
 ## Current state of `main`
 
-- v2.70.0 CI unblocked (DOSBox-X `2026.06.02` fix)
+- v2.80.0 (merge feat/pdf-printer)
 - Stability audit closed (Tier 3 ISR deferred)
 - DEMO_ENGINE merged
 - Zinc grid fix on `fix/zinc-grid-geometry` branch, unmerged
@@ -124,6 +174,9 @@ Build: `./build.sh --force && ./run.sh`
 
 ## Other open items (from TODO.md)
 
-- **PDF print driver** — DONE on `feat/pdf-printer` (see Jun 13 section). Pending: merge to `main` after an in-DOSBox build confirms (host validation done).
+- **PDF print driver** — DONE on `feat/pdf-printer`. Merged to `main` (v2.80.0).
+- **Vendor separation** — DONE on `feat/vendor-separation` (see Jun 13 section).
+  Private repo created, setup scripts working. Remaining: remove from git history.
 - **ISR volatile audit (Tier 3)** — deferred. Parked in `wiki/dev/ISR_VOLATILE_NOTES.md`. Guard-rail: no compiler optimization without the audit.
+- **Build with open-source toolchains** — long-term. See `wiki/dev/MIGRATION_PLAN_OWZ.md`.
 - **Idea backlog** — PDF print driver bulk-export, text/markdown file drivers.
