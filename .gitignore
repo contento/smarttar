@@ -1,7 +1,11 @@
 # ==============================================================================
-# vendor/ (bc, pharlap, util, zinc) and Documents/ are intentionally NOT listed here
-# — their contents are always tracked
+# vendor/ — proprietary toolchain binaries (Borland C++ 3.1, Pharlap 286,
+# Zinc 3.5, DOS utilities). Moved to a separate private repository
+# (smarttar-vendor) to avoid copyright / redistribution issues.
+# Clone with: ./setup-vendor.sh  or  .\setup-vendor.ps1
+# See VENDOR_SETUP.md for manual setup instructions.
 # ==============================================================================
+vendor/
 
 # ==============================================================================
 # st/ — build artifacts only

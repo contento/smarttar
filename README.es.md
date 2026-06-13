@@ -71,10 +71,16 @@ La documentación en inglés está en [wiki/en/](wiki/en/).
 ## Cadena de herramientas
 
 SmartTar se compila con Borland C++ 3.1 + Turbo Assembler para el target de
-modo protegido Pharlap 286, usando Zinc Interface Library 3.5 para la UI.
-Todas las herramientas están incluidas en el repositorio bajo
-[`vendor/`](vendor/). No se necesita un compilador en el host — la compilación
-se ejecuta dentro de DOSBox-X.
+modo protegido Pharlap 286, usando Zinc Interface Library 3.5 para la UI. No
+se necesita un compilador en el host — la compilación se ejecuta dentro de
+DOSBox-X.
+
+Los binarios propietarios de la cadena de herramientas están en un repositorio
+privado separado
+(**[`smarttar-vendor`](https://github.com/contento/smarttar-vendor)**), y se
+clonan en `vendor/` con `./setup-vendor.sh`. No están incluidos en este
+repositorio por restricciones de copyright / redistribución. Ver
+[VENDOR_SETUP.md](VENDOR_SETUP.md) para detalles.
 
 ---
 

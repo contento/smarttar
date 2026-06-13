@@ -81,13 +81,14 @@ The test: Every changed line should trace directly to the user's request.
 ## Repository Layout
 
 ```text
-vendor/      Bundled third-party / external toolchain (not first-party):
+vendor/      Proprietary toolchain (NOT in this repo — clone via setup-vendor.sh):
   bc/        Borland C++ 3.1 toolchain (compiler, debugger, TASM, TLIB, etc.)
   pharlap/   Pharlap 286 DOS extender (BCC286, BIND286, CFIG286, RUN286, DLLs)
   zinc/      Zinc 3.5 UI framework (headers, libs, tools — incl. GENHELP.EXE
              which the MAKEFILE's help.dat rule invokes)
   util/      DOS utilities for development (NC, MOUSE, PKLITE, PKZIP, SWEEP, etc.)
              (Distinct from st/util/, which is first-party build utilities.)
+             Lives in private repo: github.com/contento/smarttar-vendor
 dosbox-x.conf  Project-local DOSBox-X config (CPU/mem tuning, PATH wiring,
                [sdl] mouse_emulation=integration for Zinc UI, etc.)
 build.sh     Host-side runner (bash, macOS/Linux). Drives DOSBox-X
