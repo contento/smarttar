@@ -129,6 +129,20 @@ is no longer in business; the code was preserved and resurrected in 2026.
 
 ---
 
+## Acknowledgments
+
+### Engineers
+
+- **Carlos Robledo** — Director
+- **Jorge Martinez** — Hardware
+- **Luis Valencia** — Hardware
+- **Tamayo** — Hardware
+- **Hector Mario Florez** — Hardware
+- **Adriana Giraldo** — Documentation
+- **Gonzalo Contento** — Software Engineer
+
+---
+
 ## License
 
 Copyright © 1993–2003 MicroDiseño Ltda. All rights reserved.
