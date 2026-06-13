@@ -111,3 +111,9 @@ st/docs/build/
 # Demo-engine debug breadcrumb (DEMO_ENGINE::ParsePhones -> phones.dbg)
 *.dbg
 *.DBG
+
+# DOSBox-X temp lock files (created when ini files are open)
+st/**/.!*.ini
+
+# Host-side test binaries
+/test_pdf

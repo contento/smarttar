@@ -122,6 +122,14 @@ void SPOOLER::Terminate(void)
 	for (int i = 0; i < NumOfChannels; i++)
 		while (Buffers[i]->Get(byte))
 			continue;  // nothing to do ...
+
+	// Close PDF writer if open (must happen before program exit
+	// to produce a valid xref/trailer/%%EOF).
+	if (pdfWriter)
+	{
+		pdf_wr_close(pdfWriter);
+		pdfWriter = NULL;
+	}
 }
 
 //
@@ -403,14 +411,16 @@ void SPOOLER::pdfWriteString(const char *s, BOOL with0xFF)
 		//
 		if (c == 0x0C)
 		{
-			// Form feed: page break
+			// Form feed: insert blank line separator instead of
+			// forced page break.  pdf_wr_line() auto-wraps when
+			// the page is full, so receipts stack naturally.
 			if (lineLen > 0)
 			{
 				lineBuf[lineLen] = '\0';
 				pdf_wr_line(pdfWriter, lineBuf);
 				lineLen = 0;
 			}
-			pdf_wr_page_break(pdfWriter);
+			pdf_wr_line(pdfWriter, "");
 			i++;
 			continue;
 		}

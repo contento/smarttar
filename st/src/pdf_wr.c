@@ -246,10 +246,10 @@ int pdf_wr_close(PDF_WR *ctx)
     writeStr(ctx->fp, "xref\r\n");
     sprintf(buf, "0 %d\r\n", ctx->objCount + 1);
     writeStr(ctx->fp, buf);
-    writeStr(ctx->fp, "0000000000 65535 f \r\n"); // entry 0: free
+    writeStr(ctx->fp, "0000000000 65535 f\r\n"); // entry 0: free
     for (i = 0; i < ctx->objCount; i++)
     {
-        sprintf(buf, "%010ld 00000 n \r\n", ctx->objOffsets[i]);
+        sprintf(buf, "%010ld 00000 n\r\n", ctx->objOffsets[i]);
         writeStr(ctx->fp, buf);
     }
 

@@ -38,6 +38,10 @@ La configuración se almacena en dos archivos: **ST.CFG** (binario, cifrado, esc
 | HEADER_LINE4 | Cadena (64) | Línea 4 del encabezado (puede incluir formato %s o %d). |
 | HEADER_PRINT_TAXNAME | Booleano | Imprimir nombre del impuesto en el encabezado del recibo. |
 | HEADER_PRINT_RECNO | Booleano | Imprimir número de recibo en el encabezado. |
+| RECNO_LABEL | Cadena (64) | Etiqueta del número de recibo en el recibo impreso (ej., `Recibo`). |
+| RECNO_DIGITS | Entero | Número de dígitos para visualización del número de recibo. |
+| RECNO_LEADING_ZEROS | Booleano | Rellenar número de recibo con ceros a la izquierda. |
+| SHORT_SERIAL | Cadena (32) | Número de serie por defecto en el encabezado `<serial>` del recibo cuando el EEPROM no tiene serie. Predeterminado: `AA52048`. |
 | SS_TIME | Entero | Tiempo de inactividad para el salvapantallas (minutos). |
 
 ## \[Aplicacion\] — Parámetros de Aplicación

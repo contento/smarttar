@@ -2,12 +2,12 @@
 
 Status snapshot for resuming on another machine.
 
-- **Branch:** `feat/pdf-printer`, pushed to `origin/feat/pdf-printer`. **PDF receipt output works end-to-end** (validated: real text, valid multi-page PDF). Not yet merged to `main`.
+- **Branch:** `feat/pdf-printer`, pushed to `origin/feat/pdf-printer`. **PDF receipt output works end-to-end** (validated: real text, valid multi-page PDF, multi-receipt per page). Not yet merged to `main`.
 - **`main`:** at `fc00e16`, pushed, clean. v2.70.0 release CI unblocked.
 
 ---
 
-## Jun 13 — PDF receipts working (this session)
+## Jun 13 — PDF receipts + config fixes (this session)
 
 The PDF approach that succeeded is the one the Jun-12 lessons below pointed to:
 **no `Config` struct change, no `FORM_TAG` shift.** `P_PORT="pdf"` (a config
@@ -31,16 +31,35 @@ PDF 1.4 writer (`src/pdf_wr.c` + `include/pdf_wr.h`). Output:
 - **Garbled filename `RX-13062.PDF`** — assumed `_GetSysDate` returns
   `YYYY-MM-DD` (it returns `DD/MM/YYYY`), and `RX-DDMMYYYY` broke 8.3. Now
   `RXYYMMDD.pdf` via the numeric date overload. (`e40973f`)
+- **Missing xref/trailer** — `pdf_wr_close` only ran in `~SPOOLER`; hard/abnormal
+  DOS exit left PDF unterminated. Added `pdf_wr_close` to `SPOOLER::Terminate()`.
+- **Xref entry size** — entries were 21 bytes (extra space before `\r\n`);
+  PDF spec requires exactly 20. Fixed in `pdf_wr.c`.
 - **Garbage serial `<CAnn>`** — `g_appInfo.ShortSerial` is only decrypted when
   the EXE is serialized; a demo build isn't, so it printed raw bytes. Set
   Serial/ShortSerial to `"DEMO"` in demo mode. (`97cd8ac`)
 - **MAKEFILE** — `pdf_wr.obj` had no build rule; added it. (committed)
 
-### Demo defaults changed (committed canonical `st.ini`)
+### Multi-receipt per page
 
-- `P_PORT=pdf`, `P_OPERATION=automatica` (print per call on hangup),
-  `P_FORM=80 col. un recibo` (SR_80 — single full-width, the cleanest fit for
-  the fixed-pitch PDF page). (`da98be0`, `9c0a40e`)
+Form feed (`0x0C`) between receipts now inserts a blank line separator instead
+of forcing `pdf_wr_page_break()`. Receipts stack naturally; `pdf_wr_line`
+auto-wraps to a new page when full. At ~10 lines/receipt (LINEAL_80 format),
+~7 receipts fit per US Letter page.
+
+### Config changes
+
+- `P_PORT=pdf`, `P_FORM=80 col. lineal` (LINEAL_80 — single-column, 1 line/receipt,
+  cleanest for PDF). Default FORM changed from DR_80 to LINEAL_80.
+- `RECNO_LABEL=Recibo`, `SHORT_SERIAL=AA52048` added to all .ini files.
+- Demo mode: always uses INI `SHORT_SERIAL` (EEPROM holds raw encrypted bytes).
+- Production: EEPROM serial takes priority; INI is fallback when empty.
+- Documented `RECNO_LABEL`, `RECNO_DIGITS`, `RECNO_LEADING_ZEROS`, `SHORT_SERIAL`
+  in both English and Spanish wiki config references.
+
+> `util/ini2cfg/st.ini` carries the **skip-worktree** bit (local dev config).
+> The committed defaults above were applied by un-setting it, committing a
+> minimal diff, then re-setting it — so local runtime drift stays hidden.
 - Demo mode now also unhides the **Configuración** + **Extensiones** menus
   (extended the existing `s_bDevelopment` enable to `IsDemoMode()`). Note: the
   Extensiones menu is *visible* but param editing is still gated by
