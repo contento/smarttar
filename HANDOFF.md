@@ -2,27 +2,64 @@
 
 Status snapshot for resuming on another machine.
 
-- **Branch:** `feat/pdf-printer` (fresh from `main@fc00e16`). Not pushed to origin.
+- **Branch:** `feat/pdf-printer`, pushed to `origin/feat/pdf-printer`. **PDF receipt output works end-to-end** (validated: real text, valid multi-page PDF). Not yet merged to `main`.
 - **`main`:** at `fc00e16`, pushed, clean. v2.70.0 release CI unblocked.
 
 ---
 
-## Jun 13 — PDF output silently failing (fixed)
+## Jun 13 — PDF receipts working (this session)
 
-PDF receipts produced no file. Root cause: `SPOOLER::pdfWriteString` opens
-`PDF\RX-YYYYMMDD.pdf` with `fopen(..., "wb")`, but the `PDF\` directory under
-the runtime cwd (`st\bin\`) never existed. DOS `fopen` does not create missing
-directories — it returns `NULL`, `pdfWriter` stays `NULL`, and the function
-returns with no file and no error. The "dir creation hardcoded in control.cpp"
-from the Jun 12 narrative below was never actually in the source (`grep -rn
-mkdir src/` was empty; no git record).
+The PDF approach that succeeded is the one the Jun-12 lessons below pointed to:
+**no `Config` struct change, no `FORM_TAG` shift.** `P_PORT="pdf"` (a config
+string value, not a binary-struct field) makes `SPOOLER::Print` intercept the
+printer byte stream, strip ESC/P codes, and write plain text through a small
+PDF 1.4 writer (`src/pdf_wr.c` + `include/pdf_wr.h`). Output:
+`bin\PDF\RXYYMMDD.pdf`, one file per day, receipts appended as pages.
 
-Fix: lazy `mkdir("PDF")` (Borland single-arg form, via `<dir.h>` in `stdst.h`)
-right before `pdf_wr_open` in [st/src/spooler.cpp](st/src/spooler.cpp).
+### Bugs found and fixed (all verified on host with `pdfinfo`)
 
-Still open: `pdf_wr_close` (writes xref + `%%EOF`) only runs in `~SPOOLER`. A
-hard/abnormal DOS exit leaves the PDF unterminated and unreadable. Verify the
-spooler destructor runs on normal quit.
+- **No output at all** — `fopen("PDF\\...","wb")` can't create the missing
+  `PDF\` dir on DOS. Lazy `mkdir("PDF")` before open. (`c4cb8cf`)
+- **Blank pages (`() Tj`)** — the ESC-strip heuristic ("skip until 0xFF")
+  ate all text, because templates are ESC/P (`ESC ! n`) with no `0xFF` in the
+  `Printf`/NUL-terminated path. Replaced with a command-length table matching
+  `src/pr/pr_*.c`; also strip stray control bytes. (`e40973f`)
+- **Malformed PDF** — `pdf_wr_close` seek clobbered `/Type`->`/Typ`; `/Length`
+  stayed 0; fixed-size `/Kids` placeholder overflowed past page 1. Rewrote
+  `pdf_wr.c`: Pages catalog deferred to close, `/Length` back-patched into a
+  10-digit field, multi-page safe, bounds-checked. (`e40973f`)
+- **Garbled filename `RX-13062.PDF`** — assumed `_GetSysDate` returns
+  `YYYY-MM-DD` (it returns `DD/MM/YYYY`), and `RX-DDMMYYYY` broke 8.3. Now
+  `RXYYMMDD.pdf` via the numeric date overload. (`e40973f`)
+- **Garbage serial `<CAnn>`** — `g_appInfo.ShortSerial` is only decrypted when
+  the EXE is serialized; a demo build isn't, so it printed raw bytes. Set
+  Serial/ShortSerial to `"DEMO"` in demo mode. (`97cd8ac`)
+- **MAKEFILE** — `pdf_wr.obj` had no build rule; added it. (committed)
+
+### Demo defaults changed (committed canonical `st.ini`)
+
+- `P_PORT=pdf`, `P_OPERATION=automatica` (print per call on hangup),
+  `P_FORM=80 col. un recibo` (SR_80 — single full-width, the cleanest fit for
+  the fixed-pitch PDF page). (`da98be0`, `9c0a40e`)
+- Demo mode now also unhides the **Configuración** + **Extensiones** menus
+  (extended the existing `s_bDevelopment` enable to `IsDemoMode()`). Note: the
+  Extensiones menu is *visible* but param editing is still gated by
+  `g_extAreChangeable` (supervisor password) — make it demo-editable as a
+  follow-up if wanted. (`73dfcae`)
+
+> `util/ini2cfg/st.ini` carries the **skip-worktree** bit (local dev config).
+> The committed defaults above were applied by un-setting it, committing a
+> minimal diff, then re-setting it — so local runtime drift stays hidden.
+
+### Still open / known limitations
+
+- `pdf_wr_close` (writes xref + `%%EOF`) only runs in `~SPOOLER`. A hard/abnormal
+  DOS exit leaves the PDF unterminated and unreadable. Verify the destructor
+  runs on normal quit.
+- PDF renders uniform Courier 8pt: ESC/P **font-size** codes (double-width/
+  height) are stripped, so SR_80's big company-name line is not emphasized.
+  Optional enhancement: teach `pdf_wr.c` + the parser to honor the `ESC ! n`
+  size bits.
 
 ---
 
@@ -68,6 +105,6 @@ Build: `./build.sh --force && ./run.sh`
 
 ## Other open items (from TODO.md)
 
-- **PDF print driver** — on `feat/pdf-printer` branch. Restart with lessons above.
+- **PDF print driver** — DONE on `feat/pdf-printer` (see Jun 13 section). Pending: merge to `main` after an in-DOSBox build confirms (host validation done).
 - **ISR volatile audit (Tier 3)** — deferred. Parked in `wiki/dev/ISR_VOLATILE_NOTES.md`. Guard-rail: no compiler optimization without the audit.
 - **Idea backlog** — PDF print driver bulk-export, text/markdown file drivers.
