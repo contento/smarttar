@@ -3,7 +3,7 @@
 Status snapshot for resuming on another machine.
 
 - **Branch:** `feat/vendor-separation`, 4 commits ahead of `main`. Vendor separation infrastructure complete — private repo created, setup scripts, build/run checks, CI wiring, docs.
-- **`main`:** at `11ab494` (merge feat/pdf-printer), pushed, clean. v2.80.0.
+- **`main`:** at HEAD (merge feat/vendor-separation + bump to v2.90.0). v2.90.0.
 
 ---
 
