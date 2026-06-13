@@ -107,3 +107,7 @@ st/docs/build/
 
 # Obsidian vault (auto-created on first open, user-specific)
 .obsidian/
+
+# Demo-engine debug breadcrumb (DEMO_ENGINE::ParsePhones -> phones.dbg)
+*.dbg
+*.DBG
