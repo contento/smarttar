@@ -1,7 +1,7 @@
 # ISR / main-loop concurrency — design pass (volatile group)
 
 > **STATUS: this is the parked Tier 3 of the stability milestone.**
-> The rest of [STABILITY_AUDIT.md](../../STABILITY_AUDIT.md) is CLOSED; this
+> The rest of [STABILITY_AUDIT.md](STABILITY_AUDIT.md) is CLOSED; this
 > ISR/real-time group is **deferred — needs a DOSBox-X build + load-test loop
 > on (ideally) real telephony hardware** before it can be confidently closed.
 > Start any Tier 3 session here. The P0 guard-rail below is in force *now*:

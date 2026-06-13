@@ -1,7 +1,7 @@
 # SmartTar TODO
 
 Working list of milestones and tasks. Detailed findings live in
-[STABILITY_AUDIT.md](STABILITY_AUDIT.md); this file is the day-to-day
+[STABILITY_AUDIT.md](wiki/dev/STABILITY_AUDIT.md); this file is the day-to-day
 "what's next" view.
 
 ## Conventions
@@ -281,7 +281,7 @@ max_duration_secs = 1800
 ## Milestone: Toolchain portability — v4.0
 
 - [ ] **Build with open-source toolchains** — see
-      [MIGRATION_PLAN_OWZ.md](MIGRATION_PLAN_OWZ.md) for the full risk
+      [MIGRATION_PLAN_OWZ.md](wiki/dev/MIGRATION_PLAN_OWZ.md) for the full risk
       assessment. Three independent layers:
   - **Extender swap** (Low risk): Phar Lap 286 → DOS/4GW via Open Watcom
     `wlink system dos4g`. PHAPI → DPMI calls are mechanical. First step.
@@ -304,7 +304,7 @@ shrunk to intro + build + wiki pointer. Remaining:
 
 Bring the scattered docs ([README.md](README.md), [README.es.md](README.es.md),
 the four `.docx` manuals in [st/docs/archive/](st/docs/archive/), the in-app `help.txt` in [st/res/](st/res/),
-[STABILITY_AUDIT.md](STABILITY_AUDIT.md), [HANDOFF.md](HANDOFF.md),
+[STABILITY_AUDIT.md](wiki/dev/STABILITY_AUDIT.md), [HANDOFF.md](HANDOFF.md),
 [RELEASING.md](RELEASING.md), [CLAUDE.md](CLAUDE.md),
 [dosbox-x-smarttar-setup.md](dosbox-x-smarttar-setup.md),
 [ISR_VOLATILE_NOTES.md](ISR_VOLATILE_NOTES.md)) into a single
@@ -365,7 +365,7 @@ docx -> md regeneration on push (manuals change rarely).
 
 ## Milestone: Stability under Extended DOS
 
-Findings from [STABILITY_AUDIT.md](STABILITY_AUDIT.md) — see that file for
+Findings from [STABILITY_AUDIT.md](wiki/dev/STABILITY_AUDIT.md) — see that file for
 full context and severity rationale.
 
 **Spot-verified CRITICALs (audit § 6) -- all four DONE, committed:**
