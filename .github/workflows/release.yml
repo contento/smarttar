@@ -36,6 +36,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6.0.3
 
+      - name: Clone vendor toolchain (private repo)
+        shell: bash
+        run: |
+          # The vendor/ directory contains proprietary toolchain binaries
+          # (Borland C++ 3.1, Pharlap 286, Zinc 3.5) needed to build SmartTar.
+          # It lives in a separate private repository to avoid copyright issues.
+          if [ -d vendor ]; then
+            echo "vendor/ already present (local dev or cached)"
+          else
+            echo "Cloning smarttar-vendor private repo..."
+            git clone "https://x-access-token:${{ secrets.VENDOR_REPO_TOKEN }}@github.com/contento/smarttar-vendor.git" vendor
+            echo "vendor/ cloned successfully"
+            ls vendor/
+          fi
+
       - name: Install DOSBox-X (macOS)
         shell: bash
         run: |

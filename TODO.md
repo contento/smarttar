@@ -502,3 +502,23 @@ when scoped.
   writes plain text through the PDF writer. No separate `pr_*.dll` needed —
   the interception happens at the spooler level, before printer drivers.
   `SPOOLER::Terminate()` ensures xref/trailer/%%EOF are written.
+
+## Milestone: Vendor separation (private repo) — `feat/vendor-separation`
+
+Move proprietary toolchain binaries (Borland C++ 3.1, Pharlap 286, Zinc 3.5,
+DOS utilities) to a separate private repository to avoid copyright /
+redistribution issues in the main smarttar repo.
+
+**Private repo:** [`smarttar-vendor`](https://github.com/contento/smarttar-vendor)
+
+- [~] Create `smarttar-vendor` private repo with vendor/ contents
+- [x] Add `setup-vendor.sh` / `setup-vendor.ps1` to clone vendor/ from private repo
+- [x] Add `VENDOR_SETUP.md` with manual setup instructions (Zinc 3.5, BC 3.1, Pharlap 286)
+- [x] Update `.gitignore` to exclude `vendor/`
+- [x] Update `build.sh` / `build.ps1` — check for vendor/, guide user if missing
+- [x] Update `run.sh` / `run.ps1` — same vendor/ check
+- [x] Update `README.md` / `README.es.md` — vendor setup instructions in Quick Start
+- [x] Update `CLAUDE.md` — repository layout reflects vendor is external
+- [ ] Remove `vendor/` from this repo's git history (once private repo is confirmed working)
+- [ ] Update CI workflow (`.github/workflows/release.yml`) to clone vendor/ before build
+- [ ] Verify build works with vendor/ cloned from private repo (not tracked locally)

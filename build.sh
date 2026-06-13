@@ -59,6 +59,26 @@ if ! command -v "$DOSBOX_X" >/dev/null 2>&1; then
   exit 127
 fi
 
+# --- Check for vendor/ (proprietary toolchain) --------------------------------
+if [[ ! -d vendor ]]; then
+  echo "" >&2
+  echo "build: vendor/ directory not found." >&2
+  echo "" >&2
+  echo "The vendor/ directory contains proprietary toolchain binaries required" >&2
+  echo "to build SmartTar (Borland C++ 3.1, Pharlap 286, Zinc 3.5)." >&2
+  echo "" >&2
+  echo "To set it up, run:" >&2
+  echo "  ./setup-vendor.sh          # clones from private smarttar-vendor repo" >&2
+  echo "" >&2
+  echo "If you don't have SSH access to the private repo, you can obtain" >&2
+  echo "the components manually. See VENDOR_SETUP.md for details:" >&2
+  echo "  - Borland C++ 3.1  (vendor/bc/)" >&2
+  echo "  - Pharlap 286      (vendor/pharlap/)" >&2
+  echo "  - Zinc 3.5         (vendor/zinc/)" >&2
+  echo "" >&2
+  exit 1
+fi
+
 if (( keep_in_st )); then
   log="st/build.log"
   dos_log='C:\ST\build.log'

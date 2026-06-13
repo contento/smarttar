@@ -80,6 +80,26 @@ if (-not $dosboxX -or -not (Test-Path -LiteralPath $dosboxX)) {
     exit 127
 }
 
+# --- Check for vendor\ (proprietary toolchain) --------------------------------
+if (-not (Test-Path -LiteralPath 'vendor')) {
+    Write-Host ''
+    Write-Host 'run: vendor\ directory not found.' -ForegroundColor Yellow
+    Write-Host ''
+    Write-Host 'The vendor\ directory contains proprietary toolchain binaries required'
+    Write-Host 'to build SmartTar (Borland C++ 3.1, Pharlap 286, Zinc 3.5).'
+    Write-Host ''
+    Write-Host 'To set it up, run:'
+    Write-Host '  .\setup-vendor.ps1         # clones from private smarttar-vendor repo'
+    Write-Host ''
+    Write-Host 'If you don''t have SSH access to the private repo, you can obtain'
+    Write-Host 'the components manually. See VENDOR_SETUP.md for details:'
+    Write-Host '  - Borland C++ 3.1  (vendor\bc\)'
+    Write-Host '  - Pharlap 286      (vendor\pharlap\)'
+    Write-Host '  - Zinc 3.5         (vendor\zinc\)'
+    Write-Host ''
+    exit 1
+}
+
 if (-not (Test-Path -LiteralPath 'st\bin\st.exe')) {
     Write-Error 'st\bin\st.exe not found. Build first: .\build.ps1 [variant]'
     exit 1

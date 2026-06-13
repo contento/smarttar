@@ -80,13 +80,14 @@ When the `vX.Y.Z` tag is pushed, [`.github/workflows/release.yml`](.github/workf
 The workflow at [`.github/workflows/release.yml`](.github/workflows/release.yml) runs on each push of a release tag matching `v[0-9]+.[0-9]+.[0-9]+` (plain semver, no suffix — checkpoint tags like `v2.34.1-runnable-by-claude` are intentionally skipped). It:
 
 1. Checks out the repo on `windows-latest`. (DOSBox-X publishes official Windows builds and no Linux AppImage, so a Windows runner avoids building DOSBox-X from source.)
-2. Downloads the DOSBox-X **portable Windows zip** from GitHub releases at a pinned version (env `DOSBOX_X_VERSION` in the workflow file — bump it when DOSBox-X cuts a new release worth tracking). The extracted `dosbox-x.exe` path is exported as `$env:DOSBOX_X`, which `build.ps1` honors.
-3. Rewrites the `mount c …` line in `dosbox-x.conf` to point at `$env:GITHUB_WORKSPACE` (the committed line points at the original author's macOS path).
-4. Runs `.\build.ps1 prod`.
-5. Confirms `st/bin/st.exe`, `pr_*.dll`, `help.dat`, `RES.DAT` all exist.
-6. Verifies the tag matches `ST_VERSION` in `st/include/version.h` — fails the build if they disagree (catches "forgot to run `bump-version.sh`/`.ps1`" mistakes).
-7. Packages `st/bin/` artifacts plus the Pharlap runtime DLLs (`vendor/pharlap/BIN/*.DLL`) into `smarttar-X.Y.Z.zip` via `Compress-Archive`.
-8. Creates a GitHub Release attached to the tag, using GitHub's auto-generated release notes plus a small body block pointing at `versions.txt`.
+2. Clones the **`smarttar-vendor`** private repo into `vendor/` (proprietary toolchain binaries — Borland C++ 3.1, Pharlap 286, Zinc 3.5). Requires a `VENDOR_REPO_TOKEN` secret with access to the private repo.
+3. Downloads the DOSBox-X **portable Windows zip** from GitHub releases at a pinned version (env `DOSBOX_X_VERSION` in the workflow file — bump it when DOSBox-X cuts a new release worth tracking). The extracted `dosbox-x.exe` path is exported as `$env:DOSBOX_X`, which `build.ps1` honors.
+4. Rewrites the `mount c …` line in `dosbox-x.conf` to point at `$env:GITHUB_WORKSPACE` (the committed line points at the original author's macOS path).
+5. Runs `.\build.ps1 prod`.
+6. Confirms `st/bin/st.exe`, `pr_*.dll`, `help.dat`, `RES.DAT` all exist.
+7. Verifies the tag matches `ST_VERSION` in `st/include/version.h` — fails the build if they disagree (catches "forgot to run `bump-version.sh`/`.ps1`" mistakes).
+8. Packages `st/bin/` artifacts plus the Pharlap runtime DLLs (`vendor/pharlap/BIN/*.DLL`) into `smarttar-X.Y.Z.zip` via `Compress-Archive`.
+9. Creates a GitHub Release attached to the tag, using GitHub's auto-generated release notes plus a small body block pointing at `versions.txt`.
 
 You can also trigger a dry-run from the Actions tab via **workflow_dispatch** — that runs the same build but uploads the ZIP as a workflow artifact instead of creating a Release. **Strongly recommended before tagging a real release for the first time**, to shake down environment-specific quirks (mount paths, DOSBox-X launching headlessly under the runner's session, etc.).
 

@@ -42,6 +42,15 @@ brew install dosbox-x               # macOS
 winget install joncampbell123.DOSBox-X   # Windows
 ```
 
+**Set up the vendor toolchain** (required first time):
+```sh
+./setup-vendor.sh                   # clones proprietary toolchain from private repo
+```
+The vendor directory contains Borland C++ 3.1, Pharlap 286, and Zinc 3.5
+binaries — required to build but **not included** in this repository (copyright
+restrictions). See [VENDOR_SETUP.md](VENDOR_SETUP.md) for manual setup or
+alternative sources.
+
 **Build** (inside DOSBox-X: `cd ST` then `makedemo`), or from the host shell:
 ```sh
 ./build.sh                 # defaults to demo (no dongle required)
@@ -78,9 +87,14 @@ for the Spanish vault.
 ## Toolchain
 
 SmartTar is built with Borland C++ 3.1 + Turbo Assembler for the Pharlap 286
-protected-mode target, using the Zinc Interface Library 3.5 for the UI. All
-toolchain binaries are vendored under [`vendor/`](vendor/). No host compiler
-is needed — the build runs inside DOSBox-X.
+protected-mode target, using the Zinc Interface Library 3.5 for the UI. No host
+compiler is needed — the build runs inside DOSBox-X.
+
+The proprietary toolchain binaries live in a separate private repository
+(**[`smarttar-vendor`](https://github.com/contento/smarttar-vendor)**) and are
+cloned into `vendor/` by `./setup-vendor.sh`. They are not included in this
+repository due to copyright / redistribution restrictions. See
+[VENDOR_SETUP.md](VENDOR_SETUP.md) for details.
 
 ---
 
