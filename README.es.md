@@ -2,32 +2,32 @@
 
 *Read in [English](README.md).*
 
-Sistema de gestiÃ³n de tarifas telefÃ³nicas en tiempo real para cabinas telefÃ³nicas pÃºblicas
-Desarrollado por [MicroDiseÃ±o Ltda.](https://microdiseno.com) Â· Derechos reservados Â© 1993â€“2003 Â· VersiÃ³n 2.70.1
+Sistema de gestión de tarifas telefónicas en tiempo real para cabinas telefónicas públicas
+Desarrollado por [MicroDiseño Ltda.](https://microdiseno.com) · Derechos reservados © 1993?2003 · Versión 2.70.1
 
 ![SmartTar](st/docs/archive/SmartTar.jpg)
 
 ---
 
-**SmartTar** es un sistema punto de venta para DOS, diseÃ±ado para operadores de
-telecomunicaciones en Colombia que administran centros de cabinas telefÃ³nicas.
+**SmartTar** es un sistema punto de venta para DOS, diseñado para operadores de
+telecomunicaciones en Colombia que administran centros de cabinas telefónicas.
 Monitorea hasta 32 cabinas en tiempo real, clasifica las llamadas por destino,
-aplica tarifas segÃºn horario (hora del dÃ­a, festivos), imprime recibos con IVA
-a travÃ©s de controladores de impresora enchufables, y mantiene una base de datos
-completa de transacciones â€” todo desde un Ãºnico ejecutable en modo protegido.
+aplica tarifas según horario (hora del día, festivos), imprime recibos con IVA
+a través de controladores de impresora enchufables, y mantiene una base de datos
+completa de transacciones ? todo desde un único ejecutable en modo protegido.
 
-Capacidades principales: mediciÃ³n de llamadas en tiempo real, clasificaciÃ³n
-automÃ¡tica contra un plan de numeraciÃ³n configurable, motor de tarifas con
-calendario de festivos, impresiÃ³n de recibos (18/40/80 col + tÃ©rmica),
-almacenamiento indexado de transacciones, soporte de tarjetas magnÃ©ticas
-prepagadas, integraciÃ³n con mÃ³dem, displays externos de cabina, mÃ³dulo de
-estadÃ­sticas.
+Capacidades principales: medición de llamadas en tiempo real, clasificación
+automática contra un plan de numeración configurable, motor de tarifas con
+calendario de festivos, impresión de recibos (18/40/80 col + térmica),
+almacenamiento indexado de transacciones, soporte de tarjetas magnéticas
+prepagadas, integración con módem, displays externos de cabina, módulo de
+estadísticas.
 
-El nombre proviene de **Smart + Tar(*ifa*)** â€” no tiene relaciÃ³n con Unix `tar`.
+El nombre proviene de **Smart + Tar(*ifa*)** ? no tiene relación con Unix `tar`.
 
 ---
 
-## Inicio rÃ¡pido
+## Inicio rápido
 
 **Requisitos:** [DOSBox-X](https://dosbox-x.com/).
 ```sh
@@ -38,32 +38,32 @@ winget install joncampbell123.DOSBox-X   # Windows
 **Compilar** (dentro de DOSBox-X: `cd ST` luego `makedemo`), o desde el shell del host:
 ```sh
 ./build.sh                 # por defecto, demo (sin dongle)
-./build.sh --force prod    # variante de producciÃ³n con verificaciÃ³n de dongle
+./build.sh --force prod    # variante de producción con verificación de dongle
 ```
 
-La documentaciÃ³n completa estÃ¡ en [wiki/es/](wiki/es/).
-La documentaciÃ³n en inglÃ©s estÃ¡ en [wiki/en/](wiki/en/).
+La documentación completa está en [wiki/es/](wiki/es/).
+La documentación en inglés está en [wiki/en/](wiki/en/).
 
 ---
 
 ## Contenido
 
-### EspaÃ±ol â€” [wiki/es/](wiki/es/)
+### Español ? [wiki/es/](wiki/es/)
 
-- [GuÃ­a del Usuario](wiki/es/manual-usuario/) â€” inicio, monitoreo, informes, contraseÃ±as
-- [Manual de Referencia](wiki/es/manual-referencia/) â€” arquitectura, configuraciÃ³n, motor de tarifas, interfaz de hardware, recibos
-- [Ayuda](wiki/es/ayuda/) â€” temas de ayuda de la aplicaciÃ³n (compilados en `help.dat`)
+- [Guía del Usuario](wiki/es/manual-usuario/) ? inicio, monitoreo, informes, contraseñas
+- [Manual de Referencia](wiki/es/manual-referencia/) ? arquitectura, configuración, motor de tarifas, interfaz de hardware, recibos
+- [Ayuda](wiki/es/ayuda/) ? temas de ayuda de la aplicación (compilados en `help.dat`)
 
-### English â€” [wiki/en/](wiki/en/)
+### English ? [wiki/en/](wiki/en/)
 
-- [User Guide](wiki/en/users-guide/) â€” starting, monitoring, reports, passwords
-- [Reference Manual](wiki/en/reference-manual/) â€” architecture, config, tariff engine, hardware interface, receipts
-- [In-app Help](wiki/en/help/) â€” English help topics (reference only; the application ships in Spanish)
+- [User Guide](wiki/en/users-guide/) ? starting, monitoring, reports, passwords
+- [Reference Manual](wiki/en/reference-manual/) ? architecture, config, tariff engine, hardware interface, receipts
+- [In-app Help](wiki/en/help/) ? English help topics (reference only; the application ships in Spanish)
 
-### DocumentaciÃ³n de desarrollo â€” [wiki/dev/](wiki/dev/)
+### Documentación de desarrollo ? [wiki/dev/](wiki/dev/)
 
-- [ConfiguraciÃ³n de DOSBox-X](wiki/dev/dosbox-x-smarttar-setup.md)
-- [Notas volÃ¡tiles de ISR](wiki/dev/ISR_VOLATILE_NOTES.md)
+- [Configuración de DOSBox-X](wiki/dev/dosbox-x-smarttar-setup.md)
+- [Notas volátiles de ISR](wiki/dev/ISR_VOLATILE_NOTES.md)
 - [Flujo de trabajo con Zinc Designer](wiki/dev/zinc-designer-workflow.md)
 
 ---
@@ -72,32 +72,32 @@ La documentaciÃ³n en inglÃ©s estÃ¡ en [wiki/en/](wiki/en/).
 
 SmartTar se compila con Borland C++ 3.1 + Turbo Assembler para el target de
 modo protegido Pharlap 286, usando Zinc Interface Library 3.5 para la UI. No
-se necesita un compilador en el host â€” la compilaciÃ³n se ejecuta dentro de
+se necesita un compilador en el host ? la compilación se ejecuta dentro de
 DOSBox-X.
 
-Los binarios propietarios de la cadena de herramientas estÃ¡n en un repositorio
+Los binarios propietarios de la cadena de herramientas están en un repositorio
 privado separado
 (**[`smarttar-vendor`](https://github.com/contento/smarttar-vendor)**), y se
-clonan en `vendor/` con `./setup-vendor.sh`. No estÃ¡n incluidos en este
-repositorio por restricciones de copyright / redistribuciÃ³n. Ver
+clonan en `vendor/` con `./setup-vendor.sh`. No están incluidos en este
+repositorio por restricciones de copyright / redistribución. Ver
 [VENDOR_SETUP.md](VENDOR_SETUP.md) para detalles.
 
 ---
 
-## Variantes de compilaciÃ³n
+## Variantes de compilación
 
 | Variante | Atajo | Uso |
 | -------- | ----- | --- |
-| ProducciÃ³n | `makeprod` | Build completo con verificaciÃ³n de dongle |
-| Demo | `makedemo` | Ferias, evaluaciÃ³n â€” sin dongle |
-| EDA | `makeeda` | Operador EDA â€” clasificaciÃ³n de llamadas distinta |
-| DepuraciÃ³n | `makedbg` | Desarrollo; usar con el depurador Pharlap `TDP.EXE` |
+| Producción | `makeprod` | Build completo con verificación de dongle |
+| Demo | `makedemo` | Ferias, evaluación ? sin dongle |
+| EDA | `makeeda` | Operador EDA ? clasificación de llamadas distinta |
+| Depuración | `makedbg` | Desarrollo; usar con el depurador Pharlap `TDP.EXE` |
 
 ---
 
 ## Capturas de pantalla
 
-| VersiÃ³n | Captura |
+| Versión | Captura |
 | ------- | ------- |
 | 2.33 | ![SmartTar 2.33](st/docs/archive/SmartTar%202.33.gif) |
 | 2.32.1 | ![SmartTar 2.32.1](st/docs/archive/SmartTar%202.32.1.gif) |
@@ -106,16 +106,30 @@ repositorio por restricciones de copyright / redistribuciÃ³n. Ver
 
 ## Historia
 
-MicroDiseÃ±o Ltda. â€” la empresa que desarrollÃ³ SmartTar â€” fue una firma
-colombiana de tecnologÃ­a especializada en sistemas de tarificaciÃ³n y mediciÃ³n
-telefÃ³nica en el suroccidente de Colombia (NariÃ±o, Cauca, Putumayo). SmartTar
-se desplegÃ³ en cabinas telefÃ³nicas comerciales y puntos de venta
+MicroDiseño Ltda. ? la empresa que desarrolló SmartTar ? fue una firma
+colombiana de tecnología especializada en sistemas de tarificación y medición
+telefónica en el suroccidente de Colombia (Nariño, Cauca, Putumayo). SmartTar
+se desplegó en cabinas telefónicas comerciales y puntos de venta
 institucionales (incluyendo redes *Servicios & Transcripciones* y la
-Universidad del Norte). La empresa ya no estÃ¡ en operaciÃ³n; el cÃ³digo fue
+Universidad del Norte). La empresa ya no está en operación; el código fue
 preservado y resucitado en 2026.
+
+---
+
+## Agradecimientos
+
+### Ingenieros
+
+- **Carlos Robledo** ? Director
+- **Jorge Martinez** ? Hardware
+- **Luis Valencia** ? Hardware
+- **Tamayo** ? Hardware
+- **Hector Mario Florez** ? Hardware
+- **Adriana Giraldo** ? Documentación
+- **Gonzalo Contento** ? Ingeniero de Software
 
 ---
 
 ## Licencia
 
-Derechos reservados Â© 1993â€“2003 MicroDiseÃ±o Ltda. Todos los derechos reservados.
+Derechos reservados © 1993?2003 MicroDiseño Ltda. Todos los derechos reservados.
