@@ -24,7 +24,7 @@ La configuración se almacena en dos archivos: **ST.CFG** (binario, cifrado, esc
 | DDI_TAX | Doble | Porcentaje de impuesto aplicado a llamadas internacionales. |
 | CLUSTERS | Entero | Número de clusters de hardware configurados (1–4). |
 | FORM | Enumeración | Tipo de formato de impresora. Ver Sección 9. |
-| P_PORT | Cadena | Tipo de puerto de impresora: `lpt` o `com`. |
+| P_PORT | Cadena | Tipo de puerto de impresora: `lpt`, `com` o `pdf`. Con `pdf` los recibos se escriben a un archivo PDF (`PDF\RXAAMMDD.pdf`, uno por día) en lugar de una impresora física. |
 | LPT | Entero | Número de puerto paralelo (1 o 2) cuando P_PORT=lpt. |
 | COM | Cadena | Configuración de puerto serial cuando P_PORT=com (puerto, baudios, bits, paridad, stop). |
 | DOUBLE_PRN | Booleano | Habilitar operación con doble impresora. |
