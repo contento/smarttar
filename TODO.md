@@ -511,7 +511,7 @@ redistribution issues in the main smarttar repo.
 
 **Private repo:** [`smarttar-vendor`](https://github.com/contento/smarttar-vendor)
 
-- [~] Create `smarttar-vendor` private repo with vendor/ contents
+- [x] Create `smarttar-vendor` private repo with vendor/ contents
 - [x] Add `setup-vendor.sh` / `setup-vendor.ps1` to clone vendor/ from private repo
 - [x] Add `VENDOR_SETUP.md` with manual setup instructions (Zinc 3.5, BC 3.1, Pharlap 286)
 - [x] Update `.gitignore` to exclude `vendor/`
