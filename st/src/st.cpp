@@ -311,7 +311,13 @@ void Prolog(void)
 	if (TraceInfo::s_bDevelopment)
 		g_superAppInfo.Attr.STPro = TRUE;
 	if (g_cfg->IsDemoMode())
+	{
 		g_superAppInfo.Attr.STPro = TRUE;
+		// Demo EXE is not serialized, so g_appInfo serial fields hold raw
+		// (encrypted) bytes that print as garbage in the receipt <%s> field.
+		strcpy(g_appInfo.Serial, "DEMO");
+		strcpy(g_appInfo.ShortSerial, "DEMO");
+	}
 	if (g_superAppInfo.Attr.Serialized)
 		_Decrypt(&g_appInfo, sizeof(APP_INFO));
 	// I love colors. GCC/gcc.
