@@ -80,9 +80,9 @@ ASM_OPTS=/mx /zi
 OBJ_CC_OPTIONS= -c +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);NDEBUG
 DLL_CC_OPTIONS= -dll +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);NDEBUG
 LINK_OPTS=/c /C /s $(LINK_LIBPATH)
-ASM_OPTS=/mx
 !endif
 
+# Run MiniDB test after building
 # Borland C++ 3.1 startup module for Pharlap 286 protected mode.
 # Lives in pharlap/LIB/ — full path needed because TLINK's /L only
 # applies to .lib files, not .obj files.
@@ -163,7 +163,9 @@ OBJS=$(OBJ_DIR)\$(APP).$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\w_phone.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\w_sgroup.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\w_statbr.$(OBJ_EXT)    \
-	 $(OBJ_DIR)\w_table.$(OBJ_EXT)
+	 $(OBJ_DIR)\w_table.$(OBJ_EXT)	   \
+
+# ---- Borland C++ 3.1 startup module for Pharlap 286 protected mode ----
 
 DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 	$(BIN_DIR)\pr_dr80.$(DLL_EXT)  \
@@ -405,3 +407,26 @@ $(BIN_DIR)\pr_sr28.dll:  $(SOURCE_DIR)\pr\pr_sr28.c
 $(BIN_DIR)\pr_dreme.dll: $(SOURCE_DIR)\pr\pr_dreme.c
 $(BIN_DIR)\pr_drhal.dll: $(SOURCE_DIR)\pr\pr_drhal.c
 
+
+
+# ---- MiniDB standalone test ----
+
+$(OBJ_DIR)\test_mdb.obj: $(SOURCE_DIR)\db\minidb\test_mdb.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+
+$(BIN_DIR)\test_mdb.exe: $(OBJ_DIR)\test_mdb.obj $(OBJ_DIR)\minidb_cache.obj $(OBJ_DIR)\minidb_btree.obj $(OBJ_DIR)\mdb_stor.obj $(OBJ_DIR)\st_util.obj $(OBJ_DIR)\cfg.obj $(OBJ_DIR)\filehdr.obj
+	$(LINK) $(LINK_OPTS) @&&!
+$(STARTUP_OBJS) +
+$(OBJ_DIR)\test_mdb.obj +
+$(OBJ_DIR)\minidb_cache.obj +
+$(OBJ_DIR)\minidb_btree.obj +
+$(OBJ_DIR)\mdb_stor.obj +
+$(OBJ_DIR)\st_util.obj +
+$(OBJ_DIR)\cfg.obj +
+$(OBJ_DIR)\filehdr.obj
+$*, ,$(LIBS), $(DEF_FILE)
+!
+!if $d(RUN)
+	$(BIND) $(RTK_DIR)\run286b $(BIN_DIR)\$@ -dll $(RTK_DIR)\doscalls $(RTK_DIR)\int33
+	cfig286 $(BIN_DIR)\$@ -NISTACK 10 -LDTSIZE 4096
+!endif

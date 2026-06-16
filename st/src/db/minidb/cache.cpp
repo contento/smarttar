@@ -384,8 +384,18 @@ long MiniDBCache::LoadPage(long slotIdx, long pageNum)
     if (::lseek(m_fd, pageNum * MINIDB_PAGE_SIZE, SEEK_SET) < 0)
         return -1;
 
-    if (::read(m_fd, slot->Buffer, MINIDB_PAGE_SIZE) < (int)MINIDB_PAGE_SIZE)
-        return -1;
+    int n = ::read(m_fd, slot->Buffer, MINIDB_PAGE_SIZE);
+    if (n <= 0)
+    {
+        // Beyond EOF or empty file — zero-fill and treat as fresh page.
+        // The caller will write valid data into it via GetPageW().
+        memset(slot->Buffer, 0, MINIDB_PAGE_SIZE);
+    }
+    else if (n < (int)MINIDB_PAGE_SIZE)
+    {
+        // Partial read at end of file — zero the remainder.
+        memset(slot->Buffer + n, 0, MINIDB_PAGE_SIZE - n);
+    }
 
     slot->PageNum = pageNum;
     slot->Flags   = 0;

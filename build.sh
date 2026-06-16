@@ -121,7 +121,6 @@ eval "\"$DOSBOX_X\" -conf dosbox-x.conf -fastlaunch \
   -c \"echo === SmartTar build starting (variant ${variant}) ===\" \
   -c \"echo === log: ${dos_log} (silent until exit) ===\" \
   -c \"command /c make${variant}.bat $make_args >> ${dos_log}\" \
-  -c \"echo .\" \
   -c \"echo === Build finished ===\" \
   -c \"exit\" ${dx_redir}" || true
 

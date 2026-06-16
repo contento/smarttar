@@ -1,0 +1,7 @@
+MAKE Version 3.6  Copyright (c) 1992 Borland International
+Error makefile 432: Redefinition of target 'build\test_mdb.obj'
+Error makefile 449: Unexpected end of file in conditional started at line 79
+
+Available memory 31840720 bytes
+
+*** 2 errors during make ***

@@ -86,93 +86,49 @@ MiniDBReceiptStorage::~MiniDBReceiptStorage()
 BOOL MiniDBReceiptStorage::OpenDB(const char *filepath)
 {
     m_status = MINIDB_OK;
+    m_statsPage = 0L;
 
+    // Open (or create) the .db file.  The cache's Open() writes a fresh
+    // DBInfo page when creating a new file.
     if (!m_cache.Open(filepath))
     {
-        // Open failed — create a new .db if not read-only
-        if (m_readOnly)
-        {
-            m_status = MINIDB_NO_FILE;
-            return FALSE;
-        }
-
-        int fd = open(filepath, O_CREAT | O_RDWR | O_BINARY,
-                      S_IREAD | S_IWRITE);
-        if (fd == -1)
-        {
-            m_status = MINIDB_BAD_FILE;
-            return FALSE;
-        }
-        close(fd);
-
-        if (!m_cache.Open(filepath))
-        {
-            m_status = MINIDB_BAD_FILE;
-            return FALSE;
-        }
-
-        // Write DBInfo page (page 0)
-        BYTE *page = m_cache.GetPageW(0);
-        if (!page)
-        {
-            m_cache.Close();
-            m_status = MINIDB_BAD_FILE;
-            return FALSE;
-        }
-
-        memset(page, 0, MINIDB_PAGE_SIZE);
-        PageHdrInit(*(PageHeader *)page, PAGE_DBINFO, 0);
-
-        DBInfo *dbInfo = (DBInfo *)page;
-        dbInfo->Version      = MINIDB_VERSION;
-        dbInfo->RootPage     = 0;       // empty tree
-        dbInfo->Sequence     = 0L;
-        dbInfo->NumReceipts  = 0L;
-        dbInfo->NumArchived  = 0L;
-        dbInfo->StatsAnchor  = 0L;
-        dbInfo->FreeHead     = 0L;
-
-        m_cache.Release(0);
-
-        // Allocate stats page (page 1)
-        BYTE *sPage = m_cache.GetPageW(1);
-        if (sPage)
-        {
-            memset(sPage, 0, MINIDB_PAGE_SIZE);
-            PageHdrInit(*(PageHeader *)sPage, PAGE_STATS, 1);
-            dbInfo = (DBInfo *)m_cache.GetPageW(0);
-            dbInfo->StatsAnchor = 1L;
-            m_statsPage = 1L;
-            m_cache.Release(1);
-            m_cache.Release(0);
-        }
-        m_cache.Flush();
-
+        m_status = MINIDB_BAD_FILE;
+        return FALSE;
     }
-    else
+
+    // Read DBInfo from page 0
+    BYTE *page = m_cache.GetPageW(0);
+    if (!page)
     {
-        // Opened existing file — read root + stats anchor from DBInfo
-        BYTE *page = m_cache.GetPage(0);
-        if (page)
+        m_status = MINIDB_BAD_FILE;
+        return FALSE;
+    }
+    DBInfo *dbInfo = (DBInfo *)page;
+
+    if (!PageHdrIsValid(dbInfo->Header) || dbInfo->Header.PageType != PAGE_DBINFO)
+    {
+        m_status = MINIDB_BAD_FILE;
+        m_cache.Release(0);
+        return FALSE;
+    }
+
+    m_btree.SetRoot(dbInfo->RootPage);
+    m_statsPage = dbInfo->StatsAnchor;
+
+    // Allocate stats page if missing (new DB, or upgrade from pre-stats version)
+    if (m_statsPage == 0L)
+    {
+        // Extend file to include page 1, then write PAGE_STATS header
+        long sPageNum = m_cache.GetAllocPage(PAGE_STATS);
+        if (sPageNum > 0L)
         {
-            DBInfo *dbInfo = (DBInfo *)page;
-            if (!PageHdrIsValid(dbInfo->Header) ||
-                dbInfo->Header.PageType != PAGE_DBINFO)
-            {
-                m_status = MINIDB_BAD_FILE;
-            }
-            else
-            {
-                m_btree.SetRoot(dbInfo->RootPage);
-                m_statsPage = dbInfo->StatsAnchor;
-            }
-            m_cache.Release(0);
-        }
-        else
-        {
-            m_status = MINIDB_BAD_FILE;
+            dbInfo->StatsAnchor = sPageNum;
+            m_statsPage = sPageNum;
         }
     }
+
+    m_cache.Release(0);
+    m_cache.Flush();
 
     // Current append position is end of file (after all pages)
     m_nextSeek = m_cache.GetFileSize();
