@@ -11,6 +11,7 @@
 #endif
 
 #include <dstatist.h>
+#include <ireceipt.h>
 
 extern CFG 	*g_cfg;
 
@@ -124,8 +125,7 @@ void DB_STATISTICS::Flush(void)
     dupFile = dup(File);
     close(dupFile);
 }
-
-BOOL DB_STATISTICS::Repair(DB_STORAGE *dBStorage, BOOL all)
+BOOL DB_STATISTICS::Repair(IReceiptStorage *dBStorage, BOOL all)
 {
     dBStorage->Flush(); // to be sure
 
@@ -164,8 +164,7 @@ BOOL DB_STATISTICS::Repair(DB_STORAGE *dBStorage, BOOL all)
 	short x = wherex(), y = wherey();
 #endif
 #endif
-
-	DB_STORAGE::Iterator it(*dBStorage);
+	DB_STORAGE::Iterator it(*((DB_STORAGE *)dBStorage));
 	it.Restart();
 	while (it)
 	{
@@ -1226,6 +1225,13 @@ BOOL DB_STATISTICS::Update(void)
     // double prn
     for (int i=0; i<DS_MAXDOUBLEPRNENTRIES; i++)
 		DoublePRNEntries[i].Init();
+
+    // Persist the fresh statistics.  Flush() writes the entire
+    // in-memory state to the .STA file, protecting against data loss
+    // if the application crashes before the next explicit Flush() call.
+    // This is safe because Update() runs in the foreground event loop
+    // (not inside the ISR), so disk I/O is allowed.
+    Flush();
 
 	return TRUE;
 }

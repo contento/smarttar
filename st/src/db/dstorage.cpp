@@ -134,43 +134,139 @@ void DB_STORAGE::Flush(void)
 	close(dupFile);
 }
 
+BOOL DB_STORAGE::CompactDataFile(const char *dstPath)
+{
+    // Write only non-deleted, valid receipts to dstPath.
+    // Returns TRUE on success, FALSE on failure.
+    // dstPath is assumed to be a writable path (caller manages temp name).
+    int dst = creat((char *)dstPath, S_IREAD|S_IWRITE);
+    if (dst == -1) return FALSE;
+
+    if (write(dst, &m_dataHeader, sizeof(DataHeader)) != sizeof(DataHeader))
+    { close(dst); return FALSE; }
+
+    lseek(DataFile, sizeof(DataHeader), SEEK_SET);
+    Receipt receipt;
+    int nRead;
+    WORD count = 0;
+    while (!eof(DataFile))
+    {
+        nRead = read(DataFile, &receipt, sizeof(Receipt));
+        if (nRead == sizeof(Receipt)            &&
+            IsValid(receipt)                    &&
+            receipt.Number > 0                  &&
+            receipt.Number < MAX_RECEIPTS        &&
+            !receipt.Stat.Deleted                // skip deleted
+           )
+        {
+            if (write(dst, &receipt, sizeof(Receipt)) != sizeof(Receipt))
+            { close(dst); return FALSE; }
+            count++;
+        }
+    }
+    close(dst);
+    return TRUE;
+}
+
 BOOL DB_STORAGE::Archive(void)
 {
 	if (ReadOnly)
 		return FALSE;
 
-	Flush(); // to be sure
-	//
+	Flush();
+
+	// Determine archive filenames
 	_mkSysDateDir();
-	// --- data file
-	close(DataFile);
-	if (access(DataFilename, 6) != 0)
-		chmod(DataFilename, S_IREAD|S_IWRITE); // enable read/write
-	FILE_NAME arcFilename;
+	FILE_NAME arcDat, arcIdx;
 	STR16 tmp;
-	_getSysDatePath(arcFilename);
-	_PrefixAppPath(arcFilename);
+	_getSysDatePath(arcDat);
+	_PrefixAppPath(arcDat);
 	WORD year, month, day;
 	_GetSysDate(year, month, day);
 	sprintf(tmp, "\\RX%02d_%02d%s", day, g_cfg->TURN_NUMBER, DATAFILE_EXT);
-	strcat(arcFilename, tmp);
-	if (access(arcFilename, 6) != 0)
-		chmod(arcFilename, S_IREAD|S_IWRITE); // enable read/write
-	unlink(arcFilename); // sorry !!!
-	rename(DataFilename, arcFilename); // move it
-	// --- index file
+	strcat(arcDat, tmp);
+	strcpy(arcIdx, arcDat);
+	// swap extension
+	int dot = strlen(arcIdx) - 4;
+	arcIdx[dot] = '\0';
+	strcat(arcIdx, INDEXFILE_EXT);
+
+	// Compact the data file (skip deleted records) into a temp
+	char *tmpDat = "rxarc~.tmp";
+	if (!CompactDataFile(tmpDat))
+	{
+		unlink(tmpDat);
+		return FALSE;
+	}
+
+	// Close current files
+	close(DataFile);
 	close(IndexFile);
-	if (access(IndexFilename, 6) != 0)
-		chmod(IndexFilename, S_IREAD|S_IWRITE); // enable read/write
-	_getSysDatePath(arcFilename);
-	_PrefixAppPath(arcFilename);
-	sprintf(tmp, "\\RX%02d_%02d%s", day, g_cfg->TURN_NUMBER, INDEXFILE_EXT);
-	strcat(arcFilename, tmp);
-	if (access(arcFilename, 6) != 0)
-		chmod(arcFilename, S_IREAD|S_IWRITE); // enable read/write
-	unlink(arcFilename); // sorry !!!
-	rename(IndexFilename, arcFilename); // move it
-	//
+
+	// Move compacted temp to archive name
+	if (access(arcDat, 6) != 0)
+		chmod(arcDat, S_IREAD|S_IWRITE);
+	unlink(arcDat);
+	rename(tmpDat, arcDat);
+
+	// Rebuild index file from the compacted archive
+	// (open the archived .DAT, walk it, write index to temp)
+	int arcFd = open(arcDat, O_RDONLY|O_BINARY);
+	if (arcFd == -1) return FALSE;
+
+	char *tmpIdx = "rxarc~.idx";
+	int idxFd = creat(tmpIdx, S_IREAD|S_IWRITE);
+	if (idxFd == -1) { close(arcFd); return FALSE; }
+
+	IndexHeader idxHdr;
+	idxHdr.NumOfEntries = 0;
+	idxHdr.LowerNumber  = 0;
+	idxHdr.HigherNumber = 0;
+	if (write(idxFd, &idxHdr, sizeof(IndexHeader)) != sizeof(IndexHeader))
+	{ close(arcFd); close(idxFd); unlink(tmpIdx); return FALSE; }
+
+	lseek(arcFd, sizeof(DataHeader), SEEK_SET);
+	long seekPos = sizeof(DataHeader);
+	Receipt r;
+	int nr;
+	while (!eof(arcFd))
+	{
+		nr = read(arcFd, &r, sizeof(Receipt));
+		if (nr == sizeof(Receipt))
+		{
+			IndexEntry ie;
+			ie.MagicNumber  = DB_STORAGE::MAGIC_NUMBER;
+			ie.Number       = r.Number;
+			ie.BoothNumber  = r.BoothNumber;
+			ie.SeekPos      = seekPos;
+			if (write(idxFd, &ie, sizeof(IndexEntry)) != sizeof(IndexEntry))
+			{ close(arcFd); close(idxFd); unlink(tmpIdx); return FALSE; }
+			idxHdr.NumOfEntries++;
+			if (idxHdr.LowerNumber == 0 || r.Number < idxHdr.LowerNumber)
+				idxHdr.LowerNumber = r.Number;
+			if (r.Number > idxHdr.HigherNumber)
+				idxHdr.HigherNumber = r.Number;
+			seekPos += sizeof(Receipt);
+		}
+	}
+	close(arcFd);
+
+	// Rewrite idx header with final counts
+	lseek(idxFd, 0L, SEEK_SET);
+	write(idxFd, &idxHdr, sizeof(IndexHeader));
+	close(idxFd);
+
+	// Move rebuilt index to archive name
+	if (access(arcIdx, 6) != 0)
+		chmod(arcIdx, S_IREAD|S_IWRITE);
+	unlink(arcIdx);
+	rename(tmpIdx, arcIdx);
+
+	// Create fresh current files (handled by dtor + next DB_STORAGE ctor)
+	// The caller will destroy this instance and create a new one.
+	DataFile  = -1;
+	IndexFile = -1;
+
 	return TRUE;
 }
 

@@ -16,8 +16,9 @@
 #if !defined(__RECEIPT_H)
 #include <receipt.h>
 #endif
+#include <ireceipt.h>
 
-class DB_STORAGE
+class DB_STORAGE : public IReceiptStorage
 {
 	class 	Iterator;
 	friend 	Iterator;
@@ -165,6 +166,7 @@ private:
 	};
 
 	BOOL RepairDataFile(void);
+	BOOL CompactDataFile(const char *dstPath);
 	BOOL RepairIndexFile(void);
 
 	BOOL ReadDataHeader(DataHeader & header);
