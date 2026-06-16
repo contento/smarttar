@@ -35,6 +35,12 @@ public:
 
     virtual void EnumReceipts(CallbackFnPtr callback) = 0;
     virtual void Flush()              = 0;
+
+    // Returns a concrete DB_STORAGE pointer if the implementation is
+    // FlatFile-based (DB_STORAGE).  Returns NULL for MiniDB or mock
+    // backends.  Callers that need DB_STORAGE::Iterator etc. should
+    // check this before casting.
+    virtual class DB_STORAGE *GetConcreteStorage() { return NULL; }
 };
 
 #endif // __IRECEIPT_ST_H
