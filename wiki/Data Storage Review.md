@@ -274,3 +274,212 @@ Store receipts as append-only CSV lines (one line = one receipt). Periodically r
 - `src/db/sqlite_statistics.cpp` — `IStatisticsStorage` impl
 - `include/db_eng.h` — factory switch selects backend
 - `util/migrate/` — tool to convert existing .DAT/.IDX/.STA to .db
+
+---
+
+## MiniDB: Embedded C89 Database Backend
+
+MiniDB is a back-pocket replacement for FlatFileStorage that implements the
+same `IReceiptStorage` / `IStatisticsStorage` interfaces but with a single
+`.db` file, B-tree index, and rename-based atomic commit. It is **feasible**
+under BCC 3.1 / Phar Lap 286 — every required language and OS feature is
+available.
+
+### Feasibility check
+
+| Requirement | Available in BCC 3.1 / Phar Lap? | Notes |
+|---|---|---|
+| `long` (32-bit) | YES | Receipt numbers and seek positions fit in 32 bits. MAX_RECEIPTS = 100M < 2^31 |
+| `double` (64-bit) | YES | Currency and tariff values stored as-is |
+| `malloc`/`new` for page cache | YES | Phar Lap heap accessible via `malloc` (extended DOS, up to 16 MB) |
+| POSIX `open`/`read`/`write`/`lseek` | YES | Phar Lap provides all DOS file I/O via `sys/types.h` / `sys/stat.h` / `fcntl.h` |
+| `rename()` atomic on same volume | YES | DOS `rename()` is file-system-atomic on FAT32 and NT redirectors |
+| `unlink()` | YES | Standard |
+| No `long long` needed | YES | 32-bit `long` wraps at 2.1B; receipts max out at 100M |
+| No `off_t` needed | YES | `lseek` takes `long`, file size < 2 GB |
+
+### What MiniDB is not
+
+MiniDB is **not** a relational database. There are no SQL strings, no query
+planner, no schemas beyond a fixed set of record types. It is a **page-oriented
+key-value store with B+tree indexing** — roughly the equivalent of a bespoke
+Berkeley DB (dbm) for the 16-bit DOS target.
+
+### Architecture
+
+```
+MiniDB (.db file)
+├── Page 0:  DB Header (magic, page_size, root_page, sequence counter)
+├── Page 1+: B+tree leaf pages (ordered receipt index)
+├── Page N:  B+tree internal pages
+├── Page M:  Statistics pages (fixed-location rows)
+└── Tail:    Write-ahead area (rename-based commit frontier)
+```
+
+```
+IReceiptStorage   ← interface (already exists)
+  ├─ FlatFileStorage  ← existing, hardened (Phase 1)
+  └─ MiniDBStorage   ← C89 B+tree on .db
+
+IStatisticsStorage ← interface (already exists)
+  ├─ FlatFileStatistics  ← existing, hardened
+  └─ MiniDBStatistics   ← inline in same .db
+```
+
+### Page format (512 bytes = 1 DOS sector)
+
+```
+PAGE:
+  OFFSET  SIZE  FIELD
+  0       2     Magic (0xDBDB)
+  2       2     PageType (0=internal, 1=leaf, 2=stats)
+  4       2     NumEntries
+  6       2     FreeSpace (offset of next free byte)
+  8       2     RightSibling (page number, 0 = none)
+  10      6     Reserved
+  ─────────────────────────────────
+  16     496    Payload (keys + data pointers)
+
+LEAF ENTRY (each):
+  key:     4 bytes (long receipt number)
+  booth:   2 bytes (int)
+  seek:    4 bytes (page number within .db, not file offset)
+  size:  106 bytes (Receipt minus MagicNumber, inline?)
+          → OR: 10 bytes (key + page ref), Receipt on dedicated data pages
+```
+
+**Two storage strategies for receipts:**
+
+*In-row:* Store the full 111-byte `Receipt` directly in the leaf page entry.
+~3-4 receipts per 512-byte page (after header + entry overhead). B-tree is
+wider but data is single-seek.
+
+| Receipts | Pages (in-row) | Pages (ref-only) |
+|---|---|---|
+| 1,000 | ~330 | 6 (refs) + 130 (data) |
+| 10,000 | ~3,300 | 51 (refs) + 1,300 (data) |
+| 100,000 | ~33,000 | 501 (refs) + 13,000 (data) |
+
+*Ref-only:* Store just (key, booth, page#) in leaf entries. Receipts live on
+dedicated 16-receipt data pages. 2 seeks for lookup (index → data), but the
+index is much smaller — stays cached in memory longer. **Recommended.**
+
+### Statistics storage
+
+Allocate one dedicated page (or a small block of pages at a known page number)
+for the five period accumulators. Stats are fixed-sized — `DS_ENTRY[5]` +
+`DS_DOUBLEPRNENTRY[2]` + `DS_CELLULARENTRY[5]`. On `Flush()`, write the
+in-memory copy to the stats page. On `Update()` boundary, write.
+
+### Atomic commit sequence
+
+MiniDB avoids torn-write corruption without a write-ahead log by using
+**rename-based commit**:
+
+1. Open `.db.new` for writing
+2. Serialize every dirty page (header, changed index pages, stats page,
+   new/receipt data pages) to `.db.new`
+3. `Flush()` + `close()` `.db.new`
+4. `rename(".db.new", ".db")` — atomic on DOS FAT32
+5. Delete old `.db` (already replaced by the rename)
+
+If the app crashes during step 2: `.db.new` is partial (harmless), `.db` is
+untouched. Recovery: delete `.db.new` on next open.
+
+If the app crashes during step 4: `.db.new` is complete, `.db` may or may not
+have been replaced. Recovery: delete `.db`, rename `.db.new` → `.db`.
+
+### B-tree parameters
+
+| Parameter | Value | Rationale |
+|---|---|---|
+| Page size | 512 bytes | DOS sector size — single `read()`/`write()` |
+| Order (max keys) | 50 | Leaf: 50 × 10-byte entries = 500 bytes ≤ 496 payload |
+| Min keys | 25 | = order/2 |
+| Split strategy | First-fit, 50/50 split | Simplest, no rebalancing logic needed |
+| Cache | LRU, 128 pages (64 KB) | Stays within ~50 KB for 10K records (ref-only) |
+| File growth | Append-only (no free-page list) | Simplifies code; compaction on Archive |
+
+### DB_ENGINE factory change
+
+Current (after Phase 2):
+```cpp
+DB_ENGINE() {
+    DBStorage    = new DB_STORAGE(...);
+    DBStatistics = new DB_STATISTICS(...);
+}
+```
+
+MiniDB:
+```cpp
+DB_ENGINE() {
+    DBStorage    = new MiniDBStorage("rx.db");
+    DBStatistics = new MiniDBStatistics("rx.db"); // same file
+}
+```
+
+Or via a config flag:
+```cpp
+DB_ENGINE() {
+    if (g_cfg->MINIDB) {
+        DBStorage    = new MiniDBStorage("rx.db");
+        DBStatistics = new MiniDBStatistics("rx.db");
+    } else {
+        DBStorage    = new DB_STORAGE(...);
+        DBStatistics = new DB_STATISTICS(...);
+    }
+}
+```
+
+### Implementation plan
+
+#### Phase M1: Infrastructure (3-4 days)
+
+| Step | File | What |
+|---|---|---|
+| 1 | `include/minidb/page.h` | `PageType`, `PageHeader` struct, slot layout |
+| 2 | `include/minidb/btree.h` | B+tree split/insert/search/delete signatures |
+| 3 | `src/db/minidb/btree.cpp` | B+tree core: insert, search, split, compact |
+| 4 | `src/db/minidb/cache.cpp` | LRU page cache (128-slot, page-fault → disk read) |
+| 5 | `src/db/minidb/commit.cpp` | Atomic commit sequence (write dirty → flush → rename) |
+| 6 | `src/db/minidb/recover.cpp` | Startup recovery (delete orphaned `.db.new`) |
+
+#### Phase M2: Storage implementation (5-7 days)
+
+| Step | File | What |
+|---|---|---|
+| 7 | `src/db/minidb/receipt_storage.cpp` | `IReceiptStorage` impl over B+tree + data pages |
+| 8 | `src/db/minidb/statistics.cpp` | `IStatisticsStorage` impl over fixed stats pages |
+| 9 | `include/minidb_storage.h` | `MiniDBStorage : IReceiptStorage` |
+| 10 | `include/minidb_statistics.h` | `MiniDBStatistics : IStatisticsStorage` |
+
+#### Phase M3: Integration (2-3 days)
+
+| Step | File | What |
+|---|---|---|
+| 11 | `src/db/db_eng.cpp` | Factory: config flag selects MiniDB vs FlatFile |
+| 12 | `src/cfg.cpp` or `.ini` | Add `MINIDB=1` config key (default 0) |
+| 13 | `util/migrate/` | One-shot converter: .DAT+.IDX → .db |
+| 14 | Build + test | Build under all variants; run in DOSBox-X |
+
+**Total estimated effort: 10-14 days** (one developer, BCC 3.1 target).
+
+### Should we do it?
+
+| Consideration | Verdict |
+|---|---|
+| Is it technically feasible? | **Yes.** BCC 3.1 can do everything required. |
+| Will existing data migrate? | Yes — one-shot converter reads .DAT+.IDX, writes .db. |
+| Is it backward-compatible? | Yes — switchable via MINIDB=0|1 in config. FlatFile is still default. |
+| Does it fix the biggest remaining risk? | The Phase 1 CRC already closes the integrity gap. MiniDB adds atomic commit (replaces STM2 for recovery) and O(log n) lookups. |
+| Does it add maintenance burden? | Yes — another bespoke format. The current FlatFile is simple to debug by hexdump; MiniDB's paged format is not. |
+| Is it worth the effort vs. value? | The current system works for thousands of calls per turn. MiniDB only pays off if data volumes grow significantly or crash recovery without STM2 becomes critical. |
+
+**Recommendation:** Implement only if either:
+1. DOSBox-X users need crash-proof operation without STM2 emulation, OR
+2. Receipt volumes exceed ~50,000 per turn (where flat index cache becomes slow)
+
+Otherwise, the Phase 1 CRC + auto-flush + compact Archive already give integrity
+equivalent to a simple DB without the maintenance cost of a paged B-tree format.
+The abstraction layer (Phase 2) means MiniDB can be dropped in later with zero
+caller changes — the interface seam is already cut.
