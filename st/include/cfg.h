@@ -304,6 +304,7 @@ public:
 	// 2.22.1 build 25
 	WORD CACHE_SIZE;
 	BOOL CHECK_DUPS;
+	BOOL MINIDB;		// 0=FlatFile, 1=MiniDB storage backend
 	// 2.30
 	double INTERNET_TAX;	// tax de internet
 	double INTERNET_ROUND; 	// facturacion en minutos
