@@ -18,9 +18,15 @@ public:
 	virtual ~RT_ENGINE(void);
 
 	virtual void InitHardware(WORD numOfClusters);
+	virtual BOOL CheckHardware(void);
+	virtual void ShutdownHardware(void);
 	virtual void RecoverState(void);
 	virtual void OnTimerTick(WORD cNum, BoothCluster::_DataPort & dataPort);
 	virtual void OnTimerEnd(void);
+
+private:
+	// Owned hardware resources. NULL in demo/unit-test builds.
+	class STM2 *_stm2;
 };
 
 #endif // __RT_ENG_H

@@ -174,14 +174,9 @@ DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 	$(BIN_DIR)\pr_dreme.$(DLL_EXT) \
 	$(BIN_DIR)\pr_drhal.$(DLL_EXT)
 
-# All locations that receive a copy of the ini2cfg-generated st.cfg.
-# Adding a new tool here is all that is needed to wire it in.
-CFG_DESTS=\
-	$(BIN_DIR)\st.cfg \
-	$(UTIL_DIR)\defpwd\st.cfg \
-	$(UTIL_DIR)\chkrx\st.cfg \
-	$(UTIL_DIR)\setup\st.cfg \
-	$(UTIL_DIR)\inf2dat\st.cfg
+# All cfg utility references removed -- CFG is now loaded from .INI
+# at runtime directly. The ini2cfg utility remains in source tree but
+# no build artifact depends on its output.
 
 .c.dll:
 	$(CC) $(DLL_CC_OPTIONS) {$< }
@@ -195,7 +190,7 @@ CFG_DESTS=\
 .asm.obj:
 	$(ASM) $(ASM_OPTS) $<, $@
 
-$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(CFG_DESTS) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\phones.csv $(OBJS) $(DLLS)
+$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\local.inf $(BIN_DIR)\ddn.inf $(BIN_DIR)\ddi.inf $(BIN_DIR)\phones.csv $(OBJS) $(DLLS)
 	$(LINK) $(LINK_OPTS) @&&!
 $(STARTUP_OBJS) $(OBJS)
 $*, ,$(LIBS), $(DEF_FILE)
@@ -216,36 +211,20 @@ $(BIN_DIR)\$(HELP_FILE): $(RES_DIR)\help.txt
 $(BIN_DIR)\$(RES_FILE): $(RES_DIR)\$(RES_FILE)
 	@copy $(RES_DIR)\$(RES_FILE) $(BIN_DIR)\$(RES_FILE) > NUL
 
-# Application config -- ini2cfg generates st.cfg from st.ini, then each
-# tool's copy rule distributes it.  The ini2cfg invocation itself is
-# done OUT-OF-BAND by build.sh / build.ps1 before make runs, because
-# Borland MAKE 3.6 mis-propagates errorlevel from .bat-internal rules
-# (see HANDOFF / TODO).  Same story for PH_INFO.DAT regen via mk_ph.bat.
-$(BIN_DIR)\st.cfg: $(INI2CFG_DIR)\st.cfg
-	@copy $(INI2CFG_DIR)\st.cfg $(BIN_DIR)\st.cfg > NUL
-$(UTIL_DIR)\defpwd\st.cfg: $(INI2CFG_DIR)\st.cfg
-	@copy $(INI2CFG_DIR)\st.cfg $(UTIL_DIR)\defpwd\st.cfg > NUL
-$(UTIL_DIR)\chkrx\st.cfg: $(INI2CFG_DIR)\st.cfg
-	@copy $(INI2CFG_DIR)\st.cfg $(UTIL_DIR)\chkrx\st.cfg > NUL
-$(UTIL_DIR)\setup\st.cfg: $(INI2CFG_DIR)\st.cfg
-	@copy $(INI2CFG_DIR)\st.cfg $(UTIL_DIR)\setup\st.cfg > NUL
-$(UTIL_DIR)\inf2dat\st.cfg: $(INI2CFG_DIR)\st.cfg
-	@copy $(INI2CFG_DIR)\st.cfg $(UTIL_DIR)\inf2dat\st.cfg > NUL
+# Runtime data files -- .ini loaded at runtime by CFG, .inf by PH_ENGINE,
+# phones.csv by DEMO_ENGINE.  All sourced from util/ini2cfg/.
 $(BIN_DIR)\st.ini: $(INI2CFG_DIR)\st.ini
 	@copy $(INI2CFG_DIR)\st.ini $(BIN_DIR)\st.ini > NUL
 $(BIN_DIR)\demo.ini: $(INI2CFG_DIR)\demo.ini
 	@copy $(INI2CFG_DIR)\demo.ini $(BIN_DIR)\demo.ini > NUL
-# Real-number dataset for DEMO_ENGINE -- canonical source in util/inf2dat;
-# DEMO_ENGINE::ParsePhones reads it from bin/ at startup.
 $(BIN_DIR)\phones.csv: $(INF2DAT_DIR)\phones.csv
 	@copy $(INF2DAT_DIR)\phones.csv $(BIN_DIR)\phones.csv > NUL
-# Telephony binary database (bin\PH_INFO.DAT) and ini2cfg-generated
-# st.cfg (util\ini2cfg\st.cfg) are produced OUT-OF-BAND by build.sh /
-# build.ps1 before make runs.  MAKE rules used to invoke mk_ph.bat /
-# mk_cfg.bat directly, but Borland MAKE 3.6 misreports errorlevel from
-# .bat-internal commands and deletes the (just-created) target.  The
-# bats work correctly when invoked from DOSBox-X directly, so build.sh
-# does that.
+$(BIN_DIR)\local.inf: $(INF2DAT_DIR)\local.inf
+	@copy $(INF2DAT_DIR)\local.inf $(BIN_DIR)\local.inf > NUL
+$(BIN_DIR)\ddn.inf: $(INF2DAT_DIR)\ddn.inf
+	@copy $(INF2DAT_DIR)\ddn.inf $(BIN_DIR)\ddn.inf > NUL
+$(BIN_DIR)\ddi.inf: $(INF2DAT_DIR)\ddi.inf
+	@copy $(INF2DAT_DIR)\ddi.inf $(BIN_DIR)\ddi.inf > NUL
 
 # ============================================================================
 # Explicit per-file source-path mapping
