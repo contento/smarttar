@@ -32,6 +32,8 @@ struct FILE_HEADER
     WORD FILE_HEADER::IsValid(void);
     char const *FILE_HEADER::getTitle(void);
     void FILE_HEADER::SetAttr(WORD attr);
+    static DWORD ComputeCheckSum(FILE_HEADER const &hdr);
+    static BOOL  ValidateCheckSum(FILE_HEADER const &hdr);
     WORD FILE_HEADER::GetAttr(void) const;
 #if (__FHEADER>=2)
     WORD FILE_HEADER::GetVersion(void) const;

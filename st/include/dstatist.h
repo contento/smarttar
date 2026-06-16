@@ -17,11 +17,15 @@
 #include <filehdr.h>
 #endif
 
+#if !defined(__ISTATIST_H)
+#include <istatist.h>
+#endif
+
 // ----------------------------------------------------------------------------
 // [ DB_STATISTICS ]
 // ----------------------------------------------------------------------------
 
-class DB_STATISTICS
+class DB_STATISTICS : public IStatisticsStorage
 {
 public:
     DB_STATISTICS(const char *path, const char *name, WORD readOnly = TRUE);
@@ -38,7 +42,7 @@ public:
     //
     void Flush(void);
 	BOOL Archive(void);
-	BOOL Repair(DB_STORAGE *dBStorage, BOOL all = FALSE);
+	BOOL Repair(IReceiptStorage *dBStorage, BOOL all = FALSE);
 	DS_ENTRY *operator [](WORD type)
 	{
 		return &Entries[type];
