@@ -65,31 +65,46 @@ CONTROLLER::CONTROLLER(UI_EVENT_MANAGER *eventManager, UI_WINDOW_MANAGER *window
 	//
 	g_cfg = new CFG;
 	g_cfg->Load();
-	// Old __DEMO__-build behavior: bounds-check unconditionally.
-	// Old real-build behavior: STM2 recovery on BAD_SHUTDOWN, then
-	// bounds-check inside the same if-block.  Preserve both:
-	BOOL doBoundsCheck = g_cfg->IsDemoMode();
-	if (!g_cfg->IsDemoMode() && g_STM2->getStatus() == STM2::BAD_SHUTDOWN)
-	{
-		g_STM2->get(STM2::RECEIPTNUMBER, &g_cfg->N_RECEIPT);
-		g_STM2->get(STM2::EXTENSIONRECEIPTNUMBER, &g_cfg->E_N_RECEIPT);
-		doBoundsCheck = TRUE;
-	}
-	if (doBoundsCheck)
-	{
-		// avoid bad record number
-		if (g_cfg->N_RECEIPT < 0 || g_cfg->N_RECEIPT >= DB_STORAGE::MAX_RECEIPTS)
-			g_cfg->N_RECEIPT = 0;
 
-		if (g_cfg->E_N_RECEIPT < 0 || g_cfg->E_N_RECEIPT >= DB_STORAGE::MAX_RECEIPTS)
-			g_cfg->E_N_RECEIPT = 0;
-	}
-
+	// PH_ENGINE loads tariff data from .INF files at runtime
 	g_phEngine = new PH_ENGINE;
-	g_phEngine->Load();
+	g_phEngine->LoadFromInfs();
 
 	// RTEngine
 	RTEngine   = MakeEngine(g_cfg->CLUSTERS);
+
+	// Verify hardware (STM2, dongle, EEPROM).  ENGINE owns the
+	// lifecycle; CheckHardware returns FALSE if missing/expired.
+	if (!RTEngine->CheckHardware())
+	{
+		UI_WINDOW_OBJECT::errorSystem->ReportError(
+			windowManager, WOS_NO_STATUS,
+			"\n\n      Acceso Negado\n");
+		return;
+	}
+
+	// Bounds check on receipt numbers -- with STM2 recovery on
+	// BAD_SHUTDOWN (done here because g_STM2 is valid after
+	// CheckHardware, and NULL in demo mode).
+	{
+	BOOL doBoundsCheck = g_cfg->IsDemoMode();
+	if (!g_cfg->IsDemoMode() && g_STM2)
+	{
+		if (g_STM2->getStatus() == STM2::BAD_SHUTDOWN)
+		{
+			g_STM2->get(STM2::RECEIPTNUMBER, &g_cfg->N_RECEIPT);
+			g_STM2->get(STM2::EXTENSIONRECEIPTNUMBER, &g_cfg->E_N_RECEIPT);
+			doBoundsCheck = TRUE;
+		}
+	}
+	if (doBoundsCheck)
+	{
+		if (g_cfg->N_RECEIPT < 0 || g_cfg->N_RECEIPT >= DB_STORAGE::MAX_RECEIPTS)
+			g_cfg->N_RECEIPT = 0;
+		if (g_cfg->E_N_RECEIPT < 0 || g_cfg->E_N_RECEIPT >= DB_STORAGE::MAX_RECEIPTS)
+			g_cfg->E_N_RECEIPT = 0;
+	}
+	}
 
 	UI_DATE date;
 	int intDate;
@@ -506,19 +521,19 @@ void CONTROLLER::UpdateStatusBar(void)
 	}
 	else if (RTEngine->GetComErrBooth() != -1 && !View->WStatBar->PendingMsg())
 	{
-		sprintf(msg, "%d errores de comunicación en cabina: %s", g_cfg->MAX_COM_ERR, g_cfg->BoothInfo[RTEngine->GetComErrBooth()].Name);
+		sprintf(msg, "%d errores de comunicaciï¿½n en cabina: %s", g_cfg->MAX_COM_ERR, g_cfg->BoothInfo[RTEngine->GetComErrBooth()].Name);
 		View->WStatBar->setMsg(msg, WHITE, LIGHTRED);
 		RTEngine->SetComErrBooth(-1); // reset !!!
 	}
 	else if (RTEngine->GetDialErrBooth() != -1 && !View->WStatBar->PendingMsg())
 	{
-		sprintf(msg, "%d errores de marcación en cabina: %s", g_cfg->MAX_DIAL_ERR, g_cfg->BoothInfo[RTEngine->GetDialErrBooth()].Name);
+		sprintf(msg, "%d errores de marcaciï¿½n en cabina: %s", g_cfg->MAX_DIAL_ERR, g_cfg->BoothInfo[RTEngine->GetDialErrBooth()].Name);
 		View->WStatBar->setMsg(msg, WHITE, LIGHTRED);
 		RTEngine->SetDialErrBooth(-1); // reset !!!
 	}
 	else if (RTEngine->GetNotIncBooth() != -1 && !View->WStatBar->PendingMsg())
 	{
-		sprintf(msg, "Localidad no incluída en cabina: %s", g_cfg->BoothInfo[RTEngine->GetNotIncBooth()].Name);
+		sprintf(msg, "Localidad no incluï¿½da en cabina: %s", g_cfg->BoothInfo[RTEngine->GetNotIncBooth()].Name);
 		View->WStatBar->setMsg(msg, WHITE, LIGHTRED);
 		RTEngine->SetNotIncBooth(-1); // reset !!!
 	}
@@ -565,7 +580,7 @@ void interrupt far CONTROLLER::NewGPFHandler(EXCEP_FRAME eFrame)
 	cout
 		<< "EXCEPCION ATRAPADA" << endl
 		<< "------------------" << endl
-		<< "C¢digo: " << eFrame.error_code << ' '
+		<< "Cï¿½digo: " << eFrame.error_code << ' '
 	;
 	const char *msg = "Error en acceso a memoria general";
 	switch (eFrame.error_code)
@@ -574,7 +589,7 @@ void interrupt far CONTROLLER::NewGPFHandler(EXCEP_FRAME eFrame)
 		msg = "Desbordamiento en ISR";
 		break;
 	case 0xC0C0:
-		msg = "Contenci¢n en cola de recibos";
+		msg = "Contenciï¿½n en cola de recibos";
 		break;
 	case 0xC0D0:
 		msg = "Desbordamiento del CFG";
@@ -586,9 +601,9 @@ void interrupt far CONTROLLER::NewGPFHandler(EXCEP_FRAME eFrame)
 	;
 	cout
 		<< endl
-		<< "Por favor comunicarse con Microdise¤o Ltda." << endl
+		<< "Por favor comunicarse con Microdiseï¿½o Ltda." << endl
 		<< "Tels: (4) 341-5600" << endl
-		<< " Fax: (4) 341-4629 Medell¡n Col." << endl
+		<< " Fax: (4) 341-4629 Medellï¿½n Col." << endl
 		<< endl
 		<< "Ofrecemos disculpas por este molesto suceso." << endl
 		<< "Gracias." << endl

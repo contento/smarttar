@@ -210,7 +210,7 @@ EVENT_TYPE UIW_SIGNAL::Event(const UI_EVENT &event)
         LastEvent = ccode;
         WSignalGroup->Destroy();
         UIW_BUTTON *tW150;
-        WSignalGroup->Information(SET_TEXT, "Por inversión");
+        WSignalGroup->Information(SET_TEXT, "Por inversiï¿½n");
         *WSignalGroup
         + (WSteadyButton = new UIW_BUTTON(1, 1, 20, "Permanente", BTF_RADIO_BUTTON))
         + (tW150         = new UIW_BUTTON(1, 2, 20, "Durante 150 ms", BTF_RADIO_BUTTON));
@@ -364,7 +364,7 @@ EVENT_TYPE UIW_LOCK_NUM::Event(const UI_EVENT &event)
         }
         //
 		g_cfg->Save();
-		g_phEngine->Save();
+		g_phEngine->SaveToInfs();
         //
         eventManager->Put(UI_EVENT(S_CLOSE,0));
         break;
@@ -494,7 +494,7 @@ EVENT_TYPE UIW_NAL_TAR::Event(const UI_EVENT &event)
         // apply reduced schedule
 		g_cfg->APPLY_DDN_SCHEDULE = FlagSet(WBApply->woStatus, WOS_SELECTED)?1:0;
 		g_cfg->E_APPLY_DDN_SCHEDULE = FlagSet(WEApply->woStatus, WOS_SELECTED)?1:0;
-		g_phEngine->Save();
+		g_phEngine->SaveToInfs();
 		//
 		g_cfg->Save(); // 2.21.8
 		//
@@ -644,7 +644,7 @@ EVENT_TYPE UIW_INTER_TAR::Event(const UI_EVENT &event)
 		g_cfg->APPLY_DDI_SCHEDULE = FlagSet(WBApply->woStatus, WOS_SELECTED)?1:0;
 		g_cfg->E_APPLY_DDI_SCHEDULE = FlagSet(WEApply->woStatus, WOS_SELECTED)?1:0;
         //
-		g_phEngine->Save();
+		g_phEngine->SaveToInfs();
         //
 		g_cfg->Save(); // 2.21.8
         //
@@ -709,7 +709,6 @@ EVENT_TYPE UIW_NEW_CITY::Event(const UI_EVENT &event)
         {
             if (save)
             {
-				g_phEngine->Save();
 				g_phEngine->SaveToInfs();
             }
             save = FALSE;
@@ -766,7 +765,7 @@ EVENT_TYPE UIW_NEW_COUNTRY::Event(const UI_EVENT &event)
         }
     case UE_CANCEL:
         if (save)
-            g_phEngine->Save();
+            g_phEngine->SaveToInfs();
         save = FALSE;
         this->woAdvancedFlags &= ~WOAF_LOCKED; // disconnect lock !!!
         eventManager->Put(UI_EVENT(S_CLOSE,0));
@@ -1358,7 +1357,7 @@ EVENT_TYPE UIW_CHANGE_PASSWD::Event(const UI_EVENT &event)
         wString = (UIW_STRING *)Get("S_NEW_PASSWD");
         char *newString = wString->DataGet();
 		if (!g_cfg->ChangePassword(oldString, newString))
-            errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Código de acceso inválido\n");
+            errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Cï¿½digo de acceso invï¿½lido\n");
         else
         {
             g_cfg->Save(NULL, FALSE);

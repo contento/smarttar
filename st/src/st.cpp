@@ -13,12 +13,6 @@
 #include <control.h>
 #include <info.h>
 
-#if defined(__DEMO__)
-#include <dongle.h>
-#endif
-
-#include <eeprom.h>
-
 #define USE_HELP_CONTEXTS
 #include <res.hpp>
 #include <help.hpp>
@@ -34,18 +28,18 @@ char *g_LONG_APP_NAME  	= "SmartTar";
 
 APP_INFO g_appInfo;
 
+// g_STM2 defined and owned by RT_ENGINE (see rt_eng.cpp).
+// Declared here so other translation units can extern it.
 #if !defined(__TEST__)
 #include <stm2.h>
-STM2 *g_STM2  = NULL;
+STM2 *g_STM2 = NULL;
 #endif
 
 static void Prolog(void);
 static void clean(UI_DISPLAY *display, UI_EVENT_MANAGER *eventManager, UI_WINDOW_MANAGER *windowManager);
 
-static BOOL cancelBadShutDown(void);
-static void logSTM2(char c);
-//
 EVENT_TYPE Exit(UI_DISPLAY *display, UI_EVENT_MANAGER *, UI_WINDOW_MANAGER *windowManager);
+//
 
 main(int , char *argv[])
 {
@@ -53,10 +47,6 @@ main(int , char *argv[])
 		Log log(Log::OUT|Log::CREATE);
 		log.put(Log::NORMALSTART);
 	}
-#if !defined(__TEST__)
-	g_STM2 = new STM2;
-	g_STM2->login();
-#endif
 	//
 	// --- To test "Out of memory"
 	/*
@@ -114,54 +104,14 @@ main(int , char *argv[])
 
 	UI_WINDOW_OBJECT::helpSystem = new UI_HELP_SYSTEM("help.dat", windowManager, H_GENERAL);
 
-#if !defined(__DEMO__)
-	if (g_STM2->getStatus() == STM2::NONE)
-	{
-		UI_WINDOW_OBJECT::errorSystem->ReportError(windowManager,
-				WOS_NO_STATUS, "\n\n      Acceso Negado\n");
-		Log log(Log::OUT|Log::CREATE);
-		log.put(Log::STM2BADTRY);
-		// Clean up.
-		clean(display, eventManager, windowManager);
-		return (2);
-	}
-	// Activate EEPROM.  version 2.19b
-	extern SUPER_APP_INFO g_superAppInfo;
-	if (!g_superAppInfo.Attr.NoEEPROM)
-	{
-		EEPROM eeprom;
-		if (!eeprom.isValidVersion())
-		{
-			UI_WINDOW_OBJECT::errorSystem->ReportError(windowManager,
-					WOS_NO_STATUS, "\n\n      Versi�n no v�lida\n");
-			// Clean up.
-			Log log(Log::OUT|Log::CREATE);
-			log.put(Log::EEPROMBADTRY);
-			clean(display, eventManager, windowManager);
-			return (2);
-		}
-	}
-#else
-#if !defined(__NO_DONGLE__)
-DONGLE dongle;
-	if (!dongle.isThere())
-	{
-		UI_WINDOW_OBJECT::errorSystem->ReportError(windowManager,
-                WOS_NO_STATUS, "\n\n      Acceso Negado\n"
-                                                  );
-        Log log(Log::OUT|Log::CREATE);
-		log.put(Log::DONGLEBADTRY);
-        // Clean up.
-        clean(display, eventManager, windowManager);
-        return (2);
-    }
-#endif
-#endif // __DEMO__
     // attach the new devices ...
 	CONTROLLER *controller = NULL;
 	*eventManager
 		+ (controller = new CONTROLLER(eventManager, windowManager))
 	;
+    // Hardware check is delegated to the ENGINE concrete via
+    // CheckHardware() -- called inside CONTROLLER after MakeEngine().
+    // Demo build skips STM2/EEPROM/dongle when NODONGLE is set.
     if (!g_cfg->IsDemoMode() && g_cfg->GetStatus() != CFG::OK)
     {
         UI_WINDOW_OBJECT::errorSystem->ReportError(windowManager, WOS_NO_STATUS,
@@ -239,10 +189,7 @@ void clean(UI_DISPLAY *display, UI_EVENT_MANAGER *eventManager, UI_WINDOW_MANAGE
     delete windowManager;
     delete eventManager;
     delete display;
-#if !defined(__TEST__)
-	g_STM2->logout();
-	delete g_STM2;
-#endif
+    // STM2 lifecycle owned by RT_ENGINE::ShutdownHardware().
 }
 
 // user exit function ...
@@ -328,116 +275,8 @@ void Prolog(void)
 	// I love colors. GCC/gcc.
 	UI_DISPLAY::backgroundPalette->fillPattern     = PTN_SOLID_FILL;
 	UI_DISPLAY::backgroundPalette->colorBackground = GREEN;
-	if (!g_cfg->IsDemoMode())
-	{
-	WORD status = g_STM2->getStatus();
-	if (status != STM2::NONE)
-	{
-		cout
-			<< APP_VER_NAME  << endl
-			<< APP_COPYRIGHT << endl
-			<< "  Serial: " << g_appInfo.Serial << endl
-		;
-		Log log(Log::OUT|Log::CREATE);
-		switch (status)
-		{
-		case STM2::GARBAGE:
-			log.put(Log::STM2GARBAGE);
-			logSTM2('*');
-			g_STM2->forceOk();
-			break;
-		case STM2::BAD_SHUTDOWN:
-			int date, time;
-			g_STM2->get(STM2::DATE, &date);
-			g_STM2->get(STM2::TIME, &time);
-			log.put(date, time, Log::STM2BADSHUTDOWN);
-			if (cancelBadShutDown())
-			{
-				log.put(Log::STM2IGNORERECOVER);
-				g_STM2->forceOk();
-			}
-			else
-			{
-				log.put(Log::STM2RECOVER);
-			}
-			break;
-		}
-	}
-	}
+	// STM2 status display and EEPROM version check moved to
+	// RT_ENGINE::CheckHardware() (called after ENGINE construction).
 }
 
-BOOL cancelBadShutDown(void)
-{
-	BOOL ok = TRUE;
-	BOOL cancel = FALSE;
-	UI_DATE date;
-	UI_TIME time;
-	int  seconds = 0;
-	int  lastss = 0;
-	do
-	{
-		if (kbhit())
-		{
-			// based on upgrade number assign key
-			cancel = (getch() == 'a'+APP_UPGRADE_VER);
-			ok = !cancel;
-		}
-		else
-		{
-			// count five seconds
-			time.Import();
-			int hh, mm, ss;
-			time.Export(&hh, &mm, &ss);
-			if (ss != lastss)
-			{
-				lastss = ss;
-				seconds++;
-				cout << '+';
-			}
-			if (seconds == 5)
-				ok = FALSE;
-		}
-	}
-	while (ok);
-	cout << endl;
-	//
-	logSTM2(cancel?'-':'+');
-	//
-	return cancel;
-}
-
-void logSTM2(char c)
-{
-	UI_DATE date;
-	UI_TIME time;
-	int packedDate;
-	g_STM2->get(STM2::DATE, &packedDate);
-	if (date.Import(packedDate) != DTI_OK)
-		date.Import();
-	char downDateStr[0x20], upDateStr[0x20];
-	date.Export(downDateStr, DTF_EUROPEAN_FORMAT);
-	date.Import();
-	date.Export(upDateStr, DTF_EUROPEAN_FORMAT);
-	int packedTime;
-	g_STM2->get(STM2::TIME, &packedTime);
-	if (time.Import(packedTime) != TMI_OK)
-		time.Import();
-	char downTimeStr[0x10], upTimeStr[0x10];
-	time.Export(downTimeStr, TMF_TWENTY_FOUR_HOUR|TMF_ZERO_FILL);
-	time.Import();
-	time.Export(upTimeStr, TMF_TWENTY_FOUR_HOUR|TMF_ZERO_FILL);
-	//
-	FILE_NAME filename;
-	strcat(_GetAppPath(filename), "ST.LOG");
-	chmod(filename, S_IREAD|S_IWRITE);
-	ofstream logFile(filename, ios::out|ios::app);
-	logFile
-		<< "[" << c << "] "
-		<< downDateStr << ' ' << downTimeStr << " -> "
-		<< upDateStr << ' ' << upTimeStr
-		<< endl;
-	;
-	logFile.close();
-	chmod(filename, S_IREAD);
-}
 

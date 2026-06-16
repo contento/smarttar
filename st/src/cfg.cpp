@@ -42,59 +42,24 @@ static char *_MCARD_SCAN_FMT   = "%lf,%lf,%lf,%lf";
 
 static WORD status = CFG::NO_CFG_FILE;
 
-WORD CFG::Load(const char *path, BOOL fromIni)
+WORD CFG::Load(const char *path, BOOL)
 {
     FILE_NAME filename;
-    if (!fromIni)
-    { // load from .CFG
-        SetDefault(TRUE);
-        if (path)
-            strcpy(filename, path);
-        else
-            _GetAppPath(filename); // NULL implies .EXE path
-        strcat(filename, CFG_FILENAME);
-        ifstream file(filename, ios::in|ios::binary);
-        if (!file)
-            return (status = NO_CFG_FILE);
-        FILE_HEADER header;
-        file.read((char *)&header, sizeof(FILE_HEADER));
-        if (file.gcount() != sizeof(FILE_HEADER) || !header.IsValid())
-            return (status = BAD_CFG_FILE);
-        file.read((char *)this, sizeof(*this));
-        if (header.GetAttr() & FILE_HEADER::CRYPTED)
-            _Decrypt(this, file.gcount());
-        if (file.gcount() != sizeof(*this))
-            return (status = BAD_CFG_FILE);
-#if !defined(__TEST__) && !defined(__UTIL__)
-        // check to see if they tried to change the clusters from INI
-		CLUSTERS = (CLUSTERS==0)?1:CLUSTERS;
-		extern APP_INFO g_appInfo;
-		CLUSTERS = (CLUSTERS>g_appInfo.MaxClusters)?g_appInfo.MaxClusters:CLUSTERS;
-#endif
-		// begin 2.30
-		ACTIVE_CLUSTERS = CLUSTERS;
-		// end 2.30
-
-		AdjustHeader();
-    }
+    SetDefault(); // only change the parameters
+    if (path)
+        strcpy(filename, path);
     else
-    { // load from .INI
-        SetDefault(); // only change the parameters
-        if (path)
-            strcpy(filename, path);
-        else
-            _GetAppPath(filename); // NULL implies .EXE path
-        strcat(filename, INI_FILENAME);
-        ifstream file(filename, ios::in);
-        ENTRY *table = new ENTRY[MAX_ID_VALUES];
-        memset(table, 0, sizeof(ENTRY)*MAX_ID_VALUES);
-        FillCfgTable(table);
-        STR512 line;
-        while (file.getline(line, sizeof(STR512)))
-            Line2Entry(table, line);
-        Adjust();
-        delete [] table;
-    }
+        _GetAppPath(filename); // NULL implies .EXE path
+    strcat(filename, INI_FILENAME);
+    ifstream file(filename, ios::in);
+    ENTRY *table = new ENTRY[MAX_ID_VALUES];
+    memset(table, 0, sizeof(ENTRY)*MAX_ID_VALUES);
+    FillCfgTable(table);
+    STR512 line;
+    while (file.getline(line, sizeof(STR512)))
+        Line2Entry(table, line);
+    Adjust();
+    delete [] table;
 
     // Date related fields
     // adjust turn day 2.20.7f || 2.20.9 Build 4
@@ -112,52 +77,29 @@ WORD CFG::GetStatus(void)
 {
     return status;
 }
-
-WORD CFG::Save(const char *path, BOOL saveIni)
+WORD CFG::Save(const char *path, BOOL)
 {
     FILE_NAME filename;
     if (path)
         strcpy(filename, path);
     else
         _GetAppPath(filename); // NULL implies .EXE path
-    strcat(filename, CFG_FILENAME);
+    strcat(filename, INI_FILENAME);
     if (access(filename, 0x06) != 0)
         chmod(filename, S_IREAD|S_IWRITE);
-    ofstream file(filename, ios::out|ios::binary);
-    FILE_HEADER header;
-    header.SetAttr(FILE_HEADER::CRYPTED);
-    file.write((char *)&header, sizeof(FILE_HEADER));
-    // use a temporal buffer to avoid interferences with RTEngine. JEAM/gcc.
-    char *tmpConfig = new char[sizeof(*this)];
-    memcpy(tmpConfig, (char *)this, sizeof(*this));
-    _Encrypt(tmpConfig, sizeof(*this));
-    file.write(tmpConfig, sizeof(*this));
-    delete [] tmpConfig;
-    file.close();
-    //
-    if (saveIni)
-    {
-        if (path)
-            strcpy(filename, path);
-        else
-            _GetAppPath(filename); // NULL implies .EXE path
-        strcat(filename, INI_FILENAME);
-        if (access(filename, 0x06) != 0)
-            chmod(filename, S_IREAD|S_IWRITE);
-        file.open(filename);
-        ENTRY *table = new ENTRY[MAX_ID_VALUES];
-        memset(table, 0, sizeof(ENTRY)*MAX_ID_VALUES);
-        FillCfgTable(table);
-        char strDate[0x10];
-        char strTime[0x10];
-        file << ";\n; Configuraci�n [" << _GetSysDate(strDate) << ' ' << _GetSysTime(strTime) << "]\n";
-        file << ";\n; Utilice SETUP para producir ST.CFG" << "\n;\n\n";
-        STR512 line;
-        for (WORD offset=0; table[offset].Id; offset++)
-            if (Entry2Line(table, offset, line))
-                file << line << '\n';
-        delete [] table;
-    }
+    ofstream file(filename);
+    ENTRY *table = new ENTRY[MAX_ID_VALUES];
+    memset(table, 0, sizeof(ENTRY)*MAX_ID_VALUES);
+    FillCfgTable(table);
+    char strDate[0x10];
+    char strTime[0x10];
+    file << ";\n; Configuraci?n [" << _GetSysDate(strDate) << ' ' << _GetSysTime(strTime) << "]\n";
+    file << ";\n;\n\n";
+    STR512 line;
+    for (WORD offset=0; table[offset].Id; offset++)
+        if (Entry2Line(table, offset, line))
+            file << line << '\n';
+    delete [] table;
     return OK;
 }
 

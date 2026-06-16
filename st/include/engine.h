@@ -88,6 +88,16 @@ public:
 	ENGINE(WORD numOfClusters=1);
 	virtual ~ENGINE(void);
 
+	// --- Hardware lifecycle hooks (Template Method) --------------------
+	// Called after construction. CheckHardware verifies that the
+	// underlying hardware is present and valid (STM2, dongle, EEPROM).
+	// DEMO_ENGINE returns TRUE without checks.
+	virtual BOOL CheckHardware(void) { return TRUE; }
+
+	// Called on application shutdown.  Releases persistent-storage
+	// resources (STM2 logout, etc.).  No-op in DEMO_ENGINE.
+	virtual void ShutdownHardware(void) {}
+
 	// --- Variation hooks (Template Method) ----------------------------
 	// Called by the derived ctor AFTER ENGINE() finishes; pure virtual
 	// dispatch from inside a base ctor would resolve to base, so the
@@ -106,8 +116,6 @@ public:
 
 	void GetDumpData(void * & ptr, int &size);
 	void SetDumpData(void *   ptr, int  size);
-
-
 	enum
 	{
 		PULSEPHONE, TONEPHONE

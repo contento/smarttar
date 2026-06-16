@@ -103,13 +103,10 @@ echo "----------------------------------------------------------------------"
 # writing to it. tail -F (capital F) survives the file being truncated by
 # the DOS-side redirect.
 touch "$log"
+TAIL_PID=
 tail -F "$log" 2>/dev/null &
 TAIL_PID=$!
-trap 'kill $TAIL_PID 2>/dev/null; wait $TAIL_PID 2>/dev/null' EXIT
-
-# Build output dirs are gitignored and absent on a fresh checkout. C: is the
-# repo mount, so creating them host-side makes them visible inside DOSBox-X.
-mkdir -p st/build st/bin st/lib st/util/ini2cfg/obj st/util/inf2dat/obj
+mkdir -p st/build st/bin st/lib
 
 # Capture DOSBox-X's own stderr (crash traces, protection faults) when
 # MAKE_HEADLESS_DEBUG is set. CI sets this for failure diagnostics.
@@ -123,9 +120,6 @@ fi
 eval "\"$DOSBOX_X\" -conf dosbox-x.conf -fastlaunch \
   -c \"echo === SmartTar build starting (variant ${variant}) ===\" \
   -c \"echo === log: ${dos_log} (silent until exit) ===\" \
-  -c \"echo .\" \
-  -c \"command /c util\\\\ini2cfg\\\\mk_cfg.bat >> ${dos_log}\" \
-  -c \"command /c util\\\\inf2dat\\\\mk_ph.bat >> ${dos_log}\" \
   -c \"command /c make${variant}.bat $make_args >> ${dos_log}\" \
   -c \"echo .\" \
   -c \"echo === Build finished ===\" \
@@ -133,9 +127,8 @@ eval "\"$DOSBOX_X\" -conf dosbox-x.conf -fastlaunch \
 
 # Stop streaming. Ignore errors — the tail process may already have exited
 # or been killed when DOSBox-X closed its last command.
-kill $TAIL_PID 2>/dev/null || true
-wait $TAIL_PID 2>/dev/null || true
-trap - EXIT
+kill ${TAIL_PID:--1} 2>/dev/null || true
+wait ${TAIL_PID:--1} 2>/dev/null || true
 if [[ ! -f "$log" ]]; then
   echo "build $variant: NO LOG — DOSBox-X did not write to the mount" >&2
   exit 1

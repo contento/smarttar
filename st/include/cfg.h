@@ -30,8 +30,8 @@ public:
 	//
 	enum STATUS_TAG { OK, NO_CFG_FILE, BAD_CFG_FILE };
 	//
-	WORD Load(const char *path = NULL, BOOL fromIni = FALSE);
-	WORD Save(const char *path = NULL, BOOL saveIni = TRUE);
+	WORD Load(const char *path = NULL, BOOL = FALSE);
+	WORD Save(const char *path = NULL, BOOL = TRUE);
 	WORD GetStatus(void); // load status
 	//
 	void setDefaultPasswords(void);
