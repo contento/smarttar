@@ -5,10 +5,10 @@ cd ..
 cd gen
 call build
 cd ..
-cd inf2dat
+cd _deprecated\inf2dat
 call build
 cd ..
-cd ini2cfg
+cd _deprecated\ini2cfg
 call build
 cd ..
 cd repair

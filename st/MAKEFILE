@@ -26,8 +26,7 @@ BIN_DIR=bin
 LIB_DIR=lib
 INCLUDE_DIR=include
 RES_DIR=res
-INF2DAT_DIR=util\inf2dat
-INI2CFG_DIR=util\ini2cfg
+CFG_DIR=cfg
 UTIL_DIR=util
 
 # NOTE: Borland MAKE 3.6 (bundled with BC 3.1) does NOT support the
@@ -212,20 +211,19 @@ $(BIN_DIR)\$(RES_FILE): $(RES_DIR)\$(RES_FILE)
 	@copy $(RES_DIR)\$(RES_FILE) $(BIN_DIR)\$(RES_FILE) > NUL
 
 # Runtime data files -- .ini loaded at runtime by CFG, .inf by PH_ENGINE,
-# phones.csv by DEMO_ENGINE.  All sourced from util/ini2cfg/.
-$(BIN_DIR)\st.ini: $(INI2CFG_DIR)\st.ini
-	@copy $(INI2CFG_DIR)\st.ini $(BIN_DIR)\st.ini > NUL
-$(BIN_DIR)\demo.ini: $(INI2CFG_DIR)\demo.ini
-	@copy $(INI2CFG_DIR)\demo.ini $(BIN_DIR)\demo.ini > NUL
-$(BIN_DIR)\phones.csv: $(INF2DAT_DIR)\phones.csv
-	@copy $(INF2DAT_DIR)\phones.csv $(BIN_DIR)\phones.csv > NUL
-$(BIN_DIR)\local.inf: $(INF2DAT_DIR)\local.inf
-	@copy $(INF2DAT_DIR)\local.inf $(BIN_DIR)\local.inf > NUL
-$(BIN_DIR)\ddn.inf: $(INF2DAT_DIR)\ddn.inf
-	@copy $(INF2DAT_DIR)\ddn.inf $(BIN_DIR)\ddn.inf > NUL
-$(BIN_DIR)\ddi.inf: $(INF2DAT_DIR)\ddi.inf
-	@copy $(INF2DAT_DIR)\ddi.inf $(BIN_DIR)\ddi.inf > NUL
-
+# phones.csv by DEMO_ENGINE.  All sourced from st/cfg/ (canonical source).
+$(BIN_DIR)\st.ini: $(CFG_DIR)\st.ini
+	@copy $(CFG_DIR)\st.ini $(BIN_DIR)\st.ini > NUL
+$(BIN_DIR)\demo.ini: $(CFG_DIR)\demo.ini
+	@copy $(CFG_DIR)\demo.ini $(BIN_DIR)\demo.ini > NUL
+$(BIN_DIR)\phones.csv: $(CFG_DIR)\phones.csv
+	@copy $(CFG_DIR)\phones.csv $(BIN_DIR)\phones.csv > NUL
+$(BIN_DIR)\local.inf: $(CFG_DIR)\local.inf
+	@copy $(CFG_DIR)\local.inf $(BIN_DIR)\local.inf > NUL
+$(BIN_DIR)\ddn.inf: $(CFG_DIR)\ddn.inf
+	@copy $(CFG_DIR)\ddn.inf $(BIN_DIR)\ddn.inf > NUL
+$(BIN_DIR)\ddi.inf: $(CFG_DIR)\ddi.inf
+	@copy $(CFG_DIR)\ddi.inf $(BIN_DIR)\ddi.inf > NUL
 # ============================================================================
 # Explicit per-file source-path mapping
 # ----------------------------------------------------------------------------
