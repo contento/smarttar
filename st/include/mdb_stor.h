@@ -30,9 +30,12 @@ public:
     virtual BOOL IsReadOnly();
 
     virtual BOOL IsCorrectNumber(long number);
-
     // Expose the shared cache so MiniDBStatistics can use the same handle
     MiniDBCache &GetCache() { return m_cache; }
+
+    // Returns the page number of the statistics block (0 = none).
+    long GetStatsPage() const { return m_statsPage; }
+
     virtual BOOL IsValid(Receipt const &receipt);
 
     virtual BOOL Exist(long number, int boothNumber) const;
@@ -54,6 +57,7 @@ public:
     virtual void Flush();
 
 private:
+    BOOL VerifyEntry(long number, int boothNumber, long dataSeek);
     BOOL OpenDB(const char *filepath);
     void CloseDB();
 
@@ -65,6 +69,7 @@ private:
     MiniDBCache  m_cache;
     MiniDBBTree  m_btree;
     char         m_filepath[80];
+    long       m_statsPage;       // page number of stats block (0 = none)
     char         m_filepathNew[80]; // .db.new path
 };
 

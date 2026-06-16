@@ -46,17 +46,16 @@ DB_ENGINE::DB_ENGINE(void)
 #if !defined(__TEST__)
 	if (g_cfg->MINIDB)
 	{
-		DBStorage    = new MiniDBReceiptStorage(NULL, DB_NAME, FALSE);
+		MiniDBReceiptStorage *mdb = new MiniDBReceiptStorage(NULL, DB_NAME, FALSE);
+		DBStorage    = mdb;
+		DBStatistics = new MiniDBStatistics(mdb->GetCache(), mdb->GetStatsPage());
 	}
 	else
 #endif
 	{
 		DBStorage    = new DB_STORAGE(NULL, DB_NAME, FALSE);
+		DBStatistics = new DB_STATISTICS(NULL, DB_NAME, FALSE);
 	}
-	// Statistics always use FlatFile (.STA) regardless of MINIDB setting.
-	// MiniDB replaces the receipt database only; statistics are simpler
-	// and benefit from the existing .STA repair/recovery path.
-	DBStatistics = new DB_STATISTICS(NULL, DB_NAME, FALSE);
 	//
 #if !defined(__TEST__)
 #if !defined(__NOAPPINFO__)

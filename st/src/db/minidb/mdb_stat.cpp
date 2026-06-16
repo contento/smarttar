@@ -8,6 +8,21 @@
 // to the page on demand.
 //
 
+
+// Period constants (match DB_STATISTICS::TYPETAG values — bare names
+// so the copied DB_STATISTICS logic compiles without scoping changes).
+#define STAT_YEAR  0
+#define STAT_MONTH 1
+#define STAT_WEEK  2
+#define STAT_DAY   3
+#define STAT_TURN  4
+// Map bare YEAR/MONTH/WEEK/DAY/TURN references to the STAT_* constants
+// used by the MiniDBStatistics implementation.
+#define YEAR  STAT_YEAR
+#define MONTH STAT_MONTH
+#define WEEK  STAT_WEEK
+#define DAY   STAT_DAY
+#define TURN  STAT_TURN
 #include <string.h>
 #include <io.h>
 #include <fcntl.h>

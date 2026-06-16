@@ -114,7 +114,7 @@ OBJS=$(OBJ_DIR)\$(APP).$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\minidb_cache.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\minidb_btree.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\mdb_stor.$(OBJ_EXT)  \
-	 $(OBJ_DIR)\eeprom.$(OBJ_EXT)	   \
+	 $(OBJ_DIR)\mdb_stat.$(OBJ_EXT)  \
 	 $(OBJ_DIR)\filehdr.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\mb_ext.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\info.$(OBJ_EXT) 	   \
@@ -290,7 +290,7 @@ $(OBJ_DIR)\minidb_btree.obj: $(SOURCE_DIR)\db\minidb\btree.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\mdb_stor.obj: $(SOURCE_DIR)\db\minidb\mdb_stor.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\d_ext_st.obj: $(SOURCE_DIR)\db\d_ext_st.cpp
+$(OBJ_DIR)\mdb_stat.obj: $(SOURCE_DIR)\db\minidb\mdb_stat.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\eeprom.obj:   $(SOURCE_DIR)\eeprom.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**

@@ -16,6 +16,10 @@
 #include <minidb/cache.h>
 #include <minidb/btree.h>
 #include <mdb_stor.h>
+#include <st_util.h>
+#include <cfg.h>
+
+extern CFG *g_cfg;
 
 #if !defined(S_IREAD)
 #define S_IREAD  0x0100
@@ -42,6 +46,7 @@ static const UINT RECEIPT_MAGIC = 0x6719U;
 MiniDBReceiptStorage::MiniDBReceiptStorage(const char *path, const char *name,
                                            int readOnly)
     : m_nextSeek(0L)
+    , m_statsPage(0L)
     , m_status(MINIDB_OK)
     , m_readOnly(readOnly)
     , m_cache()
@@ -128,14 +133,25 @@ BOOL MiniDBReceiptStorage::OpenDB(const char *filepath)
         dbInfo->FreeHead     = 0L;
 
         m_cache.Release(0);
+
+        // Allocate stats page (page 1)
+        BYTE *sPage = m_cache.GetPageW(1);
+        if (sPage)
+        {
+            memset(sPage, 0, MINIDB_PAGE_SIZE);
+            PageHdrInit(*(PageHeader *)sPage, PAGE_STATS, 1);
+            dbInfo = (DBInfo *)m_cache.GetPageW(0);
+            dbInfo->StatsAnchor = 1L;
+            m_statsPage = 1L;
+            m_cache.Release(1);
+            m_cache.Release(0);
+        }
         m_cache.Flush();
 
-        m_btree.SetRoot(0);
-        m_status = MINIDB_NEW_FILE;
     }
     else
     {
-        // Opened existing file — read root page from DBInfo
+        // Opened existing file — read root + stats anchor from DBInfo
         BYTE *page = m_cache.GetPage(0);
         if (page)
         {
@@ -148,6 +164,7 @@ BOOL MiniDBReceiptStorage::OpenDB(const char *filepath)
             else
             {
                 m_btree.SetRoot(dbInfo->RootPage);
+                m_statsPage = dbInfo->StatsAnchor;
             }
             m_cache.Release(0);
         }
@@ -375,23 +392,38 @@ BOOL MiniDBReceiptStorage::Archive()
     Flush();
     CloseDB();
 
-    // Copy current .db to .db.new
+    // Build archive path: <sysdate>/RXdd_TT.db
+    _mkSysDateDir();
+    FILE_NAME arcPath;
+    _getSysDatePath(arcPath);
+    _PrefixAppPath(arcPath);
+
+    WORD year, month, day;
+    _GetSysDate(year, month, day);
+
+    char tmp[32];
+    sprintf(tmp, "\\RX%02d_%02d.db", day, g_cfg->TURN_NUMBER);
+    strcat(arcPath, tmp);
+
+    // Open current .db for reading
     int src = open(m_filepath, O_RDONLY | O_BINARY);
     if (src == -1)
     {
-        OpenDB(m_filepath);
+        m_status = MINIDB_NO_FILE;
         return FALSE;
     }
 
-    int dst = open(m_filepathNew, O_CREAT | O_RDWR | O_BINARY | O_TRUNC,
+    // Open archive path for writing
+    int dst = open(arcPath, O_CREAT | O_RDWR | O_BINARY | O_TRUNC,
                    S_IREAD | S_IWRITE);
     if (dst == -1)
     {
         close(src);
-        OpenDB(m_filepath);
+        m_status = MINIDB_NO_FILE;
         return FALSE;
     }
 
+    // Copy all bytes from current .db to archive
     char buf[4096];
     int n;
     while ((n = read(src, buf, sizeof(buf))) > 0)
@@ -400,8 +432,8 @@ BOOL MiniDBReceiptStorage::Archive()
         {
             close(src);
             close(dst);
-            unlink(m_filepathNew);
-            OpenDB(m_filepath);
+            unlink(arcPath);
+            m_status = MINIDB_NO_FILE;
             return FALSE;
         }
     }
@@ -409,18 +441,11 @@ BOOL MiniDBReceiptStorage::Archive()
     close(src);
     close(dst);
 
-    // Atomic rename: .db.new -> .db
-    if (access(m_filepath, 6) != 0)
-        chmod(m_filepath, S_IREAD | S_IWRITE);
+    // Remove the current .db — no reopen; caller creates fresh
     unlink(m_filepath);
+    m_status = MINIDB_NO_FILE;
 
-    if (rename(m_filepathNew, m_filepath) != 0)
-    {
-        OpenDB(m_filepath);
-        return FALSE;
-    }
-
-    return OpenDB(m_filepath);
+    return TRUE;
 }
 
 // ---------------------------------------------------------------------------
@@ -429,8 +454,140 @@ BOOL MiniDBReceiptStorage::Archive()
 
 BOOL MiniDBReceiptStorage::Repair()
 {
-    // B-tree index self-consistency is maintained by transaction-level
-    // operations.  A full verification would involve walking all data
-    // records and rebuilding the index — deferred.
+    int fd = m_cache.GetFileDesc();
+
+    if (fd != -1)
+    {
+        // File is open — close and reopen to get a clean cache state
+        m_cache.Close();
+        if (!OpenDB(m_filepath))
+            return FALSE;
+        fd = m_cache.GetFileDesc();
+    }
+
+    if (fd == -1)
+    {
+        // File is closed (e.g. after Archive) — create a fresh .db
+        unlink(m_filepath);
+        if (!OpenDB(m_filepath))
+            return FALSE;
+        return TRUE;  // fresh file is consistent by construction
+    }
+
+    // ---------------------------------------------------------------
+    // Phase 1: Walk every B-tree entry and verify the receipt data
+    // ---------------------------------------------------------------
+    long leafPage = m_btree.GetFirstLeaf();
+    while (leafPage != 0L)
+    {
+        BYTE *page = m_cache.GetPage(leafPage);
+        if (!page)
+            break;
+
+        PageHeader *hdr = (PageHeader *)page;
+        UINT numKeys = hdr->NumKeys;
+        BTreeLeafEntry *entries = (BTreeLeafEntry *)(page + MINIDB_HDR_SIZE);
+
+        for (UINT i = 0; i < numKeys; i++)
+        {
+            // Skip already-deleted entries
+            if (entries[i].Flags & 0x0001)
+                continue;
+
+            if (!VerifyEntry(entries[i].Number, entries[i].BoothNumber,
+                             entries[i].DataSeek))
+            {
+                // Invalid data at this B-tree entry — delete it
+                m_btree.Delete(entries[i].Number, entries[i].BoothNumber);
+            }
+        }
+
+        long rightSibling = hdr->RightSibling;
+        m_cache.Release(leafPage);
+        leafPage = rightSibling;
+    }
+
+    // ---------------------------------------------------------------
+    // Phase 2: Linear scan of file tail for orphaned receipts
+    // ---------------------------------------------------------------
+    long fileSize = m_cache.GetFileSize();
+    long pageBoundary = (fileSize / MINIDB_PAGE_SIZE) * MINIDB_PAGE_SIZE;
+
+    for (long offset = pageBoundary; offset + (long)sizeof(Receipt) <= fileSize;
+         offset += sizeof(Receipt))
+    {
+        Receipt receipt;
+        lseek(fd, offset, SEEK_SET);
+        int n = read(fd, &receipt, sizeof(Receipt));
+        if (n != (int)sizeof(Receipt) || receipt.MagicNumber != RECEIPT_MAGIC)
+            continue;
+
+        // Check if this receipt is already in the B-tree
+        long foundSeek;
+        if (!m_btree.Find(receipt.Number, receipt.BoothNumber, foundSeek))
+        {
+            // Orphaned receipt — insert into B-tree
+            m_btree.Insert(receipt.Number, receipt.BoothNumber, offset);
+        }
+    }
+
+    // ---------------------------------------------------------------
+    // Phase 3: Rebuild sequence counter from max receipt number
+    // ---------------------------------------------------------------
+    long maxNumber = 0L;
+    leafPage = m_btree.GetFirstLeaf();
+    while (leafPage != 0L)
+    {
+        BYTE *page = m_cache.GetPage(leafPage);
+        if (!page)
+            break;
+
+        PageHeader *hdr = (PageHeader *)page;
+        UINT numKeys = hdr->NumKeys;
+        BTreeLeafEntry *entries = (BTreeLeafEntry *)(page + MINIDB_HDR_SIZE);
+
+        for (UINT i = 0; i < numKeys; i++)
+        {
+            if (!(entries[i].Flags & 0x0001) && entries[i].Number > maxNumber)
+                maxNumber = entries[i].Number;
+        }
+
+        long rightSibling = hdr->RightSibling;
+        m_cache.Release(leafPage);
+        leafPage = rightSibling;
+    }
+
+    // Update Sequence in DBInfo page
+    BYTE *infoPage = m_cache.GetPageW(0);
+    if (infoPage)
+    {
+        DBInfo *dbInfo = (DBInfo *)infoPage;
+        if (maxNumber >= dbInfo->Sequence)
+            dbInfo->Sequence = maxNumber + 1;
+        m_cache.Release(0);
+        m_cache.Flush();
+    }
+
     return TRUE;
+}
+
+// ---------------------------------------------------------------------------
+// VerifyEntry — validate a single B-tree entry's receipt data
+// ---------------------------------------------------------------------------
+
+BOOL MiniDBReceiptStorage::VerifyEntry(long number, int boothNumber, long dataSeek)
+{
+    int fd = m_cache.GetFileDesc();
+    if (fd == -1)
+        return FALSE;
+
+    Receipt receipt;
+    if (lseek(fd, dataSeek, SEEK_SET) == -1L)
+        return FALSE;
+
+    int n = read(fd, &receipt, sizeof(Receipt));
+    if (n != (int)sizeof(Receipt))
+        return FALSE;
+
+    return (receipt.MagicNumber == RECEIPT_MAGIC);
 }

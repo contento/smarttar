@@ -4,6 +4,9 @@
 #if !defined(__IRECEIPT_H)
 #include <ireceipt.h>
 #endif
+#if !defined(__ISTATIST_H)
+#include <istatist.h>
+#endif
 
 #if !defined(__DRECEIPT_H)
 #include <dreceipt.h>
@@ -219,8 +222,8 @@ public:
 private:
     // --- current turn
     IReceiptStorage   *DBStorage;
-    DB_STATISTICS     *DBStatistics;
     // extensions
+    IStatisticsStorage *DBStatistics;
     DB_STORAGE        *DBExtStorage;
     DB_EXT_STATISTICS *DBExtStatistics;
     //
