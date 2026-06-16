@@ -239,9 +239,9 @@ void DB_ENGINE::Recover(void)
 
 	// Collect manual mode receipts
 
-	DB_STORAGE::Iterator it(*DBStorage->GetConcreteStorage());
-	it.Restart();
-
+	DB_STORAGE *dbConcrete = DBStorage->GetConcreteStorage();
+	if (!dbConcrete) { return; }
+	DB_STORAGE::Iterator it(*dbConcrete);
 	long number;
 	while (it)
 	{

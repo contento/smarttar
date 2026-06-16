@@ -22,6 +22,18 @@
 extern DB_ENGINE 	*g_dbEngine;
 extern CFG       	*g_cfg;
 
+// MiniDB receipt enumeration callback (used when GetConcreteStorage is NULL)
+static long sMdbNums[1000];
+static int  sMdbCount;
+static long sMdbFrom;
+
+static BOOL MdbEnumCallback(Receipt const &r)
+{
+    if (r.Number >= sMdbFrom && sMdbCount < 1000 && !r.Stat.Deleted)
+        sMdbNums[sMdbCount++] = r.Number;
+    return TRUE;
+}
+
 DBView::DBView(BOOL bFromTurn):
 	UIW_WINDOW("DBVIEW", defaultStorage),
 	m_bFromTurn(bFromTurn),
@@ -183,71 +195,60 @@ EVENT_TYPE DBView::ProcessTurn(UI_WINDOW_OBJECT *object, UI_EVENT &, EVENT_TYPE 
 
 EVENT_TYPE DBView::ProcessNumber(UI_WINDOW_OBJECT *object, UI_EVENT &, EVENT_TYPE ccode)
 {
-	if (ccode != L_SELECT)// && ccode != S_CURRENT)
+	if (ccode != L_SELECT)
 		return ccode;
-
-	// begin 2.21.8 Build 9
 
 	DBView *pwThis = (DBView *) object->parent;
 
-	/////////////////////////////////////////////////////////////////
 	// Clear
-
 	pwThis->m_pwNumbers->Destroy();
 
-	/////////////////////////////////////////////////////////////////
 	// Fill Numbers
-
 	long fromNumber;
 	pwThis->m_pwNumber->DataGet()->Export(&fromNumber);
 
-	DB_STORAGE::Iterator *pit = NULL;
+	DB_STORAGE *dbConcrete = g_dbEngine->GetDBStorage().GetConcreteStorage();
 
-	if (pwThis->m_bFromTurn)
+	if (dbConcrete)
 	{
-		pit = new DB_STORAGE::Iterator(*g_dbEngine->GetDBStorage().GetConcreteStorage());
+		// FlatFile path — use Iterator
+		DB_STORAGE::Iterator it(*dbConcrete);
+		fromNumber = it.Restart(fromNumber);
+		pwThis->m_pwNumber->DataSet(&UI_BIGNUM(fromNumber));
+
+		int i = 0;
+		long number;
+		while (it && i < 1000)
+		{
+			number = it.Current();
+			STR16 szNumber;
+			ltoa(number, szNumber, 10);
+			*pwThis->m_pwNumbers
+				+ new UIW_STRING(0, i, 10, szNumber, -1, STF_NO_FLAGS, WOF_VIEW_ONLY, ProcessNumbers);
+			++it;
+			i++;
+		}
 	}
 	else
 	{
-		if (pwThis->m_bArchive)
+		// MiniDB path — use EnumReceipts callback
+		sMdbCount = 0;
+		sMdbFrom  = fromNumber;
+		g_dbEngine->EnumReceipts(MdbEnumCallback);
+
+		if (sMdbCount > 0)
+			pwThis->m_pwNumber->DataSet(&UI_BIGNUM(sMdbNums[0]));
+
+		for (int i = 0; i < sMdbCount; i++)
 		{
-			pit = new DB_STORAGE::Iterator(*g_dbEngine->GetArcDBStorage().GetConcreteStorage());
+			STR16 szNumber;
+			ltoa(sMdbNums[i], szNumber, 10);
+			*pwThis->m_pwNumbers
+				+ new UIW_STRING(0, i, 10, szNumber, -1, STF_NO_FLAGS, WOF_VIEW_ONLY, ProcessNumbers);
 		}
 	}
-	if (!pit)
-	{
-		// problems
-		pwThis->m_pwNumbers->Event(UI_EVENT(S_REDISPLAY, 0));
-		pwThis->ShowRecord(0L); // clear
-
-		return ccode;
-	}
-
-	fromNumber = pit->Restart(fromNumber); // fix
-
-	pwThis->m_pwNumber->DataSet(&UI_BIGNUM(fromNumber)); // refresh
-
-	int i = 0;
-	long number;
-	while (*pit && i < 1000)
-	{
-		number = pit->Current();
-
-		STR16 szNumber;
-		ltoa(number, szNumber, 10);
-
-		*pwThis->m_pwNumbers
-			+ new UIW_STRING(0, i, 10, szNumber, -1, STF_NO_FLAGS, WOF_VIEW_ONLY, ProcessNumbers);
-
-		(*pit)++;
-		i++;
-	}
-
-	delete pit;
 
 	// end 2.21.8 Build 9
-
-	// delegate
 	pwThis->m_pwNumbers->Event(UI_EVENT(S_REDISPLAY, 0));
 
 	UIW_STRING *pwCurrent = (UIW_STRING *)pwThis->m_pwNumbers->Current();
