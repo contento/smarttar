@@ -1,3 +1,10 @@
+[ 2.95.0 ]
+ - Jun 16 2026: Decouple CFG/INI, PH_INFO/inf, hardware deps.
+                CFG loads .ini at runtime; PH_ENGINE loads .inf at
+                runtime; RT_ENGINE owns STM2/dongle/EEPROM lifecycle;
+                st/cfg/ is canonical config source (st.ini, .inf);
+                retired converters moved to util/_deprecated/.
+ 
 [ 2.90.0 ]
  - Jun 13 2026: TODO add description.
  
