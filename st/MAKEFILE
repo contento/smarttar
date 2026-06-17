@@ -194,7 +194,7 @@ DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 .asm.obj:
 	$(ASM) $(ASM_OPTS) $<, $@
 
-$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\local.inf $(BIN_DIR)\ddn.inf $(BIN_DIR)\ddi.inf $(BIN_DIR)\phones.csv $(OBJS) $(DLLS) $(BIN_DIR)\lsmdb.exe
+$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\local.inf $(BIN_DIR)\ddn.inf $(BIN_DIR)\ddi.inf $(BIN_DIR)\phones.csv $(OBJS) $(DLLS) $(BIN_DIR)\lsmdb.exe $(BIN_DIR)\minidb.py
 	$(LINK) $(LINK_OPTS) @&&!
 $(STARTUP_OBJS) $(OBJS)
 $*, ,$(LIBS), $(DEF_FILE)
@@ -229,6 +229,8 @@ $(BIN_DIR)\ddn.inf: $(CFG_DIR)\ddn.inf
 	@copy $(CFG_DIR)\ddn.inf $(BIN_DIR)\ddn.inf > NUL
 $(BIN_DIR)\ddi.inf: $(CFG_DIR)\ddi.inf
 	@copy $(CFG_DIR)\ddi.inf $(BIN_DIR)\ddi.inf > NUL
+$(BIN_DIR)\minidb.py: $(CFG_DIR)\minidb.py
+	@copy $(CFG_DIR)\minidb.py $(BIN_DIR)\minidb.py > NUL
 # ============================================================================
 # Explicit per-file source-path mapping
 # ----------------------------------------------------------------------------
