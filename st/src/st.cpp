@@ -18,7 +18,7 @@
 #include <help.hpp>
 
 char  *g_SHORT_APP_ENG  = "GCC";
-char  *g_LONG_APP_ENG   = "Gonzalo Contento Castaï¿½o";
+char  *g_LONG_APP_ENG   = "Gonzalo Contento Castaño";
 
 extern CFG  *g_cfg;
 
@@ -116,8 +116,8 @@ main(int , char *argv[])
     {
         UI_WINDOW_OBJECT::errorSystem->ReportError(windowManager, WOS_NO_STATUS,
                 "\n\n""      Acceso Negado\n"
-                "Configuraciï¿½n no disponible.\n"
-                " Deberï¿½ instalar el sistema."
+                "Configuración no disponible.\n"
+                " Deberá instalar el sistema."
                                                   );
 		Log log(Log::OUT|Log::CREATE);
         log.put(Log::CFGBADTRY);
@@ -215,7 +215,7 @@ EVENT_TYPE Exit(UI_DISPLAY *display, UI_EVENT_MANAGER *, UI_WINDOW_MANAGER *wind
 	{
 		*window
 		+ new UIW_BUTTON( 3, 3, 9, "", BTF_NO_3D|BTF_AUTO_SIZE|BTF_STATIC_BITMAPARRAY, WOF_NON_SELECTABLE, NULL, 0, "ST")
-		+ new UIW_PROMPT(15, 1, "El sistema estï¿½ procesando informaciï¿½n.")
+		+ new UIW_PROMPT(15, 1, "El sistema está procesando información.")
 		+ new UIW_PROMPT(15, 2, "Por favor verifique todas las cabinas.")
 		+ new UIW_BUTTON(19, 5, 15, "~Aceptar", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, S_CLOSE)
 		;
@@ -224,7 +224,7 @@ EVENT_TYPE Exit(UI_DISPLAY *display, UI_EVENT_MANAGER *, UI_WINDOW_MANAGER *wind
 	{
 		*window
 		+ new UIW_BUTTON( 3, 3, 9, "", BTF_NO_3D|BTF_AUTO_SIZE|BTF_STATIC_BITMAPARRAY, WOF_NON_SELECTABLE, NULL, 0, "ST")
-		+ new UIW_PROMPT(15, 2, "Detener la simulaciï¿½n y salir ?")
+		+ new UIW_PROMPT(15, 2, "Detener la simulación y salir ?")
 		+ new UIW_BUTTON(14, 5, 11, "~Si", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, L_EXIT)
 		+ ( wNoButton =
 				new UIW_BUTTON(31, 5, 11, "~No", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, S_CLOSE)
@@ -236,7 +236,7 @@ EVENT_TYPE Exit(UI_DISPLAY *display, UI_EVENT_MANAGER *, UI_WINDOW_MANAGER *wind
 	{
 		*window
 		+ new UIW_BUTTON( 3, 3, 9, "", BTF_NO_3D|BTF_AUTO_SIZE|BTF_STATIC_BITMAPARRAY, WOF_NON_SELECTABLE, NULL, 0, "ST")
-		+ new UIW_PROMPT(15, 2, "Terminar la sesiï¿½n de trabajo ?")
+		+ new UIW_PROMPT(15, 2, "Terminar la sesión de trabajo ?")
 		+ new UIW_BUTTON(14, 5, 11, "~Si", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, L_EXIT)
 		+ ( wNoButton =
 				new UIW_BUTTON(31, 5, 11, "~No", BTF_NO_TOGGLE|BTF_AUTO_SIZE|BTF_SEND_MESSAGE|BTF_STATIC_BITMAPARRAY, WOF_JUSTIFY_CENTER, NULL, S_CLOSE)
