@@ -14,7 +14,7 @@
 #endif
 
 // ---------------------------------------------------------------------------
-// MiniDBStatistics — IStatisticsStorage backed by a MiniDB .db file.
+// MiniDBStatistics -- IStatisticsStorage backed by a MiniDB .db file.
 // Statistics are stored on a dedicated stats page within the same .db used by
 // MiniDBReceiptStorage.  Both classes operate on the same MiniDBCache;
 // MiniDBStatistics expects to share the cache handle with its sibling.
@@ -24,7 +24,7 @@ class MiniDBStatistics : public IStatisticsStorage
 {
 public:
     // Construct with a shared cache and the stats anchor page number.
-    // cache is not owned — caller keeps it alive.
+    // cache is not owned -- caller keeps it alive.
     MiniDBStatistics(MiniDBCache &cache, long statsPage);
     virtual ~MiniDBStatistics();
 

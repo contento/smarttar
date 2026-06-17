@@ -1,7 +1,7 @@
 //
 // [ MINIDB_STATISTICS.CPP ]
 //
-// MiniDBStatistics — IStatisticsStorage backed by a MiniDB .db file.
+// MiniDBStatistics -- IStatisticsStorage backed by a MiniDB .db file.
 // Statistics live on a dedicated page (PAGE_STATS) inside the same .db.
 // The page payload holds serialised DS_ENTRY[], DS_DOUBLEPRNENTRY[],
 // and DS_CELLULARENTRY[] arrays.  We keep local copies and flush back
@@ -9,7 +9,7 @@
 //
 
 
-// Period constants (match DB_STATISTICS::TYPETAG values — bare names
+// Period constants (match DB_STATISTICS::TYPETAG values -- bare names
 // so the copied DB_STATISTICS logic compiles without scoping changes).
 #define STAT_YEAR  0
 #define STAT_MONTH 1
@@ -103,7 +103,7 @@ MiniDBStatistics::MiniDBStatistics(MiniDBCache &cache, long statsPage)
         }
         else
         {
-            // Invalid page — initialise empty
+            // Invalid page -- initialise empty
             InitAll();
             m_status = 1;  // BAD_FILE
         }
@@ -111,7 +111,7 @@ MiniDBStatistics::MiniDBStatistics(MiniDBCache &cache, long statsPage)
     }
     else
     {
-        // Page not found — initialise empty
+        // Page not found -- initialise empty
         InitAll();
         m_status = 2;  // NO_FILE
     }
@@ -212,7 +212,7 @@ long MiniDBStatistics::GetTelEntries()
 }
 
 // ---------------------------------------------------------------------------
-// Flush — copy local arrays back to the stats page
+// Flush -- copy local arrays back to the stats page
 // ---------------------------------------------------------------------------
 
 void MiniDBStatistics::Flush()
@@ -234,7 +234,7 @@ void MiniDBStatistics::Flush()
 }
 
 // ---------------------------------------------------------------------------
-// Archive — no-op (stats live inside .db archived by receipt storage)
+// Archive -- no-op (stats live inside .db archived by receipt storage)
 // ---------------------------------------------------------------------------
 
 BOOL MiniDBStatistics::Archive()
@@ -243,7 +243,7 @@ BOOL MiniDBStatistics::Archive()
 }
 
 // ---------------------------------------------------------------------------
-// Repair — rebuild statistics from receipt storage
+// Repair -- rebuild statistics from receipt storage
 // ---------------------------------------------------------------------------
 
 // Static context pointer for EnumReceipts callback (no user-data parameter)
@@ -253,7 +253,7 @@ BOOL MiniDBStatistics::EnumAddHelper(Receipt const &receipt)
 {
     if (g_repairTarget)
     {
-        // Add the receipt — cast away const since Add modifies tracking fields
+        // Add the receipt -- cast away const since Add modifies tracking fields
         g_repairTarget->Add((Receipt &)receipt, FALSE);  // FALSE = not a new receipt (don't update range)
     return TRUE;
     }
@@ -285,7 +285,7 @@ BOOL MiniDBStatistics::Repair(IReceiptStorage *receiptStorage, BOOL all)
 }
 
 // ---------------------------------------------------------------------------
-// Add — accumulate a receipt into TURN statistics
+// Add -- accumulate a receipt into TURN statistics
 // ---------------------------------------------------------------------------
 
 BOOL MiniDBStatistics::Add(Receipt &receipt, BOOL isNew)
@@ -738,7 +738,7 @@ BOOL MiniDBStatistics::Add(Receipt &receipt, BOOL isNew)
 }
 
 // ---------------------------------------------------------------------------
-// Subtract — reverse of Add
+// Subtract -- reverse of Add
 // ---------------------------------------------------------------------------
 
 BOOL MiniDBStatistics::Subtract(Receipt &receipt)
@@ -1158,7 +1158,7 @@ BOOL MiniDBStatistics::Subtract(Receipt &receipt)
 }
 
 // ---------------------------------------------------------------------------
-// Update — period-reset logic (mirrors DB_STATISTICS::Update)
+// Update -- period-reset logic (mirrors DB_STATISTICS::Update)
 // ---------------------------------------------------------------------------
 
 BOOL MiniDBStatistics::Update()

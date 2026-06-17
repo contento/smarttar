@@ -1,7 +1,7 @@
 //
 // [ CACHE.CPP ]
 //
-// MiniDB page cache — fixed-size LRU with clock-hand eviction.
+// MiniDB page cache -- fixed-size LRU with clock-hand eviction.
 // All .db page I/O goes through this cache.
 //
 
@@ -59,7 +59,7 @@ BOOL MiniDBCache::Open(const char *filepath)
     m_fd = ::open(filepath, O_RDWR | O_BINARY);
     if (m_fd < 0)
     {
-        // File doesn't exist — create it
+        // File doesn't exist -- create it
         m_fd = ::open(filepath, O_CREAT | O_TRUNC | O_RDWR | O_BINARY,
                       S_IWRITE | S_IREAD);
         if (m_fd < 0)
@@ -189,7 +189,7 @@ BYTE *MiniDBCache::GetPage(long pageNum)
         }
     }
 
-    // Miss — evict, then load
+    // Miss -- evict, then load
     long slotIdx = Evict();
     if (slotIdx < 0)
         return NULL;
@@ -256,7 +256,7 @@ long MiniDBCache::GetAllocPage(UINT pageType)
     long newPageNum = FreeListAlloc();
     if (newPageNum != 0)
     {
-        // Page already zeroed by FreeListAlloc — just set the header
+        // Page already zeroed by FreeListAlloc -- just set the header
         BYTE *buf = GetPageW(newPageNum);
         if (!buf)
             return 0;
@@ -315,7 +315,7 @@ long MiniDBCache::FreeListAlloc()
     BYTE *buf = GetPage(head);
     if (!buf)
     {
-        // page unreachable — empty the free list
+        // page unreachable -- empty the free list
         m_freeHead = 0;
         return 0;
     }
@@ -387,13 +387,13 @@ long MiniDBCache::LoadPage(long slotIdx, long pageNum)
     int n = ::read(m_fd, slot->Buffer, MINIDB_PAGE_SIZE);
     if (n <= 0)
     {
-        // Beyond EOF or empty file — zero-fill and treat as fresh page.
+        // Beyond EOF or empty file -- zero-fill and treat as fresh page.
         // The caller will write valid data into it via GetPageW().
         memset(slot->Buffer, 0, MINIDB_PAGE_SIZE);
     }
     else if (n < (int)MINIDB_PAGE_SIZE)
     {
-        // Partial read at end of file — zero the remainder.
+        // Partial read at end of file -- zero the remainder.
         memset(slot->Buffer + n, 0, MINIDB_PAGE_SIZE - n);
     }
 

@@ -52,7 +52,7 @@ static BOOL SearchLeafArray(BTreeLeafEntry const *entries, UINT n,
 }
 
 // ---------------------------------------------------------------------------
-// MiniDBBTree — construction / destruction
+// MiniDBBTree -- construction / destruction
 // ---------------------------------------------------------------------------
 
 MiniDBBTree::MiniDBBTree(MiniDBCache &cache)
@@ -80,7 +80,7 @@ void MiniDBBTree::FreePage(long pageNum)
 }
 
 // ---------------------------------------------------------------------------
-// SearchInternal — navigate through internal nodes to the correct leaf page.
+// SearchInternal -- navigate through internal nodes to the correct leaf page.
 // Returns the leaf page number in outLeafPage.
 // ---------------------------------------------------------------------------
 
@@ -118,7 +118,7 @@ BOOL MiniDBBTree::SearchInternal(long pageNum, long number,
 }
 
 // ---------------------------------------------------------------------------
-// SearchLeaf — binary search a specific leaf page.
+// SearchLeaf -- binary search a specific leaf page.
 // ---------------------------------------------------------------------------
 
 BOOL MiniDBBTree::SearchLeaf(long pageNum, long number, int boothNumber,
@@ -144,7 +144,7 @@ BOOL MiniDBBTree::SearchLeaf(long pageNum, long number, int boothNumber,
 }
 
 // ---------------------------------------------------------------------------
-// SplitLeaf — split a full leaf page.
+// SplitLeaf -- split a full leaf page.
 // Takes already-pinned buffer pointers (caller handles acquire/release).
 // ---------------------------------------------------------------------------
 
@@ -187,7 +187,7 @@ static void SplitLeafRaw(BYTE *srcData, BYTE *dstData, long dstPage,
 }
 
 // ---------------------------------------------------------------------------
-// InsertIntoPage — recursive insert; returns TRUE if a split occurred.
+// InsertIntoPage -- recursive insert; returns TRUE if a split occurred.
 // ---------------------------------------------------------------------------
 
 BOOL MiniDBBTree::InsertIntoPage(long pageNum, BTreeLeafEntry const &entry,
@@ -208,7 +208,7 @@ BOOL MiniDBBTree::InsertIntoPage(long pageNum, BTreeLeafEntry const &entry,
         int slot;
         if (SearchLeafArray(entries, n, entry.Number, entry.BoothNumber, slot))
         {
-            // Duplicate — reject
+            // Duplicate -- reject
             m_cache.Release(pageNum);
             return FALSE;
         }
@@ -313,7 +313,7 @@ BOOL MiniDBBTree::InsertIntoPage(long pageNum, BTreeLeafEntry const &entry,
         if (n > INTERNAL_KEYS_PER_PAGE)
         {
             // Split this internal page
-            // We can't use SplitLeaf — handle inline.
+            // We can't use SplitLeaf -- handle inline.
             UINT mid = INTERNAL_KEYS_PER_PAGE / 2;    // 30
 
             long newPage = AllocPage(PAGE_BTREE_I);
@@ -381,7 +381,7 @@ BOOL MiniDBBTree::Insert(long number, int boothNumber, long dataSeek)
     entry.DataSeek    = dataSeek;
     entry.Flags       = 0;
 
-    // Empty tree — create root leaf page
+    // Empty tree -- create root leaf page
     if (m_rootPage == 0)
     {
         m_rootPage = AllocPage(PAGE_BTREE_L);
@@ -408,7 +408,7 @@ BOOL MiniDBBTree::Insert(long number, int boothNumber, long dataSeek)
 
     if (split)
     {
-        // Root split — create a new internal page as the new root
+        // Root split -- create a new internal page as the new root
         long newRoot = AllocPage(PAGE_BTREE_I);
         if (!newRoot) return FALSE;
 
@@ -455,7 +455,7 @@ BOOL MiniDBBTree::Find(long number, int boothNumber, long &dataSeek)
 }
 
 // ---------------------------------------------------------------------------
-// Delete — set the deleted flag (bit 0) on the matching entry.
+// Delete -- set the deleted flag (bit 0) on the matching entry.
 // ---------------------------------------------------------------------------
 
 BOOL MiniDBBTree::Delete(long number, int boothNumber)
@@ -491,7 +491,7 @@ BOOL MiniDBBTree::Delete(long number, int boothNumber)
 }
 
 // ---------------------------------------------------------------------------
-// Update — change the data seek position for an existing entry.
+// Update -- change the data seek position for an existing entry.
 // ---------------------------------------------------------------------------
 
 BOOL MiniDBBTree::Update(long number, int boothNumber, long newDataSeek)
@@ -523,7 +523,7 @@ BOOL MiniDBBTree::Update(long number, int boothNumber, long newDataSeek)
 }
 
 // ---------------------------------------------------------------------------
-// GetFirstLeaf — navigate to leftmost leaf page.
+// GetFirstLeaf -- navigate to leftmost leaf page.
 // ---------------------------------------------------------------------------
 
 long MiniDBBTree::GetFirstLeaf()
@@ -554,7 +554,7 @@ long MiniDBBTree::GetFirstLeaf()
 }
 
 // ---------------------------------------------------------------------------
-// GetLastLeaf — navigate to rightmost leaf page.
+// GetLastLeaf -- navigate to rightmost leaf page.
 // ---------------------------------------------------------------------------
 
 long MiniDBBTree::GetLastLeaf()
@@ -586,7 +586,7 @@ long MiniDBBTree::GetLastLeaf()
 }
 
 // ---------------------------------------------------------------------------
-// GetFirstNumber — first entry in the leftmost leaf.
+// GetFirstNumber -- first entry in the leftmost leaf.
 // ---------------------------------------------------------------------------
 
 long MiniDBBTree::GetFirstNumber()
@@ -604,7 +604,7 @@ long MiniDBBTree::GetFirstNumber()
 }
 
 // ---------------------------------------------------------------------------
-// GetLastNumber — last entry in the rightmost leaf.
+// GetLastNumber -- last entry in the rightmost leaf.
 // ---------------------------------------------------------------------------
 
 long MiniDBBTree::GetLastNumber()
@@ -623,7 +623,7 @@ long MiniDBBTree::GetLastNumber()
 }
 
 // ---------------------------------------------------------------------------
-// GetLowerNumber / GetHigherNumber — aliases for first/last.
+// GetLowerNumber / GetHigherNumber -- aliases for first/last.
 // ---------------------------------------------------------------------------
 
 long MiniDBBTree::GetLowerNumber()
@@ -637,7 +637,7 @@ long MiniDBBTree::GetHigherNumber()
 }
 
 // ---------------------------------------------------------------------------
-// GetEntryCount — read from DBInfo page 0.
+// GetEntryCount -- read from DBInfo page 0.
 // ---------------------------------------------------------------------------
 
 long MiniDBBTree::GetEntryCount()

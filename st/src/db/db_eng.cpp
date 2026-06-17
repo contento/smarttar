@@ -42,7 +42,7 @@ extern STM2 *g_STM2;
 
 DB_ENGINE::DB_ENGINE(void)
 {
-	// current turn — select backend by config
+	// current turn -- select backend by config
 #if !defined(__TEST__)
 	if (g_cfg->MINIDB)
 	{
