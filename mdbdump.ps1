@@ -4,19 +4,22 @@
 .PARAMETER Options
     Passed through to mdbdump.py (e.g. -b for brief mode).
 .DESCRIPTION
-    Defaults to st/bin/RX.db. For a different database, run bin/mdbdump.py directly.
-#>
-
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$Db = Join-Path $ScriptDir "bin" "RX.db"
-$Tool = Join-Path $ScriptDir "util" "lsmdb" "mdbdump.py"
+$Db = Join-Path $ScriptDir "st" "bin" "RX.db"
+$Tool = Join-Path $ScriptDir "st" "util" "lsmdb" "mdbdump.py"
 
 if (-not (Test-Path $Tool)) {
-    $Tool = Join-Path $ScriptDir "bin" "mdbdump.py"
+    $Tool = Join-Path $ScriptDir "st" "bin" "mdbdump.py"
 }
 
 if (-not (Test-Path $Tool)) {
-    Write-Error "mdbdump.py not found (looked in util/lsmdb/ and bin/)"
+    Write-Error "mdbdump.py not found (looked in st/util/lsmdb/ and st/bin/)"
+    exit 1
+}
+
+if (-not (Test-Path $Db)) {
+    Write-Error "database not found: $Db"
+    Write-Error "Run the app first to generate a database."
     exit 1
 }
 $python = if (Get-Command python3 -ErrorAction SilentlyContinue) { "python3" }
@@ -24,7 +27,6 @@ $python = if (Get-Command python3 -ErrorAction SilentlyContinue) { "python3" }
           else { "py" }
 
 if ($Args.Count -gt 0 -and (Test-Path $Args[0])) {
-    # First arg is a file path — use it as DB, pass rest as options
     $Db = $Args[0]
     $toolArgs = $Args[1..$Args.Count]
 } else {
@@ -32,4 +34,3 @@ if ($Args.Count -gt 0 -and (Test-Path $Args[0])) {
 }
 
 & $python $Tool @toolArgs $Db
-

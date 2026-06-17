@@ -3,12 +3,10 @@
 # Usage: ./mdbdump.sh [options]
 #
 # Defaults to st/bin/RX.db. Passes all options through to the Python tool.
-# For a different database, run bin/mdbdump.py <path> directly.
-
 DIR="$(cd "$(dirname "$0")" && pwd)"
-DB="$DIR/bin/RX.db"
-TOOL="$DIR/util/lsmdb/mdbdump.py"
-[ -f "$TOOL" ] || TOOL="$DIR/bin/mdbdump.py"
+DB="$DIR/st/bin/RX.db"
+TOOL="$DIR/st/util/lsmdb/mdbdump.py"
+[ -f "$TOOL" ] || TOOL="$DIR/st/bin/mdbdump.py"
 
 if [ ! -f "$TOOL" ]; then
     echo "ERROR: mdbdump.py not found (looked in util/lsmdb/ and bin/)"
