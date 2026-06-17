@@ -1,12 +1,11 @@
 #ifndef __DB_ENG_H
 #define __DB_ENG_H
 
-#if !defined(__ST_DEFS_H)
-#include <st_defs.h>
+#if !defined(__IRECEIPT_H)
+#include <ireceipt.h>
 #endif
-
-#if !defined(__DSTORAGE_H)
-#include <dstorage.h>
+#if !defined(__ISTATIST_H)
+#include <istatist.h>
 #endif
 
 #if !defined(__DRECEIPT_H)
@@ -35,9 +34,9 @@ public:
     //
     // --- Current Turn ---
     //
-    void EnumReceipts(DB_STORAGE::CallbackFnPtr callback)
+    void EnumReceipts(IReceiptStorage::CallbackFnPtr callback)
     {
-    	DBStorage->EnumReceipts(callback); // low level
+    	DBStorage->EnumReceipts(callback);
     }
     BOOL Repair(void);
     BOOL Archive(void);
@@ -45,7 +44,7 @@ public:
 
 	// DBStorage
 
-	DB_STORAGE const & GetDBStorage()
+	IReceiptStorage const & GetDBStorage()
 	{
 		return *DBStorage;
 	}
@@ -116,7 +115,7 @@ public:
     //
     // --- Another Turn (archived) ---
     //
-	DB_STORAGE const & GetArcDBStorage()
+	IReceiptStorage const & GetArcDBStorage()
 	{
 		return *ArcDBStorage;
 	}
@@ -222,15 +221,15 @@ public:
     }
 private:
     // --- current turn
-    DB_STORAGE        *DBStorage;
-    DB_STATISTICS     *DBStatistics;
+    IReceiptStorage   *DBStorage;
     // extensions
+    IStatisticsStorage *DBStatistics;
     DB_STORAGE        *DBExtStorage;
     DB_EXT_STATISTICS *DBExtStatistics;
     //
     void Recover(void); // after an abnormal shutdown
     // --- another turn
-    DB_STORAGE        *ArcDBStorage;
+    IReceiptStorage   *ArcDBStorage;
     DB_STATISTICS     *ArcDBStatistics;
 };
 

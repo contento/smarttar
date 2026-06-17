@@ -8,6 +8,11 @@
 #include <db_eng.h>
 
 #if !defined(__TEST__)
+#include <mdb_stor.h>
+#endif
+#include <mdb_stat.h>
+
+#if !defined(__TEST__)
 #include <stm2.h>
 #endif
 
@@ -37,26 +42,36 @@ extern STM2 *g_STM2;
 
 DB_ENGINE::DB_ENGINE(void)
 {
-	// current turn
-	DBStorage       = new DB_STORAGE(NULL, DB_NAME, FALSE);
-    DBStatistics    = new DB_STATISTICS(NULL, DB_NAME, FALSE);
-    //
+	// current turn -- select backend by config
+#if !defined(__TEST__)
+	if (g_cfg->MINIDB)
+	{
+		MiniDBReceiptStorage *mdb = new MiniDBReceiptStorage(NULL, DB_NAME, FALSE);
+		DBStorage    = mdb;
+		DBStatistics = new MiniDBStatistics(mdb->GetCache(), mdb->GetStatsAnchor());
+	}
+	else
+#endif
+	{
+		DBStorage    = new DB_STORAGE(NULL, DB_NAME, FALSE);
+		DBStatistics = new DB_STATISTICS(NULL, DB_NAME, FALSE);
+	}
 #if !defined(__TEST__)
 #if !defined(__NOAPPINFO__)
 	if (g_superAppInfo.Attr.STPro)
-    {
-        DBExtStorage    = new DB_STORAGE(NULL, DB_EXT_NAME, FALSE);
-        DBExtStatistics = new DB_EXT_STATISTICS(NULL, DB_EXT_NAME, FALSE);
-    }
+	{
+		DBExtStorage    = new DB_STORAGE(NULL, DB_EXT_NAME, FALSE);
+		DBExtStatistics = new DB_EXT_STATISTICS(NULL, DB_EXT_NAME, FALSE);
+	}
 #endif
 #endif
 	// another turn
-    ArcDBStorage    = NULL;
-    ArcDBStatistics = NULL;
+	ArcDBStorage    = NULL;
+	ArcDBStatistics = NULL;
 #if !defined(__TEST__)
 #if !defined(__NOSTM2__)
 	if (g_STM2->getStatus() == STM2::BAD_SHUTDOWN)
-        Recover();
+		Recover();
 	g_STM2->put(STM2::STATISTICSENTRIES, (*DBStatistics)[0]);
 	g_STM2->put(STM2::STATISTICSDOUBLEPRNENTRIES, DBStatistics->GetDoublePrnEntry(0));
 	g_STM2->put(STM2::STATISTICSCELLULARENTRIES, DBStatistics->GetCellularEntry(0));
@@ -223,9 +238,9 @@ void DB_ENGINE::Recover(void)
 
 	// Collect manual mode receipts
 
-	DB_STORAGE::Iterator it(GetDBStorage());
-	it.Restart();
-
+	DB_STORAGE *dbConcrete = DBStorage->GetConcreteStorage();
+	if (!dbConcrete) { return; }
+	DB_STORAGE::Iterator it(*dbConcrete);
 	long number;
 	while (it)
 	{

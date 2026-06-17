@@ -61,6 +61,7 @@ public:
 	//
 	void Flush(void);
 	BOOL Archive(void);
+	virtual DB_STORAGE *GetConcreteStorage();
 	inline BOOL Repair();
 
 public:
@@ -268,6 +269,11 @@ inline long DB_STORAGE::GetFirstNumber() const
 inline long DB_STORAGE::GetLastNumber() const
 {
 	return m_pIndexCache->FindLastNumber();
+}
+
+inline DB_STORAGE *DB_STORAGE::GetConcreteStorage()
+{
+    return this;
 }
 
 inline long DB_STORAGE::GetNextNumber() const

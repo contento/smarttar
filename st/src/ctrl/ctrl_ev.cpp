@@ -383,8 +383,9 @@ EVENT_TYPE CONTROLLER::Event(const UI_EVENT &event)
 						wReceipts->WList->Destroy();
 
 						// begin 2.21.8 build 9
-						DB_STORAGE::Iterator it(g_dbEngine->GetDBStorage());
-						it.Restart(wReceipts->Number);
+						DB_STORAGE *dbConcrete = g_dbEngine->GetDBStorage().GetConcreteStorage();
+						if (!dbConcrete) { break; }
+						DB_STORAGE::Iterator it(*dbConcrete);
 
 						long number;
 						while (it)
@@ -434,9 +435,9 @@ EVENT_TYPE CONTROLLER::Event(const UI_EVENT &event)
 						int bNum = wReceipts->Booth;
 						wReceipts->WList->Destroy();
 
-						// begin 2.21.8 build 9
-						DB_STORAGE::Iterator it(g_dbEngine->GetDBStorage());
-						it.Restart();
+						DB_STORAGE *dbConcrete = g_dbEngine->GetDBStorage().GetConcreteStorage();
+						if (!dbConcrete) { break; }
+						DB_STORAGE::Iterator it(*dbConcrete);
 
 						long number;
 						while (it)
@@ -480,9 +481,9 @@ EVENT_TYPE CONTROLLER::Event(const UI_EVENT &event)
 						wReceipts->WList->Destroy();
 
 
-						// begin 2.21.8 build 9
-						DB_STORAGE::Iterator it(g_dbEngine->GetDBStorage());
-						it.Restart();
+						DB_STORAGE *dbConcrete = g_dbEngine->GetDBStorage().GetConcreteStorage();
+						if (!dbConcrete) { break; }
+						DB_STORAGE::Iterator it(*dbConcrete);
 
 						long number;
 						while (it)

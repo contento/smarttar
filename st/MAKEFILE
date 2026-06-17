@@ -80,9 +80,9 @@ ASM_OPTS=/mx /zi
 OBJ_CC_OPTIONS= -c +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);NDEBUG
 DLL_CC_OPTIONS= -dll +$(APP).cfg -D$(DEMO);$(DONGLE);$(EDA);NDEBUG
 LINK_OPTS=/c /C /s $(LINK_LIBPATH)
-ASM_OPTS=/mx
 !endif
 
+# Run MiniDB test after building
 # Borland C++ 3.1 startup module for Pharlap 286 protected mode.
 # Lives in pharlap/LIB/ — full path needed because TLINK's /L only
 # applies to .lib files, not .obj files.
@@ -111,7 +111,10 @@ OBJS=$(OBJ_DIR)\$(APP).$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\dstatist.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\dstorage.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\d_ext_st.$(OBJ_EXT)    \
-	 $(OBJ_DIR)\eeprom.$(OBJ_EXT)	   \
+	 $(OBJ_DIR)\minidb_cache.$(OBJ_EXT)    \
+	 $(OBJ_DIR)\minidb_btree.$(OBJ_EXT)    \
+	 $(OBJ_DIR)\mdb_stor.$(OBJ_EXT)  \
+	 $(OBJ_DIR)\mdb_stat.$(OBJ_EXT)  \
 	 $(OBJ_DIR)\filehdr.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\mb_ext.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\info.$(OBJ_EXT) 	   \
@@ -160,7 +163,9 @@ OBJS=$(OBJ_DIR)\$(APP).$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\w_phone.$(OBJ_EXT)	   \
 	 $(OBJ_DIR)\w_sgroup.$(OBJ_EXT)    \
 	 $(OBJ_DIR)\w_statbr.$(OBJ_EXT)    \
-	 $(OBJ_DIR)\w_table.$(OBJ_EXT)
+	 $(OBJ_DIR)\w_table.$(OBJ_EXT)	   \
+
+# ---- Borland C++ 3.1 startup module for Pharlap 286 protected mode ----
 
 DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 	$(BIN_DIR)\pr_dr80.$(DLL_EXT)  \
@@ -189,7 +194,7 @@ DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 .asm.obj:
 	$(ASM) $(ASM_OPTS) $<, $@
 
-$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\local.inf $(BIN_DIR)\ddn.inf $(BIN_DIR)\ddi.inf $(BIN_DIR)\phones.csv $(OBJS) $(DLLS)
+$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\local.inf $(BIN_DIR)\ddn.inf $(BIN_DIR)\ddi.inf $(BIN_DIR)\phones.csv $(OBJS) $(DLLS) $(BIN_DIR)\mdbdump.exe $(BIN_DIR)\mdbdump.py
 	$(LINK) $(LINK_OPTS) @&&!
 $(STARTUP_OBJS) $(OBJS)
 $*, ,$(LIBS), $(DEF_FILE)
@@ -224,6 +229,8 @@ $(BIN_DIR)\ddn.inf: $(CFG_DIR)\ddn.inf
 	@copy $(CFG_DIR)\ddn.inf $(BIN_DIR)\ddn.inf > NUL
 $(BIN_DIR)\ddi.inf: $(CFG_DIR)\ddi.inf
 	@copy $(CFG_DIR)\ddi.inf $(BIN_DIR)\ddi.inf > NUL
+$(BIN_DIR)\mdbdump.py: $(CFG_DIR)\mdbdump.py
+	@copy $(CFG_DIR)\mdbdump.py $(BIN_DIR)\mdbdump.py > NUL
 # ============================================================================
 # Explicit per-file source-path mapping
 # ----------------------------------------------------------------------------
@@ -279,9 +286,15 @@ $(OBJ_DIR)\dongle.obj:   $(SOURCE_DIR)\dongle.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\dstatist.obj: $(SOURCE_DIR)\db\dstatist.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\dstorage.obj: $(SOURCE_DIR)\db\dstorage.cpp
+$(OBJ_DIR)\dstorage.obj:   $(SOURCE_DIR)\db\dstorage.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(OBJ_DIR)\d_ext_st.obj: $(SOURCE_DIR)\db\d_ext_st.cpp
+$(OBJ_DIR)\minidb_cache.obj: $(SOURCE_DIR)\db\minidb\cache.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\minidb_btree.obj: $(SOURCE_DIR)\db\minidb\btree.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\mdb_stor.obj: $(SOURCE_DIR)\db\minidb\mdb_stor.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\mdb_stat.obj: $(SOURCE_DIR)\db\minidb\mdb_stat.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\eeprom.obj:   $(SOURCE_DIR)\eeprom.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
@@ -396,3 +409,40 @@ $(BIN_DIR)\pr_sr28.dll:  $(SOURCE_DIR)\pr\pr_sr28.c
 $(BIN_DIR)\pr_dreme.dll: $(SOURCE_DIR)\pr\pr_dreme.c
 $(BIN_DIR)\pr_drhal.dll: $(SOURCE_DIR)\pr\pr_drhal.c
 
+
+
+# ---- MiniDB standalone test ----
+
+$(OBJ_DIR)\test_mdb.obj: $(SOURCE_DIR)\db\minidb\test_mdb.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+
+$(BIN_DIR)\test_mdb.exe: $(OBJ_DIR)\test_mdb.obj $(OBJ_DIR)\minidb_cache.obj $(OBJ_DIR)\minidb_btree.obj $(OBJ_DIR)\mdb_stor.obj $(OBJ_DIR)\st_util.obj $(OBJ_DIR)\cfg.obj $(OBJ_DIR)\filehdr.obj
+	$(LINK) $(LINK_OPTS) @&&!
+$(STARTUP_OBJS) +
+$(OBJ_DIR)\test_mdb.obj +
+$(OBJ_DIR)\minidb_cache.obj +
+$(OBJ_DIR)\minidb_btree.obj +
+$(OBJ_DIR)\mdb_stor.obj +
+$(OBJ_DIR)\st_util.obj +
+$(OBJ_DIR)\cfg.obj +
+$(OBJ_DIR)\filehdr.obj
+$*, ,$(LIBS), $(DEF_FILE)
+!
+!if $d(RUN)
+	$(BIND) $(RTK_DIR)\run286b $(BIN_DIR)\$@ -dll $(RTK_DIR)\doscalls $(RTK_DIR)\int33
+	cfig286 $(BIN_DIR)\$@ -NISTACK 10 -LDTSIZE 4096
+!endif
+
+# ---- mdbdump utility (MiniDB .db file inspector) ----
+
+$(OBJ_DIR)\mdbdump.obj: $(SOURCE_DIR)\mdbdump.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(BIN_DIR)\mdbdump.exe: $(OBJ_DIR)\mdbdump.obj
+	$(LINK) $(LINK_OPTS) @&&!
+$(STARTUP_OBJS) $(OBJ_DIR)\mdbdump.obj
+$*, ,$(LIBS), $(DEF_FILE)
+!
+!if $d(RUN)
+	$(BIND) $(RTK_DIR)\run286b $@ -dll $(RTK_DIR)\doscalls $(RTK_DIR)\int33
+	cfig286 $@ -NISTACK 10 -LDTSIZE 4096
+!endif
