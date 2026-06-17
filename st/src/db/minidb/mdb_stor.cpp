@@ -215,6 +215,7 @@ BOOL MiniDBReceiptStorage::Add(const Receipt &receipt)
             m_cache.Release(0);
         }
     }
+    m_cache.Flush();    // persist receipt + updated RootPage
     return TRUE;
 }
 BOOL MiniDBReceiptStorage::Get(Receipt &receipt, long number, int boothNumber)
