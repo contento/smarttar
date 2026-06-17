@@ -194,7 +194,7 @@ DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 .asm.obj:
 	$(ASM) $(ASM_OPTS) $<, $@
 
-$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\local.inf $(BIN_DIR)\ddn.inf $(BIN_DIR)\ddi.inf $(BIN_DIR)\phones.csv $(OBJS) $(DLLS)
+$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\local.inf $(BIN_DIR)\ddn.inf $(BIN_DIR)\ddi.inf $(BIN_DIR)\phones.csv $(OBJS) $(DLLS) $(BIN_DIR)\lsmdb.exe
 	$(LINK) $(LINK_OPTS) @&&!
 $(STARTUP_OBJS) $(OBJS)
 $*, ,$(LIBS), $(DEF_FILE)
@@ -429,4 +429,18 @@ $*, ,$(LIBS), $(DEF_FILE)
 !if $d(RUN)
 	$(BIND) $(RTK_DIR)\run286b $(BIN_DIR)\$@ -dll $(RTK_DIR)\doscalls $(RTK_DIR)\int33
 	cfig286 $(BIN_DIR)\$@ -NISTACK 10 -LDTSIZE 4096
+!endif
+
+# ---- lsmdb utility (MiniDB .db file inspector) ----
+
+$(OBJ_DIR)\lsmdb.obj: $(SOURCE_DIR)\lsmdb.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(BIN_DIR)\lsmdb.exe: $(OBJ_DIR)\lsmdb.obj
+	$(LINK) $(LINK_OPTS) @&&!
+$(STARTUP_OBJS) $(OBJ_DIR)\lsmdb.obj
+$*, ,$(LIBS), $(DEF_FILE)
+!
+!if $d(RUN)
+	$(BIND) $(RTK_DIR)\run286b $@ -dll $(RTK_DIR)\doscalls $(RTK_DIR)\int33
+	cfig286 $@ -NISTACK 10 -LDTSIZE 4096
 !endif
