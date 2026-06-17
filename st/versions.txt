@@ -1,3 +1,22 @@
+[ 2.97.0 ]
+ - Jun 17 2026: MiniDB embedded database backend — new on-disk storage
+                engine for receipts and statistics, gated by MINIDB config
+                key (0=FlatFile, 1=MiniDB). Includes:
+                  * MiniDB B-tree page storage with RootPage persistence
+                  * MiniDBReceiptStorage: receipt add/exist/lookup/archive
+                  * MiniDBStatistics: multi-page (7-page) statistics storage
+                  * MiniDB Archive and Repair operations
+                  * lsmdb.exe: MiniDB .db file inspector utility
+                  * mdbdump: cross-format stats/receipt dump tool (--csv, --help)
+                  * mdbdump.sh/ps1 host-side scripts for data inspection
+                Bug fixes and hardening:
+                  * PAGE_STATS type detection in multi-page stats reader
+                  * Latin-1 encoding normalization across all MiniDB files
+                  * NULL GetConcreteStorage crash fix (Recibos de turno)
+                  * Memory consistency: flush after every receipt Add()
+                  * Const-correctness warnings in mdb_stor.cpp
+                See wiki/dev/ for the design documents.
+ 
 [ 2.95.0 ]
  - Jun 16 2026: Decouple CFG/INI, PH_INFO/inf, hardware deps.
                 CFG loads .ini at runtime; PH_ENGINE loads .inf at
