@@ -1,129 +1,236 @@
 #!/usr/bin/env python3
 """
-ls-minidb.py — dump MiniDB .db file contents.
+MiniDB .db file inspector.
 
-Usage: python3 ls-minidb.py [-b] <path/to/RX.db>
+Dump (default):        mdbdump.py [-b] <path>
+CSV receipts:          mdbdump.py --csv-receipts <path>
+CSV statistics:        mdbdump.py --csv-stats <path>
+Concise:               mdbdump.py --csv <path>
 
 Struct offsets match BCC 3.1 16-bit DOS layout.
-Use -b to skip free pages.
 """
-import struct, sys, os
+import struct, sys, os, csv, io
 
 PAGE_SIZE=512; HDR_SIZE=16
 PAGE_FREE,PAGE_DBINFO,PAGE_BTREE_I,PAGE_BTREE_L,PAGE_DATA,PAGE_STATS=0,1,2,3,4,5
 PNAME={0:"FREE",1:"DBINFO",2:"BTREE_I",3:"BTREE_L",4:"DATA",5:"STATS"}
 RECEIPT_MAGIC=0x6719
 
-# Receipt struct — BCC 3.1 16-bit DOS layout:
-# ofs size field
-#   0    2 UINT MagicNumber
-#   2    4 long Number
-#   6    2 enum TTag
-#   8    2 union Stat/nStat (UINT)
-#  10    1 UCHAR bExtendedStat
-#  11    2 int Date
-#  13    2 int Time
-#  15    2 int BoothNumber
-#  17   21 char City[21]
-#  38   17 char Phone[17]
-#  55    2 int Amount
-#  57    4 long ElapsedTime
-#  61    8 double ValuePerMin
-#  69    8 double CeilMin
-#  77    2 int Percent
-#  79    8 double Value
-#  87    8 double Tax
-#  95    8 double Tax2
-# 103    8 double DDummy
-# total 111
+# Receipt offsets (BCC 3.1, int=2, UCHAR=1, enum=2, long=4, double=8)
+# ofs:0 Magic(W) 2 Number(l) 6 Tag(W) 8 nStat(W) 10 bExt(B)
+# 11 Date(h) 13 Time(h) 15 Booth(h) 17 City(21) 38 Phone(17)
+# 55 Amount(h) 57 Elapsed(l) 61 VPM(d) 69 Ceil(d) 77 Percent(h)
+# 79 Value(d) 87 Tax(d) 95 Tax2(d) 103 DDummy(d)
 
+def parse_receipt(sd):
+    """Parse a 111-byte receipt. Returns dict or None."""
+    if len(sd) < 111: return None
+    mn = struct.unpack_from('<H', sd, 0)[0]
+    if mn != RECEIPT_MAGIC: return None
+    return {
+        'number':  struct.unpack_from('<l', sd, 2)[0],
+        'tag':     struct.unpack_from('<H', sd, 6)[0],
+        'nstat':   struct.unpack_from('<H', sd, 8)[0],
+        'date':    struct.unpack_from('<h', sd, 11)[0],
+        'time':    struct.unpack_from('<h', sd, 13)[0],
+        'booth':   struct.unpack_from('<h', sd, 15)[0],
+        'city':    sd[17:38].split(b'\0')[0].decode('latin-1',errors='replace'),
+        'phone':   sd[38:55].split(b'\0')[0].decode('latin-1',errors='replace'),
+        'amount':  struct.unpack_from('<h', sd, 55)[0],
+        'elapsed': struct.unpack_from('<l', sd, 57)[0],
+        'vpm':     struct.unpack_from('<d', sd, 61)[0],
+        'ceil':    struct.unpack_from('<d', sd, 69)[0],
+        'percent': struct.unpack_from('<h', sd, 77)[0],
+        'value':   struct.unpack_from('<d', sd, 79)[0],
+        'tax':     struct.unpack_from('<d', sd, 87)[0],
+        'tax2':    struct.unpack_from('<d', sd, 95)[0],
+    }
+
+# ---------------------------------------------------------------------------
 def ph(page): return struct.unpack_from('<HHHHl',page,0)
 
-def dump_dbinfo(page):
+# Dump formatters (human-readable)
+# ---------------------------------------------------------------------------
+def dump_dbinfo(page, out):
     m,pt,nk,fo,r=ph(page)
-    print(f'  Magic=0x{m:04X}  Type={PNAME.get(pt,str(pt))}')
-    if m!=0xDBDB or pt!=PAGE_DBINFO: print('  *** INVALID ***'); return
+    if m!=0xDBDB or pt!=PAGE_DBINFO: out.write('  *** INVALID ***\n'); return
     ver,root,seq,nrecs,narc,sa,fh=struct.unpack_from('<H6l',page,HDR_SIZE)
-    print(f'  Version={ver}  RootPage={root}  Sequence={seq}')
-    print(f'  NumReceipts={nrecs}  NumArchived={narc}  StatsAnchor={sa}  FreeHead={fh}')
+    out.write(f'  Version={ver}  RootPage={root}  Sequence={seq}\n')
+    out.write(f'  NumReceipts={nrecs}  NumArchived={narc}  StatsAnchor={sa}  FreeHead={fh}\n')
 
-def dump_leaf(page):
+def dump_leaf(page, out):
     m,pt,nk,fo,r=ph(page)
     if nk==0: return
-    print(f'  NumKeys={nk}  RightSibling={r}')
+    out.write(f'  NumKeys={nk}  RightSibling={r}\n')
     for i in range(nk):
         off=HDR_SIZE+i*12
         num,booth,sp,fl=struct.unpack_from('<lhlH',page,off)
         pn=sp>>8; sl=sp&3; d='(del)' if fl&1 else ''
-        print(f'  [{i}] num={num} booth={booth} page={pn} slot={sl} {d}')
+        out.write(f'  [{i}] num={num} booth={booth} page={pn} slot={sl} {d}\n')
 
-def dump_data(page):
+def dump_data(page, out):
     m,pt,nk,fo,r=ph(page)
     if nk==0: return
-    print(f'  NumKeys={nk}')
+    out.write(f'  NumKeys={nk}\n')
     for sl in range(nk):
-        off=HDR_SIZE+sl*111; sd=page[off:off+111]
-        if len(sd)<111: break
-        mn=struct.unpack_from('<H',sd,0)[0]
-        if mn!=RECEIPT_MAGIC: print(f'  [slot {sl}] BAD magic=0x{mn:04X}'); continue
-        num=struct.unpack_from('<l',sd,2)[0]
-        tag=struct.unpack_from('<H',sd,6)[0]
-        sr=struct.unpack_from('<H',sd,8)[0]
-        date=struct.unpack_from('<h',sd,11)[0]
-        rtime=struct.unpack_from('<h',sd,13)[0]
-        booth=struct.unpack_from('<h',sd,15)[0]
-        city=sd[17:38].split(b'\0')[0].decode('latin-1',errors='replace')
-        phone=sd[38:55].split(b'\0')[0].decode('latin-1',errors='replace')
-        amt=struct.unpack_from('<h',sd,55)[0]
-        elap=struct.unpack_from('<l',sd,57)[0]
-        vpm=struct.unpack_from('<d',sd,61)[0]
-        ceil=struct.unpack_from('<d',sd,69)[0]
-        pct=struct.unpack_from('<h',sd,77)[0]
-        val=struct.unpack_from('<d',sd,79)[0]
-        tx=struct.unpack_from('<d',sd,87)[0]
-        tx2=struct.unpack_from('<d',sd,95)[0]
-        dl='(DEL)' if sr&0x0020 else ''
-        print(f'  [slot {sl}] #{num} booth={booth} date={date} t={rtime} {dl}')
-        print(f'           city={city} phone={phone} amount={amt} elapsed={elap}s')
-        print(f'           val={val:.2f} tax={tx:.2f} vpm={vpm:.4f} ceil={ceil} pct={pct}')
+        off=HDR_SIZE+sl*111
+        r=parse_receipt(page[off:off+111])
+        if not r: out.write(f'  [slot {sl}] BAD magic\n'); continue
+        dl='(DEL)' if r['nstat']&0x0020 else ''
+        out.write(f'  [slot {sl}] #{r["number"]} booth={r["booth"]} date={r["date"]} t={r["time"]} {dl}\n')
+        out.write(f'           city={r["city"]} phone={r["phone"]} amount={r["amount"]} elapsed={r["elapsed"]}s\n')
+        out.write(f'           val={r["value"]:.2f} tax={r["tax"]:.2f} vpm={r["vpm"]:.4f} ceil={r["ceil"]} pct={r["percent"]}\n')
 
-def dump_stats(page):
+def dump_stats(page, out):
     m,pt,nk,fo,r=ph(page)
-    print(f'  NumKeys={nk}')
+    out.write(f'  NumKeys={nk}\n')
     periods=['YEAR','MONTH','WEEK','DAY','TURN']
     svcs=['TEL','SPECIAL_TEL','FAX','TELEX','CARD','OTHER']
     pay=page[HDR_SIZE:]
     for p in range(5):
-        print(f'  --- {periods[p]} ---')
+        out.write(f'  --- {periods[p]} ---\n')
         for s in range(6):
             off=(p*6+s)*30
             if off+30>len(pay): break
             rec,tmin,pmin,v,tx=struct.unpack_from('<hdddd',pay,off)
             if rec or v:
-                print(f'    {svcs[s]:12} rec={rec} talk={tmin:.2f} paid={pmin:.2f} val={v:.2f} tax={tx:.2f}')
+                out.write(f'    {svcs[s]:12} rec={rec} talk={tmin:.2f} paid={pmin:.2f} val={v:.2f} tax={tx:.2f}\n')
+
+# ---------------------------------------------------------------------------
+# CSV formatters
+# ---------------------------------------------------------------------------
+
+def csv_receipts(page, writer):
+    """Write data-page receipts as CSV rows."""
+    m,pt,nk,fo,r=ph(page)
+    for sl in range(nk):
+        off=HDR_SIZE+sl*111
+        r=parse_receipt(page[off:off+111])
+        if not r: continue
+        writer.writerow([
+            r['number'], r['booth'], r['date'], r['time'],
+            r['city'], r['phone'], r['amount'], r['elapsed'],
+            f'{r["value"]:.2f}', f'{r["tax"]:.2f}',
+            f'{r["vpm"]:.4f}', r['ceil'], r['percent'],
+            '(deleted)' if r['nstat']&0x0020 else '',
+        ])
+
+def csv_stats(page, writer):
+    """Write stats page as CSV rows."""
+    m,pt,nk,fo,r=ph(page)
+    periods=['YEAR','MONTH','WEEK','DAY','TURN']
+    svcs=['TEL','SPECIAL_TEL','FAX','TELEX','CARD','OTHER']
+    pay=page[HDR_SIZE:]
+    for p in range(5):
+        for s in range(6):
+            off=(p*6+s)*30
+            if off+30>len(pay): break
+            rec,tmin,pmin,v,tx=struct.unpack_from('<hdddd',pay,off)
+            if rec or v:
+                writer.writerow([periods[p], svcs[s], rec, f'{tmin:.2f}', f'{pmin:.2f}', f'{v:.2f}', f'{tx:.2f}'])
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
 
 def main():
-    brief='-b' in sys.argv
-    paths=[a for a in sys.argv[1:] if not a.startswith('-')]
-    if not paths: print(f'Usage: {sys.argv[0]} [-b] <path>'); sys.exit(1)
-    for path in paths:
-        if not os.path.exists(path): print(f'ERROR: {path}'); continue
-        with open(path,'rb') as f: data=f.read()
-        np=len(data)//PAGE_SIZE
-        print(f'\nFile: {path} ({len(data)} bytes, {np} pages)')
-        dp=lp=te=0
-        for pn in range(np):
-            page=data[pn*PAGE_SIZE:(pn+1)*PAGE_SIZE]
-            m,pt,nk,fo,r=ph(page)
-            pn2=PNAME.get(pt,f'TYPE{pt}')
-            if brief and pt==PAGE_FREE: continue
-            print(f'\n{"="*55}\nPage {pn} [{pn2}] @0x{pn*PAGE_SIZE:04x}\n{"="*55}')
-            if pt==PAGE_DBINFO: dump_dbinfo(page)
-            elif pt==PAGE_BTREE_L: dump_leaf(page); lp+=1; te+=nk
-            elif pt==PAGE_DATA: dump_data(page); dp+=1
-            elif pt==PAGE_STATS: dump_stats(page)
-            elif pt==PAGE_FREE: print(f'  (free sibling={r})')
-            else: print(f'  (type {pt})')
-        print(f'\n{"="*55}\nSummary: {dp} data, {lp} leaf, ~{te} entries')
+    import argparse
+    parser = argparse.ArgumentParser(
+        description='Dump MiniDB .db file contents.',
+        epilog='Struct offsets match BCC 3.1 16-bit DOS. Default: dump all pages.')
+    parser.add_argument('path', nargs='?', default='RX.db',
+                        help='Path to .db file (default: RX.db)')
+    parser.add_argument('-b', '--brief', action='store_true',
+                        help='Skip free pages (dump mode only)')
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--csv', action='store_true',
+                       help='Concise CSV: both receipts and stats')
+    group.add_argument('--csv-receipts', action='store_true',
+                       help='Receipts as CSV')
+    group.add_argument('--csv-stats', action='store_true',
+                       help='Statistics as CSV')
+    args = parser.parse_args()
 
-if __name__=='__main__': main()
+    path = args.path
+    if not os.path.exists(path):
+        print(f'ERROR: {path} not found', file=sys.stderr)
+        sys.exit(1)
+
+    with open(path, 'rb') as f:
+        data = f.read()
+    np = len(data) // PAGE_SIZE
+
+    # Collect receipts and stats from all pages
+    receipts = []
+    stats = []
+    for pn in range(np):
+        page = data[pn*PAGE_SIZE:(pn+1)*PAGE_SIZE]
+        m,pt,nk,fo,r = ph(page)
+        if pt == PAGE_DATA:
+            for sl in range(nk):
+                off = HDR_SIZE+sl*111
+                rcp = parse_receipt(page[off:off+111])
+                if rcp: receipts.append(rcp)
+        elif pt == PAGE_STATS:
+            periods = ['YEAR','MONTH','WEEK','DAY','TURN']
+            svcs = ['TEL','SPECIAL_TEL','FAX','TELEX','CARD','OTHER']
+            pay = page[HDR_SIZE:]
+            for p in range(5):
+                for s in range(6):
+                    off = (p*6+s)*30
+                    if off+30 > len(pay): break
+                    rec,tmin,pmin,v,tx = struct.unpack_from('<hdddd',pay,off)
+                    if rec or v:
+                        stats.append((periods[p], svcs[s], rec, tmin, pmin, v, tx))
+
+    # CSV output
+    if args.csv or args.csv_receipts or args.csv_stats:
+        w = csv.writer(sys.stdout)
+        if args.csv_receipts or args.csv:
+            w.writerow(['number','booth','date','time','city','phone',
+                        'amount','elapsed_s','value','tax','vpm','ceil_min','percent','deleted'])
+            for r in receipts:
+                w.writerow([r['number'], r['booth'], r['date'], r['time'],
+                           r['city'], r['phone'], r['amount'], r['elapsed'],
+                           f'{r["value"]:.2f}', f'{r["tax"]:.2f}',
+                           f'{r["vpm"]:.4f}', r['ceil'], r['percent'],
+                           '(deleted)' if r['nstat']&0x0020 else ''])
+            if not args.csv and not args.csv_stats:
+                return
+        if args.csv_stats or args.csv:
+            if args.csv: w.writerow([])  # blank separator
+            w.writerow(['period','service','receipts','talk_min','paid_min','value','tax'])
+            for period, svc, rec, tmin, pmin, v, tx in stats:
+                w.writerow([period, svc, rec, f'{tmin:.2f}', f'{pmin:.2f}', f'{v:.2f}', f'{tx:.2f}'])
+        return
+
+    # Human-readable dump
+    if args.brief:
+        print(f'File: {path}  ({len(data)} bytes, {np} pages)')
+    for pn in range(np):
+        page = data[pn*PAGE_SIZE:(pn+1)*PAGE_SIZE]
+        m,pt,nk,fo,r = ph(page)
+        pn2 = PNAME.get(pt, f'TYPE{pt}')
+        if args.brief and pt == PAGE_FREE:
+            continue
+        print(f'\n{"="*55}\nPage {pn} [{pn2}] @0x{pn*PAGE_SIZE:04x}\n{"="*55}')
+        if pt == PAGE_DBINFO:
+            dump_dbinfo(page, sys.stdout)
+        elif pt == PAGE_BTREE_L:
+            dump_leaf(page, sys.stdout)
+        elif pt == PAGE_DATA:
+            dump_data(page, sys.stdout)
+        elif pt == PAGE_STATS:
+            dump_stats(page, sys.stdout)
+        elif pt == PAGE_FREE:
+            print(f'  (free sibling={r})')
+        else:
+            print(f'  (type {pt})')
+
+    dp = sum(1 for p in range(np) if ph(data[p*PAGE_SIZE:(p+1)*PAGE_SIZE])[1] == PAGE_DATA)
+    lp = sum(1 for p in range(np) if ph(data[p*PAGE_SIZE:(p+1)*PAGE_SIZE])[1] == PAGE_BTREE_L)
+    te = sum(ph(data[p*PAGE_SIZE:(p+1)*PAGE_SIZE])[2] for p in range(np) if ph(data[p*PAGE_SIZE:(p+1)*PAGE_SIZE])[1] == PAGE_BTREE_L)
+    print(f'\n{"="*55}\nSummary: {dp} data, {lp} leaf, ~{te} entries in {np} pages')
+
+if __name__ == '__main__':
+    main()

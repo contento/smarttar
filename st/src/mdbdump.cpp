@@ -1,6 +1,6 @@
 //
-// lsmdb — list MiniDB .db file contents.
-// Usage: lsmdb [path\]RX.db
+// mdbdump — list MiniDB .db file contents.
+// Usage: mdbdump [options] [path]
 // Compiles under BCC 3.1 16-bit DOS (Phar Lap).
 //
 
@@ -12,41 +12,32 @@
 
 #include <minidb/page.h>
 
-// ---------------------------------------------------------------------------
-// Receipt struct (mirrors the 111-byte BCC 3.1 layout from receipt.h,
-// duplicated here to avoid pulling in the full app header chain.)
-// ---------------------------------------------------------------------------
-
 static const UINT RECEIPT_MAGIC = 0x6719U;
 
 #pragma pack(1)
 struct ReceiptDump
 {
-    UINT  MagicNumber;          // 0
-    long  Number;               // 2
-    UINT  Tag;                  // 6
-    UINT  nStat;                // 8
-    UCHAR bExtendedStat;        // 10
-    int   Date;                 // 11
-    int   Time;                 // 13
-    int   BoothNumber;          // 15
-    char  City[21];             // 17
-    char  Phone[17];            // 38
-    int   Amount;               // 55
-    long  ElapsedTime;          // 57
-    double ValuePerMin;         // 61
-    double CeilMin;             // 69
-    int   Percent;              // 77
-    double Value;               // 79
-    double Tax;                 // 87
-    double Tax2;                // 95
-    double DDummy;              // 103
-}; // total 111 bytes
+    UINT  MagicNumber;
+    long  Number;
+    UINT  Tag;
+    UINT  nStat;
+    UCHAR bExtendedStat;
+    int   Date;
+    int   Time;
+    int   BoothNumber;
+    char  City[21];
+    char  Phone[17];
+    int   Amount;
+    long  ElapsedTime;
+    double ValuePerMin;
+    double CeilMin;
+    int   Percent;
+    double Value;
+    double Tax;
+    double Tax2;
+    double DDummy;
+};
 #pragma pack()
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
 
 static const char *PageTypeName(UINT pt)
 {
@@ -65,99 +56,95 @@ static const char *PageTypeName(UINT pt)
 static const char *PeriodName(int p)
 {
     static const char *names[] = { "YEAR", "MONTH", "WEEK", "DAY", "TURN" };
-    if (p >= 0 && p < 5) return names[p];
-    return "?";
+    return (p >= 0 && p < 5) ? names[p] : "?";
 }
 
 static const char *SvcName(int s)
 {
     static const char *names[] = { "TEL", "SPECIAL_TEL", "FAX", "TELEX", "CARD", "OTHER" };
-    if (s >= 0 && s < 6) return names[s];
-    return "?";
+    return (s >= 0 && s < 6) ? names[s] : "?";
 }
 
 // ---------------------------------------------------------------------------
 // Page readers
 // ---------------------------------------------------------------------------
 
-static void DumpDBInfo(const BYTE *page)
+static void DumpDBInfo(const BYTE *page, FILE *out)
 {
-    const PageHeader *hdr = (const PageHeader *)page;
     const DBInfo *info = (const DBInfo *)page;
-
-    printf("  Version=%u  RootPage=%ld  Sequence=%ld\n",
+    fprintf(out, "  Version=%u  RootPage=%ld  Sequence=%ld\n",
            info->Version, info->RootPage, info->Sequence);
-    printf("  NumReceipts=%ld  NumArchived=%ld  StatsAnchor=%ld  FreeHead=%ld\n",
+    fprintf(out, "  NumReceipts=%ld  NumArchived=%ld  StatsAnchor=%ld  FreeHead=%ld\n",
            info->NumReceipts, info->NumArchived, info->StatsAnchor, info->FreeHead);
 }
 
-static void DumpLeaf(const BYTE *page, long pageNum)
+static void DumpLeaf(const BYTE *page, FILE *out)
 {
     const PageHeader *hdr = (const PageHeader *)page;
     UINT nk = hdr->NumKeys;
     if (nk == 0) return;
-
-    printf("  NumKeys=%u  RightSibling=%ld\n", nk, hdr->RightSibling);
-    const BTreeLeafEntry *entries = (const BTreeLeafEntry *)(page + MINIDB_HDR_SIZE);
+    fprintf(out, "  NumKeys=%u  RightSibling=%ld\n", nk, hdr->RightSibling);
+    const BTreeLeafEntry *e = (const BTreeLeafEntry *)(page + MINIDB_HDR_SIZE);
     for (UINT i = 0; i < nk; i++)
-    {
-        long pn = entries[i].DataSeek >> 8;
-        int  sl = (int)(entries[i].DataSeek & 0x3);
-        printf("  [%u] num=%ld booth=%d page=%ld slot=%d%s\n",
-               i, entries[i].Number, entries[i].BoothNumber,
-               pn, sl,
-               (entries[i].Flags & 0x0001) ? " (del)" : "");
-    }
+        fprintf(out, "  [%u] num=%ld booth=%d page=%ld slot=%d%s\n",
+               i, e[i].Number, e[i].BoothNumber,
+               e[i].DataSeek >> 8, (int)(e[i].DataSeek & 3),
+               (e[i].Flags & 0x0001) ? " (del)" : "");
 }
 
-static void DumpData(const BYTE *page, long pageNum)
+static void DumpData(const BYTE *page, FILE *out)
 {
     const PageHeader *hdr = (const PageHeader *)page;
     UINT nk = hdr->NumKeys;
     if (nk == 0) return;
-    printf("  NumKeys=%u\n", nk);
-
+    fprintf(out, "  NumKeys=%u\n", nk);
     for (UINT sl = 0; sl < nk; sl++)
     {
         const ReceiptDump *r = (const ReceiptDump *)(page + MINIDB_HDR_SIZE + sl * 111);
-        if (r->MagicNumber != RECEIPT_MAGIC)
-        {
-            printf("  [slot %u] *** BAD magic=0x%04X ***\n", sl, r->MagicNumber);
-            continue;
-        }
-        printf("  [slot %u] #%ld booth=%d date=%d time=%d\n",
+        if (r->MagicNumber != RECEIPT_MAGIC) { fprintf(out, "  [slot %u] BAD\n", sl); continue; }
+        fprintf(out, "  [slot %u] #%ld booth=%d date=%d time=%d\n",
                sl, r->Number, r->BoothNumber, r->Date, r->Time);
-        printf("           city=%-21.21s phone=%-17.17s amount=%d elapsed=%lds\n",
+        fprintf(out, "           city=%-21.21s phone=%-17.17s amount=%d elapsed=%lds\n",
                r->City, r->Phone, r->Amount, r->ElapsedTime);
-        printf("           val=%.2f tax=%.2f vpm=%.4f ceil=%.1f pct=%d\n",
+        fprintf(out, "           val=%.2f tax=%.2f vpm=%.4f ceil=%.1f pct=%d\n",
                r->Value, r->Tax, r->ValuePerMin, r->CeilMin, r->Percent);
     }
 }
 
-static void DumpStats(const BYTE *page, long pageNum)
+static void DumpStats(const BYTE *page, FILE *out)
 {
-    // Fast forward: read DS_ENTRY[5][6] as raw bytes.
-    // DS_ENTRY has ITEM[6], each ITEM has receipts(int), talkMin,paidMin,value,tax (double each).
     const BYTE *pay = page + MINIDB_HDR_SIZE;
-
     for (int p = 0; p < 5; p++)
     {
-        printf("  --- %s ---\n", PeriodName(p));
+        fprintf(out, "  --- %s ---\n", PeriodName(p));
         for (int s = 0; s < 6; s++)
         {
-            int off = (p * 6 + s) * (2 + 8 + 8 + 8 + 8); // = 34
-            if (off + 34 > (int)(MINIDB_PAYLOAD)) break;
-
+            int off = (p * 6 + s) * 34;
+            if (off + 34 > (int)MINIDB_PAYLOAD) break;
             int  rec   = *(const int *)(pay + off);
             double tmin = *(const double *)(pay + off + 2);
             double pmin = *(const double *)(pay + off + 10);
             double val  = *(const double *)(pay + off + 18);
             double tx   = *(const double *)(pay + off + 26);
-
             if (rec || val != 0.0)
-                printf("    %-12s rec=%d talk=%.2f paid=%.2f val=%.2f tax=%.2f\n",
+                fprintf(out, "    %-12s rec=%d talk=%.2f paid=%.2f val=%.2f tax=%.2f\n",
                        SvcName(s), rec, tmin, pmin, val, tx);
         }
+    }
+}
+
+static void CsvData(const BYTE *page, FILE *out)
+{
+    const PageHeader *hdr = (const PageHeader *)page;
+    UINT nk = hdr->NumKeys;
+    for (UINT sl = 0; sl < nk; sl++)
+    {
+        const ReceiptDump *r = (const ReceiptDump *)(page + MINIDB_HDR_SIZE + sl * 111);
+        if (r->MagicNumber != RECEIPT_MAGIC) continue;
+        fprintf(out, "%ld,%d,%d,%d,%.21s,%.17s,%d,%ld,%.2f,%.2f,%.4f,%.1f,%d\n",
+                r->Number, r->BoothNumber, r->Date, r->Time,
+                r->City, r->Phone, r->Amount, r->ElapsedTime,
+                r->Value, r->Tax, r->ValuePerMin, r->CeilMin, r->Percent);
     }
 }
 
@@ -165,80 +152,97 @@ static void DumpStats(const BYTE *page, long pageNum)
 // Main
 // ---------------------------------------------------------------------------
 
+static void usage(const char *prog)
+{
+    printf("Usage: %s [options] [path]\n", prog ? prog : "mdbdump");
+    printf("  path           .db file (default: RX.db)\n");
+    printf("  -h             Show this help\n");
+    printf("  -b             Skip free pages\n");
+    printf("  --csv-receipts Receipts as CSV\n");
+    printf("  --csv-stats    Statistics as CSV\n");
+}
+
 int main(int argc, char *argv[])
 {
     const char *path = "RX.db";
-    if (argc > 1) path = argv[1];
+    int brief = 0, csvR = 0, csvS = 0;
+
+    for (int i = 1; i < argc; i++)
+    {
+        if      (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) { usage(argv[0]); return 0; }
+        else if (strcmp(argv[i], "-b") == 0 || strcmp(argv[i], "--brief") == 0) brief = 1;
+        else if (strcmp(argv[i], "--csv-receipts") == 0) csvR = 1;
+        else if (strcmp(argv[i], "--csv-stats") == 0) csvS = 1;
+        else path = argv[i];
+    }
+
+    if (csvR) printf("number,booth,date,time,city,phone,amount,elapsed_s,value,tax,vpm,ceil_min,percent\n");
+    if (csvS) printf("period,service,receipts,talk_min,paid_min,value,tax\n");
 
     int fd = open(path, O_RDONLY | O_BINARY);
-    if (fd == -1)
-    {
-        printf("ERROR: cannot open '%s'\n", path);
-        return 1;
-    }
+    if (fd == -1) { fprintf(stderr, "ERROR: cannot open '%s'\n", path); return 1; }
 
     long fileSize = lseek(fd, 0L, SEEK_END);
     lseek(fd, 0L, SEEK_SET);
-
     int nPages = (int)(fileSize / MINIDB_PAGE_SIZE);
-    printf("File: %s  (%ld bytes, %d pages)\n\n", path, fileSize, nPages);
-
-    int dataPages = 0, leafPages = 0, totalEntries = 0;
 
     for (int pn = 0; pn < nPages; pn++)
     {
         BYTE page[MINIDB_PAGE_SIZE];
-        int n = read(fd, page, sizeof(page));
-        if (n != (int)sizeof(page))
-        {
-            printf("ERROR: short read on page %d\n", pn);
-            break;
-        }
-
+        if (read(fd, page, sizeof(page)) != (int)sizeof(page)) break;
         const PageHeader *hdr = (const PageHeader *)page;
-        if (hdr->Magic != MINIDB_MAGIC)
+        if (hdr->Magic != MINIDB_MAGIC) continue;
+
+        // CSV-only modes: print the requested data and skip everything else
+        if (csvR)
         {
-            printf("Page %d [BAD]  magic=0x%04X (expected 0x%04X)\n",
-                   pn, hdr->Magic, MINIDB_MAGIC);
+            if (hdr->PageType == PAGE_DATA) CsvData(page, stdout);
+            continue;
+        }
+        if (csvS)
+        {
+            if (hdr->PageType == PAGE_STATS)
+            {
+                const BYTE *pay = page + MINIDB_HDR_SIZE;
+                for (int p = 0; p < 5; p++)
+                    for (int s = 0; s < 6; s++)
+                    {
+                        int off = (p * 6 + s) * 34;
+                        if (off + 34 > (int)MINIDB_PAYLOAD) break;
+                        int  rec = *(const int *)(pay + off);
+                        double tmin = *(const double *)(pay + off + 2);
+                        double pmin = *(const double *)(pay + off + 10);
+                        double val = *(const double *)(pay + off + 18);
+                        double tx = *(const double *)(pay + off + 26);
+                        if (rec || val != 0.0)
+                            printf("%s,%s,%d,%.2f,%.2f,%.2f,%.2f\n",
+                                   PeriodName(p), SvcName(s), rec, tmin, pmin, val, tx);
+                    }
+            }
             continue;
         }
 
-        const char *pname = PageTypeName(hdr->PageType);
+        if (brief && hdr->PageType == PAGE_FREE) continue;
+
         printf("============================================================\n");
-        printf("Page %d  [%s]  offset=0x%04lx\n", pn, pname, (long)pn * MINIDB_PAGE_SIZE);
+        printf("Page %d  [%s]  offset=0x%04lx\n", pn, PageTypeName(hdr->PageType),
+               (long)pn * MINIDB_PAGE_SIZE);
         printf("============================================================\n");
 
         switch (hdr->PageType)
         {
-        case PAGE_DBINFO:
-            DumpDBInfo(page);
-            break;
-        case PAGE_BTREE_L:
-            DumpLeaf(page, pn);
-            leafPages++;
-            totalEntries += (int)hdr->NumKeys;
-            break;
-        case PAGE_DATA:
-            DumpData(page, pn);
-            dataPages++;
-            break;
-        case PAGE_STATS:
-            DumpStats(page, pn);
-            break;
-        case PAGE_FREE:
-            printf("  (free page, rightSibling=%ld)\n", hdr->RightSibling);
-            break;
-        default:
-            printf("  (type %u)\n", hdr->PageType);
-            break;
+        case PAGE_DBINFO:  DumpDBInfo(page, stdout); break;
+        case PAGE_BTREE_L: DumpLeaf(page, stdout); break;
+        case PAGE_DATA:    DumpData(page, stdout); break;
+        case PAGE_STATS:   DumpStats(page, stdout); break;
+        case PAGE_FREE:    printf("  (free, rightSibling=%ld)\n", hdr->RightSibling); break;
+        default:           printf("  (type %u)\n", hdr->PageType); break;
         }
         putchar('\n');
     }
 
     close(fd);
-
-    printf("============================================================\n");
-    printf("Summary: %d data pages, %d leaf pages, ~%d entries in %d pages (%ld bytes)\n",
-           dataPages, leafPages, totalEntries, nPages, fileSize);
+    if (!csvR && !csvS)
+        printf("Summary: %d pages, %ld bytes\n", nPages, fileSize);
     return 0;
 }
