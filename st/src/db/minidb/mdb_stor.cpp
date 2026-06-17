@@ -203,7 +203,6 @@ BOOL MiniDBReceiptStorage::Add(const Receipt &receipt)
     if (!m_btree.Insert(receipt.Number, receipt.BoothNumber, dataSeek))
         return FALSE;
 
-    // Advance slot for next receipt
     m_dataSlot++;
 
     // Write current B-tree root page to DBInfo so it persists
@@ -216,11 +215,8 @@ BOOL MiniDBReceiptStorage::Add(const Receipt &receipt)
             m_cache.Release(0);
         }
     }
-
-    m_cache.Flush();        // persist all dirty pages
     return TRUE;
 }
-
 BOOL MiniDBReceiptStorage::Get(Receipt &receipt, long number, int boothNumber)
 {
     if (boothNumber < 0)
