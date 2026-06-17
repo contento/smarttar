@@ -9,21 +9,17 @@ Concise:               mdbdump.py --csv <path>
 
 Struct offsets match BCC 3.1 16-bit DOS layout.
 """
-import struct, sys, os, csv, io
+import struct, sys, os, csv
 
 PAGE_SIZE=512; HDR_SIZE=16
 PAGE_FREE,PAGE_DBINFO,PAGE_BTREE_I,PAGE_BTREE_L,PAGE_DATA,PAGE_STATS=0,1,2,3,4,5
 PNAME={0:"FREE",1:"DBINFO",2:"BTREE_I",3:"BTREE_L",4:"DATA",5:"STATS"}
 RECEIPT_MAGIC=0x6719
+PERIODS=['YEAR','MONTH','WEEK','DAY','TURN']
 
-# Receipt offsets (BCC 3.1, int=2, UCHAR=1, enum=2, long=4, double=8)
-# ofs:0 Magic(W) 2 Number(l) 6 Tag(W) 8 nStat(W) 10 bExt(B)
-# 11 Date(h) 13 Time(h) 15 Booth(h) 17 City(21) 38 Phone(17)
-# 55 Amount(h) 57 Elapsed(l) 61 VPM(d) 69 Ceil(d) 77 Percent(h)
-# 79 Value(d) 87 Tax(d) 95 Tax2(d) 103 DDummy(d)
+def ph(page): return struct.unpack_from('<HHHHl',page,0)
 
 def parse_receipt(sd):
-    """Parse a 111-byte receipt. Returns dict or None."""
     if len(sd) < 111: return None
     mn = struct.unpack_from('<H', sd, 0)[0]
     if mn != RECEIPT_MAGIC: return None
@@ -46,11 +42,23 @@ def parse_receipt(sd):
         'tax2':    struct.unpack_from('<d', sd, 95)[0],
     }
 
-# ---------------------------------------------------------------------------
-def ph(page): return struct.unpack_from('<HHHHl',page,0)
+# DS_ENTRY ITEM offsets within the struct (BCC 3.1, no EDA):
+# From:0 To:8 Tel.Nal:16  Tel.Inter:50  SpTel.Nal:84  SpTel.Inter:118
+# Fax.Nal:152  Fax.Inter:186  Net.Nal:220  Net.Inter:254  Cards:288  Other:322
+DS_ITEM_OFF = [16, 50, 84, 118, 152, 186, 220, 254, 288, 322]
+DS_ITEM_SVC = ['TEL.Nal','TEL.Inter','SPTEL.Nal','SPTEL.Inter',
+               'FAX.Nal','FAX.Inter','NET.Nal','NET.Inter','CARDS','OTHER']
 
-# Dump formatters (human-readable)
-# ---------------------------------------------------------------------------
+def read_ds_entry(pay):
+    """Parse a DS_ENTRY from page payload. Returns list of (svc, rec, talk, paid, val, tax)."""
+    rows = []
+    for idx, off in enumerate(DS_ITEM_OFF):
+        if off + 34 > len(pay): break
+        rec, tmin, pmin, v, tx = struct.unpack_from('<hdddd', pay, off)
+        if rec or v:
+            rows.append((DS_ITEM_SVC[idx], rec, tmin, pmin, v, tx))
+    return rows
+
 def dump_dbinfo(page, out):
     m,pt,nk,fo,r=ph(page)
     if m!=0xDBDB or pt!=PAGE_DBINFO: out.write('  *** INVALID ***\n'); return
@@ -75,157 +83,90 @@ def dump_data(page, out):
     for sl in range(nk):
         off=HDR_SIZE+sl*111
         r=parse_receipt(page[off:off+111])
-        if not r: out.write(f'  [slot {sl}] BAD magic\n'); continue
+        if not r: out.write(f'  [slot {sl}] BAD\n'); continue
         dl='(DEL)' if r['nstat']&0x0020 else ''
         out.write(f'  [slot {sl}] #{r["number"]} booth={r["booth"]} date={r["date"]} t={r["time"]} {dl}\n')
         out.write(f'           city={r["city"]} phone={r["phone"]} amount={r["amount"]} elapsed={r["elapsed"]}s\n')
         out.write(f'           val={r["value"]:.2f} tax={r["tax"]:.2f} vpm={r["vpm"]:.4f} ceil={r["ceil"]} pct={r["percent"]}\n')
 
 def dump_stats(page, out):
-    m,pt,nk,fo,r=ph(page)
-    out.write(f'  NumKeys={nk}\n')
-    periods=['YEAR','MONTH','WEEK','DAY','TURN']
-    svcs=['TEL','SPECIAL_TEL','FAX','TELEX','CARD','OTHER']
-    pay=page[HDR_SIZE:]
-    for p in range(5):
-        out.write(f'  --- {periods[p]} ---\n')
-        for s in range(6):
-            off=(p*6+s)*30
-            if off+30>len(pay): break
-            rec,tmin,pmin,v,tx=struct.unpack_from('<hdddd',pay,off)
-            if rec or v:
-                out.write(f'    {svcs[s]:12} rec={rec} talk={tmin:.2f} paid={pmin:.2f} val={v:.2f} tax={tx:.2f}\n')
-
-# ---------------------------------------------------------------------------
-# CSV formatters
-# ---------------------------------------------------------------------------
-
-def csv_receipts(page, writer):
-    """Write data-page receipts as CSV rows."""
-    m,pt,nk,fo,r=ph(page)
-    for sl in range(nk):
-        off=HDR_SIZE+sl*111
-        r=parse_receipt(page[off:off+111])
-        if not r: continue
-        writer.writerow([
-            r['number'], r['booth'], r['date'], r['time'],
-            r['city'], r['phone'], r['amount'], r['elapsed'],
-            f'{r["value"]:.2f}', f'{r["tax"]:.2f}',
-            f'{r["vpm"]:.4f}', r['ceil'], r['percent'],
-            '(deleted)' if r['nstat']&0x0020 else '',
-        ])
-
-def csv_stats(page, writer):
-    """Write stats page as CSV rows."""
-    m,pt,nk,fo,r=ph(page)
-    periods=['YEAR','MONTH','WEEK','DAY','TURN']
-    svcs=['TEL','SPECIAL_TEL','FAX','TELEX','CARD','OTHER']
-    pay=page[HDR_SIZE:]
-    for p in range(5):
-        for s in range(6):
-            off=(p*6+s)*30
-            if off+30>len(pay): break
-            rec,tmin,pmin,v,tx=struct.unpack_from('<hdddd',pay,off)
-            if rec or v:
-                writer.writerow([periods[p], svcs[s], rec, f'{tmin:.2f}', f'{pmin:.2f}', f'{v:.2f}', f'{tx:.2f}'])
-
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
+    pay = page[HDR_SIZE:]
+    rows = read_ds_entry(pay)
+    if not rows:
+        out.write(f'  (empty)\n')
+        return
+    for svc, rec, tmin, pmin, v, tx in rows:
+        out.write(f'  {svc:12} rec={rec} talk={tmin:.2f} paid={pmin:.2f} val={v:.2f} tax={tx:.2f}\n')
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(
-        description='Dump MiniDB .db file contents.',
-        epilog='Struct offsets match BCC 3.1 16-bit DOS. Default: dump all pages.')
-    parser.add_argument('path', nargs='?', default='RX.db',
-                        help='Path to .db file (default: RX.db)')
-    parser.add_argument('-b', '--brief', action='store_true',
-                        help='Skip free pages (dump mode only)')
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument('--csv', action='store_true',
-                       help='Concise CSV: both receipts and stats')
-    group.add_argument('--csv-receipts', action='store_true',
-                       help='Receipts as CSV')
-    group.add_argument('--csv-stats', action='store_true',
-                       help='Statistics as CSV')
+    parser = argparse.ArgumentParser(description='Dump MiniDB .db file contents.')
+    parser.add_argument('path', nargs='?', default='RX.db')
+    parser.add_argument('-b', '--brief', action='store_true')
+    g = parser.add_mutually_exclusive_group()
+    g.add_argument('--csv', action='store_true')
+    g.add_argument('--csv-receipts', action='store_true')
+    g.add_argument('--csv-stats', action='store_true')
     args = parser.parse_args()
 
-    path = args.path
-    if not os.path.exists(path):
-        print(f'ERROR: {path} not found', file=sys.stderr)
+    if not os.path.exists(args.path):
+        print(f'ERROR: {args.path} not found', file=sys.stderr)
         sys.exit(1)
 
-    with open(path, 'rb') as f:
+    with open(args.path, 'rb') as f:
         data = f.read()
     np = len(data) // PAGE_SIZE
 
-    # Collect receipts and stats from all pages
-    receipts = []
-    stats = []
+    receipts, stats = [], []
+
     for pn in range(np):
         page = data[pn*PAGE_SIZE:(pn+1)*PAGE_SIZE]
         m,pt,nk,fo,r = ph(page)
+
+        # Stats block: pages 1-7 hold DS_ENTRY data
+        if 1 <= pn <= 7:
+            if pn - 1 < 5:
+                for svc, rec, tmin, pmin, v, tx in read_ds_entry(page[HDR_SIZE:]):
+                    stats.append((PERIODS[pn-1], svc, rec, tmin, pmin, v, tx))
+            continue
+
         if pt == PAGE_DATA:
             for sl in range(nk):
-                off = HDR_SIZE+sl*111
-                rcp = parse_receipt(page[off:off+111])
+                rcp = parse_receipt(page[HDR_SIZE+sl*111:HDR_SIZE+sl*111+111])
                 if rcp: receipts.append(rcp)
-        elif pt == PAGE_STATS:
-            periods = ['YEAR','MONTH','WEEK','DAY','TURN']
-            svcs = ['TEL','SPECIAL_TEL','FAX','TELEX','CARD','OTHER']
-            pay = page[HDR_SIZE:]
-            for p in range(5):
-                for s in range(6):
-                    off = (p*6+s)*30
-                    if off+30 > len(pay): break
-                    rec,tmin,pmin,v,tx = struct.unpack_from('<hdddd',pay,off)
-                    if rec or v:
-                        stats.append((periods[p], svcs[s], rec, tmin, pmin, v, tx))
 
-    # CSV output
-    if args.csv or args.csv_receipts or args.csv_stats:
+    # Output
+    if args.csv_receipts or args.csv:
         w = csv.writer(sys.stdout)
-        if args.csv_receipts or args.csv:
-            w.writerow(['number','booth','date','time','city','phone',
-                        'amount','elapsed_s','value','tax','vpm','ceil_min','percent','deleted'])
-            for r in receipts:
-                w.writerow([r['number'], r['booth'], r['date'], r['time'],
-                           r['city'], r['phone'], r['amount'], r['elapsed'],
-                           f'{r["value"]:.2f}', f'{r["tax"]:.2f}',
-                           f'{r["vpm"]:.4f}', r['ceil'], r['percent'],
-                           '(deleted)' if r['nstat']&0x0020 else ''])
-            if not args.csv and not args.csv_stats:
-                return
-        if args.csv_stats or args.csv:
-            if args.csv: w.writerow([])  # blank separator
-            w.writerow(['period','service','receipts','talk_min','paid_min','value','tax'])
-            for period, svc, rec, tmin, pmin, v, tx in stats:
-                w.writerow([period, svc, rec, f'{tmin:.2f}', f'{pmin:.2f}', f'{v:.2f}', f'{tx:.2f}'])
+        w.writerow(['number','booth','date','time','city','phone','amount','elapsed_s','value','tax','vpm','ceil_min','percent','deleted'])
+        for r in receipts:
+            w.writerow([r['number'], r['booth'], r['date'], r['time'],
+                       r['city'], r['phone'], r['amount'], r['elapsed'],
+                       f'{r["value"]:.2f}', f'{r["tax"]:.2f}', f'{r["vpm"]:.4f}',
+                       r['ceil'], r['percent'],
+                       '(deleted)' if r['nstat']&0x0020 else ''])
+    if args.csv_stats or args.csv:
+        if args.csv: print()
+        w = csv.writer(sys.stdout)
+        w.writerow(['period','service','receipts','talk_min','paid_min','value','tax'])
+        for period, svc, rec, tmin, pmin, v, tx in stats:
+            w.writerow([period, svc, rec, f'{tmin:.2f}', f'{pmin:.2f}', f'{v:.2f}', f'{tx:.2f}'])
+    if args.csv_receipts or args.csv_stats or args.csv:
         return
 
     # Human-readable dump
-    if args.brief:
-        print(f'File: {path}  ({len(data)} bytes, {np} pages)')
     for pn in range(np):
         page = data[pn*PAGE_SIZE:(pn+1)*PAGE_SIZE]
         m,pt,nk,fo,r = ph(page)
         pn2 = PNAME.get(pt, f'TYPE{pt}')
-        if args.brief and pt == PAGE_FREE:
-            continue
+        if args.brief and pt == PAGE_FREE: continue
         print(f'\n{"="*55}\nPage {pn} [{pn2}] @0x{pn*PAGE_SIZE:04x}\n{"="*55}')
-        if pt == PAGE_DBINFO:
-            dump_dbinfo(page, sys.stdout)
-        elif pt == PAGE_BTREE_L:
-            dump_leaf(page, sys.stdout)
-        elif pt == PAGE_DATA:
-            dump_data(page, sys.stdout)
-        elif pt == PAGE_STATS:
-            dump_stats(page, sys.stdout)
-        elif pt == PAGE_FREE:
-            print(f'  (free sibling={r})')
-        else:
-            print(f'  (type {pt})')
+        if pt == PAGE_DBINFO:  dump_dbinfo(page, sys.stdout)
+        elif pt == PAGE_BTREE_L: dump_leaf(page, sys.stdout)
+        elif pt == PAGE_DATA:  dump_data(page, sys.stdout)
+        elif pt == PAGE_STATS: dump_stats(page, sys.stdout)
+        elif pt == PAGE_FREE:  print(f'  (free sibling={r})')
+        else:                  print(f'  (type {pt})')
 
     dp = sum(1 for p in range(np) if ph(data[p*PAGE_SIZE:(p+1)*PAGE_SIZE])[1] == PAGE_DATA)
     lp = sum(1 for p in range(np) if ph(data[p*PAGE_SIZE:(p+1)*PAGE_SIZE])[1] == PAGE_BTREE_L)
