@@ -205,6 +205,19 @@ BOOL MiniDBReceiptStorage::Add(const Receipt &receipt)
 
     // Advance slot for next receipt
     m_dataSlot++;
+
+    // Write current B-tree root page to DBInfo so it persists
+    {
+        long rootPage = m_btree.GetRoot();
+        BYTE *p0 = m_cache.GetPageW(0);
+        if (p0)
+        {
+            ((DBInfo *)p0)->RootPage = rootPage;
+            m_cache.Release(0);
+        }
+    }
+
+    m_cache.Flush();        // persist all dirty pages
     return TRUE;
 }
 
