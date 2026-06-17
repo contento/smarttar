@@ -9,7 +9,7 @@ class MiniDBCache;
 
 // ---------------------------------------------------------------------------
 // MiniDB B-tree index.
-// Maps (receipt number, booth number) → file seek position.
+// Maps (receipt number, booth number) -> file seek position.
 // Pages are 512-byte fixed-size indexed by page number (0-based).
 // Page 0 is always the DBInfo page.  Root page starts at page 1.
 // ---------------------------------------------------------------------------
@@ -78,7 +78,7 @@ private:
     BOOL SearchInternal(long pageNum, long number,
                         long &outLeafPage, int &outSlot);
 
-    // Insert helper — returns TRUE if page split was needed
+    // Insert helper -- returns TRUE if page split was needed
     BOOL InsertIntoPage(long pageNum, BTreeLeafEntry const &entry,
                         BTreeLeafEntry &splitKey, long &splitChild);
 

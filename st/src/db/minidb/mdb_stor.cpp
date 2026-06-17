@@ -1,7 +1,7 @@
 //
 // [ MINIDB_STORAGE.CPP ]
 //
-// MiniDBReceiptStorage — IReceiptStorage over a MiniDB .db file.
+// MiniDBReceiptStorage -- IReceiptStorage over a MiniDB .db file.
 // Uses page-based B-tree index with raw receipt bytes stored at file offsets
 // between pages.  Atomic commit via write-to-.db.new + rename.
 //
@@ -268,7 +268,7 @@ BOOL MiniDBReceiptStorage::Exist(long number, int boothNumber) const
     return m_btree.Find(number, boothNumber, dummy);
 }
 // ---------------------------------------------------------------------------
-// Number queries — delegate to B-tree
+// Number queries -- delegate to B-tree
 // ---------------------------------------------------------------------------
 
 long MiniDBReceiptStorage::GetLowerNumber() const
@@ -361,7 +361,7 @@ void MiniDBReceiptStorage::Flush()
 }
 
 // ---------------------------------------------------------------------------
-// Archive — rename-based atomic commit
+// Archive -- rename-based atomic commit
 // ---------------------------------------------------------------------------
 
 BOOL MiniDBReceiptStorage::Archive()
@@ -421,7 +421,7 @@ BOOL MiniDBReceiptStorage::Archive()
     close(src);
     close(dst);
 
-    // Remove the current .db — no reopen; caller creates fresh
+    // Remove the current .db -- no reopen; caller creates fresh
     unlink(m_filepath);
     m_status = MINIDB_NO_FILE;
 
@@ -429,7 +429,7 @@ BOOL MiniDBReceiptStorage::Archive()
 }
 
 // ---------------------------------------------------------------------------
-// Repair — placeholder (B-tree is self-consistent for now)
+// Repair -- placeholder (B-tree is self-consistent for now)
 // ---------------------------------------------------------------------------
 
 BOOL MiniDBReceiptStorage::Repair()
@@ -438,7 +438,7 @@ BOOL MiniDBReceiptStorage::Repair()
 
     if (fd != -1)
     {
-        // File is open — close and reopen to get a clean cache state
+        // File is open -- close and reopen to get a clean cache state
         m_cache.Close();
         if (!OpenDB(m_filepath))
             return FALSE;
@@ -447,7 +447,7 @@ BOOL MiniDBReceiptStorage::Repair()
 
     if (fd == -1)
     {
-        // File is closed (e.g. after Archive) — create a fresh .db
+        // File is closed (e.g. after Archive) -- create a fresh .db
         unlink(m_filepath);
         if (!OpenDB(m_filepath))
             return FALSE;
@@ -477,7 +477,7 @@ BOOL MiniDBReceiptStorage::Repair()
             if (!VerifyEntry(entries[i].Number, entries[i].BoothNumber,
                              entries[i].DataSeek))
             {
-                // Invalid data at this B-tree entry — delete it
+                // Invalid data at this B-tree entry -- delete it
                 m_btree.Delete(entries[i].Number, entries[i].BoothNumber);
             }
         }
@@ -506,7 +506,7 @@ BOOL MiniDBReceiptStorage::Repair()
         long foundSeek;
         if (!m_btree.Find(receipt.Number, receipt.BoothNumber, foundSeek))
         {
-            // Orphaned receipt — insert into B-tree
+            // Orphaned receipt -- insert into B-tree
             m_btree.Insert(receipt.Number, receipt.BoothNumber, offset);
         }
     }
@@ -552,7 +552,7 @@ BOOL MiniDBReceiptStorage::Repair()
 }
 
 // ---------------------------------------------------------------------------
-// VerifyEntry — validate a single B-tree entry's receipt data
+// VerifyEntry -- validate a single B-tree entry's receipt data
 // ---------------------------------------------------------------------------
 
 BOOL MiniDBReceiptStorage::VerifyEntry(long number, int boothNumber, long dataSeek)

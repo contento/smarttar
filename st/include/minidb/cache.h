@@ -6,10 +6,10 @@
 #endif
 
 // ---------------------------------------------------------------------------
-// Page cache — fixed-size LRU over page buffers.
+// Page cache -- fixed-size LRU over page buffers.
 // ---------------------------------------------------------------------------
 
-// Number of cached pages (128 pages × 512 bytes = 64 KB)
+// Number of cached pages (128 pages x 512 bytes = 64 KB)
 static const UINT MINIDB_CACHE_SIZE = 128;
 
 struct CachedPage

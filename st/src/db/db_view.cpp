@@ -216,7 +216,7 @@ EVENT_TYPE DBView::ProcessNumber(UI_WINDOW_OBJECT *object, UI_EVENT &, EVENT_TYP
 
 	if (dbConcrete)
 	{
-		// FlatFile path â€” use Iterator
+		// FlatFile path -- use Iterator
 		DB_STORAGE::Iterator it(*dbConcrete);
 		fromNumber = it.Restart(fromNumber);
 		pwThis->m_pwNumber->DataSet(&UI_BIGNUM(fromNumber));
@@ -236,7 +236,7 @@ EVENT_TYPE DBView::ProcessNumber(UI_WINDOW_OBJECT *object, UI_EVENT &, EVENT_TYP
 	}
 	else
 	{
-		// MiniDB path â€” use EnumReceipts callback
+		// MiniDB path -- use EnumReceipts callback
 		sMdbCount = 0;
 		sMdbFrom  = fromNumber;
 		g_dbEngine->EnumReceipts(MdbEnumCallback);
@@ -313,30 +313,30 @@ void DBView::ShowRecord(long nNumber)
 		{
 		case Receipt::TEL:
 			{
-				serv = "Telefonï¿½a";
+				serv = "Telefonía";
 				boothPrompt = "  Cabina";
 				booth = g_cfg->BoothInfo[receipt.BoothNumber].Name;
-				phonePrompt = "Telï¿½fono";
+				phonePrompt = "Teléfono";
 				phone = receipt.Phone;
-				amountPrompt = "Duraciï¿½n";
+				amountPrompt = "Duración";
 				amount.Import(g_Milisec2Time(receipt.ElapsedTime, g_cfg->CORRECTION_TIME));
 				break;
 			}
 		case Receipt::SPECIAL_TEL:
 			{
-				serv = "Telefonï¿½a Esp.";
+				serv = "Telefonía Esp.";
 				boothPrompt = "  Cabina";
 				booth = g_cfg->BoothInfo[receipt.BoothNumber].Name;
-				phonePrompt = "Telï¿½fono";
+				phonePrompt = "Teléfono";
 				phone = receipt.Phone;
-				amountPrompt = "Duraciï¿½n";
+				amountPrompt = "Duración";
 				amount.Import(g_Milisec2Time(receipt.ElapsedTime, g_cfg->CORRECTION_TIME));
 				break;
 			}
 		case Receipt::FAX:
 			{
 				serv = "Fax";
-				phonePrompt = "Telï¿½fono";
+				phonePrompt = "Teléfono";
 				phone = receipt.Phone;
 				break;
 			}

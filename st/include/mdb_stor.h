@@ -14,9 +14,9 @@
 #endif
 
 // ---------------------------------------------------------------------------
-// MiniDBReceiptStorage — IReceiptStorage over a MiniDB .db file.
+// MiniDBReceiptStorage -- IReceiptStorage over a MiniDB .db file.
 // Receipts are stored in PAGE_DATA pages (4 per page) within the .db.
-// The B-tree index maps (number, boothNumber) → (pageNum << 8) | slot.
+// The B-tree index maps (number, boothNumber) -> (pageNum << 8) | slot.
 // ---------------------------------------------------------------------------
 
 // Receipts per data page
