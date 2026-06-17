@@ -194,7 +194,7 @@ DLLS=$(BIN_DIR)\pr_sr80.$(DLL_EXT)	\
 .asm.obj:
 	$(ASM) $(ASM_OPTS) $<, $@
 
-$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\local.inf $(BIN_DIR)\ddn.inf $(BIN_DIR)\ddi.inf $(BIN_DIR)\phones.csv $(OBJS) $(DLLS) $(BIN_DIR)\lsmdb.exe $(BIN_DIR)\minidb.py
+$(BIN_DIR)\$(EXE_FILE): $(BIN_DIR)\$(HELP_FILE) $(BIN_DIR)\$(RES_FILE) $(BIN_DIR)\st.ini $(BIN_DIR)\demo.ini $(BIN_DIR)\local.inf $(BIN_DIR)\ddn.inf $(BIN_DIR)\ddi.inf $(BIN_DIR)\phones.csv $(OBJS) $(DLLS) $(BIN_DIR)\mdbdump.exe $(BIN_DIR)\mdbdump.py
 	$(LINK) $(LINK_OPTS) @&&!
 $(STARTUP_OBJS) $(OBJS)
 $*, ,$(LIBS), $(DEF_FILE)
@@ -229,8 +229,8 @@ $(BIN_DIR)\ddn.inf: $(CFG_DIR)\ddn.inf
 	@copy $(CFG_DIR)\ddn.inf $(BIN_DIR)\ddn.inf > NUL
 $(BIN_DIR)\ddi.inf: $(CFG_DIR)\ddi.inf
 	@copy $(CFG_DIR)\ddi.inf $(BIN_DIR)\ddi.inf > NUL
-$(BIN_DIR)\minidb.py: $(CFG_DIR)\minidb.py
-	@copy $(CFG_DIR)\minidb.py $(BIN_DIR)\minidb.py > NUL
+$(BIN_DIR)\mdbdump.py: $(CFG_DIR)\mdbdump.py
+	@copy $(CFG_DIR)\mdbdump.py $(BIN_DIR)\mdbdump.py > NUL
 # ============================================================================
 # Explicit per-file source-path mapping
 # ----------------------------------------------------------------------------
@@ -433,13 +433,13 @@ $*, ,$(LIBS), $(DEF_FILE)
 	cfig286 $(BIN_DIR)\$@ -NISTACK 10 -LDTSIZE 4096
 !endif
 
-# ---- lsmdb utility (MiniDB .db file inspector) ----
+# ---- mdbdump utility (MiniDB .db file inspector) ----
 
-$(OBJ_DIR)\lsmdb.obj: $(SOURCE_DIR)\lsmdb.cpp
+$(OBJ_DIR)\mdbdump.obj: $(SOURCE_DIR)\mdbdump.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
-$(BIN_DIR)\lsmdb.exe: $(OBJ_DIR)\lsmdb.obj
+$(BIN_DIR)\mdbdump.exe: $(OBJ_DIR)\mdbdump.obj
 	$(LINK) $(LINK_OPTS) @&&!
-$(STARTUP_OBJS) $(OBJ_DIR)\lsmdb.obj
+$(STARTUP_OBJS) $(OBJ_DIR)\mdbdump.obj
 $*, ,$(LIBS), $(DEF_FILE)
 !
 !if $d(RUN)
