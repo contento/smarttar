@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     MiniDBReceiptStorage *stor = new MiniDBReceiptStorage(".", "test_minidb", FALSE);
     printf("Status: %d\n", stor->GetStatus());
     printf("Entries: %ld\n", stor->GetEntries());
-    printf("StatsPage: %ld\n", stor->GetStatsPage());
+    printf("StatsAnchor: %ld\n", stor->GetStatsAnchor());
 
     // Check .db file size
     int fd = open(dbpath, O_RDONLY | O_BINARY);

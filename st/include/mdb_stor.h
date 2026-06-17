@@ -62,7 +62,7 @@ public:
 
     // Expose the shared cache so MiniDBStatistics can use the same handle
     MiniDBCache &GetCache() { return m_cache; }
-    long GetStatsPage() const { return m_statsPage; }
+    long GetStatsAnchor() const { return m_statsAnchor; }
 
 private:
     BOOL VerifyEntry(long number, int boothNumber, long dataSeek);
@@ -76,7 +76,7 @@ private:
 
     long      m_dataPage;       // current open data page for appends
     int       m_dataSlot;       // next free slot on m_dataPage
-    long      m_statsPage;      // page number of stats block (0 = none)
+    long      m_statsAnchor;    // page number of stats block anchor (start of DS_ENTRY[0])
     int       m_status;
     BOOL      m_readOnly;
 };

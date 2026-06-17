@@ -46,7 +46,7 @@ static const UINT RECEIPT_MAGIC = 0x6719U;
 MiniDBReceiptStorage::MiniDBReceiptStorage(const char *path, const char *name, int readOnly)
     : m_dataPage(0L)
     , m_dataSlot(0)
-    , m_statsPage(0L)
+    , m_statsAnchor(0L)
     , m_status(MINIDB_OK)
     , m_readOnly(readOnly)
     , m_cache()
@@ -86,7 +86,7 @@ MiniDBReceiptStorage::~MiniDBReceiptStorage()
 BOOL MiniDBReceiptStorage::OpenDB(const char *filepath)
 {
     m_status = MINIDB_OK;
-    m_statsPage = 0L;
+    m_statsAnchor = 0L;
 
     // Open (or create) the .db file.  The cache's Open() writes a fresh
     // DBInfo page when creating a new file.
@@ -113,18 +113,51 @@ BOOL MiniDBReceiptStorage::OpenDB(const char *filepath)
     }
 
     m_btree.SetRoot(dbInfo->RootPage);
-    m_statsPage = dbInfo->StatsAnchor;
+    m_statsAnchor = dbInfo->StatsAnchor;
 
-    // Allocate stats page if missing (new DB, or upgrade from pre-stats version)
-    if (m_statsPage == 0L)
+    // Allocate 7 stats pages if missing (new DB, or upgrade from pre-stats version)
+    if (m_statsAnchor == 0L)
     {
-        // Extend file to include page 1, then write PAGE_STATS header
-        long sPageNum = m_cache.GetAllocPage(PAGE_STATS);
-        if (sPageNum > 0L)
+        // Pages 1-5: one DS_ENTRY per page
+        long sp;
+        for (int i = 0; i < DS_MAXENTRIES; i++)
         {
-            dbInfo->StatsAnchor = sPageNum;
-            m_statsPage = sPageNum;
+            sp = m_cache.GetAllocPage(PAGE_DATA);
+            BYTE *spPage = m_cache.GetPageW(sp);
+            if (spPage)
+            {
+                memset(spPage, 0, MINIDB_PAGE_SIZE);
+                PageHdrInit(*(PageHeader *)spPage, PAGE_DATA, (UINT)sp);
+                m_cache.MarkDirty(sp);
+                m_cache.Release(sp);
+            }
         }
+        // Page 6: DS_DOUBLEPRNENTRY[2]
+        sp = m_cache.GetAllocPage(PAGE_DATA);
+        {
+            BYTE *spPage = m_cache.GetPageW(sp);
+            if (spPage)
+            {
+                memset(spPage, 0, MINIDB_PAGE_SIZE);
+                PageHdrInit(*(PageHeader *)spPage, PAGE_DATA, (UINT)sp);
+                m_cache.MarkDirty(sp);
+                m_cache.Release(sp);
+            }
+        }
+        // Page 7: DS_CELLULARENTRY[5]
+        sp = m_cache.GetAllocPage(PAGE_DATA);
+        {
+            BYTE *spPage = m_cache.GetPageW(sp);
+            if (spPage)
+            {
+                memset(spPage, 0, MINIDB_PAGE_SIZE);
+                PageHdrInit(*(PageHeader *)spPage, PAGE_DATA, (UINT)sp);
+                m_cache.MarkDirty(sp);
+                m_cache.Release(sp);
+            }
+        }
+        dbInfo->StatsAnchor = 1L;
+        m_statsAnchor = 1L;
     }
 
     m_cache.Release(0);

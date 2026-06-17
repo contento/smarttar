@@ -25,7 +25,7 @@ class MiniDBStatistics : public IStatisticsStorage
 public:
     // Construct with a shared cache and the stats anchor page number.
     // cache is not owned -- caller keeps it alive.
-    MiniDBStatistics(MiniDBCache &cache, long statsPage);
+    MiniDBStatistics(MiniDBCache &cache, long statsAnchor);
     virtual ~MiniDBStatistics();
 
     virtual void Flush();
@@ -47,7 +47,7 @@ public:
 
 private:
     MiniDBCache &m_cache;
-    long         m_statsPage;    // page number of StatsPage
+    long         m_statsAnchor;    // page number of stats block anchor
     WORD         m_status;
     BOOL         m_readOnly;
 

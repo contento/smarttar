@@ -1,11 +1,11 @@
 //
 // [ MINIDB_STATISTICS.CPP ]
 //
-// MiniDBStatistics -- IStatisticsStorage backed by a MiniDB .db file.
-// Statistics live on a dedicated page (PAGE_STATS) inside the same .db.
-// The page payload holds serialised DS_ENTRY[], DS_DOUBLEPRNENTRY[],
-// and DS_CELLULARENTRY[] arrays.  We keep local copies and flush back
-// to the page on demand.
+// Statistics live on 7 pages inside the same .db, anchored at m_statsAnchor:
+//   pages [anchor + 0..4]: one DS_ENTRY per page
+//   page   [anchor + 5]:   DS_DOUBLEPRNENTRY[2]
+//   page   [anchor + 6]:   DS_CELLULARENTRY[5]
+// We keep local copies and flush back to the pages on demand.
 //
 
 
@@ -45,76 +45,67 @@ extern CFG *g_cfg;
 
 // Maximum receipt number for range-checking (same as DB_STORAGE)
 static const long MINIDB_MAX_RECEIPTS = 100000000L;
-// ---------------------------------------------------------------------------
-// Offset helpers within the StatsPage::DSData[] payload
-// ---------------------------------------------------------------------------
-// Layout:  DS_ENTRY[DS_MAXENTRIES]
-//          DS_DOUBLEPRNENTRY[DS_MAXDOUBLEPRNENTRIES]
-//          DS_CELLULARENTRY[DS_MAXCELLULARENTRIES]
-
-static inline BYTE *StatsDSData(BYTE *pageData)
-{
-    return pageData;
-}
-
-static DS_ENTRY          *StatsDSArray(BYTE *pageData)
-{
-    return (DS_ENTRY *)pageData;
-}
-
-static DS_DOUBLEPRNENTRY *StatsDPArray(BYTE *pageData)
-{
-    return (DS_DOUBLEPRNENTRY *)
-        (pageData + DS_MAXENTRIES * sizeof(DS_ENTRY));
-}
-
-static DS_CELLULARENTRY  *StatsCEArray(BYTE *pageData)
-{
-    return (DS_CELLULARENTRY *)
-        (pageData + DS_MAXENTRIES * sizeof(DS_ENTRY)
-         + DS_MAXDOUBLEPRNENTRIES * sizeof(DS_DOUBLEPRNENTRY));
-}
 
 // ---------------------------------------------------------------------------
 // Constructor / Destructor
 // ---------------------------------------------------------------------------
 
-MiniDBStatistics::MiniDBStatistics(MiniDBCache &cache, long statsPage)
+MiniDBStatistics::MiniDBStatistics(MiniDBCache &cache, long statsAnchor)
     : m_cache(cache)
-    , m_statsPage(statsPage)
+    , m_statsAnchor(statsAnchor)
     , m_status(0)
     , m_readOnly(FALSE)
 {
-    // Read the stats page from cache and copy data into local arrays
-    BYTE *page = m_cache.GetPage(statsPage);
-    if (page)
+    // Read each of the 7 stats pages from cache into local arrays
+    int i;
+    for (i = 0; i < DS_MAXENTRIES; i++)
     {
-        PageHeader *hdr = (PageHeader *)page;
-        if (PageHdrIsValid(*hdr) && hdr->PageType == PAGE_STATS)
+        BYTE *page = m_cache.GetPage(statsAnchor + i);
+        if (page)
         {
-            BYTE *dsData = ((StatsPage *)page)->DSData;
-            memcpy(m_entries,        StatsDSArray(dsData),
-                   DS_MAXENTRIES * sizeof(DS_ENTRY));
-            memcpy(m_doublePrn,      StatsDPArray(dsData),
-                   DS_MAXDOUBLEPRNENTRIES * sizeof(DS_DOUBLEPRNENTRY));
-            memcpy(m_cellular,       StatsCEArray(dsData),
-                   DS_MAXCELLULARENTRIES * sizeof(DS_CELLULARENTRY));
-            m_status = 0;  // OK
+            memcpy(&m_entries[i], page + MINIDB_HDR_SIZE, sizeof(DS_ENTRY));
+            m_cache.Release(statsAnchor + i);
         }
         else
         {
-            // Invalid page -- initialise empty
             InitAll();
-            m_status = 1;  // BAD_FILE
+            m_status = 2;  // NO_FILE
+            return;
         }
-        m_cache.Release(statsPage);
     }
-    else
+    // Page statsAnchor+5: DS_DOUBLEPRNENTRY[2]
     {
-        // Page not found -- initialise empty
-        InitAll();
-        m_status = 2;  // NO_FILE
+        BYTE *page = m_cache.GetPage(statsAnchor + 5);
+        if (page)
+        {
+            memcpy(m_doublePrn, page + MINIDB_HDR_SIZE,
+                   DS_MAXDOUBLEPRNENTRIES * sizeof(DS_DOUBLEPRNENTRY));
+            m_cache.Release(statsAnchor + 5);
+        }
+        else
+        {
+            InitAll();
+            m_status = 2;  // NO_FILE
+            return;
+        }
     }
+    // Page statsAnchor+6: DS_CELLULARENTRY[5]
+    {
+        BYTE *page = m_cache.GetPage(statsAnchor + 6);
+        if (page)
+        {
+            memcpy(m_cellular, page + MINIDB_HDR_SIZE,
+                   DS_MAXCELLULARENTRIES * sizeof(DS_CELLULARENTRY));
+            m_cache.Release(statsAnchor + 6);
+        }
+        else
+        {
+            InitAll();
+            m_status = 2;  // NO_FILE
+            return;
+        }
+    }
+    m_status = 0;  // OK
 }
 
 MiniDBStatistics::~MiniDBStatistics()
@@ -217,20 +208,37 @@ long MiniDBStatistics::GetTelEntries()
 
 void MiniDBStatistics::Flush()
 {
-    BYTE *page = m_cache.GetPageW(m_statsPage);
-    if (!page)
-        return;
-
-    BYTE *dsData = ((StatsPage *)page)->DSData;
-    memcpy(StatsDSArray(dsData),       m_entries,
-           DS_MAXENTRIES * sizeof(DS_ENTRY));
-    memcpy(StatsDPArray(dsData),       m_doublePrn,
-           DS_MAXDOUBLEPRNENTRIES * sizeof(DS_DOUBLEPRNENTRY));
-    memcpy(StatsCEArray(dsData),       m_cellular,
-           DS_MAXCELLULARENTRIES * sizeof(DS_CELLULARENTRY));
-
-    m_cache.MarkDirty(m_statsPage);
-    m_cache.Release(m_statsPage);
+    int i;
+    for (i = 0; i < DS_MAXENTRIES; i++)
+    {
+        BYTE *page = m_cache.GetPageW(m_statsAnchor + i);
+        if (!page) continue;
+        memcpy(page + MINIDB_HDR_SIZE, &m_entries[i], sizeof(DS_ENTRY));
+        m_cache.MarkDirty(m_statsAnchor + i);
+        m_cache.Release(m_statsAnchor + i);
+    }
+    // Page m_statsAnchor+5: DS_DOUBLEPRNENTRY[2]
+    {
+        BYTE *page = m_cache.GetPageW(m_statsAnchor + 5);
+        if (page)
+        {
+            memcpy(page + MINIDB_HDR_SIZE, m_doublePrn,
+                   DS_MAXDOUBLEPRNENTRIES * sizeof(DS_DOUBLEPRNENTRY));
+            m_cache.MarkDirty(m_statsAnchor + 5);
+            m_cache.Release(m_statsAnchor + 5);
+        }
+    }
+    // Page m_statsAnchor+6: DS_CELLULARENTRY[5]
+    {
+        BYTE *page = m_cache.GetPageW(m_statsAnchor + 6);
+        if (page)
+        {
+            memcpy(page + MINIDB_HDR_SIZE, m_cellular,
+                   DS_MAXCELLULARENTRIES * sizeof(DS_CELLULARENTRY));
+            m_cache.MarkDirty(m_statsAnchor + 6);
+            m_cache.Release(m_statsAnchor + 6);
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
