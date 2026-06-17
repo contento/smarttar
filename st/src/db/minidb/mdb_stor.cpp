@@ -122,36 +122,36 @@ BOOL MiniDBReceiptStorage::OpenDB(const char *filepath)
         long sp;
         for (int i = 0; i < DS_MAXENTRIES; i++)
         {
-            sp = m_cache.GetAllocPage(PAGE_DATA);
+            sp = m_cache.GetAllocPage(PAGE_STATS);
             BYTE *spPage = m_cache.GetPageW(sp);
             if (spPage)
             {
                 memset(spPage, 0, MINIDB_PAGE_SIZE);
-                PageHdrInit(*(PageHeader *)spPage, PAGE_DATA, (UINT)sp);
+                PageHdrInit(*(PageHeader *)spPage, PAGE_STATS, (UINT)sp);
                 m_cache.MarkDirty(sp);
                 m_cache.Release(sp);
             }
         }
         // Page 6: DS_DOUBLEPRNENTRY[2]
-        sp = m_cache.GetAllocPage(PAGE_DATA);
+        sp = m_cache.GetAllocPage(PAGE_STATS);
         {
             BYTE *spPage = m_cache.GetPageW(sp);
             if (spPage)
             {
                 memset(spPage, 0, MINIDB_PAGE_SIZE);
-                PageHdrInit(*(PageHeader *)spPage, PAGE_DATA, (UINT)sp);
+                PageHdrInit(*(PageHeader *)spPage, PAGE_STATS, (UINT)sp);
                 m_cache.MarkDirty(sp);
                 m_cache.Release(sp);
             }
         }
         // Page 7: DS_CELLULARENTRY[5]
-        sp = m_cache.GetAllocPage(PAGE_DATA);
+        sp = m_cache.GetAllocPage(PAGE_STATS);
         {
             BYTE *spPage = m_cache.GetPageW(sp);
             if (spPage)
             {
                 memset(spPage, 0, MINIDB_PAGE_SIZE);
-                PageHdrInit(*(PageHeader *)spPage, PAGE_DATA, (UINT)sp);
+                PageHdrInit(*(PageHeader *)spPage, PAGE_STATS, (UINT)sp);
                 m_cache.MarkDirty(sp);
                 m_cache.Release(sp);
             }

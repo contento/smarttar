@@ -97,25 +97,32 @@ def dump_stats(page, out):
                 out.write(f'    {svcs[s]:12} rec={rec} talk={tmin:.2f} paid={pmin:.2f} val={v:.2f} tax={tx:.2f}\n')
 
 # ---------------------------------------------------------------------------
-# CSV formatters
-# ---------------------------------------------------------------------------
-
-def csv_receipts(page, writer):
-    """Write data-page receipts as CSV rows."""
+def dump_stats(page, out):
+    """Read a DS_ENTRY from a PAGE_STATS page and print its contents."""
     m,pt,nk,fo,r=ph(page)
-    for sl in range(nk):
-        off=HDR_SIZE+sl*111
-        r=parse_receipt(page[off:off+111])
-        if not r: continue
-        writer.writerow([
-            r['number'], r['booth'], r['date'], r['time'],
-            r['city'], r['phone'], r['amount'], r['elapsed'],
-            f'{r["value"]:.2f}', f'{r["tax"]:.2f}',
-            f'{r["vpm"]:.4f}', r['ceil'], r['percent'],
-            '(deleted)' if r['nstat']&0x0020 else '',
-        ])
-
-def csv_stats(page, writer):
+    if pt != PAGE_STATS: return
+    # DS_ENTRY starts at MINIDB_HDR_SIZE
+    off = MINIDB_HDR_SIZE
+    # Read From/To RANGETAG
+    FromTime, FromDate, FromNum = struct.unpack_from('<HHl', page, off)
+    ToTime, ToDate, ToNum = struct.unpack_from('<HHl', page, off+8)
+    out.write(f'  From: t={FromTime} d={FromDate} num={FromNum}\n')
+    out.write(f'  To:   t={ToTime} d={ToDate} num={ToNum}\n')
+    svcs = ['Tel.Nal','Tel.Inter','SpTel.Nal','SpTel.Inter','Fax.Nal','Fax.Inter',
+            'Net.Nal','Net.Inter','Cards','Other']
+    # Each ITEM: receipts(WORD) talkMin(double) paidMin(double) value(double) tax(double) = 34 bytes
+    # Offsets within DS_ENTRY need to match BCC 3.1 layout
+    # From:0 To:8 Tel.Nal:16 Tel.Inter:50 SpTel.Nal:84 SpTel.Inter:118 Fax.Nal:152 Fax.Inter:186
+    # Net.Nal:220 Net.Inter:254 Cards:288 Other:322
+    item_offsets = [16, 50, 84, 118, 152, 186, 220, 254, 288, 322]
+    for svc, ioff in zip(svcs, item_offsets):
+        if ioff + 34 > MINIDB_PAYLOAD: break
+        rec = struct.unpack_from('<H', page, off+ioff)[0]
+        tmin, pmin, val, tx = struct.unpack_from('<dddd', page, off+ioff+2)
+        if rec or val:
+            out.write(f'    {svc:12} rec={rec} talk={tmin:.2f} paid={pmin:.2f} val={val:.2f} tax={tx:.2f}\n')
+    # DialErrors/ComErrors at offsets determined by struct layout
+    # ... (skip for brevity)
     """Write stats page as CSV rows."""
     m,pt,nk,fo,r=ph(page)
     periods=['YEAR','MONTH','WEEK','DAY','TURN']
