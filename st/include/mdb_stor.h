@@ -15,10 +15,20 @@
 
 // ---------------------------------------------------------------------------
 // MiniDBReceiptStorage — IReceiptStorage over a MiniDB .db file.
-// Each receipt is stored at a file offset within the .db.  The B-tree index
-// maps (number, boothNumber) → seek position.  Atomic commit via
-// write-to-.db-new + rename.
+// Receipts are stored in PAGE_DATA pages (4 per page) within the .db.
+// The B-tree index maps (number, boothNumber) → (pageNum << 8) | slot.
 // ---------------------------------------------------------------------------
+
+// Receipts per data page
+static const int MDB_RECIPTS_PER_PAGE = 4;
+
+// Helpers to encode/decode the DataSeek field
+inline long MDB_DataSeekEncode(long pageNum, int slot)
+    { return (pageNum << 8) | (slot & 0x3); }
+inline long MDB_DataSeekPage(long ds)
+    { return ds >> 8; }
+inline int  MDB_DataSeekSlot(long ds)
+    { return (int)(ds & 0x3); }
 
 class MiniDBReceiptStorage : public IReceiptStorage
 {
@@ -30,12 +40,6 @@ public:
     virtual BOOL IsReadOnly();
 
     virtual BOOL IsCorrectNumber(long number);
-    // Expose the shared cache so MiniDBStatistics can use the same handle
-    MiniDBCache &GetCache() { return m_cache; }
-
-    // Returns the page number of the statistics block (0 = none).
-    long GetStatsPage() const { return m_statsPage; }
-
     virtual BOOL IsValid(Receipt const &receipt);
 
     virtual BOOL Exist(long number, int boothNumber) const;
@@ -56,21 +60,25 @@ public:
     virtual void EnumReceipts(CallbackFnPtr callback);
     virtual void Flush();
 
+    // Expose the shared cache so MiniDBStatistics can use the same handle
+    MiniDBCache &GetCache() { return m_cache; }
+    long GetStatsPage() const { return m_statsPage; }
+
 private:
     BOOL VerifyEntry(long number, int boothNumber, long dataSeek);
     BOOL OpenDB(const char *filepath);
     void CloseDB();
 
-    // Current seek position for appending new receipts
-    long      m_nextSeek;
-    int       m_status;
-    BOOL      m_readOnly;
-
     MiniDBCache  m_cache;
     MiniDBBTree  m_btree;
     char         m_filepath[80];
-    long       m_statsPage;       // page number of stats block (0 = none)
-    char         m_filepathNew[80]; // .db.new path
+    char         m_filepathNew[80];  // .db.new path
+
+    long      m_dataPage;       // current open data page for appends
+    int       m_dataSlot;       // next free slot on m_dataPage
+    long      m_statsPage;      // page number of stats block (0 = none)
+    int       m_status;
+    BOOL      m_readOnly;
 };
 
 #endif // __MINIDB_STORAGE_H

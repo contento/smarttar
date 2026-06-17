@@ -43,9 +43,9 @@ static const UINT RECEIPT_MAGIC = 0x6719U;
 // Constructor / Destructor
 // ---------------------------------------------------------------------------
 
-MiniDBReceiptStorage::MiniDBReceiptStorage(const char *path, const char *name,
-                                           int readOnly)
-    : m_nextSeek(0L)
+MiniDBReceiptStorage::MiniDBReceiptStorage(const char *path, const char *name, int readOnly)
+    : m_dataPage(0L)
+    , m_dataSlot(0)
     , m_statsPage(0L)
     , m_status(MINIDB_OK)
     , m_readOnly(readOnly)
@@ -130,8 +130,9 @@ BOOL MiniDBReceiptStorage::OpenDB(const char *filepath)
     m_cache.Release(0);
     m_cache.Flush();
 
-    // Current append position is end of file (after all pages)
-    m_nextSeek = m_cache.GetFileSize();
+    // Reset data-page state for receipt appending
+    m_dataPage = 0L;
+    m_dataSlot = 0;
     return (m_status == MINIDB_OK || m_status == MINIDB_NEW_FILE);
 }
 
@@ -158,10 +159,6 @@ BOOL MiniDBReceiptStorage::IsReadOnly()
 // Validation helpers
 // ---------------------------------------------------------------------------
 
-BOOL MiniDBReceiptStorage::IsCorrectNumber(long number)
-{
-    return (number > 0L);
-}
 
 BOOL MiniDBReceiptStorage::IsValid(Receipt const &receipt)
 {
@@ -172,26 +169,6 @@ BOOL MiniDBReceiptStorage::IsValid(Receipt const &receipt)
 // Existence / Retrieval
 // ---------------------------------------------------------------------------
 
-BOOL MiniDBReceiptStorage::Exist(long number, int boothNumber) const
-{
-    long dataSeek;
-    return m_btree.Find(number, boothNumber, dataSeek);
-}
-
-BOOL MiniDBReceiptStorage::Get(Receipt &receipt, long number, int boothNumber)
-{
-    long dataSeek;
-    if (!m_btree.Find(number, boothNumber, dataSeek))
-        return FALSE;
-
-    int fd = m_cache.GetFileDesc();
-    if (fd == -1)
-        return FALSE;
-
-    lseek(fd, dataSeek, SEEK_SET);
-    int n = read(fd, &receipt, sizeof(Receipt));
-    return (n == (int)sizeof(Receipt));
-}
 
 // ---------------------------------------------------------------------------
 // Add / Update / Delete
@@ -202,26 +179,55 @@ BOOL MiniDBReceiptStorage::Add(const Receipt &receipt)
     if (m_readOnly)
         return FALSE;
 
-    int fd = m_cache.GetFileDesc();
-    if (fd == -1)
+    if (m_dataPage == 0L || m_dataSlot >= MDB_RECIPTS_PER_PAGE)
+    {
+        m_dataPage = m_cache.GetAllocPage(PAGE_DATA);
+        if (m_dataPage == 0L)
+            return FALSE;
+        m_dataSlot = 0;
+    }
+
+    BYTE *page = m_cache.GetPageW(m_dataPage);
+    if (!page)
         return FALSE;
 
-    // Seek to end of file — receipts are stored past all page data
-    long dataSeek = lseek(fd, 0, SEEK_END);
-    if (dataSeek == -1L)
-        return FALSE;
-
-    // Write receipt data at the append offset
-    int n = write(fd, &receipt, sizeof(Receipt));
-    if (n != (int)sizeof(Receipt))
-        return FALSE;
+    // Write receipt into the page at the next free slot
+    int offset = MINIDB_HDR_SIZE + m_dataSlot * (int)sizeof(Receipt);
+    memcpy(page + offset, &receipt, sizeof(Receipt));
+    PageHeader *hdr = (PageHeader *)page;
+    hdr->NumKeys = (UINT)(m_dataSlot + 1);   // receipts stored on page
+    m_cache.Release(m_dataPage);
 
     // Insert into B-tree index
+    long dataSeek = MDB_DataSeekEncode(m_dataPage, m_dataSlot);
     if (!m_btree.Insert(receipt.Number, receipt.BoothNumber, dataSeek))
         return FALSE;
 
-    // Update next seek position for fast path
-    m_nextSeek = dataSeek + sizeof(Receipt);
+    // Advance slot for next receipt
+    m_dataSlot++;
+    return TRUE;
+}
+
+BOOL MiniDBReceiptStorage::Get(Receipt &receipt, long number, int boothNumber)
+{
+    if (boothNumber < 0)
+        boothNumber = 0;
+
+    long dataSeek;
+    if (!m_btree.Find(number, boothNumber, dataSeek))
+        return FALSE;
+
+    long pn = MDB_DataSeekPage(dataSeek);
+    int  sl = MDB_DataSeekSlot(dataSeek);
+
+    BYTE *pg = m_cache.GetPage(pn);
+    if (!pg)
+        return FALSE;
+
+    int off = MINIDB_HDR_SIZE + sl * (int)sizeof(Receipt);
+    memcpy(&receipt, pg + off, sizeof(Receipt));
+    m_cache.Release(pn);
+
     return TRUE;
 }
 
@@ -234,13 +240,18 @@ BOOL MiniDBReceiptStorage::Update(const Receipt &receipt)
     if (!m_btree.Find(receipt.Number, receipt.BoothNumber, dataSeek))
         return FALSE;
 
-    int fd = m_cache.GetFileDesc();
-    if (fd == -1)
+    long pageNum = MDB_DataSeekPage(dataSeek);
+    int  slot    = MDB_DataSeekSlot(dataSeek);
+
+    BYTE *page = m_cache.GetPageW(pageNum);
+    if (!page)
         return FALSE;
 
-    lseek(fd, dataSeek, SEEK_SET);
-    int n = write(fd, &receipt, sizeof(Receipt));
-    return (n == (int)sizeof(Receipt));
+    int offset = MINIDB_HDR_SIZE + slot * (int)sizeof(Receipt);
+    memcpy(page + offset, &receipt, sizeof(Receipt));
+    m_cache.Release(pageNum);
+
+    return TRUE;
 }
 
 BOOL MiniDBReceiptStorage::Delete(long number, int boothNumber)
@@ -251,6 +262,11 @@ BOOL MiniDBReceiptStorage::Delete(long number, int boothNumber)
     return m_btree.Delete(number, boothNumber);
 }
 
+BOOL MiniDBReceiptStorage::Exist(long number, int boothNumber) const
+{
+    long dummy;
+    return m_btree.Find(number, boothNumber, dummy);
+}
 // ---------------------------------------------------------------------------
 // Number queries — delegate to B-tree
 // ---------------------------------------------------------------------------
@@ -275,21 +291,10 @@ long MiniDBReceiptStorage::GetFirstNumber() const
     return m_btree.GetFirstNumber();
 }
 
-long MiniDBReceiptStorage::GetLastNumber() const
-{
-    return m_btree.GetLastNumber();
-}
-
-// ---------------------------------------------------------------------------
-// Enumeration — in-order walk via B-tree
-// ---------------------------------------------------------------------------
-
 void MiniDBReceiptStorage::EnumReceipts(CallbackFnPtr callback)
 {
-    // In-order enumeration requires walking the B-tree in sorted order.
-    // Since the B-tree stores leaf entries sorted by (number, booth),
-    // we walk leaf pages from left to right via RightSibling links.
     long leafPage = m_btree.GetFirstLeaf();
+
     while (leafPage != 0L)
     {
         BYTE *page = m_cache.GetPage(leafPage);
@@ -302,18 +307,27 @@ void MiniDBReceiptStorage::EnumReceipts(CallbackFnPtr callback)
 
         for (UINT i = 0; i < numKeys; i++)
         {
-            // Skip deleted entries
             if (entries[i].Flags & 0x0001)
                 continue;
 
-            // Read the receipt at DataSeek
-            Receipt receipt;
-            int fd = m_cache.GetFileDesc();
-            lseek(fd, entries[i].DataSeek, SEEK_SET);
-            int n = read(fd, &receipt, sizeof(Receipt));
-            if (n == (int)sizeof(Receipt) && IsValid(receipt))
+            long pn  = MDB_DataSeekPage(entries[i].DataSeek);
+            int  sl  = MDB_DataSeekSlot(entries[i].DataSeek);
+
+            BYTE *dPage = m_cache.GetPage(pn);
+            if (!dPage)
             {
-                if (!callback(receipt))
+                m_cache.Release(leafPage);
+                return;
+            }
+
+            int off = MINIDB_HDR_SIZE + sl * (int)sizeof(Receipt);
+            Receipt r;
+            memcpy(&r, dPage + off, sizeof(Receipt));
+            m_cache.Release(pn);
+
+            if (IsValid(r))
+            {
+                if (!callback(r))
                 {
                     m_cache.Release(leafPage);
                     return;
@@ -325,6 +339,16 @@ void MiniDBReceiptStorage::EnumReceipts(CallbackFnPtr callback)
         m_cache.Release(leafPage);
         leafPage = rightSibling;
     }
+}
+
+long MiniDBReceiptStorage::GetLastNumber() const
+{
+    return m_btree.GetLastNumber();
+}
+
+BOOL MiniDBReceiptStorage::IsCorrectNumber(long number)
+{
+    return (number > 0L && number < 100000000L);
 }
 
 // ---------------------------------------------------------------------------

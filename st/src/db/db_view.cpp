@@ -142,10 +142,15 @@ EVENT_TYPE DBView::Event(const UI_EVENT &event)
 
 	case UE_VIEW:
 		if (m_bFromTurn)
+		{
+			// Start at the first receipt of the turn
+			long firstNum = g_dbEngine->GetDBStorage().GetFirstNumber();
+			if (firstNum)
+				m_pwNumber->DataSet(&UI_BIGNUM(firstNum));
 			m_pwNumber->Event(UI_EVENT(L_SELECT, 0));
+		}
 		else
 			m_pwDate->Event(UI_EVENT(L_SELECT, 0));
-
 		break;
 
 	default:
