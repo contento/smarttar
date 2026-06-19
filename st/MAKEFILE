@@ -288,6 +288,8 @@ $(OBJ_DIR)\dstatist.obj: $(SOURCE_DIR)\db\dstatist.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\dstorage.obj:   $(SOURCE_DIR)\db\dstorage.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
+$(OBJ_DIR)\d_ext_st.obj: $(SOURCE_DIR)\db\d_ext_st.cpp
+	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\minidb_cache.obj: $(SOURCE_DIR)\db\minidb\cache.cpp
 	$(CC) $(OBJ_CC_OPTIONS) -o$@ $**
 $(OBJ_DIR)\minidb_btree.obj: $(SOURCE_DIR)\db\minidb\btree.cpp
