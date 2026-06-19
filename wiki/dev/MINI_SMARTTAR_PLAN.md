@@ -236,27 +236,20 @@ Phase 1 produces a smaller, demo-only DOS app. Phase 2 makes it **portable** by
 isolating the three things a new compiler / new OS cannot keep:
 **DOS, Pharlap, and Zinc.** No port happens here — we install the seams.
 
-### 2.1 Receipts → CSV behind `DB_STORAGE_BACKEND`
+### 2.1 Receipt storage abstraction
 
 The single most portability-blocking artifact is the **binary, seek-indexed
-`RX.DAT`**. Make CSV the demo default behind an abstraction:
+`RX.DAT`**. This is already solved — **MiniDB** (implemented in v2.97.0+) provides
+a pluggable storage backend behind `IReceiptStorage` / `IStatisticsStorage` interfaces:
 
-- New abstract `DB_STORAGE_BACKEND` (in `core/include/`) exposing the operations
-  `DB_ENGINE` actually needs: `Add`, `Update`, `Get`, iterate, count, repair.
-  Derive the API from current `DB_ENGINE` usage so the facade is unchanged.
-- `CsvStorage` (default for `demo_dos`): one CSV row per `Receipt`; an in-memory
-  index built on load (record count is small for demo). Human-readable, trivially
-  portable, no seek math. Statistics recomputed from rows on load/repair.
-- `BinStorage` (legacy): the existing `dstorage.cpp` behaviour, kept behind the
-  same interface for anyone needing to read old `RX.DAT` archives.
-- Backend chosen by config (`ST.INI`, e.g. `STORAGE=csv|bin`), default `csv`.
-- The parallel extension store (`RXX.*`) and `RX.STA` follow the same backend
-  selection.
+- `FlatFileStorage` (legacy): the existing `dstorage.cpp` behaviour, selectable via `MINIDB=0`.
+- `MiniDBStorage` (default): B+tree on `.db` file, atomic commit, indexed lookups.
+- Backend chosen by config (`ST.INI`, `MINIDB=0|1`), default `MiniDB`.
+- The parallel extension store (`RXX.*`) and `RX.STA` follow the same backend selection.
 
-Risk: ~1000–1400 LOC, statistics recompute, archive back-compat. Mitigation:
-land `BinStorage` (pure extraction, behaviour-identical) **first** as its own
-green checkpoint, then add `CsvStorage`, then flip the default. The Phase 0
-golden artifacts validate round-trip equivalence.
+For the mini/portability split, the existing `IReceiptStorage` interface can be
+extended with additional implementations (e.g., in-memory for testing, or a
+future portable format) without changing `DB_ENGINE`.
 
 ### 2.2 Catalogue the platform seams (design, not implementation)
 
@@ -275,7 +268,7 @@ Deliverable of 2.2 is a **`PORTABILITY.md`** seam catalogue, not code.
 
 ### 2.3 Phase 2 exit criteria
 
-- Demo runs on CSV storage; binary archives still readable via `BinStorage`.
+- Demo builds and runs with MiniDB storage backend.
 - Every platform seam is named, located, and rated in `PORTABILITY.md`.
 - The dependency on DOS/Pharlap/Zinc is concentrated, not diffuse.
 
@@ -287,12 +280,12 @@ Out of scope to execute; recorded so Phase 1–2 decisions stay aligned with it.
 The strip-down + seams above are precisely what make this feasible:
 
 - The `core/` subtree (engine-agnostic, hardware behind `I*`, config from `.ini`,
-  receipts as CSV) is the **first candidate to re-implement** in a new language —
-  it has the fewest platform tentacles.
+  receipts in MiniDB `.db` format) is the **first candidate to re-implement** in
+  a new language — it has the fewest platform tentacles.
 - `demo_dos`/`real_dos`/`Null*` boundaries map cleanly onto a future
   trait/interface system in the target language.
-- CSV + `.ini` mean **data formats are already language-neutral** — a rewrite
-  shares files with the C++ build during transition.
+- MiniDB `.db` + `.ini` mean **data formats are already language-neutral** — a
+  rewrite shares files with the C++ build during transition.
 - Language choice, FFI-vs-rewrite strategy, and UI-replacement are deferred to a
   dedicated Phase 3 doc once Phase 2 lands.
 
@@ -300,8 +293,6 @@ The strip-down + seams above are precisely what make this feasible:
 
 ## 8. Risks & open items
 
-- **CSV round-trip fidelity** for statistics and the extension store is the main
-  technical risk; gated behind the BinStorage-first checkpoint.
 - **Zinc resource (`res.dat`)** still binds the UI to DOS Zinc; untouched here.
   It is the biggest *unaddressed* portability cost — flagged for Phase 2 catalogue
   only.
@@ -323,9 +314,7 @@ The strip-down + seams above are precisely what make this feasible:
 | 1.3 | hardware behind I*/Null*, st.cpp ifdef-free | demo green |
 | 1.4 | config from ST.INI, ini2cfg gone | demo green |
 | 1.5 | two variants; real_dos #errors | demo green / real_dos errors |
-| 2.1a | BinStorage extracted behind backend iface | demo green (binary) |
-| 2.1b | CsvStorage added, default flipped to csv | demo green (csv) |
-| 2.2 | PORTABILITY.md seam catalogue | doc |
+| 2.1 | Storage abstraction via MiniDB interfaces | demo green |
 | 3 | C++-exit plan | doc (separate) |
 
 ---

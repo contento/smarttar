@@ -176,78 +176,71 @@ Introduce a virtual `IStorage` interface so the receipt lifecycle is decoupled f
 ```
 ReceiptStorage   ← interface (Add/Get/Update/Delete/Enum/Repair)
   ├─ FlatFileStorage    ← current binary format (default)
-  └─ [future: SqliteStorage, etc.]
+  └─ MiniDBStorage     ← B+tree on .db (implemented)
 ```
 
 This is the same pattern used to decouple `RT_ENGINE` / `DEMO_ENGINE` in the Template Method hierarchy. Benefits:
 
 - Testable: mock `ReceiptStorage` in unit tests without touching real files
-- Replaceable: swap in a SQLite backend later without touching `db_eng.cpp`
 - Observable: a logging proxy between interface and implementation
 
 **Effort:** 5-8 days. **Risk:** Medium. Touches every receipt operation in control/engine.
 
-### Proposal C: Replace with embedded SQLite (high effort, high payoff)
+### Proposal C: Replace with embedded SQLite ~~(high effort, high payoff)~~ **REJECTED**
 
-Port receipt storage + statistics to SQLite (via `sqlite3` amalgamation compiled under Open Watcom). One `.db` file replaces `.DAT` + `.IDX` + `.STA`:
+~~Port receipt storage + statistics to SQLite (via `sqlite3` amalgamation compiled under Open Watcom). One `.db` file replaces `.DAT` + `.IDX` + `.STA`:~~
 
-- Atomic transactions — no .DAT/.IDX/.STA inconsistency possible
-- Real time-series queries — "revenue last 3 hours" without Repair()
-- Indexed — no IndexCache, no batch-size tuning
-- Schema migration — `ALTER TABLE` replaces zero-init Dummy fields
-- CRUD is ACID, not logical-delete-and-repair
+~~- Atomic transactions — no .DAT/.IDX/.STA inconsistency possible~~
+~~- Real time-series queries — "revenue last 3 hours" without Repair()~~
+~~- Indexed — no IndexCache, no batch-size tuning~~
+~~- Schema migration — `ALTER TABLE` replaces zero-init Dummy fields~~
+~~- CRUD is ACID, not logical-delete-and-repair~~
 
-**Statements the current logic would map to:**
+~~**Statements the current logic would map to:**~~
 
-```sql
--- Receipts (replaces .DAT + .IDX)
-CREATE TABLE receipts (
-    number      INTEGER PRIMARY KEY,
-    tag         INTEGER NOT NULL,
-    stat        INTEGER NOT NULL,
-    date        INTEGER NOT NULL,
-    time        INTEGER NOT NULL,
-    booth       INTEGER NOT NULL,
-    city        TEXT,
-    phone       TEXT,
-    elapsed     INTEGER,
-    ceil_min    REAL,
-    percent     INTEGER,
-    value       REAL NOT NULL,
-    tax         REAL,
-    tax2        REAL,
-    created_at  TEXT DEFAULT (datetime('now'))
-);
+~~```sql~~
+~~-- Receipts (replaces .DAT + .IDX)~~
+~~CREATE TABLE receipts (~~
+~~    number      INTEGER PRIMARY KEY,~~
+~~    tag         INTEGER NOT NULL,~~
+~~    stat        INTEGER NOT NULL,~~
+~~    date        INTEGER NOT NULL,~~
+~~    time        INTEGER NOT NULL,~~
+~~    booth       INTEGER NOT NULL,~~
+~~    city        TEXT,~~
+~~    phone       TEXT,~~
+~~    elapsed     INTEGER,~~
+~~    ceil_min    REAL,~~
+~~    percent     INTEGER,~~
+~~    value       REAL NOT NULL,~~
+~~    tax         REAL,~~
+~~    tax2        REAL,~~
+~~    created_at  TEXT DEFAULT (datetime('now'))~~
+~~);~~
+~~
+~~-- Statistics (replaces .STA)~~
+~~CREATE TABLE statistics (~~
+~~    period_type INTEGER NOT NULL,  -- YEAR/MONTH/WEEK/DAY/TURN~~
+~~    period_key  TEXT NOT NULL,      -- '2026', '2026-06', '2026-W25', etc.~~
+~~    service     INTEGER NOT NULL,   -- TEL/FAX/etc.~~
+~~    receipts    INTEGER DEFAULT 0,~~
+~~    talk_min    REAL DEFAULT 0,~~
+~~    paid_min    REAL DEFAULT 0,~~
+~~    value       REAL DEFAULT 0,~~
+~~    tax         REAL DEFAULT 0,~~
+~~    PRIMARY KEY (period_type, period_key, service)~~
+~~);~~
+~~```~~
 
--- Statistics (replaces .STA)
-CREATE TABLE statistics (
-    period_type INTEGER NOT NULL,  -- YEAR/MONTH/WEEK/DAY/TURN
-    period_key  TEXT NOT NULL,      -- '2026', '2026-06', '2026-W25', etc.
-    service     INTEGER NOT NULL,   -- TEL/FAX/etc.
-    receipts    INTEGER DEFAULT 0,
-    talk_min    REAL DEFAULT 0,
-    paid_min    REAL DEFAULT 0,
-    value       REAL DEFAULT 0,
-    tax         REAL DEFAULT 0,
-    PRIMARY KEY (period_type, period_key, service)
-);
-```
+~~**Effort:** 15-20 days. **Risk:** High. Requires Open Watcom toolchain + sqlite3 amalgamation compile. Crunch time if the goal is "working product" vs "learning exercise."~~
 
-**Effort:** 15-20 days. **Risk:** High. Requires Open Watcom toolchain + sqlite3 amalgamation compile. Crunch time if the goal is "working product" vs "learning exercise."
 
-### Proposal D: CSV/JSON as canonical + binary cache (exotic)
+**Decision:** MiniDB (implemented below) provides the same benefits — atomic commit, indexed lookups, single `.db` file — without the SQLite dependency and Open Watcom toolchain requirement. SQLite is not needed.
+### Proposal D: CSV/JSON as canonical + binary cache ~~(exotic)~~ **REJECTED**
 
-Store receipts as append-only CSV lines (one line = one receipt). Periodically rebuild a binary index. SQLite already does this better — not recommended.
+~~Store receipts as append-only CSV lines (one line = one receipt). Periodically rebuild a binary index. SQLite already does this better — not recommended.~~
 
----
-
-## Recommendation
-
-**Phase 1 (Proposal A):** Compute CheckSum, add record CRC, compact on Archive, auto-flush statistics. 3-5 days, backward-compatible, buys integrity for free.
-
-**Phase 2 (Proposal B):** Abstract `ReceiptStorage` / `StatisticsStorage` interfaces. 5-8 days. Enables testing, mock receipts, and a clean seam for Phase 3.
-
-**Phase 3 (Proposal C):** Optionally replace the concrete impl with SQLite. Can be deferred indefinitely — Phase 1 + 2 already fix the integrity gaps and enable testing.
+**Decision:** MiniDB provides structured, indexed storage without the complexity of maintaining a separate binary index over CSV. CSV is not needed.
 
 ---
 
@@ -267,13 +260,6 @@ Store receipts as append-only CSV lines (one line = one receipt). Periodically r
 - `src/db/mock_storage.cpp` — in-memory impl for testbeds
 - `src/db/db_eng.cpp` — wire through factory instead of owning concrete
 - `include/db_eng.h` — replace `DB_STORAGE *` with `IReceiptStorage *`
-
-### Phase 3 — SQLite
-- `vendor/sqlite/` — amalgamation (sqlite3.c + sqlite3.h)
-- `src/db/sqlite_storage.cpp` — `IReceiptStorage` impl over SQLite
-- `src/db/sqlite_statistics.cpp` — `IStatisticsStorage` impl
-- `include/db_eng.h` — factory switch selects backend
-- `util/migrate/` — tool to convert existing .DAT/.IDX/.STA to .db
 
 ---
 
