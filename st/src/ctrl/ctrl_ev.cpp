@@ -523,6 +523,7 @@ EVENT_TYPE CONTROLLER::Event(const UI_EVENT &event)
                     }
                 }
             }
+            break;
         case UE_PAY_FROM_UIW_RECEIPT:
             {
                 // ---

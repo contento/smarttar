@@ -22,6 +22,8 @@ static int CompareEntry(long number, int boothNumber, BTreeLeafEntry const &e)
 {
     if (number < e.Number) return -1;
     if (number > e.Number) return 1;
+    // boothNumber=-1 means "any booth" — match on number only
+    if (boothNumber < 0) return 0;
     if (boothNumber < e.BoothNumber) return -1;
     if (boothNumber > e.BoothNumber) return 1;
     return 0;

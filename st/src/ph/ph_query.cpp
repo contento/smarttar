@@ -196,7 +196,7 @@ BOOL PhoneQueryWindow::Recalc()
 
 	// city
 	pszToken = pszCP;
-	while (*pszCP != ':')
+	while (*pszCP && *pszCP != ':')
 		++pszCP;
 	CITY_NAME szCity;
 
@@ -206,7 +206,7 @@ BOOL PhoneQueryWindow::Recalc()
 
 	// tariff
 	pszToken = ++pszCP;
-	while (*pszCP != '=')
+	while (*pszCP && *pszCP != '=')
 		++pszCP;
 	STR16 szTariff;
 

@@ -245,6 +245,7 @@ BOOL MiniDBReceiptStorage::Add(const Receipt &receipt)
         if (p0)
         {
             ((DBInfo *)p0)->RootPage = rootPage;
+            ((DBInfo *)p0)->NumReceipts++;
             m_cache.Release(0);
         }
     }
@@ -253,8 +254,6 @@ BOOL MiniDBReceiptStorage::Add(const Receipt &receipt)
 }
 BOOL MiniDBReceiptStorage::Get(Receipt &receipt, long number, int boothNumber)
 {
-    if (boothNumber < 0)
-        boothNumber = 0;
 
     long dataSeek;
     if (!m_btree.Find(number, boothNumber, dataSeek))

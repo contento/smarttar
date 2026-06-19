@@ -68,11 +68,14 @@ DB_EXT_STATISTICS::DB_EXT_STATISTICS(const char *path, const char *name, int rea
     {
         Init();
         File = creat(Filename, S_IREAD|S_IWRITE);
-        FILE_HEADER header;
-        write(File, &header, sizeof(header));
-        write(File, NonCritical, sizeof(DXS_NON_CRITICAL_ENTRY)*MAX_BOOTH);
-        write(File, Critical, sizeof(DXS_CRITICAL_ENTRY));
-        Status |= NEW;
+        if (File != -1)
+        {
+            FILE_HEADER header;
+            write(File, &header, sizeof(header));
+            write(File, NonCritical, sizeof(DXS_NON_CRITICAL_ENTRY)*MAX_BOOTH);
+            write(File, Critical, sizeof(DXS_CRITICAL_ENTRY));
+            Status |= NEW;
+        }
     }
 }
 
@@ -193,7 +196,7 @@ BOOL DB_EXT_STATISTICS::Repair(DB_STORAGE *dBStorage, BOOL all)
 	//
 #if defined(__TEST__)
 #if !defined(__UTIL__)
- //	cprintf("\n\r- Extensi¢n Statistics file, Record: ");
+ //	cprintf("\n\r- Extensiï¿½n Statistics file, Record: ");
  //	short x = wherex(), y = wherey(); // 2.21.8 Build 6
 #endif
 #endif

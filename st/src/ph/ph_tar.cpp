@@ -256,7 +256,7 @@ PH_ENGINE::SCHEDULE_ENTRY& PH_ENGINE::GetDDISchedule(WORD dayType, WORD number)
 BOOL PH_ENGINE::IsDDIReduced(WORD schedule, WORD dayType, WORD time, WORD& percent)
 {
     percent = 100; // !!! look out with this default
-    WORD offset, len;
+    WORD offset = 0, len = 0;
     // adjust offsets and lengths into table
     switch (schedule)
     {

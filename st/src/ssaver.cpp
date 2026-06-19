@@ -30,13 +30,20 @@ SSAVER::SSAVER(void) : UI_DEVICE(E_SAVER, D_ON),
         {
             bmpFile->Load(&BmpWidth);
             bmpFile->Load(&BmpHeight);
-            Bmp = new UCHAR[BmpWidth*BmpHeight];
-            bmpFile->Load(Bmp, sizeof(UCHAR), BmpWidth*BmpHeight);
+            long bmpSize = (long)BmpWidth * (long)BmpHeight;
+            if (bmpSize > 0)
+            {
+                Bmp = new UCHAR[bmpSize];
+                bmpFile->Load(Bmp, sizeof(UCHAR), bmpSize);
+            }
         }
         delete bmpFile;
         //
-        MaxCols = display->columns-BmpWidth;
-        MaxLines= display->lines-BmpHeight;
+        if (Bmp)
+        {
+            MaxCols = display->columns-BmpWidth;
+            MaxLines= display->lines-BmpHeight;
+        }
     }
 }
 

@@ -29,7 +29,7 @@ BOOL EEPROM::isValidVersion(void)
 #if (APP_MAJOR_VER == 2)
 	if (strlen(versionId) == strlen(bytes))
 	{
-		// Force the version to be written by MicroDise¤o before installation.
+		// Force the version to be written by MicroDiseï¿½o before installation.
 		// GCC SmartTar 2.xx.x. V 2.33 build 2
 		ok =
 			bytes[13] == '2' &&
@@ -88,9 +88,12 @@ void EEPROM::write(const BYTE *bytes, int nBytes)
     release();
     //
     BYTE wrBytes[80];
-    swab((char *)bytes, wrBytes, nBytes);
+    int copyLen = nBytes;
+    if (copyLen > (int)sizeof(wrBytes))
+        copyLen = (int)sizeof(wrBytes);
+    swab((char *)bytes, wrBytes, copyLen);
     BYTE address = 0x40; // ???
-    for (int i=0; i < nBytes; i++)
+    for (int i=0; i < copyLen; i++)
     {
         init();
         out(address);
@@ -101,7 +104,7 @@ void EEPROM::write(const BYTE *bytes, int nBytes)
         address++;
     }
     // v.220. HJ/gc
-    setPrg();   // CS=PRE=PE=1, Habilita Protección de memoria
+    setPrg();   // CS=PRE=PE=1, Habilita Protecciï¿½n de memoria
     out(0x30);  // 00110000=PREN
     release();
     setPrg();
