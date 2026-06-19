@@ -218,30 +218,29 @@ void CFG::AdjustHeader(void)
     if (strlen(HEADER_LINE1))
     {
     	if (FORM == DR_80)
-        	strcat(HEADER_LINE, "\t");
-    	strcat(HEADER_LINE, HEADER_LINE1);
-        strcat(HEADER_LINE, "\n");
+        	strncat(HEADER_LINE, "\t", sizeof(HEADER_LINE) - strlen(HEADER_LINE) - 1);
+    	strncat(HEADER_LINE, HEADER_LINE1, sizeof(HEADER_LINE) - strlen(HEADER_LINE) - 1);
+        strncat(HEADER_LINE, "\n", sizeof(HEADER_LINE) - strlen(HEADER_LINE) - 1);
     }
     if (strlen(HEADER_LINE2))
     {
     	if (FORM == DR_80)
-        	strcat(HEADER_LINE, "\t");
-    	strcat(HEADER_LINE, HEADER_LINE2);
-        strcat(HEADER_LINE, "\n");
+        	strncat(HEADER_LINE, "\t", sizeof(HEADER_LINE) - strlen(HEADER_LINE) - 1);
+    	strncat(HEADER_LINE, HEADER_LINE2, sizeof(HEADER_LINE) - strlen(HEADER_LINE) - 1);
+        strncat(HEADER_LINE, "\n", sizeof(HEADER_LINE) - strlen(HEADER_LINE) - 1);
     }
     if (strlen(HEADER_LINE3))
     {
     	if (FORM == DR_80)
-        	strcat(HEADER_LINE, "\t");
-
-    	strcat(HEADER_LINE, HEADER_LINE3);
-        strcat(HEADER_LINE, "\n");
+        	strncat(HEADER_LINE, "\t", sizeof(HEADER_LINE) - strlen(HEADER_LINE) - 1);
+    	strncat(HEADER_LINE, HEADER_LINE3, sizeof(HEADER_LINE) - strlen(HEADER_LINE) - 1);
+        strncat(HEADER_LINE, "\n", sizeof(HEADER_LINE) - strlen(HEADER_LINE) - 1);
     }
     if (strlen(HEADER_LINE4))
     {
     	if (FORM == DR_80)
-        	strcat(HEADER_LINE, "\t");
-    	strcat(HEADER_LINE, HEADER_LINE4);
+        	strncat(HEADER_LINE, "\t", sizeof(HEADER_LINE) - strlen(HEADER_LINE) - 1);
+    	strncat(HEADER_LINE, HEADER_LINE4, sizeof(HEADER_LINE) - strlen(HEADER_LINE) - 1);
     }
 }
 
@@ -349,6 +348,7 @@ void CFG::FillCfgTable(ENTRY *table)
 #define Entry(entry, type) 			\
 	if (offset < MAX_ID_VALUES) {   	\
 	table[offset].Type  = type;   	\
+	table[offset].Size = sizeof(entry); \
 	table[offset].Id    = #entry; 	\
 	table[offset].Value = &entry; 	\
 	}                             	\
@@ -629,8 +629,8 @@ BOOL CFG::Line2Entry(const ENTRY *table, const char *line)
 					if (isspace(strLine[i]))
 						memmove(&strLine[i], &strLine[i+1], strlen(&strLine[i+1]) + 1);
 			}
-			strcpy((char *)table[offset].Value, strLine);
-			break;
+			strncpy((char *)table[offset].Value, strLine, table[offset].Size - 1);
+			((char *)table[offset].Value)[table[offset].Size - 1] = '\0';
 		}
 	}
 

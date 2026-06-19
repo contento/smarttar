@@ -352,6 +352,7 @@ private:
             NO_SPACES = 0x0800
         };
         WORD  Type;
+        WORD  Size;
         char *Id;      // token identifier
         void *Value;   // token value pointer
 	};
