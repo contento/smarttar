@@ -278,22 +278,6 @@ max_duration_secs = 1800
   `demo.ini [GLOBAL]` (0 = unlimited). Engine counts run-ticks and triggers
   the same graceful drain as a manual stop; resume resets the budget.
 
-## Milestone: Toolchain portability — v4.0
-
-- [ ] **Build with open-source toolchains** — see
-      [MIGRATION_PLAN_OWZ.md](wiki/dev/MIGRATION_PLAN_OWZ.md) for the full risk
-      assessment. Three independent layers:
-  - **Extender swap** (Low risk): Phar Lap 286 → DOS/4GW via Open Watcom
-    `wlink system dos4g`. PHAPI → DPMI calls are mechanical. First step.
-  - **Compiler swap** (High risk): Borland C++ 3.1 → Open Watcom v2
-    (`wcc386`). 16-bit→32-bit model, `far`/`near`/`huge`, inline asm,
-    pre-compiled headers all need work. Per-file incremental migration.
-  - **UI library swap** (High risk): Zinc 3.5 → OpenZinc. Differences PDF
-    lists API changes; `RES.DAT` format may differ. Optional — only after
-    compiler + extender swap produces a working EXE.
-  **Recommended first step:** Install Open Watcom v2 inside DOSBox-X and try
-  compiling `cstr.cpp` (no external dependencies) with `wcc386`. This alone
-  reveals whether the path is viable.
 ## Milestone: Documentation -- Obsidian wiki (EN + ES)
 
 **Status (2026-06-09): wiki complete.** All 119 pages are in place,
@@ -485,13 +469,6 @@ updated together, so partial commits would be broken intermediate states.
 Loose notes that aren't ready to be scheduled. Promote into a milestone
 when scoped.
 
-- **OpenZinc** — open-source continuation of Zinc Interface Library;
-  may be relevant for UI bug fixes or toolchain portability work.
-  <http://www.openzinc.com/index.html>
-- **Open Watcom** — open-source successor to Watcom C/C++; closest
-  drop-in replacement for Borland C++ 3.1 targeting 16/32-bit DOS.
-  Could replace BCC286 + Pharlap in the "Toolchain portability"
-  milestone (see above).  <https://github.com/open-watcom/open-watcom-v2>
 - [x] **Print all receipts as PDF** — `P_PORT=pdf` in `st.ini` routes all
   spooler output through `pdf_wr.c`. Receipts are written to
   `bin/PDF/RXYYMMDD.pdf` (one file per day). Multi-receipt per page
@@ -501,13 +478,6 @@ when scoped.
   `SPOOLER::Print` intercepts when `P_PORT="pdf"`, strips ESC/P codes,
   writes plain text through the PDF writer. No separate `pr_*.dll` needed —
   the interception happens at the spooler level, before printer drivers.
-  `SPOOLER::Terminate()` ensures xref/trailer/%%EOF are written.
-- **Add more screenshots** — capture additional UI states and workflows
- (e.g. tariff table, receipt printing, config screen) to enrich the
- wiki and README visual assets.
-- **Demo simulator GIF** — record a short animated GIF (~10–15 s) of the
-  DEMO_ENGINE running in DOSBox-X showing booths going through the call
-  lifecycle (idle → ringing → offhook → talk → onhook). ~500 KB target,
   compress with `gifsicle -O3`. Add to README.md Screenshots section
   and wiki/dev/ for the DEMO_ENGINE milestone documentation.
 - **Add original manuals** — include the original SmartTar manuals
@@ -530,6 +500,6 @@ redistribution issues in the main smarttar repo.
 - [x] Update `run.sh` / `run.ps1` — same vendor/ check
 - [x] Update `README.md` / `README.es.md` — vendor setup instructions in Quick Start
 - [x] Update `CLAUDE.md` — repository layout reflects vendor is external
-- [ ] Remove `vendor/` from this repo's git history (once private repo is confirmed working)
+- [x] Remove `vendor/` from this repo's git history (once private repo is confirmed working)
 - [x] Update CI workflow (`.github/workflows/release.yml`) to clone vendor/ before build
 - [x] Verify build works with vendor/ cloned from private repo (not tracked locally)
