@@ -143,8 +143,6 @@ EVENT_TYPE UIW_TABLE::Event(const UI_EVENT &event)
                 Event(vEvent);
             }
         }
-        else if (object)
-            return (object->Event(event));
         break;
 
     case L_LEFT:
@@ -184,8 +182,6 @@ EVENT_TYPE UIW_TABLE::Event(const UI_EVENT &event)
                 Event(hEvent);
             }
         }
-        else if (object)
-            return (object->Event(event));
         break;
     case L_SCROLL_PGUP:
     case L_SCROLL_PGDN:

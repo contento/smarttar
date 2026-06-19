@@ -1051,9 +1051,6 @@ EVENT_TYPE UIW_ROUND::Event(const UI_EVENT &event)
 		wButton = (UIW_BUTTON*) Get("W_020");
 		if (FlagSet(wButton->woStatus, WOS_SELECTED))
 			g_cfg->M_ROUND = 0.20;
-		wButton = (UIW_BUTTON*) Get("W_010");
-		if (FlagSet(wButton->woStatus, WOS_SELECTED))
-			g_cfg->M_ROUND = 0.10;
 		wButton = (UIW_BUTTON*) Get("W_025");
 		if (FlagSet(wButton->woStatus, WOS_SELECTED))
 			g_cfg->M_ROUND = 0.25;

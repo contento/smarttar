@@ -8,6 +8,7 @@
 
 extern CFG *g_cfg;
 extern UINT g_pass;
+#define BORDER_DIGITS_MARGIN 0  // no margin for border calls
 
 PHONE PH_ENGINE::LockedNumbers[MAX_LOCKED_NUMBERS];
 
@@ -201,7 +202,7 @@ BOOL PH_ENGINE::IsAnswerable(const PHONE& phone, int numOfDigits, BOOL isExcepti
 			}
 		case BORDER_CALL  :
 			{
-				if (numOfDigits >= g_cfg->BORDER_DIGITS-g_cfg->INTER_DIGITS_MARGIN)
+				if (numOfDigits >= g_cfg->BORDER_DIGITS-BORDER_DIGITS_MARGIN)
 				{
 					answerable = TRUE;
 				}

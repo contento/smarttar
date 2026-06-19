@@ -367,7 +367,7 @@ void CONTROLLER::RefreshView(void)
         refreshCalls(cNum, bNum);
     }
     // one by step
-	static WORD maxBooth = g_cfg->ACTIVE_CLUSTERS*CLUSTER_SIZE;
+	WORD maxBooth = g_cfg->ACTIVE_CLUSTERS*CLUSTER_SIZE;
     boothCount = (boothCount+1)%maxBooth; // next booth
 }
 
@@ -618,6 +618,6 @@ void CONTROLLER::RefreshBoothDisplay(void)
 	}
 
 	// one step at a time
-	static WORD maxBooth = g_cfg->ACTIVE_CLUSTERS*CLUSTER_SIZE;
+	WORD maxBooth = g_cfg->ACTIVE_CLUSTERS*CLUSTER_SIZE;
 	boothCount = (boothCount+1)%maxBooth;  // next booth
 }
