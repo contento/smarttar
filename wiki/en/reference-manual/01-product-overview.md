@@ -6,7 +6,7 @@ order: 1
 ---
 
 # Product Overview
-SmartTar is a real-time telephone tariff management system designed for public telephone booth centers (*cabinas telefónicas*). It runs under MS-DOS 5.0 in 286 protected mode via the Pharlap DOS extender, and manages the complete call lifecycle from off-hook detection through tariff calculation, receipt printing, and transaction archival.
+SmartTar is a real-time telephone tariff management system designed for public telephone booth centers (*cabinas telefónicas*). It runs under MS-DOS 6.22 in 286 protected mode via the Pharlap DOS extender, and manages the complete call lifecycle from off-hook detection through tariff calculation, receipt printing, and transaction archival.
 
 SmartTar was developed by MicroDiseño Ltda. (Gonzalo Contento Castañ) starting in July 1993. Version 2.34 supports up to 32 telephone booths across 4 hardware clusters of 8 booths each.
 

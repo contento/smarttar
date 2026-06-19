@@ -6,7 +6,7 @@ order: 1
 ---
 
 # Descripción General del Producto
-SmartTar es un sistema de administración de tarifas telefónicas en tiempo real diseñado para centros de cabinas telefónicas. Funciona bajo MS-DOS 5.0 en modo protegido 286 a través del extensor de DOS Pharlap, y gestiona el ciclo completo de una llamada: desde la detección de descolgado hasta el cálculo de tarifas, la impresión de recibos y el archivo de transacciones.
+SmartTar es un sistema de administración de tarifas telefónicas en tiempo real diseñado para centros de cabinas telefónicas. Funciona bajo MS-DOS 6.22 en modo protegido 286 a través del extensor de DOS Pharlap, y gestiona el ciclo completo de una llamada: desde la detección de descolgado hasta el cálculo de tarifas, la impresión de recibos y el archivo de transacciones.
 
 SmartTar fue desarrollado por MicroDiseño Ltda. (Gonzalo Contento Castañ) desde julio de 1993. La versión 2.34 soporta hasta 32 cabinas telefónicas distribuidas en 4 clusters de hardware de 8 cabinas cada uno.
 

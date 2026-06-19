@@ -25,7 +25,7 @@ SmartTar es una aplicación de proceso único orientada a eventos, estructurada 
     |  Configuración  Logger       Salvapantallas         |
     +-----------------------------------------------------+
               Extensor de DOS Pharlap 286
-              MS-DOS 5.0 / Hardware PC
+              MS-DOS 6.22 / Hardware PC
 
 ## Componentes Principales
 

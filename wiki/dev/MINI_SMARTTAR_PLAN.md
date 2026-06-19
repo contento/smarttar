@@ -15,7 +15,7 @@ Reduce SmartTar to a **mini-smarttar**: the smallest, most portable subset that
 still runs the application end-to-end in demo mode. This is explicitly **the base
 for two future tracks**:
 
-1. **New compilers / new OSs** — get off Borland C++ 3.1 + Pharlap 286 + DOS 5.0.
+1. **New compilers / new OSs** — get off Borland C++ 3.1 + Pharlap 286 + DOS 6.22.
 2. **Moving out of C++** — eventually re-implement in another language.
 
 Therefore every decision here favours **isolation of platform-specific code

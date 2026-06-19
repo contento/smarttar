@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-SmartTar is a DOS 5.0 protected-mode point-of-sale / tariff management system. Current version: **2.98.0** (originally 2003, resurrected 2026).
+SmartTar is a DOS 6.22 protected-mode point-of-sale / tariff management system. Current version: **2.98.0** (originally 2003, resurrected 2026).
 
 **Name:** SmartTar = **Smart + Tar(ifa)**. "Tarifa" is Spanish for tariff / rate (standard in Colombia for telephone call billing). Not an acronym, not related to Unix `tar`.
 
@@ -10,9 +10,9 @@ SmartTar is a DOS 5.0 protected-mode point-of-sale / tariff management system. C
 
 ### Runtime environment
 
-- **Physical machine**: 386 (or compatible)
-- **OS**: DOS 5.0
-- **Execution model**: Pharlap 286 extended DOS — 286 protected-mode *instruction set* and segmented memory model, running on the 386 hardware via the Pharlap DOS extender. Not flat 386 mode.
+- **Physical machine**: 286 (or compatible)
+- **OS**: DOS 6.22
+- **Execution model**: Pharlap 286 extended DOS — 286 protected-mode *instruction set* and segmented memory model.
 - **Build / dev environment**: DOSBox-X (Mac and Windows)
 
 ### Toolchain
@@ -25,7 +25,7 @@ SmartTar is a DOS 5.0 protected-mode point-of-sale / tariff management system. C
 - **Build tool**: Borland `MAKE`
 ### Conventions
 
-- **DOS 8.3 filenames**: All filenames MUST respect the DOS 8.3 limit (8-char name, 3-char extension). This applies to `.cpp`, `.h`, `.prj`, directories, and any file the build toolchain touches. No exceptions — DOS 5.0/6.x does not support long filenames.
+- **DOS 8.3 filenames**: All filenames MUST respect the DOS 8.3 limit (8-char name, 3-char extension). This applies to `.cpp`, `.h`, `.prj`, directories, and any file the build toolchain touches. No exceptions — DOS 6.22 does not support long filenames.
 
 ## Project Goal
 
@@ -325,7 +325,7 @@ pr_sr80  pr_dr80  pr_lin80  pr_drpre  pr_dr40  pr_sr40  pr_dr18  pr_sr28  pr_dre
 
 ## Important Constraints
 
-- **Physical hardware: 386**, running DOS 5.0. The Pharlap extender uses the 286 protection model (segmented, not flat), but the CPU executing it is a 386.
+- **Physical hardware: 286**, running DOS 6.22. The Pharlap extender uses the 286 protection model (segmented, not flat).
 - **286 protected mode via Pharlap** — flat memory model is NOT available; use `PHAPI` for extended memory access. Large model (`-ml`): all pointers are implicitly `far`.
 - **Stack checking is OFF** (`-k-` in `st.cfg`) — do not add it back.
 - **Zinc 3.5 API** — do not use later Zinc idioms; the framework version is fixed.

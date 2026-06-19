@@ -8,7 +8,7 @@ order: 2
 # Requisitos del Sistema
 | Componente | Requisito |
 |----|----|
-| Sistema operativo | MS-DOS 5.0 o posterior |
+| Sistema operativo | MS-DOS 6.22 |
 | Procesador | Intel 80286 o compatible |
 | Memoria convencional | 640 KB (requerido por el cargador del extensor de DOS) |
 | Memoria extendida | Administrada por el extensor de DOS Pharlap 286 |

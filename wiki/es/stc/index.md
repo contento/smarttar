@@ -16,7 +16,7 @@ El STC es una aplicación de comunicación cliente/servidor para DOS en modo rea
 
 ## Requerimientos
 
-Un sistema PC con 640K de RAM, DOS 5.0 o posterior y un modem universal.
+Un sistema PC con 640K de RAM, DOS 6.22 o posterior y un modem universal.
 
 ## Archivos de la Aplicación
 

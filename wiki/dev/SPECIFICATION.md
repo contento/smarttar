@@ -16,7 +16,7 @@ SmartTar is a real-time point-of-sale system for public telephone booth operator
 
 | Component | Requirement |
 |-----------|-------------|
-| CPU | 386 or compatible (runs Pharlap 286-extended protected mode) |
+| CPU | 286 or compatible (runs Pharlap 286 protected mode) |
 | RAM | 4 MB minimum, 32 MB recommended |
 | Storage | Hard disk with DOS filesystem |
 | Display | VGA/BGI-compatible (SVGA_S3 under DOSBox-X) |
@@ -25,8 +25,8 @@ SmartTar is a real-time point-of-sale system for public telephone booth operator
 
 ### 1.3 Operating Environment
 
-- **OS:** DOS 5.0 (or compatible)
-- **Execution:** Pharlap 286 DOS extender v3.0 — 286 protected-mode instruction set on 386 hardware, segmented memory model
+- **OS:** DOS 6.22
+- **Execution:** Pharlap 286 DOS extender v3.0 — 286 protected-mode instruction set, segmented memory model
 - **UI:** Zinc Interface Library 3.5 (BGI graphics)
 - **Build:** Borland C++ 3.1 + Borland MAKE 3.6 + Turbo Assembler + TLINK
 
@@ -749,7 +749,7 @@ SmartTar Pro variant adds extension lines (secondary internal lines per booth) a
 
 | Metric | Requirement |
 |--------|-------------|
-| Booth polling latency | ≤ 1 tick (18.2 ms) for all 32 booths |
+| Booth polling latency | < 10 ms for all 32 booths |
 | Receipt storage | ≤ 10 ms per `IReceiptStorage::Add()` |
 | UI refresh | Configurable 100–1000 ms interval (default 500 ms) |
 | Page cache | 1024 entries minimum (configurable via `CACHE_SIZE`) |
@@ -763,14 +763,14 @@ SmartTar Pro variant adds extension lines (secondary internal lines per booth) a
 
 ### Filesystem & Naming
 
-- **DOS 8.3 filenames:** All filesystem operations MUST respect the 8.3 limit (8-char name, 3-char extension). DOS 5.0/6.x does not support long filenames. This includes `.cpp`, `.h`, `.prj`, directories, and all build outputs.
+- **DOS 8.3 filenames:** All filesystem operations MUST respect the 8.3 limit (8-char name, 3-char extension). DOS 6.22 does not support long filenames. This includes `.cpp`, `.h`, `.prj`, directories, and all build outputs.
 - **Line endings:** Enforced via `.gitattributes` — git auto-converts at checkout/commit.
   - **CRLF** for DOS-toolchain-consumed files: `*.def`, `*.bat`, `*.cfg`, `*.ini`, `*.mak`, `MAKEFILE`, `*.c`, `*.cpp`, `*.h`, `*.hpp`, `*.asm`, `*.inf`, `*.txt`
   - **LF** for host-side files: `*.sh`, `*.md`, `*.conf`, `dosbox-x.conf`
 
 ### Compiler & Runtime
 
-- **CPU:** 386 or compatible (executes Pharlap 286 protected-mode instructions)
+- **CPU:** 286 or compatible (executes Pharlap 286 protected-mode instructions)
 - **Memory model:** Large model (`-ml` in `st.cfg`) — multiple code + data segments; all pointers implicitly `far`
 - **286 protected mode via Pharlap:** Segmented memory, not flat. Use `PHAPI` for extended memory access.
 - **Stack checking:** DISABLED (`-k-` flag in `st.cfg`) — do not re-enable; causes instability

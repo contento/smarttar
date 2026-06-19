@@ -25,7 +25,7 @@ SmartTar is a single-process, event-driven application structured in layered sub
     |  Config (cfg)   Logger (log)   Screen saver         |
     +-----------------------------------------------------+
               Pharlap 286 DOS Extender
-              MS-DOS 5.0 / PC hardware
+              MS-DOS 6.22 / PC hardware
 
 ## Core Components
 

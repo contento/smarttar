@@ -7,7 +7,7 @@ title: "SmartTar — Documentación"
 ![](assets/smarttar-2.33.gif)
 
 Sistema de administración de tarifas telefónicas en tiempo real para centros de
-cabinas telefónicas. DOS 5.0, modo protegido 286 (Pharlap), Zinc 3.5.
+cabinas telefónicas. DOS 6.22, modo protegido 286 (Pharlap), Zinc 3.5.
 **MicroDiseño Ltda.**
 
 > Este vault es la **fuente única** de la documentación. Los manuales `.docx` y

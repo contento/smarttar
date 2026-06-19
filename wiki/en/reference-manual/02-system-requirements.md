@@ -8,7 +8,7 @@ order: 2
 # System Requirements
 | Component | Requirement |
 |----|----|
-| Operating System | MS-DOS 5.0 or later |
+| Operating System | MS-DOS 6.22 |
 | Processor | Intel 80286 or compatible |
 | Conventional memory | 640 KB (required by DOS extender loader) |
 | Extended memory | Managed by Pharlap 286 DOS extender |
