@@ -43,13 +43,16 @@ winget install joncampbell123.DOSBox-X   # Windows
 ```
 
 **Set up the vendor toolchain** (required first time):
+
+> **⚠️ Copyright notice:** The build requires proprietary toolchain binaries
+> (Borland C++ 3.1, Pharlap 286, Zinc 3.5) that are **not included** in this
+> repository due to copyright restrictions. You must obtain these yourself.
+> See [VENDOR_SETUP.md](VENDOR_SETUP.md) for manual setup instructions or
+> alternative sources.
+
 ```sh
 ./setup-vendor.sh                   # clones proprietary toolchain from private repo
 ```
-The vendor directory contains Borland C++ 3.1, Pharlap 286, and Zinc 3.5
-binaries — required to build but **not included** in this repository (copyright
-restrictions). See [VENDOR_SETUP.md](VENDOR_SETUP.md) for manual setup or
-alternative sources.
 
 **Build** (inside DOSBox-X: `cd ST` then `makedemo`), or from the host shell:
 ```sh

@@ -35,6 +35,18 @@ brew install dosbox-x               # macOS
 winget install joncampbell123.DOSBox-X   # Windows
 ```
 
+**Configurar la cadena de herramientas del vendor** (requerido la primera vez):
+
+> **⚠️ Aviso de copyright:** La compilación requiere binarios propietarios de
+> la cadena de herramientas (Borland C++ 3.1, Pharlap 286, Zinc 3.5) que **no
+> están incluidos** en este repositorio por restricciones de copyright. Debe
+> obtenerlos usted mismo. Ver [VENDOR_SETUP.md](VENDOR_SETUP.md) para
+> instrucciones de configuración manual o fuentes alternativas.
+
+```sh
+./setup-vendor.sh                   # clona la cadena de herramientas desde el repo privado
+```
+
 **Compilar** (dentro de DOSBox-X: `cd ST` luego `makedemo`), o desde el shell del host:
 ```sh
 ./build.sh                 # por defecto, demo (sin dongle)
