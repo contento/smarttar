@@ -383,11 +383,9 @@ full context and severity rationale.
 - [x] Address MEDIUM / LOW findings (audit § 3) -- clear wins done
       (`038f489`: eeprom off-by-one, w_table use-after-free); bdisplay
       STR16 closed DEFENDED (value range).
-- [~] **Tier 3 deferred (ISR / real-time concurrency)** -- needs a
-      DOSBox-X build + load-test loop (ideally real hardware). Parked in
-      [ISR_VOLATILE_NOTES.md](wiki/dev/ISR_VOLATILE_NOTES.md). **Guard-rail
-      in force:** do not enable compiler optimization without first doing the
-      `volatile`/atomicity audit in that note.
+- **Tier 3 deferred (ISR / real-time concurrency)** — parked in
+  [ISR_VOLATILE_NOTES.md](wiki/dev/ISR_VOLATILE_NOTES.md). Technical note
+  only; no commitment to perform this audit.
 
 ## Milestone: Repo layout -- vendor consolidation [DONE]
 
