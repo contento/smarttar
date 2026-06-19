@@ -1,3 +1,27 @@
+[ 2.98.0 ]
+ - Jun 19 2026: Code review and hardening — 14 fixes from full-project
+                code review. Key fixes:
+                  * CRITICAL: MiniDB boothNumber=-1 contract mismatch
+                    (Get/Exist/Delete now correctly match any booth)
+                  * CRITICAL: MiniDB NumReceipts counter now incremented
+                  * HIGH: cfg.cpp strcpy overflow → strncpy with bounds
+                  * HIGH: cfg.cpp AdjustHeader strcat overflow → strncat
+                  * HIGH: ph_query.cpp unbounded while-loops in Recalc
+                  * HIGH: ph_tar.cpp uninitialized offset/len in IsDDIReduced
+                  * HIGH: ssaver.cpp signed overflow + NULL Bmp dereference
+                  * HIGH: d_ext_st.cpp missing creat() return check
+                  * HIGH: eeprom.cpp swab buffer overflow
+                Logic fixes:
+                  * mb_ext.cpp operator precedence (!Attr & ACTIVE_EXT)
+                  * ctrl_ev.cpp missing break (fallthrough to pay handler)
+                  * ph_util.cpp wrong margin constant for BORDER_CALL
+                  * ctrl_rf.cpp stale static maxBooth in refresh functions
+                Cleanup:
+                  * Dead code removed in w_table.cpp, mb_conf.cpp
+                  * Abandoned Open Watcom/Open Zinc initiatives from TODO
+                  * Removed vendor/ from git history
+                  * Added copyright notice for vendor toolchain in READMEs
+
 [ 2.97.0 ]
  - Jun 17 2026: MiniDB embedded database backend — new on-disk storage
                 engine for receipts and statistics, gated by MINIDB config
