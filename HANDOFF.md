@@ -35,9 +35,8 @@ What was done:
 
 ### Historical docs cleanup
 
-Moved 3 planning/audit documents from repo root to [`wiki/dev/`](wiki/dev/) as historical references:
+Moved 2 planning/audit documents from repo root to [`wiki/dev/`](wiki/dev/) as historical references:
 - `MIGRATION_PLAN_OWZ.md` → `wiki/dev/MIGRATION_PLAN_OWZ.md`
-- `MINI_SMARTTAR_PLAN.md` → `wiki/dev/MINI_SMARTTAR_PLAN.md`
 - `STABILITY_AUDIT.md` → `wiki/dev/STABILITY_AUDIT.md`
 
 Updated all cross-references in [`TODO.md`](TODO.md) and [`wiki/dev/ISR_VOLATILE_NOTES.md`](wiki/dev/ISR_VOLATILE_NOTES.md).
