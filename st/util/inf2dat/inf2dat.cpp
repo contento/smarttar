@@ -68,9 +68,15 @@ int main(int argc, char *argv[])
 	cout << "Procesando ..." << endl;
 
 	if (fromInf)
-		phEngine->Inf2Dat();
+	{
+		phEngine->LoadFromInfs(); // tariffs from PH_INFO.BIN + places from .inf
+		phEngine->Save();         // write compiled PH_INFO.BIN
+	}
 	else
-		phEngine->Dat2Inf();
+	{
+		phEngine->Load();         // read compiled PH_INFO.BIN
+		phEngine->SaveToInfs();   // export places back to .inf
+	}
 
 	cout << "Listo." << endl;
 

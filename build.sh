@@ -60,23 +60,13 @@ if ! command -v "$DOSBOX_X" >/dev/null 2>&1; then
 fi
 
 # --- Check for vendor/ (proprietary toolchain) --------------------------------
-if [[ ! -d vendor ]]; then
-  echo "" >&2
-  echo "build: vendor/ directory not found." >&2
-  echo "" >&2
-  echo "The vendor/ directory contains proprietary toolchain binaries required" >&2
-  echo "to build SmartTar (Borland C++ 3.1, Pharlap 286, Zinc 3.5)." >&2
-  echo "" >&2
-  echo "To set it up, run:" >&2
-  echo "  ./setup-vendor.sh          # clones from private smarttar-vendor repo" >&2
-  echo "" >&2
-  echo "If you don't have SSH access to the private repo, you can obtain" >&2
-  echo "the components manually. See VENDOR_SETUP.md for details:" >&2
-  echo "  - Borland C++ 3.1  (vendor/bc/)" >&2
-  echo "  - Pharlap 286      (vendor/pharlap/)" >&2
-  echo "  - Zinc 3.5         (vendor/zinc/)" >&2
-  echo "" >&2
-  exit 1
+if [[ ! -d vendor/bc/BIN ]]; then
+  echo "build: vendor/bc/BIN not found — setting up automatically ..." >&2
+  if ! ./setup-vendor.sh --force; then
+    echo "" >&2
+    echo "build: vendor setup failed. See VENDOR_SETUP.md for manual instructions." >&2
+    exit 1
+  fi
 fi
 
 if (( keep_in_st )); then
@@ -106,7 +96,7 @@ touch "$log"
 TAIL_PID=
 tail -F "$log" 2>/dev/null &
 TAIL_PID=$!
-mkdir -p st/build st/bin st/lib
+mkdir -p st/build st/bin st/lib st/util/inf2dat/obj
 
 # Capture DOSBox-X's own stderr (crash traces, protection faults) when
 # MAKE_HEADLESS_DEBUG is set. CI sets this for failure diagnostics.
@@ -120,6 +110,7 @@ fi
 eval "\"$DOSBOX_X\" -conf dosbox-x.conf -fastlaunch \
   -c \"echo === SmartTar build starting (variant ${variant}) ===\" \
   -c \"echo === log: ${dos_log} (silent until exit) ===\" \
+  -c \"command /c util\\\\inf2dat\\\\mk_ph.bat >> ${dos_log}\" \
   -c \"command /c make${variant}.bat $make_args >> ${dos_log}\" \
   -c \"echo === Build finished ===\" \
   -c \"exit\" ${dx_redir}" || true

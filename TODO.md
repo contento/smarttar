@@ -481,7 +481,16 @@ when scoped.
 - **Add original manuals** — include the original SmartTar manuals
  (scanned or typed) in the wiki `dev/` or `docs/` section as
  historical reference material.
+- **Refresh README + recover original ST manual** — (a) capture new
+  screenshots of the current UI (incl. demo mode) and update the README
+  Screenshots section; (b) recover the original SmartTar manual from the
+  Word source docs in [st/docs/archive/](st/docs/archive/) (`help.doc`,
+  `STC.doc`, the four `*.docx` manuals). Overlaps the "Add original
+  manuals" note above — fold together when scoped into a milestone.
 
+- [x] **Demo mode visual indicator** — background color shifts from
+  `GREEN` to `CYAN` in demo mode; window title shows `[DEMO]` prefix;
+  exit dialog and about dialog also show demo indicator.
 ## Milestone: Vendor separation (private repo) — `feat/vendor-separation`
 
 Move proprietary toolchain binaries (Borland C++ 3.1, Pharlap 286, Zinc 3.5,

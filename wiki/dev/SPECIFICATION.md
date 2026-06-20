@@ -374,17 +374,15 @@ When `P_PORT=pdf`, output is redirected to PDF 1.4 writer (`pdf_wr.c`):
 
 | Source | Format | Usage | Location |
 |--------|--------|-------|----------|
-| `st.ini` | INI text (ISO-8859-1) | Human-editable source of truth | `st/cfg/st.ini` (tracked in git) |
-| `st.cfg` | Binary (compiled via `ini2cfg.exe`) | Runtime loaded by app | `bin/st.cfg` (gitignored, generated) |
-| `*.inf` | Text files (ISO-8859-1) | Telephony numbering plan (DDI, DDN, local) | `st/util/inf2dat/` |
-| `ph_info.dat` | Binary (compiled via `inf2dat.exe`) | Runtime numbering plan | `bin/ph_info.dat` (gitignored, generated) |
+| `st.ini` | INI text (ISO-8859-1) | Loaded directly at runtime | `st/cfg/st.ini` (tracked in git) |
+| `*.inf` | Text files (ISO-8859-1) | Telephony numbering plan, loaded at runtime | `st/cfg/` |
+| `phones.csv` | CSV | Demo engine call generation | `st/cfg/` |
 
-**Config Compilation Pipeline:**
-1. Developer edits `st/cfg/st.ini` (human-readable)
-2. `SETUP.EXE` or `ini2cfg.exe` compiles `st.ini` → `st.cfg` (binary format)
-3. MAKEFILE runs `ini2cfg` and distributes `st.cfg` to `bin/` and every `util/*/` subdir
-4. Application loads `st.cfg` at startup via `CFG::Load()`
-5. Changes persist: `st.cfg` updated by UI config dialogs; `st.ini` remains source-of-truth for version control
+**Runtime Loading:**
+1. Application loads `st.ini` directly at startup via `CFG::Load()`
+2. `PH_ENGINE` loads `.inf` files directly (local.inf, ddn.inf, ddi.inf)
+3. No compilation step needed — text files are parsed at runtime
+4. Legacy compiled formats (`st.cfg`, `ph_info.dat`) exist in source tree but are NOT used
 
 #### 3.7.2 Config Groups
 
@@ -501,7 +499,7 @@ As of v2.97.0, SmartTar supports two pluggable storage backends. Both implement 
 | **FlatFile** | `MINIDB=0` | Legacy `.dat` + `.ndx` files | Stable, proven; use for production if stability critical |
 | **MiniDB** | `MINIDB=1` (default) | B-tree page-based `.db` file | Default v2.97.0+; better scalability, unified file, concurrent access |
 
-Set in `st.ini` `[Aplicacion]` section; recompile `st.cfg` via `ini2cfg.exe`; restart app.
+Set in `st.ini` `[Aplicacion]` section; restart app (no recompile needed).
 
 ## 6. Build Variants
 
@@ -643,6 +641,19 @@ Set in `st.ini` `[Aplicacion]` section; recompile `st.cfg` via `ini2cfg.exe`; re
 └──────────────────────────────────────────────────────┘
 ```
 
+### 8.1.1 Demo Mode Indicator
+
+When running in demo mode (`ENGINE_KIND=demo`), the UI provides visual
+indicators:
+
+- **Background color**: Shifts from `GREEN` (production) to `CYAN` (demo)
+- **Window title**: Shows `[DEMO]` prefix (e.g., `[DEMO] SmartTar - Company City`)
+- **Exit dialog title**: Shows `[DEMO] SmartTar`
+- **About dialog**: Build string appends `" Demo"` (e.g., `"2.98.0 Demo"`)
+
+These indicators are set in `Prolog()` (background), `UIW_VIEW::UIW_VIEW()`
+(main title), `Exit()` (exit dialog), and `UIW_ABOUT()` (about dialog).
+
 ### 8.2 Booth Cell Display
 
 Each booth cell shows real-time:
@@ -730,8 +741,8 @@ SmartTar Pro variant adds extension lines (secondary internal lines per booth) a
 | Tool | Purpose | Location |
 |------|---------|----------|
 | `mdbdump` | Inspect/export MiniDB `.db` files (receipts + stats) | `st/util/lsmdb/mdbdump.exe` or `mdbdump.sh` / `mdbdump.ps1` at project root |
-| `inf2dat` | Compile `.inf` files → `ph_info.dat` | `st/util/inf2dat/inf2dat.exe` (auto-run by MAKEFILE) |
-| `ini2cfg` | Compile `st.ini` → `st.cfg` | `st/util/ini2cfg/ini2cfg.exe` (auto-run by MAKEFILE) |
+| `inf2dat` | Compile `.inf` files → `ph_info.dat` (legacy, not used at runtime) | `st/util/inf2dat/inf2dat.exe` |
+| `ini2cfg` | Compile `st.ini` → `st.cfg` (legacy, not used at runtime) | `st/util/ini2cfg/ini2cfg.exe` |
 | `SETUP.EXE` | Interactive config / install utility | `st/util/setup/setup.exe` |
 | `defpwd` | Password reset utility | `st/util/defpwd/defpwd.exe` |
 | `chkrx` | Receipt database checker / repair | `st/util/chkrx/chkrx.exe` |

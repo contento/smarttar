@@ -8,6 +8,8 @@
 #include <menubar.h>
 #include <events.h>
 
+extern CFG *g_cfg;
+
 #ifndef USE_HELP_CONTEXTS
 #define USE_HELP_CONTEXTS
 #include <help.hpp>
@@ -44,6 +46,8 @@ UIW_ABOUT::UIW_ABOUT(void) : UIW_WINDOW("W_ABOUT", defaultStorage)
 		strcat(str, " Test");
 	if (TraceInfo::s_bDevelopment)
 		strcat(str, " Dev");
+	if (g_cfg->IsDemoMode())
+		strcat(str, " Demo");
 	((UIW_PROMPT *)Get("BUILD"))->DataSet(str); // 2.21.8 build 5
 
 	((UIW_TEXT *)Get("AUTHORS"))->DataSet((char *)MD_AUTHORS);

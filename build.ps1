@@ -123,7 +123,7 @@ Write-Host ('-' * 70)
 # Build output dirs are gitignored and absent on a fresh checkout. C: is the
 # repo mount, so creating them host-side makes them visible inside DOSBox-X.
 New-Item -ItemType Directory -Force -Path `
-    st/build, st/bin, st/lib | Out-Null
+    st/build, st/bin, st/lib, st/util/inf2dat/obj | Out-Null
 
 # Truncate or create the log. Remove-Item fails when a previous run's
 # FileStream (FileShare::ReadWrite, no FileShare::Delete) is still open.
@@ -132,6 +132,7 @@ New-Item -ItemType Directory -Force -Path `
 $dosboxArgs = @(
     '-conf',       'dosbox-x.conf',
     '-fastlaunch',
+    '-c',          "command /c util\inf2dat\mk_ph.bat >> $dosLog",
     '-c',          "command /c make$Variant.bat $makeArgs >> $dosLog",
     '-c',          'exit'
 )

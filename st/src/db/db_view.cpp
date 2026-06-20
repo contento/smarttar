@@ -313,30 +313,30 @@ void DBView::ShowRecord(long nNumber)
 		{
 		case Receipt::TEL:
 			{
-				serv = "Telefonï¿½a";
+				serv = "Telefonía";
 				boothPrompt = "  Cabina";
 				booth = g_cfg->BoothInfo[receipt.BoothNumber].Name;
-				phonePrompt = "Telï¿½fono";
+				phonePrompt = "Teléfono";
 				phone = receipt.Phone;
-				amountPrompt = "Duraciï¿½n";
+				amountPrompt = "Duración";
 				amount.Import(g_Milisec2Time(receipt.ElapsedTime, g_cfg->CORRECTION_TIME));
 				break;
 			}
 		case Receipt::SPECIAL_TEL:
 			{
-				serv = "Telefonï¿½a Esp.";
+				serv = "Telefonía Esp.";
 				boothPrompt = "  Cabina";
 				booth = g_cfg->BoothInfo[receipt.BoothNumber].Name;
-				phonePrompt = "Telï¿½fono";
+				phonePrompt = "Teléfono";
 				phone = receipt.Phone;
-				amountPrompt = "Duraciï¿½n";
+				amountPrompt = "Duración";
 				amount.Import(g_Milisec2Time(receipt.ElapsedTime, g_cfg->CORRECTION_TIME));
 				break;
 			}
 		case Receipt::FAX:
 			{
 				serv = "Fax";
-				phonePrompt = "Telï¿½fono";
+				phonePrompt = "Teléfono";
 				phone = receipt.Phone;
 				break;
 			}

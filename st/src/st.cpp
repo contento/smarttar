@@ -203,14 +203,14 @@ EVENT_TYPE Exit(UI_DISPLAY *display, UI_EVENT_MANAGER *, UI_WINDOW_MANAGER *wind
     UIW_WINDOW *window = new UIW_WINDOW(left, top, width, height,
                                         WOF_NO_FLAGS, WOAF_NORMAL_HOT_KEYS|WOAF_MODAL|WOAF_DIALOG_OBJECT|WOAF_NO_SIZE);
     window->helpContext = H_QUIT;
+	BOOL isDemo    = CONTROLLER::RTEngineIsDemo();
+	BOOL sysIsBusy = !isDemo && CONTROLLER::RTEngineIsBusy();
     *window
 		+ new UIW_BORDER
 		+ new UIW_SYSTEM_BUTTON(SYF_GENERIC)
-		+ new UIW_TITLE("SmartTar", WOF_JUSTIFY_CENTER)
+		+ new UIW_TITLE(isDemo ? "[DEMO] SmartTar" : "SmartTar", WOF_JUSTIFY_CENTER)
 	;
 	// check to see if it's possible to go out
-	BOOL isDemo    = CONTROLLER::RTEngineIsDemo();
-	BOOL sysIsBusy = !isDemo && CONTROLLER::RTEngineIsBusy();
 	if (sysIsBusy)
 	{
 		*window
@@ -274,7 +274,7 @@ void Prolog(void)
 			sizeof(g_appInfo.ShortSerial) - 1);
 	// I love colors. GCC/gcc.
 	UI_DISPLAY::backgroundPalette->fillPattern     = PTN_SOLID_FILL;
-	UI_DISPLAY::backgroundPalette->colorBackground = GREEN;
+	UI_DISPLAY::backgroundPalette->colorBackground = g_cfg->IsDemoMode() ? CYAN : GREEN;
 	// STM2 status display and EEPROM version check moved to
 	// RT_ENGINE::CheckHardware() (called after ENGINE construction).
 }

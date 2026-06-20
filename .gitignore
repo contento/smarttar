@@ -35,9 +35,17 @@ st/**/*.sym
 # Borland IDE desktop state
 st/**/*.dsk
 
+# DOSBox-X debug log (build.sh MAKE_HEADLESS_DEBUG output)
+dosbox-x-build.log
+
 # util build artifacts
 st/util/**/obj/
 st/util/inf2dat/PH_INFO.DAT
+st/util/inf2dat/PH_INFO.BIN
+# mk_ph.bat stages cfg/*.inf here transiently (cfg/ is canonical)
+st/util/inf2dat/local.inf
+st/util/inf2dat/ddn.inf
+st/util/inf2dat/ddi.inf
 st/util/ini2cfg/st.cfg
 
 # util runtime data -- canonical sources in util/inf2dat/ and util/ini2cfg/;

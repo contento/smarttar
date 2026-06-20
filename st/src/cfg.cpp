@@ -30,7 +30,7 @@ static char *forms[] = {
 	"18 col. doble rollo",
 	"28 col. rollo simple",
 	"80 col. EMETEL",
-    "80 col. media pï¿½gina",
+    "80 col. media página",
 };
 
 static char *_MCARD_PRINT_FMT  = "%.1lf,%.1lf,%.1lf,%.1lf";
@@ -782,11 +782,11 @@ void CFG::SetDefault(BOOL setAll)
     strcpy(SysGroup, ";\n; [ Sistema ]\n;");
     strcpy(COUNTRY, "Colombia");
     strcpy(CURRENCY, "$");
-    strcpy(CITY    , "Medellï¿½n");
+    strcpy(CITY    , "Medellín");
     strcpy(COMPANY , "TELECOM");
     strcpy(ID      , ""); // clear ID.  JEAM/GCC
     strcpy(OPERATOR_NAME, "TELECOM"); // v2.16
-    DEALER         = 0; // MicroDiseï¿½o Ltda.
+    DEALER         = 0; // MicroDiseño Ltda.
 	CLUSTERS       = 2;
 	ACTIVE_CLUSTERS = CLUSTERS; // 2.30
 	VIEW_REFRESH_TIME = 500;
@@ -796,7 +796,7 @@ void CFG::SetDefault(BOOL setAll)
 	TAX_PERCENT    = 16;
 	DDN_TAX        = 16;
 	DDI_TAX        = 16;
-    strcpy(OP_TITLE, "Seï¿½ora");
+    strcpy(OP_TITLE, "Señora");
     strcpy(OP_NAME , "Adriana Giraldo");
     SS_ID          = 0;
     SS_TIME        = 0;
@@ -841,7 +841,7 @@ void CFG::SetDefault(BOOL setAll)
 	CORRECTION_TIME          = 0; // miliseconds
 	TURN_DAY				 = 1;
     TURN_NUMBER              = 1;
-    strcpy(HEADER_LINE1, "Recibo de pago de servicios pï¿½blicos");
+    strcpy(HEADER_LINE1, "Recibo de pago de servicios públicos");
     strcpy(HEADER_LINE2, "");
     strcpy(HEADER_LINE3, "");
     strcpy(HEADER_LINE4, "Somos agente retenedor del");
@@ -960,7 +960,7 @@ void CFG::SetDefault(BOOL setAll)
     //
     // [ Critical ]
     //
-    strcpy(CriticalGroup, ";\n; [ Valores Crï¿½ticos ]\n;");
+    strcpy(CriticalGroup, ";\n; [ Valores Críticos ]\n;");
     CHECK_PAUSE_KEY     = TRUE;
 	IGNORE_EXTRA_DIGITS = FALSE;
     EXCLUSIVE_SPY       = TRUE;

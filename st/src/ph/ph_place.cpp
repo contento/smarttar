@@ -122,7 +122,7 @@ ostream& PH_ENGINE::PLACE_INFO::SetInfHeader(ostream& os)
 		   << ";     lugar : tarifa, minutos, porcentaje = numeraci¢n"  << endl
 		   << "; "                                            << endl
 */
-		   << ";   Utilice SETUP para producir PH_INFO.DAT"   << endl
+		   << ";   Utilice INF2DAT para producir PH_INFO.BIN"   << endl
 		   << "; *******************************************" << endl
 		   << "  "                                            << endl
 		   ;

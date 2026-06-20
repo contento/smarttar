@@ -510,7 +510,7 @@ void E_ACCOUNT::PrintData(void)
     case CFG::SR_80:
         {
             extFmt =
-                "\tExtensiï¿½n""\n"
+                "\tExtensión""\n"
                 "\t  [%d] %s""\n"
                 ;
             creditsFmt0 =
@@ -555,7 +555,7 @@ void E_ACCOUNT::PrintData(void)
     case CFG::LINEAL_80:
         {
             extFmt =
-                "\tExtensiï¿½n""\tExtensiï¿½n""\n"
+                "\tExtensión""\tExtensión""\n"
                 "\t  [%d] %s""\t  [%d] %s""\n"
                 ;
             creditsFmt0 =
@@ -597,7 +597,7 @@ void E_ACCOUNT::PrintData(void)
     case CFG::SR_40:
         {
             extFmt =
-                "Extensiï¿½n""\n"
+                "Extensión""\n"
                 "  [%d] %s""\n"
                 ;
             creditsFmt0 =
@@ -973,7 +973,7 @@ EVENT_TYPE E_ACCUM::Event(const UI_EVENT &event)
 		for (int i = g_cfg->E_FIRST_EXT-1; !error && i < g_cfg->ACTIVE_CLUSTERS*CLUSTER_SIZE; i++)
 			if (g_cfg->BoothInfo[i].Attr & CFG::ACTIVE_EXT)
             {
-				errorSystem->ReportError(windowManager, WOS_NO_STATUS, "La extensiï¿½n \"%s\" estï¿½ en operaciï¿½n.", g_cfg->BoothInfo[i].Name);
+				errorSystem->ReportError(windowManager, WOS_NO_STATUS, "La extensión \"%s\" está en operación.", g_cfg->BoothInfo[i].Name);
                 error = TRUE;
             }
         if (error)
@@ -1067,8 +1067,8 @@ void E_ACCUM::PrintData(void)
                 "\tBalance"                   "\n"
                 "\t        Abonos: %.2f"      "\n"
                 "\t    Cuenta cte: %.2f"      "\n"
-                "\t   Instalaciï¿½n: %.2f"      "\n"
-                "\t         Lï¿½nea: %.2f"      "\n"
+                "\t   Instalación: %.2f"      "\n"
+                "\t         Línea: %.2f"      "\n"
                 "\t  Otros cargos: %.2f"      "\n"
                 "\t      Llamadas: [%ld] %.2f""\n"
                 "\t    Descuentos: %.2f"      "\n"
@@ -1098,8 +1098,8 @@ void E_ACCUM::PrintData(void)
                 "\tBalance"                   "\tBalance""\n"
                 "\t        Abonos: %.2f"      "\t        Abonos: %.2f""\n"
                 "\t    Cuenta cte: %.2f"      "\t   Cuenta cte.: %.2f""\n"
-                "\t   Instalaciï¿½n: %.2f"      "\t   Instalaciï¿½n: %.2f""\n"
-                "\t         Lï¿½nea: %.2f"      "\t         Lï¿½nea: %.2f""\n"
+                "\t   Instalación: %.2f"      "\t   Instalación: %.2f""\n"
+                "\t         Línea: %.2f"      "\t         Línea: %.2f""\n"
                 "\t  Otros cargos: %.2f"      "\t  Otros cargos: %.2f""\n"
                 "\t      Llamadas: [%ld] %.2f""\t      Llamadas: [%ld] %.2f""\n"
                 "\t    Descuentos: %.2f"      "\t    Descuentos: %.2f""\n"
@@ -1126,8 +1126,8 @@ void E_ACCUM::PrintData(void)
                 "\tBalance""\n"
                 "\t        Abonos: %.2f""\n"
                 "\t    Cuenta cte: %.2f""\n"
-                "\t   Instalaciï¿½n: %.2f""\n"
-                "\t         Lï¿½nea: %.2f""\n"
+                "\t   Instalación: %.2f""\n"
+                "\t         Línea: %.2f""\n"
                 "\t  Otros cargos: %.2f""\n"
                 "\t      Llamadas: [%ld] %.2f""\n"
                 "\t    Descuentos: %.2f""\n"
@@ -1280,7 +1280,7 @@ EVENT_TYPE E_PARAMETERS::Process(UI_WINDOW_OBJECT *object, UI_EVENT &, EVENT_TYP
     wLastExt->DataSet(&integer);
     if (!(booth > 0 && booth <= maxBooth))
     {
-        errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Nï¿½mero de cabina entre 1 y %d.", maxBooth);
+        errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Número de cabina entre 1 y %d.", maxBooth);
         ((UIW_INTEGER *)object)->DataSet(&maxBooth);
         return -1;
     }

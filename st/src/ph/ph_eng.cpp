@@ -12,7 +12,7 @@
 
 extern CFG *g_cfg;
 //
-static const char *PH_INFO_FILENAME   = "PH_INFO.DAT";
+static const char *PH_INFO_FILENAME   = "PH_INFO.BIN";
 static const char *DDN_INF_FILENAME   = "DDN.INF";
 static const char *DDI_INF_FILENAME   = "DDI.INF";
 static const char *LOCAL_INF_FILENAME = "LOCAL.INF";
@@ -48,7 +48,7 @@ BOOL PH_ENGINE::Inf2Dat(void)
     _GetAppPath(path);
     FILE_NAME filename;
     //
-    // preserve existing PH_INFO.DAT data
+    // preserve existing PH_INFO.BIN data
     // except places.  Assume good information.
     //
     strcat(strcpy(filename, path), PH_INFO_FILENAME);
@@ -132,7 +132,7 @@ BOOL PH_ENGINE::Dat2Inf(void)
     _GetAppPath(path);
     FILE_NAME filename;
     //
-    // read existing PH_INFO.DAT data
+    // read existing PH_INFO.BIN data
     //
     strcat(strcpy(filename, path), PH_INFO_FILENAME);
     fstream file(filename, ios::binary|ios::in);
@@ -182,7 +182,7 @@ BOOL PH_ENGINE::LoadFromInfs(void)
 {
 #pragma warn -pia
     //
-    // preserve existing PH_INFO.DAT data
+    // preserve existing PH_INFO.BIN data
     // except places
     //
     FILE_NAME filename;

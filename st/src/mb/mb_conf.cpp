@@ -210,7 +210,7 @@ EVENT_TYPE UIW_SIGNAL::Event(const UI_EVENT &event)
         LastEvent = ccode;
         WSignalGroup->Destroy();
         UIW_BUTTON *tW150;
-        WSignalGroup->Information(SET_TEXT, "Por inversiï¿½n");
+        WSignalGroup->Information(SET_TEXT, "Por inversión");
         *WSignalGroup
         + (WSteadyButton = new UIW_BUTTON(1, 1, 20, "Permanente", BTF_RADIO_BUTTON))
         + (tW150         = new UIW_BUTTON(1, 2, 20, "Durante 150 ms", BTF_RADIO_BUTTON));
@@ -1354,7 +1354,7 @@ EVENT_TYPE UIW_CHANGE_PASSWD::Event(const UI_EVENT &event)
         wString = (UIW_STRING *)Get("S_NEW_PASSWD");
         char *newString = wString->DataGet();
 		if (!g_cfg->ChangePassword(oldString, newString))
-            errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Cï¿½digo de acceso invï¿½lido\n");
+            errorSystem->ReportError(windowManager, WOS_NO_STATUS, "Código de acceso inválido\n");
         else
         {
             g_cfg->Save(NULL, FALSE);

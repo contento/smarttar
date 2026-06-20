@@ -196,7 +196,7 @@ BOOL DB_EXT_STATISTICS::Repair(DB_STORAGE *dBStorage, BOOL all)
 	//
 #if defined(__TEST__)
 #if !defined(__UTIL__)
- //	cprintf("\n\r- Extensiï¿½n Statistics file, Record: ");
+ //	cprintf("\n\r- Extensión Statistics file, Record: ");
  //	short x = wherex(), y = wherey(); // 2.21.8 Build 6
 #endif
 #endif

@@ -45,7 +45,10 @@ UIW_VIEW::UIW_VIEW(int numOfClusters, int numOfGroups)
 	m_callInfo = new PH_ENGINE::CallInfo[NumOfClusters][CLUSTER_SIZE];
 
     STR256 title;
-	sprintf(title, "%s - %s %s", g_appInfo.Title, g_cfg->COMPANY, g_cfg->CITY);
+	if (CONTROLLER::RTEngineIsDemo())
+		sprintf(title, "[DEMO] %s - %s %s", g_appInfo.Title, g_cfg->COMPANY, g_cfg->CITY);
+	else
+		sprintf(title, "%s - %s %s", g_appInfo.Title, g_cfg->COMPANY, g_cfg->CITY);
     // add the other objects to the Window ...
     *this
 		+ new UIW_BORDER
