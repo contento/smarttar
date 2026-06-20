@@ -18,7 +18,8 @@ Parser::Parser(const char *line, Tokens& tokens)
     BI_StackAsList<char> stack;
 #endif
     STR512 tmpLine;
-    for (WORD i=0; i<strlen(line)+1; i++)
+    WORD len = (WORD)strlen(line); // hoist: avoid O(n^2) strlen per char
+    for (WORD i=0; i<=len; i++)
     { // include NULL character
         switch (line[i])
         {
