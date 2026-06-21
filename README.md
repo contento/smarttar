@@ -138,4 +138,7 @@ no longer in business; the code was preserved and resurrected in 2026.
 
 ## License
 
-Copyright © 1993–2003 MicroDiseño Ltda. All rights reserved.
+SmartTar is **proprietary software** — Copyright © 1993–2026 Gonzalo Contento,
+all rights reserved. The source is published for reference and historical
+preservation only; no use, redistribution, or derivative works are permitted
+without prior written permission. See [LICENSE](LICENSE) for the full terms.

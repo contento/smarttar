@@ -144,4 +144,8 @@ resucitado en 2026.
 
 ## Licencia
 
-Derechos reservados © 1993–2003 MicroDiseño Ltda. Todos los derechos reservados.
+SmartTar es **software propietario** — Derechos reservados © 1993–2026 Gonzalo
+Contento, todos los derechos reservados. El código se publica únicamente con
+fines de referencia y preservación histórica; no se permite ningún uso,
+redistribución ni obra derivada sin permiso previo por escrito. Ver
+[LICENSE](LICENSE) para los términos completos.
