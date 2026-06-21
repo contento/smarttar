@@ -116,9 +116,8 @@ repository due to copyright / redistribution restrictions. See
 
 | Version | Screenshot |
 | ------- | ---------- |
-| Simulator (mockup) | ![SmartTar Simulator](wiki/assets/demo-simulator.jpg) |
+| Simulator (demo) | ![SmartTar Simulator](wiki/assets/demo-simulator.gif) |
 | 2.33 | ![SmartTar 2.33](st/docs/archive/SmartTar%202.33.gif) |
-| 2.32.1 | ![SmartTar 2.32.1](st/docs/archive/SmartTar%202.32.1.gif) |
 
 ---
 

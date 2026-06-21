@@ -46,5 +46,8 @@
     "cSpell.language": "en,es",
     "files.encoding": "iso88591",
     "files.autoGuessEncoding": false,
+    "[markdown]": {
+        "files.encoding": "utf8"
+    },
     "C_Cpp.errorSquiggles": "disabled"
 }
