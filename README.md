@@ -8,14 +8,12 @@
 --------
 ```
 
-
 *Leer en [Español](README.es.md).*
-Developed by [MicroDiseño Ltda.](https://microdiseno.com) · Copyright © 1993–2003 · Version 2.70.1
+
 Real-time telephone tariff management system for public telephone booths
+Developed by [MicroDiseño Ltda.](https://microdiseno.com) · Copyright © 1993–2003 · Version 2.32.1
 
-Developed by [MicroDiseño Ltda.](https://microdiseno.com) · Copyright © 1993–2003 · Version 2.70.0
-
-![SmartTar](st/docs/archive/SmartTar.jpg)
+![SmartTar](wiki/assets/demo-simulator.gif)
 
 ---
 
@@ -112,37 +110,29 @@ repository due to copyright / redistribution restrictions. See
 
 ---
 
-## Screenshots
-
-| Version | Screenshot |
-| ------- | ---------- |
-| Simulator (demo) | ![SmartTar Simulator](wiki/assets/demo-simulator.gif) |
-| 2.33 | ![SmartTar 2.33](st/docs/archive/SmartTar%202.33.gif) |
-
----
-
 ## History
 
 MicroDiseño Ltda. — the company that built SmartTar — was a Colombian
-technology firm specializing in telephone billing and metering systems in
-southwestern Colombia (Nariño, Cauca, Putumayo). SmartTar was deployed in
-commercial call cabins and institutional points of sale (including
-*Servicios & Transcripciones* networks and Universidad del Norte). The company
-is no longer in business; the code was preserved and resurrected in 2026.
+technology firm specializing in telephone billing and metering systems.
+SmartTar was deployed in commercial call cabins and institutional points of
+sale. The product was maintained for MicroDiseño by **GCSoft**. The company is
+no longer in business; the code was preserved and resurrected in 2026.
 
 ---
 
 ## Acknowledgments
 
+![SmartTar — About](st/docs/archive/SmartTar.jpg)
+
 ### Engineers
 
-- **Carlos Robledo** — Director
-- **Jorge Martinez** — Hardware
-- **Luis Valencia** — Hardware
-- **Tamayo** — Hardware
-- **Hector Mario Florez** — Hardware
-- **Adriana Giraldo** — Documentation
-- **Gonzalo Contento** — Software Engineer
+- **Carlos Robledo** — Director, Electronics Engineer
+- **Jorge Martinez** — Electronics Engineer
+- **Luis Valencia** — Electronics Engineer
+- **Hector Tamayo** — Electronics Engineer
+- **Mario Florez** — Electronics Engineer
+- **Adriana Giraldo** — Documentation, Software Engineer
+- **Gonzalo Contento** — Electronics Engineer, Software Engineer
 
 ---
 

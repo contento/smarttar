@@ -2,11 +2,11 @@
 
 ## Project Overview
 
-SmartTar is a DOS 6.22 protected-mode point-of-sale / tariff management system. Current version: **2.98.0** (originally 2003, resurrected 2026).
+SmartTar is a DOS 6.22 protected-mode point-of-sale / tariff management system. Development version: **2.98.0** (originally 2003, resurrected 2026). The **last official (shipped) release was 2.32.1** -- that is the version shown in the READMEs and user-facing docs; 2.98.0 is the ongoing in-development build.
 
 **Name:** SmartTar = **Smart + Tar(ifa)**. "Tarifa" is Spanish for tariff / rate (standard in Colombia for telephone call billing). Not an acronym, not related to Unix `tar`.
 
-**Vendor:** **MicroDiseño Ltda.** — Colombian company. Web: **microdiseno.com** (ASCII form, no tilde; the company name itself is written with the `ñ`). The original author is Gonzalo Contento ("GCC" in source comments).
+**Vendor:** **MicroDiseño Ltda.** — Colombian company. Web: **microdiseno.com** (ASCII form, no tilde; the company name itself is written with the `ñ`). The original author is Gonzalo Contento ("GCC" in source comments). The product was maintained for MicroDiseño by **GCSoft** (Gonzalo Contento).
 
 ### Runtime environment
 
