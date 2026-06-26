@@ -2,8 +2,9 @@
 
 Status snapshot for resuming on another machine.
 
-- **Branch:** `feat/vendor-separation`, 4 commits ahead of `main`. Vendor separation infrastructure complete — private repo created, setup scripts, build/run checks, CI wiring, docs.
-- **`main`:** at HEAD (merge feat/vendor-separation + bump to v2.90.0). v2.90.0.
+- **Branch:** historical notes from `feat/vendor-separation`. The repo state has since moved on.
+- **`main`:** current development line is v2.98.0.
+- **Vendor history cleanup:** complete. `vendor/` is no longer present in any reachable ref; the short SHAs recorded below are pre-rewrite and may no longer resolve locally.
 
 ---
 
@@ -52,9 +53,9 @@ d5d74b6 feat: move vendor/ to private repo (smarttar-vendor) to avoid copyright 
 
 ### Remaining vendor separation TODO items
 
-- `[ ]` Remove `vendor/` from this repo's git history — destructive operation
-  (rewrites history with `git filter-repo` or BFG). All collaborators would need
-  to re-clone. Do only after confirming the full build works with cloned vendor.
+- `[x]` Remove `vendor/` from this repo's git history. Completed after the
+  cloned-vendor workflow was verified; current reachable history no longer
+  contains `vendor/`.
 - `[ ]` Build with open-source toolchains — long-term milestone (Open Watcom,
   OpenZinc), not part of vendor separation.
 
